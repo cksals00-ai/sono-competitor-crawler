@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>소노 경쟁사 가격 모니터링</title>
+  <title>소노 경쟁사 모니터링 | GS Team</title>
   <style>
 :root {
   --bg:          #0d1117;
@@ -50,13 +50,31 @@ body {
   max-width: 1400px;
   margin: 0 auto;
 }
+.header-left { display: flex; flex-direction: column; gap: 3px; }
+.header-title-wrap { display: flex; align-items: center; gap: 10px; }
 .header-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: -.3px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -.5px;
+  line-height: 1;
 }
-.header-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.header-team-badge {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(135deg, #238636 0%, #1a7f37 100%);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.15);
+  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+  flex-shrink: 0;
+}
+.header-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
 .header-badge {
   background: var(--green);
   color: #0d1117;
@@ -293,6 +311,23 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   vertical-align: middle;
 }
 
+/* ── Review / 별점 ── */
+.review-col   { text-align: center; min-width: 80px; font-size: 11px; color: var(--muted); }
+.review-cell  { text-align: center; padding: 4px 6px; white-space: nowrap; }
+.review-na    { color: #3a3f4b; }
+.review-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 4px;
+  margin: 1px 0;
+  letter-spacing: .2px;
+}
+.review-high  { background: rgba(46,160,67,.20); color: #3fb950; }
+.review-mid   { background: rgba(210,153,34,.20); color: #d29922; }
+.review-low   { background: rgba(248,81,73,.20);  color: #f85149; }
+
 /* ── Footer ── */
 .footer {
   padding: 20px 24px;
@@ -310,7 +345,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   .property-grid { grid-template-columns: 1fr; gap: 12px; }
   .main { padding: 10px; }
   .header { padding: 12px 14px; }
-  .header-title { font-size: 15px; }
+  .header-title { font-size: 16px; }
   .header-meta  { font-size: 10px; }
   .stat-item { padding: 8px 14px; min-width: 72px; }
   .stat-value { font-size: 18px; }
@@ -332,9 +367,12 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
 
 <header class="header">
   <div class="header-inner">
-    <div>
-      <div class="header-title">소노 경쟁사 가격 모니터링</div>
-      <div class="header-meta">수집: 2026-04-15 23:46&ensp;&middot;&ensp;생성: 2026-04-16 05:32&ensp;&middot;&ensp;대상기간: 4/16 ~ 4/21&ensp;&middot;&ensp;비교기준: 전일(4/15)</div>
+    <div class="header-left">
+      <div class="header-title-wrap">
+        <span class="header-title">소노 경쟁사 모니터링</span>
+        <span class="header-team-badge">GS Team</span>
+      </div>
+      <div class="header-meta">수집: 2026-04-15 23:46&ensp;&middot;&ensp;생성: 2026-04-16 06:50&ensp;&middot;&ensp;대상기간: 4/16 ~ 4/21&ensp;&middot;&ensp;비교기준: 전일(4/15)</div>
     </div>
     <div class="header-badge">LIVE</div>
   </div>
