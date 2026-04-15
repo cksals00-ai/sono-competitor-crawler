@@ -115,10 +115,39 @@ def load_previous_df(export_dir: str) -> pd.DataFrame:
         try:
             df = pd.read_csv(csv_path, encoding="utf-8-sig")
             logger.info(f"전일 데이터 로드: {csv_path}")
-            return df
+            return _normalize_columns(df)
         except Exception as e:
             logger.warning(f"전일 데이터 로드 실패: {e}")
     return pd.DataFrame()
+
+
+def _normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """한글 컬럼명 → 영문 정규화 (export_powerbi._prepare_df 역변환).
+    이미 영문 컬럼이 있는 경우엔 덮어쓰지 않는다."""
+    KO_TO_EN = {
+        "수집일시":   "crawled_at",
+        "소노사업장":  "property_name",
+        "사업장ID":   "property_id",
+        "경쟁사명":   "competitor_name",
+        "OTA":       "ota",
+        "체크인":     "checkin_date",
+        "체크아웃":   "checkout_date",
+        "객실유형":   "room_type",
+        "판매가(원)": "price",
+        "통화":      "currency",
+        "판매상태":   "availability",
+        "URL":       "url",
+        "오류":      "error",
+        "별점(10점)": "review_score",
+        "리뷰수":     "review_count",
+    }
+    rename_map = {
+        k: v for k, v in KO_TO_EN.items()
+        if k in df.columns and v not in df.columns
+    }
+    if rename_map:
+        return df.rename(columns=rename_map)
+    return df
 
 
 # ── 메인 공개 함수 ────────────────────────────────────────────────────────────
@@ -145,6 +174,11 @@ def generate_dashboard(
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
 
     cfg = load_config(config_path)
+
+    # 한글 컬럼명으로 저장된 CSV를 직접 넘기는 경우 정규화
+    df = _normalize_columns(df)
+    if prev_df is not None and not prev_df.empty:
+        prev_df = _normalize_columns(prev_df)
 
     # 요일별 summary 빌드 (최저가 + 메타)
     summaries = {dt: _build_price_summary(df, dt) for dt in DAY_TYPES}
