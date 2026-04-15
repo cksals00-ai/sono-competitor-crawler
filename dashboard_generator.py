@@ -20,10 +20,10 @@ import yaml
 logger = logging.getLogger(__name__)
 
 # ── OTA 설정 ─────────────────────────────────────────────────────────────────
-OTA_ORDER   = ["야놀자", "여기어때", "Booking.com", "Agoda"]
-OTA_SHORT   = {"야놀자": "야놀자", "여기어때": "여기어때", "Booking.com": "Booking", "Agoda": "Agoda"}
-OTA_URL_KEY = {"야놀자": "yanolja_url", "여기어때": "yeogiuh_url", "Booking.com": "booking_url", "Agoda": "agoda_url"}
-OTA_CLASS   = {"야놀자": "yanolja",  "여기어때": "yeogi",       "Booking.com": "booking",     "Agoda": "agoda"}
+OTA_ORDER   = ["야놀자", "여기어때", "Booking.com", "Agoda", "자사홈"]
+OTA_SHORT   = {"야놀자": "야놀자", "여기어때": "여기어때", "Booking.com": "Booking", "Agoda": "Agoda", "자사홈": "자사홈"}
+OTA_URL_KEY = {"야놀자": "yanolja_url", "여기어때": "yeogiuh_url", "Booking.com": "booking_url", "Agoda": "agoda_url", "자사홈": ""}
+OTA_CLASS   = {"야놀자": "yanolja",  "여기어때": "yeogi",       "Booking.com": "booking",     "Agoda": "agoda",  "자사홈": "homepage"}
 
 # ── 요일 구분 ─────────────────────────────────────────────────────────────────
 DAY_TYPES  = ["전체", "주중", "금", "토", "연휴"]
@@ -815,6 +815,7 @@ _CSS = """
   --c-yeogi:     #4285f4;
   --c-booking:   #5cb8ff;
   --c-agoda:     #e85d3e;
+  --c-homepage:  #3fb950;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -1011,10 +1012,11 @@ th {
   white-space: nowrap;
 }
 th.competitor-col { text-align: left; min-width: 120px; }
-th.ota-yanolja { color: var(--c-yanolja); }
-th.ota-yeogi   { color: var(--c-yeogi);   }
-th.ota-booking { color: var(--c-booking); }
-th.ota-agoda   { color: var(--c-agoda);   }
+th.ota-yanolja  { color: var(--c-yanolja);  }
+th.ota-yeogi    { color: var(--c-yeogi);    }
+th.ota-booking  { color: var(--c-booking);  }
+th.ota-agoda    { color: var(--c-agoda);    }
+th.ota-homepage { color: var(--c-homepage); }
 td {
   padding: 8px 10px;
   border-bottom: 1px solid rgba(48,54,61,.4);

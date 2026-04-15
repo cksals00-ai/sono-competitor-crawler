@@ -5,6 +5,7 @@
 - Booking.com: Selenium headless Chrome
 """
 
+import os
 import re
 import json
 import time
@@ -37,6 +38,13 @@ HEADERS = {
 
 # Selenium 드라이버 싱글톤 (재사용)
 _driver = None
+
+# 소노 자사 홈페이지 세션 싱글톤
+_sono_session: requests.Session = None
+
+SONO_BASE_URL      = "https://www.sonohotelsresorts.com"
+SONO_LOGIN_URL     = f"{SONO_BASE_URL}/api/hms/user/management/auth/login"
+SONO_ROOM_LIST_URL = f"{SONO_BASE_URL}/api/hms/user/memberReservation/room/list/pc"
 
 
 @dataclass
@@ -915,6 +923,241 @@ def _parse_booking_review(soup: BeautifulSoup) -> tuple:
 
 
 # ---------------------------------------------------------------------------
+# 소노 자사 홈페이지 크롤러 (requests + REST API)
+# ---------------------------------------------------------------------------
+
+def _sono_login(cfg: dict) -> bool:
+    """
+    소노 홈페이지 로그인.
+    자격증명 우선순위: 환경변수 SONO_USER_ID / SONO_PASSWORD > config.yaml sono_homepage
+    성공 시 True 반환, _sono_session 갱신.
+    """
+    global _sono_session
+
+    hp_cfg  = cfg.get("sono_homepage", {})
+    user_id = os.environ.get("SONO_USER_ID") or hp_cfg.get("user_id", "")
+    password = os.environ.get("SONO_PASSWORD") or hp_cfg.get("password", "")
+
+    if not user_id or not password:
+        logger.warning(
+            "[자사홈] 로그인 정보 없음 — "
+            "환경변수 SONO_USER_ID / SONO_PASSWORD 또는 config.yaml sono_homepage 설정 필요"
+        )
+        return False
+
+    sess = requests.Session()
+    sess.headers.update({
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        ),
+        "Accept":          "application/json, text/plain, */*",
+        "Accept-Language": "ko-KR,ko;q=0.9",
+        "Content-Type":    "application/json",
+        "Origin":          SONO_BASE_URL,
+        "Referer":         f"{SONO_BASE_URL}/",
+    })
+
+    try:
+        # 홈페이지 방문 → 세션 쿠키 초기화
+        sess.get(SONO_BASE_URL, timeout=10)
+
+        resp = sess.post(
+            SONO_LOGIN_URL,
+            json={"userId": user_id, "password": password},
+            timeout=15,
+        )
+        data = resp.json() if resp.content else {}
+
+        fail_type = data.get("failMsgType") or data.get("resultCode")
+        if resp.status_code == 200 and not fail_type:
+            logger.info("[자사홈] 로그인 성공")
+            _sono_session = sess
+            return True
+        else:
+            logger.error(f"[자사홈] 로그인 실패: {fail_type or resp.status_code}")
+            return False
+
+    except Exception as e:
+        logger.error(f"[자사홈] 로그인 오류: {e}")
+        return False
+
+
+def _parse_sono_rooms(data) -> list:
+    """소노 홈페이지 room/list/pc API 응답에서 객실/가격 추출."""
+
+    def _find_list(obj, depth=0) -> list:
+        """객실 리스트를 재귀 탐색"""
+        if depth > 6:
+            return []
+        room_keys = {"rmTypNm", "roomTypeName", "rmNm", "salAmt", "saleAmt", "typeName"}
+        if isinstance(obj, list) and obj and isinstance(obj[0], dict):
+            if room_keys & set(obj[0].keys()):
+                return obj
+        if isinstance(obj, dict):
+            for v in obj.values():
+                result = _find_list(v, depth + 1)
+                if result:
+                    return result
+        return []
+
+    room_list = None
+    if isinstance(data, dict):
+        # 직접 탐색
+        room_list = (
+            data.get("roomList")
+            or data.get("list")
+            or data.get("rooms")
+        )
+        if not room_list:
+            inner = data.get("data") or {}
+            room_list = (
+                inner.get("roomList")
+                or inner.get("list")
+                or inner.get("rooms")
+            )
+        if not room_list:
+            room_list = _find_list(data)
+
+    if not room_list or not isinstance(room_list, list):
+        return []
+
+    rooms = []
+    seen = set()
+    for room in room_list:
+        if not isinstance(room, dict):
+            continue
+
+        name = (
+            room.get("rmTypNm") or room.get("roomTypeName") or room.get("typeName")
+            or room.get("rmNm") or room.get("name") or "객실"
+        )
+        price = (
+            room.get("salAmt") or room.get("saleAmt") or room.get("dcAmt")
+            or room.get("price") or room.get("amt") or room.get("totalAmt") or 0
+        )
+        avail_flag = room.get("saleYn") or room.get("availYn") or room.get("status", "Y")
+        is_sold = avail_flag in ("N", "CLOSED", "SOLD_OUT") or (
+            isinstance(avail_flag, bool) and not avail_flag
+        )
+
+        try:
+            price_int = int(float(price))
+        except (TypeError, ValueError):
+            price_int = 0
+
+        if name and name not in seen:
+            seen.add(name)
+            rooms.append({
+                "name":         str(name),
+                "price":        price_int,
+                "availability": "sold_out" if (is_sold or price_int == 0) else "available",
+            })
+
+    return rooms
+
+
+def crawl_sono_homepage(competitor: dict, checkin: str, checkout: str, cfg: dict) -> list:
+    """
+    소노 자사 홈페이지 객실 가격 크롤링.
+    competitor dict에 'homepage_store_cd' 키가 필요.
+    인증: SONO_USER_ID / SONO_PASSWORD 환경변수 또는 config.yaml sono_homepage.
+    """
+    global _sono_session
+
+    store_cd = competitor.get("homepage_store_cd", "")
+    if not store_cd:
+        return []
+
+    reservation_url = f"{SONO_BASE_URL}/reservation"
+    records = []
+
+    # 로그인 (세션 없으면)
+    if _sono_session is None:
+        if not _sono_login(cfg):
+            records.append(
+                _make_record(competitor, "자사홈", checkin, checkout, reservation_url, error="login_failed")
+            )
+            return records
+
+    ci_ymd = checkin.replace("-", "")
+    co_ymd = checkout.replace("-", "")
+    payload = {
+        "ciYmd":       ci_ymd,
+        "coYmd":       co_ymd,
+        "storeCdList": [store_cd],
+        "rmCnt":       1,
+        "adultCnt":    2,
+        "childCnt":    0,
+        "rsvIndCd":    "9",
+    }
+
+    def _post_room_list():
+        return _sono_session.post(
+            SONO_ROOM_LIST_URL,
+            json=payload,
+            timeout=cfg["crawl"]["timeout"],
+        )
+
+    try:
+        resp = _post_room_list()
+
+        # 세션 만료 → 재로그인 후 재시도
+        if resp.status_code == 401:
+            logger.info("[자사홈] 세션 만료 — 재로그인 시도")
+            _sono_session = None
+            if not _sono_login(cfg):
+                records.append(
+                    _make_record(competitor, "자사홈", checkin, checkout, reservation_url, error="login_failed")
+                )
+                return records
+            resp = _post_room_list()
+
+        if resp.status_code != 200:
+            logger.error(f"[자사홈] {competitor['name']} {checkin}: HTTP {resp.status_code}")
+            records.append(
+                _make_record(competitor, "자사홈", checkin, checkout, reservation_url,
+                             error=f"http_{resp.status_code}")
+            )
+            return records
+
+        data = resp.json() if resp.content else {}
+        rooms = _parse_sono_rooms(data)
+
+        if not rooms:
+            logger.warning(f"[자사홈] {competitor['name']} ({checkin}): 객실 데이터 없음")
+            records.append(
+                _make_record(competitor, "자사홈", checkin, checkout, reservation_url, error="no_room_data")
+            )
+            return records
+
+        for room in rooms:
+            records.append(PriceRecord(
+                crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                property_name="",
+                property_id="",
+                competitor_name=competitor["name"],
+                ota="자사홈",
+                checkin_date=checkin,
+                checkout_date=checkout,
+                room_type=room["name"],
+                price=room["price"],
+                availability=room["availability"],
+                url=reservation_url,
+                is_own=True,
+            ))
+        logger.info(f"[자사홈] {competitor['name']} ({checkin}): {len(rooms)}개 객실")
+
+    except Exception as e:
+        logger.error(f"[자사홈] {competitor['name']} {checkin} 오류: {e}")
+        records.append(
+            _make_record(competitor, "자사홈", checkin, checkout, reservation_url, error=str(e)[:100])
+        )
+
+    return records
+
+
+# ---------------------------------------------------------------------------
 # Selenium 드라이버 관리
 # ---------------------------------------------------------------------------
 
@@ -1030,10 +1273,11 @@ def run_crawl(
     delay = cfg["crawl"]["request_delay"]
 
     all_crawlers = [
-        (crawl_yanolja, "야놀자"),
-        (crawl_yeogiuh, "여기어때"),
-        (crawl_booking, "Booking.com"),
-        (crawl_agoda,   "Agoda"),
+        (crawl_yanolja,        "야놀자"),
+        (crawl_yeogiuh,        "여기어때"),
+        (crawl_booking,        "Booking.com"),
+        (crawl_agoda,          "Agoda"),
+        (crawl_sono_homepage,  "자사홈"),
     ]
     if ota_filter:
         crawlers = [(fn, name) for fn, name in all_crawlers if name in ota_filter]
@@ -1049,12 +1293,14 @@ def run_crawl(
 
             # ── 자사 가격 수집 ──────────────────────────────────────────────
             own_urls = prop.get("own_urls", {})
-            if any(own_urls.get(k, "") for k in ("yanolja_url", "yeogiuh_url", "booking_url")):
+            if any(own_urls.get(k, "") for k in ("yanolja_url", "yeogiuh_url", "booking_url", "agoda_url", "homepage_store_cd")):
                 own_entry = {
-                    "name":        prop["name"],
-                    "yanolja_url": own_urls.get("yanolja_url", ""),
-                    "yeogiuh_url": own_urls.get("yeogiuh_url", ""),
-                    "booking_url": own_urls.get("booking_url", ""),
+                    "name":               prop["name"],
+                    "yanolja_url":        own_urls.get("yanolja_url", ""),
+                    "yeogiuh_url":        own_urls.get("yeogiuh_url", ""),
+                    "booking_url":        own_urls.get("booking_url", ""),
+                    "agoda_url":          own_urls.get("agoda_url", ""),
+                    "homepage_store_cd":  own_urls.get("homepage_store_cd", ""),
                 }
                 logger.info(f"  [자사] {prop['name']}")
                 for checkin, checkout in date_pairs:
