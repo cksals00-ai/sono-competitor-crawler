@@ -9,6 +9,7 @@ Usage:
     generate_dashboard(df, "dashboard/index.html", prev_df=prev_df)
 """
 
+import json
 import logging
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -85,6 +86,25 @@ REGION_LABELS = {
 def load_config(config_path: str = "config.yaml") -> dict:
     with open(config_path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
+
+
+def _load_channel_data(json_path: str = "channel_sales_data.json") -> dict:
+    """채널별 판매객실수 JSON 로드. 없으면 빈 dict 반환."""
+    try:
+        p = Path(json_path)
+        if not p.exists():
+            return {}
+        with open(p, encoding="utf-8") as f:
+            data = json.load(f)
+        # property_name → 데이터 매핑으로 변환 (여러 property_names 지원)
+        mapping: dict = {}
+        for entry in data.get("properties", []):
+            for pname in entry.get("property_names", []):
+                mapping[pname] = entry
+        return {"entries": mapping, "meta": data}
+    except Exception as e:
+        logger.warning(f"channel_sales_data.json 로드 실패: {e}")
+        return {}
 
 
 def load_previous_df(export_dir: str) -> pd.DataFrame:
@@ -425,12 +445,92 @@ def _render_price_cell(
     return f'<td class="price-cell">{"".join(layers)}</td>'
 
 
+def _render_channel_section(prop_name: str, channel_data: dict) -> str:
+    """채널별 판매객실수 토글 섹션 HTML 생성."""
+    if not channel_data:
+        return ""
+    entries = channel_data.get("entries", {})
+    entry = entries.get(prop_name)
+    if not entry:
+        return ""
+
+    meta       = channel_data.get("meta", {})
+    label      = meta.get("label", "금월")
+    channels   = meta.get("channels", list(entry.get("channels", {}).keys()))
+    ch_data    = entry.get("channels", {})
+    total      = entry.get("total", {})
+
+    rows = []
+    for ch in channels:
+        d = ch_data.get(ch, {})
+        rns  = d.get("rns", 0)
+        prev = d.get("prev", 0)
+        if prev > 0:
+            pct    = round((rns - prev) / prev * 100)
+            sign   = "+" if pct >= 0 else ""
+            cls    = "ch-up" if pct >= 0 else "ch-dn"
+            growth = f'<span class="{cls}">{sign}{pct}%</span>'
+        else:
+            growth = '<span class="ch-na">-</span>'
+        rows.append(
+            f'<tr>'
+            f'<td class="ch-name">{ch}</td>'
+            f'<td class="ch-num">{rns:,}</td>'
+            f'<td class="ch-num ch-prev">{prev:,}</td>'
+            f'<td class="ch-growth">{growth}</td>'
+            f'</tr>'
+        )
+
+    # 합계 행
+    t_rns  = total.get("rns", 0)
+    t_prev = total.get("prev", 0)
+    if t_prev > 0:
+        t_pct   = round((t_rns - t_prev) / t_prev * 100)
+        t_sign  = "+" if t_pct >= 0 else ""
+        t_cls   = "ch-up" if t_pct >= 0 else "ch-dn"
+        t_growth = f'<span class="{t_cls}">{t_sign}{t_pct}%</span>'
+    else:
+        t_growth = '<span class="ch-na">-</span>'
+
+    rows_html = "\n".join(rows)
+    return f"""\
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">{label}</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+{rows_html}
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">{t_rns:,}</td>
+          <td class="ch-num ch-prev">{t_prev:,}</td>
+          <td class="ch-growth">{t_growth}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>"""
+
+
 def _render_property_card(
     prop: dict,
     summaries: dict,        # {day_type: summary_dict}
     prev_per_date: dict,    # {(prop, comp, ota, checkin_date): price}
     df: pd.DataFrame,
     review_summary: dict = None,  # {comp_name: {ota: score}}
+    channel_data: dict = None,    # _load_channel_data() 결과
 ) -> str:
     prop_name    = prop["name"]
     region_str   = prop.get("region", "")
@@ -498,10 +598,12 @@ def _render_property_card(
             f'<tr><td class="competitor-name">{comp_name}</td>{cells}{review_cell}</tr>'
         )
 
-    rows_html  = "\n          ".join(rows)
-    comp_label = f"{len(competitors)}개 경쟁사"
+    rows_html    = "\n          ".join(rows)
+    comp_label   = f"{len(competitors)}개 경쟁사"
     if has_own:
         comp_label = "자사 포함 · " + comp_label
+
+    channel_html = _render_channel_section(prop_name, channel_data)
 
     return f"""\
 <div class="property-card" data-region="{region_label}">
@@ -523,7 +625,7 @@ def _render_property_card(
       </tbody>
     </table>
   </div>
-</div>"""
+{channel_html}</div>"""
 
 
 def _render_review_cell(comp_name: str, review_summary: dict) -> str:
@@ -571,8 +673,11 @@ def _render_html(
         total_ok = len(df) if not df.empty else 0
     prices_ok = int((df["price"].fillna(0) > 0).sum()) if not df.empty and "price" in df.columns else 0
 
+    channel_data = _load_channel_data()
+
     cards_html = "\n\n".join(
-        _render_property_card(p, summaries, prev_per_date, df, review_summary) for p in properties
+        _render_property_card(p, summaries, prev_per_date, df, review_summary, channel_data)
+        for p in properties
     )
 
     # 지역 필터 버튼
@@ -620,15 +725,18 @@ def _render_html(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>소노 경쟁사 가격 모니터링</title>
+  <title>소노 경쟁사 모니터링 | GS Team</title>
   <style>{_CSS}</style>
 </head>
 <body>
 
 <header class="header">
   <div class="header-inner">
-    <div>
-      <div class="header-title">소노 경쟁사 가격 모니터링</div>
+    <div class="header-left">
+      <div class="header-title-wrap">
+        <span class="header-title">소노 경쟁사 모니터링</span>
+        <span class="header-team-badge">GS Team</span>
+      </div>
       <div class="header-meta">수집: {crawled_disp}&ensp;&middot;&ensp;생성: {gen_time}&ensp;&middot;&ensp;대상기간: {date_range}&ensp;&middot;&ensp;비교기준: {prev_date_disp}</div>
     </div>
     <div class="header-badge">LIVE</div>
@@ -736,13 +844,31 @@ body {
   max-width: 1400px;
   margin: 0 auto;
 }
+.header-left { display: flex; flex-direction: column; gap: 3px; }
+.header-title-wrap { display: flex; align-items: center; gap: 10px; }
 .header-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: -.3px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -.5px;
+  line-height: 1;
 }
-.header-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.header-team-badge {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(135deg, #238636 0%, #1a7f37 100%);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.15);
+  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+  flex-shrink: 0;
+}
+.header-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
 .header-badge {
   background: var(--green);
   color: #0d1117;
@@ -1013,7 +1139,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   .property-grid { grid-template-columns: 1fr; gap: 12px; }
   .main { padding: 10px; }
   .header { padding: 12px 14px; }
-  .header-title { font-size: 15px; }
+  .header-title { font-size: 16px; }
   .header-meta  { font-size: 10px; }
   .stat-item { padding: 8px 14px; min-width: 72px; }
   .stat-value { font-size: 18px; }
@@ -1028,6 +1154,80 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   .property-title { font-size: 13px; }
   .header-title { font-size: 14px; }
   .legend-bar { font-size: 10px; }
+}
+
+/* ── Channel Sales Section ── */
+.channel-section {
+  border-top: 1px solid var(--border);
+}
+.channel-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  color: var(--muted);
+  font-size: 12px;
+  font-family: inherit;
+  text-align: left;
+  transition: background .15s, color .15s;
+  touch-action: manipulation;
+}
+.channel-toggle:hover { background: rgba(255,255,255,.04); color: var(--text); }
+.channel-toggle-label { font-weight: 600; color: var(--text); font-size: 12px; }
+.channel-toggle-meta {
+  background: rgba(88,166,255,.15);
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 10px;
+  border: 1px solid rgba(88,166,255,.25);
+}
+.channel-arrow {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--muted);
+  transition: transform .2s;
+}
+.channel-section.open .channel-arrow { transform: rotate(180deg); }
+.channel-body {
+  display: none;
+  padding: 0 14px 12px;
+}
+.channel-section.open .channel-body { display: block; }
+.channel-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.channel-table th {
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
+  font-weight: 600;
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.ch-th-name { text-align: left; }
+.ch-th-num, .ch-th-growth { text-align: right; }
+.channel-table td { padding: 4px 8px; border-bottom: 1px solid rgba(48,54,61,.6); }
+.ch-name { color: var(--text); font-weight: 500; }
+.ch-num  { text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
+.ch-prev { color: var(--muted); }
+.ch-growth { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.ch-up   { color: var(--green); }
+.ch-dn   { color: var(--red); }
+.ch-na   { color: var(--muted); }
+.ch-total-row td {
+  font-weight: 700;
+  border-top: 1px solid var(--border);
+  border-bottom: none;
+  color: var(--text);
+  padding-top: 6px;
 }
 """
 
@@ -1079,6 +1279,15 @@ _JS = """
       });
     })(dtBtns[j]);
   }
+
+  // ── 채널별 판매객실수 토글 ────────────────────────────────────────────────
+  var chToggles = toArr(document.querySelectorAll('.channel-toggle'));
+  chToggles.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var section = btn.parentElement;
+      section.classList.toggle('open');
+    });
+  });
 })();
 """
 

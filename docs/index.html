@@ -361,6 +361,80 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   .header-title { font-size: 14px; }
   .legend-bar { font-size: 10px; }
 }
+
+/* ── Channel Sales Section ── */
+.channel-section {
+  border-top: 1px solid var(--border);
+}
+.channel-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  color: var(--muted);
+  font-size: 12px;
+  font-family: inherit;
+  text-align: left;
+  transition: background .15s, color .15s;
+  touch-action: manipulation;
+}
+.channel-toggle:hover { background: rgba(255,255,255,.04); color: var(--text); }
+.channel-toggle-label { font-weight: 600; color: var(--text); font-size: 12px; }
+.channel-toggle-meta {
+  background: rgba(88,166,255,.15);
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 10px;
+  border: 1px solid rgba(88,166,255,.25);
+}
+.channel-arrow {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--muted);
+  transition: transform .2s;
+}
+.channel-section.open .channel-arrow { transform: rotate(180deg); }
+.channel-body {
+  display: none;
+  padding: 0 14px 12px;
+}
+.channel-section.open .channel-body { display: block; }
+.channel-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.channel-table th {
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
+  font-weight: 600;
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.ch-th-name { text-align: left; }
+.ch-th-num, .ch-th-growth { text-align: right; }
+.channel-table td { padding: 4px 8px; border-bottom: 1px solid rgba(48,54,61,.6); }
+.ch-name { color: var(--text); font-weight: 500; }
+.ch-num  { text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
+.ch-prev { color: var(--muted); }
+.ch-growth { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.ch-up   { color: var(--green); }
+.ch-dn   { color: var(--red); }
+.ch-na   { color: var(--muted); }
+.ch-total-row td {
+  font-weight: 700;
+  border-top: 1px solid var(--border);
+  border-bottom: none;
+  color: var(--text);
+  padding-top: 6px;
+}
 </style>
 </head>
 <body>
@@ -372,7 +446,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         <span class="header-title">소노 경쟁사 모니터링</span>
         <span class="header-team-badge">GS Team</span>
       </div>
-      <div class="header-meta">수집: 2026-04-15 23:46&ensp;&middot;&ensp;생성: 2026-04-16 06:50&ensp;&middot;&ensp;대상기간: 4/16 ~ 4/21&ensp;&middot;&ensp;비교기준: 전일(4/15)</div>
+      <div class="header-meta">수집: 2026-04-15 23:46&ensp;&middot;&ensp;생성: 2026-04-16 07:07&ensp;&middot;&ensp;대상기간: 4/16 ~ 4/21&ensp;&middot;&ensp;비교기준: 전일(4/15)</div>
     </div>
     <div class="header-badge">LIVE</div>
   </div>
@@ -460,7 +534,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">48</td><td class="ch-num ch-prev">117</td><td class="ch-growth"><span class="ch-dn">-59%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">35</td><td class="ch-num ch-prev">101</td><td class="ch-growth"><span class="ch-dn">-65%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">13</td><td class="ch-num ch-prev">90</td><td class="ch-growth"><span class="ch-dn">-86%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">5</td><td class="ch-num ch-prev">46</td><td class="ch-growth"><span class="ch-dn">-89%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">78</td><td class="ch-num ch-prev">27</td><td class="ch-growth"><span class="ch-up">+189%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">0</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">4</td><td class="ch-num ch-prev">12</td><td class="ch-growth"><span class="ch-dn">-67%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">0</td><td class="ch-num ch-prev">16</td><td class="ch-growth"><span class="ch-dn">-100%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">0</td><td class="ch-num ch-prev">6</td><td class="ch-growth"><span class="ch-dn">-100%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">222</td>
+          <td class="ch-num ch-prev">309</td>
+          <td class="ch-growth"><span class="ch-dn">-28%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="강원">
   <div class="property-header">
@@ -484,7 +593,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">246</td><td class="ch-num ch-prev">131</td><td class="ch-growth"><span class="ch-up">+88%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">305</td><td class="ch-num ch-prev">416</td><td class="ch-growth"><span class="ch-dn">-27%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">267</td><td class="ch-num ch-prev">324</td><td class="ch-growth"><span class="ch-dn">-18%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">58</td><td class="ch-num ch-prev">62</td><td class="ch-growth"><span class="ch-dn">-6%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">1,291</td><td class="ch-num ch-prev">571</td><td class="ch-growth"><span class="ch-up">+126%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">785</td><td class="ch-num ch-prev">470</td><td class="ch-growth"><span class="ch-up">+67%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">22</td><td class="ch-num ch-prev">81</td><td class="ch-growth"><span class="ch-dn">-73%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">689</td><td class="ch-num ch-prev">894</td><td class="ch-growth"><span class="ch-dn">-23%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">60</td><td class="ch-num ch-prev">85</td><td class="ch-growth"><span class="ch-dn">-29%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">5,804</td>
+          <td class="ch-num ch-prev">5,294</td>
+          <td class="ch-growth"><span class="ch-up">+10%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="충청">
   <div class="property-header">
@@ -509,7 +653,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">273</td><td class="ch-num ch-prev">174</td><td class="ch-growth"><span class="ch-up">+57%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">182</td><td class="ch-num ch-prev">394</td><td class="ch-growth"><span class="ch-dn">-54%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">214</td><td class="ch-num ch-prev">307</td><td class="ch-growth"><span class="ch-dn">-30%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">162</td><td class="ch-num ch-prev">55</td><td class="ch-growth"><span class="ch-up">+195%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">34</td><td class="ch-num ch-prev">204</td><td class="ch-growth"><span class="ch-dn">-83%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">41</td><td class="ch-num ch-prev">27</td><td class="ch-growth"><span class="ch-up">+52%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">47</td><td class="ch-num ch-prev">153</td><td class="ch-growth"><span class="ch-dn">-69%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">210</td><td class="ch-num ch-prev">18</td><td class="ch-growth"><span class="ch-up">+1067%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">104</td><td class="ch-num ch-prev">150</td><td class="ch-growth"><span class="ch-dn">-31%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">1,713</td>
+          <td class="ch-num ch-prev">2,040</td>
+          <td class="ch-growth"><span class="ch-dn">-16%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="강원">
   <div class="property-header">
@@ -533,7 +712,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">1,086</td><td class="ch-num ch-prev">712</td><td class="ch-growth"><span class="ch-up">+53%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">762</td><td class="ch-num ch-prev">1,139</td><td class="ch-growth"><span class="ch-dn">-33%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">765</td><td class="ch-num ch-prev">693</td><td class="ch-growth"><span class="ch-up">+10%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">215</td><td class="ch-num ch-prev">213</td><td class="ch-growth"><span class="ch-up">+1%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">203</td><td class="ch-num ch-prev">35</td><td class="ch-growth"><span class="ch-up">+480%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">211</td><td class="ch-num ch-prev">119</td><td class="ch-growth"><span class="ch-up">+77%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">115</td><td class="ch-num ch-prev">238</td><td class="ch-growth"><span class="ch-dn">-52%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">153</td><td class="ch-num ch-prev">45</td><td class="ch-growth"><span class="ch-up">+240%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">166</td><td class="ch-num ch-prev">257</td><td class="ch-growth"><span class="ch-dn">-35%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">4,282</td>
+          <td class="ch-num ch-prev">4,009</td>
+          <td class="ch-growth"><span class="ch-up">+7%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="전라">
   <div class="property-header">
@@ -557,7 +771,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">362</td><td class="ch-num ch-prev">15</td><td class="ch-growth"><span class="ch-up">+2313%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">330</td><td class="ch-num ch-prev">400</td><td class="ch-growth"><span class="ch-dn">-18%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">313</td><td class="ch-num ch-prev">455</td><td class="ch-growth"><span class="ch-dn">-31%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">88</td><td class="ch-num ch-prev">70</td><td class="ch-growth"><span class="ch-up">+26%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">82</td><td class="ch-num ch-prev">49</td><td class="ch-growth"><span class="ch-up">+67%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">49</td><td class="ch-num ch-prev">37</td><td class="ch-growth"><span class="ch-up">+32%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">92</td><td class="ch-num ch-prev">48</td><td class="ch-growth"><span class="ch-up">+92%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">88</td><td class="ch-num ch-prev">31</td><td class="ch-growth"><span class="ch-up">+184%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">116</td><td class="ch-num ch-prev">148</td><td class="ch-growth"><span class="ch-dn">-22%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">2,343</td>
+          <td class="ch-num ch-prev">2,067</td>
+          <td class="ch-growth"><span class="ch-up">+13%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="경기">
   <div class="property-header">
@@ -581,7 +830,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">217</td><td class="ch-num ch-prev">491</td><td class="ch-growth"><span class="ch-dn">-56%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">57</td><td class="ch-num ch-prev">265</td><td class="ch-growth"><span class="ch-dn">-78%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">26</td><td class="ch-num ch-prev">125</td><td class="ch-growth"><span class="ch-dn">-79%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">225</td><td class="ch-num ch-prev">172</td><td class="ch-growth"><span class="ch-up">+31%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">0</td><td class="ch-num ch-prev">9</td><td class="ch-growth"><span class="ch-dn">-100%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">6</td><td class="ch-num ch-prev">50</td><td class="ch-growth"><span class="ch-dn">-88%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">95</td><td class="ch-num ch-prev">61</td><td class="ch-growth"><span class="ch-up">+56%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">18</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-up">+260%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">32</td><td class="ch-num ch-prev">22</td><td class="ch-growth"><span class="ch-up">+45%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">755</td>
+          <td class="ch-num ch-prev">1,347</td>
+          <td class="ch-growth"><span class="ch-dn">-44%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="부산">
   <div class="property-header">
@@ -605,7 +889,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">491</td><td class="ch-num ch-prev">386</td><td class="ch-growth"><span class="ch-up">+27%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">265</td><td class="ch-num ch-prev">138</td><td class="ch-growth"><span class="ch-up">+92%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">125</td><td class="ch-num ch-prev">177</td><td class="ch-growth"><span class="ch-dn">-29%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">172</td><td class="ch-num ch-prev">97</td><td class="ch-growth"><span class="ch-up">+77%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">9</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+800%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">50</td><td class="ch-num ch-prev">19</td><td class="ch-growth"><span class="ch-up">+163%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">61</td><td class="ch-num ch-prev">101</td><td class="ch-growth"><span class="ch-dn">-40%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">32</td><td class="ch-num ch-prev">22</td><td class="ch-growth"><span class="ch-up">+45%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">1,347</td>
+          <td class="ch-num ch-prev">1,041</td>
+          <td class="ch-growth"><span class="ch-up">+29%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="부산">
   <div class="property-header">
@@ -631,7 +950,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">491</td><td class="ch-num ch-prev">386</td><td class="ch-growth"><span class="ch-up">+27%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">265</td><td class="ch-num ch-prev">138</td><td class="ch-growth"><span class="ch-up">+92%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">125</td><td class="ch-num ch-prev">177</td><td class="ch-growth"><span class="ch-dn">-29%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">172</td><td class="ch-num ch-prev">97</td><td class="ch-growth"><span class="ch-up">+77%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">9</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+800%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">50</td><td class="ch-num ch-prev">19</td><td class="ch-growth"><span class="ch-up">+163%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">61</td><td class="ch-num ch-prev">101</td><td class="ch-growth"><span class="ch-dn">-40%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">32</td><td class="ch-num ch-prev">22</td><td class="ch-growth"><span class="ch-up">+45%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">1,347</td>
+          <td class="ch-num ch-prev">1,041</td>
+          <td class="ch-growth"><span class="ch-up">+29%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="경북">
   <div class="property-header">
@@ -657,7 +1011,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">506</td><td class="ch-num ch-prev">128</td><td class="ch-growth"><span class="ch-up">+295%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">443</td><td class="ch-num ch-prev">124</td><td class="ch-growth"><span class="ch-up">+257%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">361</td><td class="ch-num ch-prev">104</td><td class="ch-growth"><span class="ch-up">+247%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">231</td><td class="ch-num ch-prev">58</td><td class="ch-growth"><span class="ch-up">+298%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">78</td><td class="ch-num ch-prev">20</td><td class="ch-growth"><span class="ch-up">+290%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">126</td><td class="ch-num ch-prev">33</td><td class="ch-growth"><span class="ch-up">+282%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">8</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+300%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">102</td><td class="ch-num ch-prev">29</td><td class="ch-growth"><span class="ch-up">+252%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">2,079</td>
+          <td class="ch-num ch-prev">558</td>
+          <td class="ch-growth"><span class="ch-up">+273%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="경남">
   <div class="property-header">
@@ -682,7 +1071,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">536</td><td class="ch-num ch-prev">369</td><td class="ch-growth"><span class="ch-up">+45%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">317</td><td class="ch-num ch-prev">314</td><td class="ch-growth"><span class="ch-up">+1%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">276</td><td class="ch-num ch-prev">380</td><td class="ch-growth"><span class="ch-dn">-27%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">154</td><td class="ch-num ch-prev">38</td><td class="ch-growth"><span class="ch-up">+305%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">297</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-up">+5840%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">46</td><td class="ch-num ch-prev">52</td><td class="ch-growth"><span class="ch-dn">-12%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">120</td><td class="ch-num ch-prev">145</td><td class="ch-growth"><span class="ch-dn">-17%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">222</td><td class="ch-num ch-prev">25</td><td class="ch-growth"><span class="ch-up">+788%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">79</td><td class="ch-num ch-prev">127</td><td class="ch-growth"><span class="ch-dn">-38%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">2,378</td>
+          <td class="ch-num ch-prev">2,096</td>
+          <td class="ch-growth"><span class="ch-up">+13%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="전라">
   <div class="property-header">
@@ -707,7 +1131,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">486</td><td class="ch-num ch-prev">371</td><td class="ch-growth"><span class="ch-up">+31%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">159</td><td class="ch-num ch-prev">254</td><td class="ch-growth"><span class="ch-dn">-37%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">143</td><td class="ch-num ch-prev">242</td><td class="ch-growth"><span class="ch-dn">-41%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">129</td><td class="ch-num ch-prev">56</td><td class="ch-growth"><span class="ch-up">+130%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">0</td><td class="ch-num ch-prev">297</td><td class="ch-growth"><span class="ch-dn">-100%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">22</td><td class="ch-num ch-prev">25</td><td class="ch-growth"><span class="ch-dn">-12%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">242</td><td class="ch-num ch-prev">277</td><td class="ch-growth"><span class="ch-dn">-13%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">11</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+450%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">67</td><td class="ch-num ch-prev">27</td><td class="ch-growth"><span class="ch-up">+148%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">1,459</td>
+          <td class="ch-num ch-prev">1,553</td>
+          <td class="ch-growth"><span class="ch-dn">-6%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="제주">
   <div class="property-header">
@@ -731,7 +1190,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">486</td><td class="ch-num ch-prev">420</td><td class="ch-growth"><span class="ch-up">+16%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">230</td><td class="ch-num ch-prev">11</td><td class="ch-growth"><span class="ch-up">+1991%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">205</td><td class="ch-num ch-prev">28</td><td class="ch-growth"><span class="ch-up">+632%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">174</td><td class="ch-num ch-prev">124</td><td class="ch-growth"><span class="ch-up">+40%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">0</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-dn">-100%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">37</td><td class="ch-num ch-prev">112</td><td class="ch-growth"><span class="ch-dn">-67%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">92</td><td class="ch-num ch-prev">14</td><td class="ch-growth"><span class="ch-up">+557%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">37</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-up">+640%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">81</td><td class="ch-num ch-prev">16</td><td class="ch-growth"><span class="ch-up">+406%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">1,714</td>
+          <td class="ch-num ch-prev">1,404</td>
+          <td class="ch-growth"><span class="ch-up">+22%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="제주">
   <div class="property-header">
@@ -756,7 +1250,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">356</td><td class="ch-num ch-prev">222</td><td class="ch-growth"><span class="ch-up">+60%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">160</td><td class="ch-num ch-prev">138</td><td class="ch-growth"><span class="ch-up">+16%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">127</td><td class="ch-num ch-prev">177</td><td class="ch-growth"><span class="ch-dn">-28%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">210</td><td class="ch-num ch-prev">142</td><td class="ch-growth"><span class="ch-up">+48%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">0</td><td class="ch-num ch-prev">9</td><td class="ch-growth"><span class="ch-dn">-100%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">23</td><td class="ch-num ch-prev">21</td><td class="ch-growth"><span class="ch-up">+10%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">99</td><td class="ch-num ch-prev">119</td><td class="ch-growth"><span class="ch-dn">-17%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">35</td><td class="ch-num ch-prev">6</td><td class="ch-growth"><span class="ch-up">+483%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">48</td><td class="ch-num ch-prev">64</td><td class="ch-growth"><span class="ch-dn">-25%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">1,292</td>
+          <td class="ch-num ch-prev">967</td>
+          <td class="ch-growth"><span class="ch-up">+34%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="경기">
   <div class="property-header">
@@ -780,7 +1309,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">154</td><td class="ch-num ch-prev">86</td><td class="ch-growth"><span class="ch-up">+79%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">133</td><td class="ch-num ch-prev">163</td><td class="ch-growth"><span class="ch-dn">-18%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">144</td><td class="ch-num ch-prev">73</td><td class="ch-growth"><span class="ch-up">+97%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">79</td><td class="ch-num ch-prev">31</td><td class="ch-growth"><span class="ch-up">+155%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">5</td><td class="ch-num ch-prev">132</td><td class="ch-growth"><span class="ch-dn">-96%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">19</td><td class="ch-num ch-prev">25</td><td class="ch-growth"><span class="ch-dn">-24%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">59</td><td class="ch-num ch-prev">30</td><td class="ch-growth"><span class="ch-up">+97%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">16</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+1500%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">34</td><td class="ch-num ch-prev">13</td><td class="ch-growth"><span class="ch-up">+162%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">681</td>
+          <td class="ch-num ch-prev">607</td>
+          <td class="ch-growth"><span class="ch-up">+12%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="충청">
   <div class="property-header">
@@ -804,7 +1368,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">112</td><td class="ch-num ch-prev">506</td><td class="ch-growth"><span class="ch-dn">-78%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">96</td><td class="ch-num ch-prev">443</td><td class="ch-growth"><span class="ch-dn">-78%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">37</td><td class="ch-num ch-prev">361</td><td class="ch-growth"><span class="ch-dn">-90%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">8</td><td class="ch-num ch-prev">162</td><td class="ch-growth"><span class="ch-dn">-95%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">3</td><td class="ch-num ch-prev">204</td><td class="ch-growth"><span class="ch-dn">-99%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">7</td><td class="ch-num ch-prev">47</td><td class="ch-growth"><span class="ch-dn">-85%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">6</td><td class="ch-num ch-prev">153</td><td class="ch-growth"><span class="ch-dn">-96%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">22</td><td class="ch-num ch-prev">22</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">9</td><td class="ch-num ch-prev">6</td><td class="ch-growth"><span class="ch-up">+50%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">592</td>
+          <td class="ch-num ch-prev">2,079</td>
+          <td class="ch-growth"><span class="ch-dn">-72%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="강원">
   <div class="property-header">
@@ -827,7 +1426,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">802</td><td class="ch-num ch-prev">492</td><td class="ch-growth"><span class="ch-up">+63%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">492</td><td class="ch-num ch-prev">492</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">427</td><td class="ch-num ch-prev">524</td><td class="ch-growth"><span class="ch-dn">-19%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">382</td><td class="ch-num ch-prev">115</td><td class="ch-growth"><span class="ch-up">+232%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">326</td><td class="ch-num ch-prev">308</td><td class="ch-growth"><span class="ch-up">+6%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">95</td><td class="ch-num ch-prev">34</td><td class="ch-growth"><span class="ch-up">+179%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">141</td><td class="ch-num ch-prev">30</td><td class="ch-growth"><span class="ch-up">+370%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">152</td><td class="ch-num ch-prev">40</td><td class="ch-growth"><span class="ch-up">+280%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">154</td><td class="ch-num ch-prev">28</td><td class="ch-growth"><span class="ch-up">+450%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">2,979</td>
+          <td class="ch-num ch-prev">4,140</td>
+          <td class="ch-growth"><span class="ch-dn">-28%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="전라">
   <div class="property-header">
@@ -850,7 +1484,42 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </tbody>
     </table>
   </div>
-</div>
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">2026년 4월 (금월)</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+    <table class="channel-table">
+      <thead>
+        <tr>
+          <th class="ch-th-name">채널</th>
+          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">전년동월</th>
+          <th class="ch-th-growth">증감</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td class="ch-name">아고다</td><td class="ch-num">920</td><td class="ch-num ch-prev">632</td><td class="ch-growth"><span class="ch-up">+46%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">497</td><td class="ch-num ch-prev">820</td><td class="ch-growth"><span class="ch-dn">-39%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">725</td><td class="ch-num ch-prev">666</td><td class="ch-growth"><span class="ch-up">+9%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">287</td><td class="ch-num ch-prev">72</td><td class="ch-growth"><span class="ch-up">+299%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">695</td><td class="ch-num ch-prev">9</td><td class="ch-growth"><span class="ch-up">+7622%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">91</td><td class="ch-num ch-prev">65</td><td class="ch-growth"><span class="ch-up">+40%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">81</td><td class="ch-num ch-prev">282</td><td class="ch-growth"><span class="ch-dn">-71%</span></td></tr>
+<tr><td class="ch-name">쿠팡</td><td class="ch-num">254</td><td class="ch-num ch-prev">63</td><td class="ch-growth"><span class="ch-up">+303%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">289</td><td class="ch-num ch-prev">219</td><td class="ch-growth"><span class="ch-up">+32%</span></td></tr>
+        <tr class="ch-total-row">
+          <td class="ch-name">합계</td>
+          <td class="ch-num">4,391</td>
+          <td class="ch-num ch-prev">3,321</td>
+          <td class="ch-growth"><span class="ch-up">+32%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
 
 <div class="property-card" data-region="해외">
   <div class="property-header">
@@ -926,6 +1595,15 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       });
     })(dtBtns[j]);
   }
+
+  // ── 채널별 판매객실수 토글 ────────────────────────────────────────────────
+  var chToggles = toArr(document.querySelectorAll('.channel-toggle'));
+  chToggles.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var section = btn.parentElement;
+      section.classList.toggle('open');
+    });
+  });
 })();
 </script>
 </body>
