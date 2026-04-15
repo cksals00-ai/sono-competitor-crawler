@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>소노 경쟁사 가격 모니터링</title>
+  <style>
+:root {
+  --bg:          #0d1117;
+  --card-bg:     #161b22;
+  --card-header: #21262d;
+  --border:      #30363d;
+  --text:        #e6edf3;
+  --muted:       #7d8590;
+  --accent:      #58a6ff;
+  --green:       #3fb950;
+  --red:         #f85149;
+  --yellow:      #e3b341;
+  --orange:      #f0883e;
+  --c-yanolja:   #ff4081;
+  --c-yeogi:     #4285f4;
+  --c-booking:   #5cb8ff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic",
+               BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Header ── */
+.header {
+  background: rgba(22,27,34,.97);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.header-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -.3px;
+}
+.header-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.header-badge {
+  background: var(--green);
+  color: #0d1117;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 1.5px;
+  flex-shrink: 0;
+  animation: blink 2.5s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.45} }
+
+/* ── Stats bar ── */
+.stats-bar {
+  display: flex;
+  background: var(--card-header);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 24px;
+  border-right: 1px solid var(--border);
+  min-width: 88px;
+  flex-shrink: 0;
+}
+.stat-item:last-child { border-right: none; }
+.stat-label { font-size: 10px; color: var(--muted); letter-spacing: .5px; }
+.stat-value { font-size: 22px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+
+/* ── Filter section ── */
+.filter-section {
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.filter-group {
+  display: flex;
+  align-items: center;
+  padding: 7px 16px;
+  border-bottom: 1px solid rgba(48,54,61,.5);
+}
+.filter-group:last-child { border-bottom: none; }
+.filter-group-label {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .5px;
+  width: 28px;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+.filter-bar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 5px 13px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  transition: all .15s;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.filter-btn:hover        { border-color: var(--accent); color: var(--accent); }
+.filter-btn.active       { background: var(--accent); border-color: var(--accent); color: #0d1117; font-weight: 700; }
+.filter-btn.dt-btn.active { background: var(--yellow); border-color: var(--yellow); color: #0d1117; font-weight: 700; }
+
+/* ── Legend bar ── */
+.legend-bar {
+  padding: 7px 16px;
+  font-size: 11px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  background: rgba(13,17,23,.8);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  line-height: 1.8;
+}
+.legend-label { font-weight: 600; color: var(--text); font-size: 11px; }
+.legend-note  { color: var(--muted); font-size: 11px; }
+
+/* ── Main / Grid ── */
+.main { padding: 16px; max-width: 1400px; margin: 0 auto; }
+.property-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 16px;
+}
+
+/* ── Property card ── */
+.property-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color .2s, box-shadow .2s;
+}
+.property-card:hover {
+  border-color: rgba(88,166,255,.35);
+  box-shadow: 0 0 24px rgba(88,166,255,.08);
+}
+.property-card.hidden { display: none; }
+.property-header {
+  background: var(--card-header);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.property-title  { font-size: 14px; font-weight: 700; }
+.property-region { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.property-stats  { font-size: 11px; color: var(--muted); white-space: nowrap; margin-left: 8px; padding-top: 2px; }
+
+/* ── Table ── */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; }
+th {
+  padding: 8px 10px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,.18);
+  color: var(--muted);
+  white-space: nowrap;
+}
+th.competitor-col { text-align: left; min-width: 120px; }
+th.ota-yanolja { color: var(--c-yanolja); }
+th.ota-yeogi   { color: var(--c-yeogi);   }
+th.ota-booking { color: var(--c-booking); }
+td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(48,54,61,.4);
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(88,166,255,.04); }
+td.competitor-name {
+  font-size: 12px;
+  font-weight: 500;
+  max-width: 136px;
+  line-height: 1.4;
+  word-break: keep-all;
+}
+
+/* ── Price cell ── */
+.price-cell   { text-align: center; min-width: 110px; }
+.price-link {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity .15s;
+}
+.price-link:hover, .price-link:active { opacity: .7; }
+.price-link.own-price { color: var(--accent) !important; }
+.price-meta   { font-size: 10px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+.room-type    { font-size: 10px; color: #6e7681; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px; }
+td.no-data    { text-align: center; color: #3a3f4b; font-size: 16px; }
+.sold-out-txt { color: #555; font-size: 11px; letter-spacing: .3px; }
+
+/* ── Day-type layers ── */
+.dt-layer          { display: none; }
+.dt-layer.dt-active { display: block; }
+
+/* ── Own (자사) row ── */
+tr.own-row td {
+  background: rgba(88,166,255,.10);
+  border-bottom: 2px solid rgba(88,166,255,.25);
+}
+tr.own-row:hover td { background: rgba(88,166,255,.16); }
+.own-label {
+  font-weight: 700;
+  color: var(--accent) !important;
+  font-size: 12px;
+}
+.badge-sono {
+  display: inline-block;
+  background: var(--accent);
+  color: #0d1117;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-right: 6px;
+  letter-spacing: .3px;
+  vertical-align: middle;
+}
+
+/* ── Price change ── */
+.change-up   { color: var(--red);   font-size: 10px; font-weight: 700; }
+.change-down { color: var(--green); font-size: 10px; font-weight: 700; }
+.change-same { color: var(--muted); font-size: 10px; }
+.badge-new {
+  background: var(--yellow);
+  color: #0d1117;
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+/* ── Promo badge ── */
+.badge-promo {
+  display: inline-block;
+  background: var(--orange);
+  color: #0d1117;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+  margin-left: 3px;
+  letter-spacing: .2px;
+  vertical-align: middle;
+}
+
+/* ── Footer ── */
+.footer {
+  padding: 20px 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 2;
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+}
+.copyright { font-size: 11px; color: #444; letter-spacing: .2px; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .property-grid { grid-template-columns: 1fr; gap: 12px; }
+  .main { padding: 10px; }
+  .header { padding: 12px 14px; }
+  .header-title { font-size: 15px; }
+  .header-meta  { font-size: 10px; }
+  .stat-item { padding: 8px 14px; min-width: 72px; }
+  .stat-value { font-size: 18px; }
+  th, td { padding: 6px 7px; }
+  td.competitor-name { font-size: 11px; max-width: 90px; }
+  .price-link { font-size: 12px; }
+  .price-cell { min-width: 90px; }
+  .room-type  { max-width: 90px; }
+}
+@media (max-width: 400px) {
+  .filter-btn { padding: 4px 10px; font-size: 11px; }
+  .property-title { font-size: 13px; }
+  .header-title { font-size: 14px; }
+  .legend-bar { font-size: 10px; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header-title">소노 경쟁사 가격 모니터링</div>
+      <div class="header-meta">수집: 2026-04-15 20:52&ensp;&middot;&ensp;생성: 2026-04-15 20:52&ensp;&middot;&ensp;대상기간: 4/16 ~ 4/22&ensp;&middot;&ensp;비교기준: 전일</div>
+    </div>
+    <div class="header-badge">LIVE</div>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-label">사업장</span>
+    <span class="stat-value">17</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">경쟁사</span>
+    <span class="stat-value">58</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">수집건수</span>
+    <span class="stat-value">4,011</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">가격정보</span>
+    <span class="stat-value">2,826</span>
+  </div>
+</div>
+
+<div class="filter-section">
+  <div class="filter-group">
+    <span class="filter-group-label">지역</span>
+    <div class="filter-bar">
+    <button class="filter-btn  active" data-region="전체">전체</button>
+    <button class="filter-btn" data-region="강원">강원</button>
+    <button class="filter-btn" data-region="경기">경기</button>
+    <button class="filter-btn" data-region="경남">경남</button>
+    <button class="filter-btn" data-region="경북">경북</button>
+    <button class="filter-btn" data-region="부산">부산</button>
+    <button class="filter-btn" data-region="전라">전라</button>
+    <button class="filter-btn" data-region="제주">제주</button>
+    <button class="filter-btn" data-region="충청">충청</button>
+    <button class="filter-btn" data-region="해외">해외</button>
+    </div>
+  </div>
+  <div class="filter-group">
+    <span class="filter-group-label">요일</span>
+    <div class="filter-bar">
+    <button class="filter-btn dt-btn  active" data-dt="전체">전체</button>
+    <button class="filter-btn dt-btn" data-dt="주중">주중(월~목)</button>
+    <button class="filter-btn dt-btn" data-dt="금">금요일</button>
+    <button class="filter-btn dt-btn" data-dt="토">토요일</button>
+    <button class="filter-btn dt-btn" data-dt="연휴">공휴일</button>
+    </div>
+  </div>
+</div>
+
+<div class="legend-bar">
+  <span class="legend-label">전일 대비(조회일 기준):</span>
+  <span class="change-down">&#9660; 하락</span>
+  <span class="change-up">&#9650; 상승</span>
+  <span class="change-same">&#8212; 변동없음</span>
+  <span class="badge-new">신규</span><span class="legend-note">&thinsp;전일 없음</span>
+  &emsp;&middot;&emsp;<span class="badge-promo">특가</span><span class="legend-note">&thinsp;프로모션 진행중</span>
+  &emsp;&middot;&emsp;<span class="legend-note">※ 객실타입·가격은 해당 OTA 최저가 기준</span>
+</div>
+
+<main class="main">
+  <div class="property-grid" id="grid">
+<div class="property-card" data-region="강원">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노캄 비발디파크</div>
+      <div class="property-region">강원도 홍천군</div>
+    </div>
+    <div class="property-stats">자사 포함 · 4개 경쟁사&nbsp;&middot;&nbsp;231건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노캄 비발디파크</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3013069?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;179,000</a><div class="room-type">패밀리</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3013069?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;179,000</a><div class="room-type">패밀리</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3013069?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;230,000</a><div class="room-type">스위트</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3013069?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link own-price">&#8361;329,000</a><div class="room-type">소노캄A</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">웰리힐리파크</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3016118?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;81,360</a><div class="room-type">스탠다드 A</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3016118?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;81,360</a><div class="room-type">스탠다드 A</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3016118?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;125,430</a><div class="room-type">스탠다드 B</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">휘닉스 리조트 평창</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001676?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;73,000</a><div class="room-type">스탠다드 20평</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001676?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;73,000</a><div class="room-type">스탠다드 20평</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001676?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;120,500</a><div class="room-type">스탠다드 20평</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001676?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;168,000</a><div class="room-type">스탠다드 20평</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">한화리조트 평창</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001426?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;135,000</a><div class="room-type">스위트 베드</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001426?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;135,000</a><div class="room-type">스위트 베드</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001426?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;149,000</a><div class="room-type">스위트 베드</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001426?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;232,000</a><div class="room-type">스위트 베드</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">하이원리조트 힐콘도</td><td class="price-cell no-data">&#8212;</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="강원">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노벨 비발디파크</div>
+      <div class="property-region">강원도 홍천군</div>
+    </div>
+    <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;287건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노벨 비발디파크</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001803?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;130,000</a><div class="room-type">패밀리-C동 취사/스탠다드/…</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001803?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;130,000</a><div class="room-type">패밀리-C동 취사/스탠다드/…</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001803?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;152,000</a><div class="room-type">패밀리-C동 취사/스탠다드/…</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001803?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link own-price">&#8361;224,000</a><div class="room-type">패밀리-C동 취사/파크뷰/침대</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">웰리힐리파크</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3016118?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;81,360</a><div class="room-type">스탠다드 A</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3016118?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;81,360</a><div class="room-type">스탠다드 A</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3016118?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;125,430</a><div class="room-type">스탠다드 B</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">휘닉스 리조트 평창</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001676?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;73,000</a><div class="room-type">스탠다드 20평</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001676?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;73,000</a><div class="room-type">스탠다드 20평</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001676?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;120,500</a><div class="room-type">스탠다드 20평</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001676?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;168,000</a><div class="room-type">스탠다드 20평</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">한화리조트 평창</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001426?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;135,000</a><div class="room-type">스위트 베드</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001426?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;135,000</a><div class="room-type">스위트 베드</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001426?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;149,000</a><div class="room-type">스위트 베드</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001426?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;232,000</a><div class="room-type">스위트 베드</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="충청">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노벨 천안</div>
+      <div class="property-region">충남 천안</div>
+    </div>
+    <div class="property-stats">자사 포함 · 4개 경쟁사&nbsp;&middot;&nbsp;182건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노벨 천안</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3010962?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link own-price">&#8361;150,000</a><div class="room-type">패밀리-취사/스탠다드/패밀리…</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3010962?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link own-price">&#8361;150,000</a><div class="room-type">패밀리-취사/스탠다드/패밀리…</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3010962?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;172,000</a><div class="room-type">패밀리-취사/스탠다드/패밀리…</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">천안 상록리조트</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/10054528?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;113,000</a><div class="room-type">호텔 패밀리룸</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/10054528?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;113,000</a><div class="room-type">호텔 패밀리룸</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/10054528?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;130,000</a><div class="room-type">호텔 패밀리룸</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">아산 온양관광호텔</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">아산 르카운티 호텔</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">스플라스 리솜 덕산</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/10054606?checkInDate=2026-04-21&checkOutDate=2026-04-22" target="_blank" rel="noopener" class="price-link ">&#8361;137,000</a><div class="room-type">S20 스테이 콘도</div><div class="price-meta">4/21 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/10054606?checkInDate=2026-04-21&checkOutDate=2026-04-22" target="_blank" rel="noopener" class="price-link ">&#8361;137,000</a><div class="room-type">S20 스테이 콘도</div><div class="price-meta">4/21 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="강원">
+  <div class="property-header">
+    <div>
+      <div class="property-title">쏠비치 양양</div>
+      <div class="property-region">강원도 양양군</div>
+    </div>
+    <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;238건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>쏠비치 양양</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001599?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;161,000</a><div class="room-type">패밀리-취사/스탠다드/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001599?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;161,000</a><div class="room-type">패밀리-취사/스탠다드/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001599?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;201,000</a><div class="room-type">패밀리-취사/스탠다드/침대</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001599?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link own-price">&#8361;266,000</a><div class="room-type">패밀리-취사/스탠다드/침대</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">더앤리조트 호텔&스파 양양</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/1000109887?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;80,400</a><div class="room-type">Deluxe Double</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/1000109887?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;85,000</a><div class="room-type">Deluxe Ondol</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/1000109887?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;80,400</a><div class="room-type">Deluxe Double</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/1000109887?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;145,200</a><div class="room-type">Deluxe Double</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">브리드호텔 양양</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/10044985?checkInDate=2026-04-20&checkOutDate=2026-04-21" target="_blank" rel="noopener" class="price-link ">&#8361;191,000</a><div class="room-type">라이즈업 Small</div><div class="price-meta">4/20 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/10044985?checkInDate=2026-04-20&checkOutDate=2026-04-21" target="_blank" rel="noopener" class="price-link ">&#8361;191,000</a><div class="room-type">라이즈업 Small</div><div class="price-meta">4/20 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/10044985?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;237,000</a><div class="room-type">라이즈업 Small</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/10044985?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;328,000</a><div class="room-type">레이드백 Small</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">켄싱턴리조트 설악밸리</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/1000103524?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;206,900</a><div class="room-type">프리미어 로잔 26평 - 연…</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/1000103524?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;206,900</a><div class="room-type">프리미어 로잔 26평 - 연…</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/1000103524?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;296,900</a><div class="room-type">프리미어 로잔 26평 - 연…</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/1000103524?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;486,900</a><div class="room-type">로얄스위트 펫 베른 32평 …</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td><td class="price-cell no-data">&#8212;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="전라">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노벨 변산</div>
+      <div class="property-region">전북 부안군</div>
+    </div>
+    <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;196건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노벨 변산</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3000944?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;137,000</a><div class="room-type">패밀리-클린/스탠다드/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3000944?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;137,000</a><div class="room-type">패밀리-클린/스탠다드/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3000944?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;169,000</a><div class="room-type">패밀리-클린/스탠다드/침대</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">더웨스트변산리조트</td><td class="price-cell no-data">&#8212;</td><td class="price-cell no-data">&#8212;</td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">변산반도 스테이리조트</td><td class="price-cell no-data">&#8212;</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">스위트 호텔 변산</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/10050777?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;100,000</a><div class="room-type">B동207호</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/10050777?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;100,000</a><div class="room-type">B동207호</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/10050777?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;100,000</a><div class="room-type">B동207호</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/10050777?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;100,000</a><div class="room-type">A동106호</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="경기">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노캄 고양</div>
+      <div class="property-region">경기도 고양시</div>
+    </div>
+    <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;156건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노캄 고양</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3000929?checkInDate=2026-04-20&checkOutDate=2026-04-21" target="_blank" rel="noopener" class="price-link own-price">&#8361;149,000</a><div class="room-type">패밀리-슈페리어/스탠다드/더블</div><div class="price-meta">4/20 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3000929?checkInDate=2026-04-20&checkOutDate=2026-04-21" target="_blank" rel="noopener" class="price-link own-price">&#8361;149,000</a><div class="room-type">패밀리-슈페리어/스탠다드/더블</div><div class="price-meta">4/20 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3000929?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;187,000</a><div class="room-type">패밀리-웨스트 슈페리어/스탠…</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3000929?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link own-price">&#8361;236,000</a><div class="room-type">패밀리-웨스트 슈페리어/스탠…</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">글로스터호텔 킨텍스</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/1000113415?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;62,000</a><div class="room-type">스탠다드 더블</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/1000113415?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;62,000</a><div class="room-type">스탠다드 더블</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/1000113415?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;110,000</a><div class="room-type">스탠다드 트윈 + 1시간 레…</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/1000113415?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;166,740</a><div class="room-type">스탠다드 트윈</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">킨텍스 바이 케이트리</td><td class="price-cell no-data">&#8212;</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">라마다 앙코르 일산</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="부산">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노문 해운대</div>
+      <div class="property-region">부산 해운대구</div>
+    </div>
+    <div class="property-stats">자사 포함 · 5개 경쟁사&nbsp;&middot;&nbsp;533건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노문 해운대</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/10058110?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link own-price">&#8361;80,000</a><div class="room-type">스탠다드 더블</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/10058110?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link own-price">&#8361;80,000</a><div class="room-type">스탠다드 더블</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/10058110?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;140,000</a><div class="room-type">스탠다드 더블</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">파라다이스 호텔 부산</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001112?checkInDate=2026-04-20&checkOutDate=2026-04-21" target="_blank" rel="noopener" class="price-link ">&#8361;212,000</a><div class="room-type">본관시티트윈+씨메르+오션풀</div><div class="price-meta">4/20 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001112?checkInDate=2026-04-20&checkOutDate=2026-04-21" target="_blank" rel="noopener" class="price-link ">&#8361;212,000</a><div class="room-type">본관시티트윈+씨메르+오션풀</div><div class="price-meta">4/20 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001112?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;405,600</a><div class="room-type">본관시티트윈+씨메르+오션풀</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001112?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;575,000</a><div class="room-type">본관시티더블+씨메르+오션풀</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">그랜드 조선 부산</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/1000110883?checkInDate=2026-04-21&checkOutDate=2026-04-22" target="_blank" rel="noopener" class="price-link ">&#8361;246,500</a><div class="room-type">디럭스 시티 킹</div><div class="price-meta">4/21 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/1000110883?checkInDate=2026-04-21&checkOutDate=2026-04-22" target="_blank" rel="noopener" class="price-link ">&#8361;246,500</a><div class="room-type">디럭스 시티 킹</div><div class="price-meta">4/21 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/1000110883?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;558,900</a><div class="room-type">디럭스 파셜 오션 킹</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/1000110883?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;519,900</a><div class="room-type">디럭스 파셜 오션 킹</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">L7 해운대 바이 롯데</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/10057260?checkInDate=2026-04-20&checkOutDate=2026-04-21" target="_blank" rel="noopener" class="price-link ">&#8361;182,260</a><div class="room-type">체크인 시 배정</div><div class="price-meta">4/20 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/10057260?checkInDate=2026-04-20&checkOutDate=2026-04-21" target="_blank" rel="noopener" class="price-link ">&#8361;182,260</a><div class="room-type">체크인 시 배정</div><div class="price-meta">4/20 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/10057260?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;311,620</a><div class="room-type">체크인 시 배정</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/10057260?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;387,080</a><div class="room-type">체크인 시 배정</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">엘시티 레지던스 와이컬렉션</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/10043211?checkInDate=2026-04-22&checkOutDate=2026-04-23" target="_blank" rel="noopener" class="price-link ">&#8361;214,700</a><div class="room-type">슈퍼브 오션뷰 스위트 - 미…</div><div class="price-meta">4/22 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/10043211?checkInDate=2026-04-22&checkOutDate=2026-04-23" target="_blank" rel="noopener" class="price-link ">&#8361;214,700</a><div class="room-type">슈퍼브 오션뷰 스위트 - 미…</div><div class="price-meta">4/22 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/10043211?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;577,680</a><div class="room-type">슈퍼브 오션뷰 스위트 - 미…</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/10043211?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;1,075,680</a><div class="room-type">슈퍼브 오션뷰 스위트 - 미…</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">시그니엘 부산</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="경북">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노캄 경주</div>
+      <div class="property-region">경북 경주시</div>
+    </div>
+    <div class="property-stats">자사 포함 · 5개 경쟁사&nbsp;&middot;&nbsp;376건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노캄 경주</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3000930?checkInDate=2026-04-22&checkOutDate=2026-04-23" target="_blank" rel="noopener" class="price-link own-price">&#8361;202,000</a><div class="room-type">패밀리-취사/뷰프리/1더블,…</div><div class="price-meta">4/22 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3000930?checkInDate=2026-04-22&checkOutDate=2026-04-23" target="_blank" rel="noopener" class="price-link own-price">&#8361;202,000</a><div class="room-type">패밀리-취사/뷰프리/1더블,…</div><div class="price-meta">4/22 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">힐튼 경주</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3000915?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;170,000</a><div class="room-type">디럭스 트윈</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3000915?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;170,000</a><div class="room-type">디럭스 트윈</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3000915?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;420,000</a><div class="room-type">디럭스 더블</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">라한셀렉트 경주</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001175?checkInDate=2026-04-22&checkOutDate=2026-04-23" target="_blank" rel="noopener" class="price-link ">&#8361;130,500</a><div class="room-type">디럭스 트윈 산 전망</div><div class="price-meta">4/22 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001175?checkInDate=2026-04-22&checkOutDate=2026-04-23" target="_blank" rel="noopener" class="price-link ">&#8361;130,500</a><div class="room-type">디럭스 트윈 산 전망</div><div class="price-meta">4/22 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001175?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;475,000</a><div class="room-type">패밀리 트윈 산 전망</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001175?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;455,000</a><div class="room-type">디럭스 트윈 산 전망</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">켄싱턴리조트 경주</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001056?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;129,900</a><div class="room-type">스튜디오</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001056?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;129,900</a><div class="room-type">스튜디오</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001056?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;399,900</a><div class="room-type">켄싱턴 주니어스위트</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">강동리조트 경주</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/10048751?checkInDate=2026-04-21&checkOutDate=2026-04-22" target="_blank" rel="noopener" class="price-link ">&#8361;124,000</a><div class="room-type">패밀리 36타입 - 취사</div><div class="price-meta">4/21 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/10048751?checkInDate=2026-04-21&checkOutDate=2026-04-22" target="_blank" rel="noopener" class="price-link ">&#8361;124,000</a><div class="room-type">패밀리 36타입 - 취사</div><div class="price-meta">4/21 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/10048751?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;230,000</a><div class="room-type">패밀리 36타입 - 클린</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">경주 마우나오션리조트</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001441?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;95,000</a><div class="room-type">20평 - 2인</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001441?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;95,000</a><div class="room-type">20평 - 2인</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001441?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;127,340</a><div class="room-type">20평</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001441?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;235,140</a><div class="room-type">20평</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="경남">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노캄 거제</div>
+      <div class="property-region">경남 거제시</div>
+    </div>
+    <div class="property-stats">자사 포함 · 4개 경쟁사&nbsp;&middot;&nbsp;216건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노캄 거제</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3000935?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;176,000</a><div class="room-type">패밀리-취사/오션뷰/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3000935?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;176,000</a><div class="room-type">패밀리-취사/오션뷰/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3000935?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;212,000</a><div class="room-type">패밀리-취사/오션뷰/침대</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">한화리조트 거제 벨버디어</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3015778?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;221,000</a><div class="room-type">디럭스 원룸 호텔형</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3015778?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;221,000</a><div class="room-type">디럭스 원룸 호텔형</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3015778?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;258,000</a><div class="room-type">디럭스 원룸 호텔형</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3015778?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;426,000</a><div class="room-type">스위트 오션뷰 호텔형</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">한화리조트 거제 르씨엘</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/10047986?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;494,000</a><div class="room-type">프리미어 스위트</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/10047986?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;494,000</a><div class="room-type">프리미어 스위트</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/10047986?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;638,000</a><div class="room-type">프리미어 스위트</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">라마다 스위츠 거제</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/1000111911?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;86,600</a><div class="room-type">킹 프리미어</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/1000111911?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;86,600</a><div class="room-type">킹 프리미어</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/1000111911?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;143,850</a><div class="room-type">킹 프리미어 자쿠지</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/1000111911?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;179,000</a><div class="room-type">킹 프리미어 자쿠지</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">거제 삼성호텔</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3000911?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;111,788</a><div class="room-type">본관 스탠다드 마운틴→디럭스…</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3000911?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;111,788</a><div class="room-type">본관 스탠다드 마운틴→디럭스…</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3000911?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;125,100</a><div class="room-type">본관 스탠다드 마운틴→디럭스…</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3000911?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;175,405</a><div class="room-type">스탠다드 → 디럭스</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="전라">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노캄 여수</div>
+      <div class="property-region">전남 여수시</div>
+    </div>
+    <div class="property-stats">자사 포함 · 4개 경쟁사&nbsp;&middot;&nbsp;438건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노캄 여수</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3000925?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;194,000</a><div class="room-type">패밀리-슈페리어/스탠다드/트윈</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3000925?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;194,000</a><div class="room-type">패밀리-슈페리어/스탠다드/트윈</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3000925?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;247,000</a><div class="room-type">패밀리-슈페리어/스탠다드/트윈</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3000925?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link own-price">&#8361;299,000</a><div class="room-type">패밀리-슈페리어/스탠다드/트윈</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">히든베이 호텔</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3000669?checkInDate=2026-04-21&checkOutDate=2026-04-22" target="_blank" rel="noopener" class="price-link ">&#8361;89,990</a><div class="room-type">디럭스 더블 오션뷰</div><div class="price-meta">4/21 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3000669?checkInDate=2026-04-21&checkOutDate=2026-04-22" target="_blank" rel="noopener" class="price-link ">&#8361;89,990</a><div class="room-type">디럭스 더블 오션뷰</div><div class="price-meta">4/21 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3000669?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;144,000</a><div class="room-type">디럭스 패밀리 트윈 오션뷰</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3000669?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;209,600</a><div class="room-type">디럭스 더블 오션뷰</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">디오션 호텔&리조트</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/1000102742?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;75,000</a><div class="room-type">더블</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/1000102742?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;75,000</a><div class="room-type">더블</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/1000102742?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;110,000</a><div class="room-type">트윈온돌</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/1000102742?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;153,000</a><div class="room-type">트윈온돌</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">여수 벨메르 한화호텔&리조트</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/1000109882?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;139,000</a><div class="room-type">스탠다드 쿼드</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/1000109882?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;139,000</a><div class="room-type">스탠다드 쿼드</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/1000109882?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;167,000</a><div class="room-type">스탠다드 쿼드</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/1000109882?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;241,000</a><div class="room-type">스탠다드 쿼드</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">여수 베네치아 호텔&스위트</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3014238?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;103,500</a><div class="room-type">슈페리어 트윈</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3014238?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link ">&#8361;103,500</a><div class="room-type">슈페리어 트윈</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3014238?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;114,900</a><div class="room-type">슈페리어 더블</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3014238?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;172,500</a><div class="room-type">슈페리어 트윈</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="제주">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노벨 제주</div>
+      <div class="property-region">제주도 제주시 조천읍</div>
+    </div>
+    <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;98건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노벨 제주</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3000931?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link own-price">&#8361;164,000</a><div class="room-type">패밀리-클린/스탠다드/트윈</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3000931?checkInDate=2026-04-19&checkOutDate=2026-04-20" target="_blank" rel="noopener" class="price-link own-price">&#8361;164,000</a><div class="room-type">패밀리-클린/스탠다드/트윈</div><div class="price-meta">4/19 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3000931?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;196,000</a><div class="room-type">패밀리-클린/스탠다드/트윈</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3000931?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link own-price">&#8361;240,000</a><div class="room-type">패밀리-클린/스탠다드/트윈</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">한화리조트 제주</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001417?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;145,000</a><div class="room-type">디럭스 투룸 호텔형</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001417?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;145,000</a><div class="room-type">디럭스 투룸 호텔형</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001417?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;163,000</a><div class="room-type">디럭스 투룸 호텔형</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001417?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;171,000</a><div class="room-type">디럭스 투룸 호텔형</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">레지던스 제이 제주</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">씨에스 호텔&리조트 제주</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="제주">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노캄 제주</div>
+      <div class="property-region">제주도 서귀포시 표선면</div>
+    </div>
+    <div class="property-stats">자사 포함 · 4개 경쟁사&nbsp;&middot;&nbsp;353건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노캄 제주</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3008624?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;145,000</a><div class="room-type">패밀리-슈페리어 클린/스탠다…</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3008624?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;145,000</a><div class="room-type">패밀리-슈페리어 클린/스탠다…</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3008624?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;178,000</a><div class="room-type">패밀리-슈페리어 취사/스탠다…</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3008624?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link own-price">&#8361;210,000</a><div class="room-type">패밀리-슈페리어 취사/스탠다…</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">해비치 호텔앤리조트 제주</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001286?checkInDate=2026-04-21&checkOutDate=2026-04-22" target="_blank" rel="noopener" class="price-link ">&#8361;234,900</a><div class="room-type">슈페리어 더블 빌리지</div><div class="price-meta">4/21 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001286?checkInDate=2026-04-21&checkOutDate=2026-04-22" target="_blank" rel="noopener" class="price-link ">&#8361;234,900</a><div class="room-type">슈페리어 더블 빌리지</div><div class="price-meta">4/21 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001286?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;318,000</a><div class="room-type">슈페리어 더블 빌리지</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001286?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;307,000</a><div class="room-type">슈페리어 트윈 빌리지</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">휘닉스 아일랜드 섭지코지</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001109?checkInDate=2026-04-20&checkOutDate=2026-04-21" target="_blank" rel="noopener" class="price-link ">&#8361;148,050</a><div class="room-type">로얄룸-34평</div><div class="price-meta">4/20 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001109?checkInDate=2026-04-20&checkOutDate=2026-04-21" target="_blank" rel="noopener" class="price-link ">&#8361;148,050</a><div class="room-type">로얄룸-34평</div><div class="price-meta">4/20 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001109?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;233,550</a><div class="room-type">로얄룸-34평</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">제주 신화월드 호텔앤리조트</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3015955?checkInDate=2026-04-21&checkOutDate=2026-04-22" target="_blank" rel="noopener" class="price-link ">&#8361;147,000</a><div class="room-type">슈페리어 트윈 + BIG3 …</div><div class="price-meta">4/21 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3015955?checkInDate=2026-04-21&checkOutDate=2026-04-22" target="_blank" rel="noopener" class="price-link ">&#8361;147,000</a><div class="room-type">슈페리어 트윈 + BIG3 …</div><div class="price-meta">4/21 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3015955?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;223,600</a><div class="room-type">슈페리어 트윈</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3015955?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;209,800</a><div class="room-type">슈페리어 트윈</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">제주 부영호텔&리조트</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3016760?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;164,400</a><div class="room-type">리조트/프리미엄</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3016760?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;164,400</a><div class="room-type">리조트/프리미엄</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3016760?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;195,100</a><div class="room-type">리조트/프리미엄</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3016760?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;195,100</a><div class="room-type">리조트/프리미엄</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="경기">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노벨 양평</div>
+      <div class="property-region">경기도 양평군</div>
+    </div>
+    <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;343건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노벨 양평</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3000933?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;108,000</a><div class="room-type">패밀리 클린/스탠다드/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3000933?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;108,000</a><div class="room-type">패밀리 클린/스탠다드/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3000933?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;121,000</a><div class="room-type">패밀리 클린/스탠다드/침대</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">블룸비스타 호텔</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3000806?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;154,000</a><div class="room-type">스탠다드 트윈</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3000806?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;162,720</a><div class="room-type">스탠다드 더블</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3000806?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;154,000</a><div class="room-type">스탠다드 트윈</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3000806?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;183,530</a><div class="room-type">스탠다드 트윈</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">더스타휴 골프&리조트</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3013443?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;172,000</a><div class="room-type">슈페리어</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3013443?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;172,000</a><div class="room-type">슈페리어</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3013443?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;222,000</a><div class="room-type">슈페리어</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3013443?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;292,000</a><div class="room-type">스위트 체크인시 현장 배정</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">쉐르빌 온천관광호텔</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/10046363?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;100,000</a><div class="room-type">그랜드룸</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/10046363?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;100,000</a><div class="room-type">그랜드룸</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/10046363?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;115,000</a><div class="room-type">그랜드룸</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/10046363?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;145,000</a><div class="room-type">코리아룸</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="충청">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노벨 단양</div>
+      <div class="property-region">충북 단양군</div>
+    </div>
+    <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;133건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노벨 단양</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3000932?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;120,000</a><div class="room-type">패밀리-취사/스탠다드/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3000932?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;120,000</a><div class="room-type">패밀리-취사/스탠다드/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3000932?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;155,000</a><div class="room-type">패밀리-클린/스탠다드/침대</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">쏘라노 단양</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001539?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;40,000</a><div class="room-type">디럭스룸</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001539?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;40,000</a><div class="room-type">디럭스룸</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001539?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;50,000</a><div class="room-type">디럭스룸</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001539?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;80,000</a><div class="room-type">프리미엄 더블</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">더밸리 호텔 단양</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">단양 아쿠아월드</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001067?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;49,000</a><div class="room-type">디럭스</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001067?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;49,000</a><div class="room-type">디럭스</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001067?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;49,000</a><div class="room-type">디럭스</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001067?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;69,000</a><div class="room-type">디럭스 스파</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="강원">
+  <div class="property-header">
+    <div>
+      <div class="property-title">쏠비치 삼척</div>
+      <div class="property-region">강원도 삼척시</div>
+    </div>
+    <div class="property-stats">자사 포함 · 2개 경쟁사&nbsp;&middot;&nbsp;133건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>쏠비치 삼척</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001981?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;146,000</a><div class="room-type">패밀리-클린/스탠다드/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001981?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;146,000</a><div class="room-type">패밀리-클린/스탠다드/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001981?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;187,000</a><div class="room-type">패밀리-취사/스탠다드/침대</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><div class="sold-out-txt">매진</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">한화리조트 동해</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3001429?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;136,620</a><div class="room-type">스탠다드 스위트</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3001429?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;136,620</a><div class="room-type">스탠다드 스위트</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3001429?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;151,800</a><div class="room-type">스탠다드 스위트</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3001429?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;177,100</a><div class="room-type">스탠다드 스위트</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">삼척 쏠비치 인근 리조트</td><td class="price-cell no-data">&#8212;</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="전라">
+  <div class="property-header">
+    <div>
+      <div class="property-title">쏠비치 진도</div>
+      <div class="property-region">전남 진도군</div>
+    </div>
+    <div class="property-stats">자사 포함 · 2개 경쟁사&nbsp;&middot;&nbsp;98건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>쏠비치 진도</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/1000100490?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;152,000</a><div class="room-type">패밀리 클린/스탠다드/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/1000100490?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link own-price">&#8361;152,000</a><div class="room-type">패밀리 클린/스탠다드/침대</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/1000100490?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link own-price">&#8361;307,000</a><div class="room-type">패밀리 Pet Friendl…</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/1000100490?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link own-price">&#8361;356,000</a><div class="room-type">스위트 클린/스탠다드/침대</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">진도 관광호텔</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><a href="https://nol.yanolja.com/stay/domestic/3000709?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;50,000</a><div class="room-type">스탠다드 더블</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="주중"><a href="https://nol.yanolja.com/stay/domestic/3000709?checkInDate=2026-04-16&checkOutDate=2026-04-17" target="_blank" rel="noopener" class="price-link ">&#8361;50,000</a><div class="room-type">스탠다드 더블</div><div class="price-meta">4/16 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="금"><a href="https://nol.yanolja.com/stay/domestic/3000709?checkInDate=2026-04-17&checkOutDate=2026-04-18" target="_blank" rel="noopener" class="price-link ">&#8361;60,000</a><div class="room-type">스탠다드 더블</div><div class="price-meta">4/17 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="토"><a href="https://nol.yanolja.com/stay/domestic/3000709?checkInDate=2026-04-18&checkOutDate=2026-04-19" target="_blank" rel="noopener" class="price-link ">&#8361;80,000</a><div class="room-type">스탠다드 더블</div><div class="price-meta">4/18 <span class="badge-new">신규</span></div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td><td class="price-cell no-data">&#8212;</td></tr>
+          <tr><td class="competitor-name">오시아노관광호텔</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td><td class="price-cell no-data">&#8212;</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="property-card" data-region="해외">
+  <div class="property-header">
+    <div>
+      <div class="property-title">소노벨 하이퐁</div>
+      <div class="property-region">베트남 하이퐁</div>
+    </div>
+    <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;0건</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="ota-yanolja">야놀자</th><th class="ota-yeogi">여기어때</th><th class="ota-booking">Booking</th>
+      </tr></thead>
+      <tbody>
+          <tr class="own-row"><td class="competitor-name own-label"><span class="badge-sono">자사</span>소노벨 하이퐁</td><td class="price-cell no-data">&#8212;</td><td class="price-cell no-data">&#8212;</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">Melia Vinpearl Hai Phong Rivera</td><td class="price-cell no-data">&#8212;</td><td class="price-cell no-data">&#8212;</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">Dream Dragon Resort Hai Phong</td><td class="price-cell no-data">&#8212;</td><td class="price-cell no-data">&#8212;</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+          <tr><td class="competitor-name">Cat Ba Island Resort And Spa</td><td class="price-cell no-data">&#8212;</td><td class="price-cell no-data">&#8212;</td><td class="price-cell"><div class="dt-layer dt-active" data-dt="전체"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="주중"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="금"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="토"><div class="price" style="color:#3a3f4b">&#8212;</div></div><div class="dt-layer" data-dt="연휴"><div class="price" style="color:#3a3f4b">&#8212;</div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+  </div>
+</main>
+
+<footer class="footer">
+  소노호텔앤리조트 경쟁사 가격 모니터링&ensp;&middot;&ensp;매일 07:00 자동 업데이트<br>
+  <small>각 OTA 기준 30일 내 최저가 (1박, 성인 2인)&ensp;&middot;&ensp;요일 탭은 체크인 날짜 기준</small><br>
+  <small class="copyright">&copy; GS Alfred Park</small>
+</footer>
+
+<script>
+(function () {
+  function toArr(nl) { return Array.prototype.slice.call(nl); }
+
+  // ── 지역 필터 ─────────────────────────────────────────────────────────────
+  var regionBtns = toArr(document.querySelectorAll('.filter-btn[data-region]'));
+  var cards      = toArr(document.querySelectorAll('.property-card'));
+
+  regionBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      regionBtns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var r = btn.getAttribute('data-region');
+      cards.forEach(function (c) {
+        var show = (r === '전체') || (c.getAttribute('data-region') === r);
+        c.classList.toggle('hidden', !show);
+      });
+    });
+  });
+
+  // ── 요일 필터 ─────────────────────────────────────────────────────────────
+  var dtBtns = toArr(document.querySelectorAll('.dt-btn'));
+  var layers = toArr(document.querySelectorAll('.dt-layer'));
+
+  function activateDt(dt) {
+    var i;
+    for (i = 0; i < dtBtns.length; i++) {
+      dtBtns[i].classList.toggle('active', dtBtns[i].getAttribute('data-dt') === dt);
+    }
+    for (i = 0; i < layers.length; i++) {
+      layers[i].classList.toggle('dt-active', layers[i].getAttribute('data-dt') === dt);
+    }
+  }
+
+  for (var j = 0; j < dtBtns.length; j++) {
+    (function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        activateDt(btn.getAttribute('data-dt'));
+      });
+    })(dtBtns[j]);
+  }
+})();
+</script>
+</body>
+</html>
