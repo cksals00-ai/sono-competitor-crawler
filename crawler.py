@@ -56,6 +56,8 @@ class PriceRecord:
     error: str = ""
     is_own: bool = False    # True = 소노 자사 가격
     is_promo: bool = False  # True = 프로모션/특가 진행중
+    review_score: float = 0.0  # OTA 별점 (0 = 미수집, 1.0~10.0 범위)
+    review_count: int = 0      # 리뷰 수
 
 
 # ---------------------------------------------------------------------------
@@ -87,6 +89,7 @@ def crawl_yanolja(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
         html = resp.text
 
         rooms = _parse_yanolja_rooms(html)
+        review_score, review_count = _parse_yanolja_review(html)
 
         if not rooms:
             logger.warning(f"[야놀자] {competitor['name']} ({checkin}): 객실 데이터 없음")
@@ -106,6 +109,8 @@ def crawl_yanolja(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
                 price=room.get("price", 0),
                 availability=room.get("availability", "unknown"),
                 url=url,
+                review_score=review_score,
+                review_count=review_count,
             ))
 
     except requests.RequestException as e:
@@ -193,6 +198,42 @@ def _extract_rooms_from_decoded_chunk(decoded: str) -> list:
     return rooms
 
 
+def _parse_yanolja_review(html: str) -> tuple:
+    """
+    야놀자 RSC 청크에서 별점과 리뷰 수를 추출한다.
+    반환: (review_score: float, review_count: int)
+    야놀자는 10점 만점 기준 (예: 9.5).
+    """
+    chunks = re.findall(r'self\.__next_f\.push\(\[1,"(.*?)"\]\)', html)
+    for raw_chunk in sorted(chunks, key=len, reverse=True):
+        try:
+            decoded = json.loads(f'"{raw_chunk}"')
+        except Exception:
+            continue
+
+        # 별점 키워드 탐색
+        score_m = re.search(
+            r'"(?:avgRating|averageRating|reviewScore|ratingScore|rating|score)"'
+            r'\s*:\s*([0-9]+(?:\.[0-9]+)?)',
+            decoded,
+        )
+        count_m = re.search(
+            r'"(?:reviewCount|totalReviewCount|ratingCount|reviewCnt)"'
+            r'\s*:\s*(\d+)',
+            decoded,
+        )
+
+        if score_m:
+            score = float(score_m.group(1))
+            # 야놀자는 10점 만점이지만 가끔 100점 만점 형태로 오는 경우 정규화
+            if score > 10:
+                score = round(score / 10, 1)
+            count = int(count_m.group(1)) if count_m else 0
+            return score, count
+
+    return 0.0, 0
+
+
 def _parse_price_str(s: str) -> int:
     """'130,000원', '98100', '\\u20a9 120,000' 등에서 숫자 추출"""
     digits = re.sub(r"[^\d]", "", s)
@@ -232,6 +273,7 @@ def crawl_yeogiuh(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
             return records
 
         rooms = _parse_yeogi_rooms(soup)
+        review_score, review_count = _parse_yeogi_review(soup)
 
         if not rooms:
             logger.warning(f"[여기어때] {competitor['name']} ({checkin}): 객실 데이터 없음")
@@ -252,6 +294,8 @@ def crawl_yeogiuh(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
                 availability=room.get("availability", "unknown"),
                 url=url,
                 is_promo=room.get("is_promo", False),
+                review_score=review_score,
+                review_count=review_count,
             ))
 
     except Exception as e:
@@ -335,30 +379,86 @@ def _parse_yeogi_rooms(soup: BeautifulSoup) -> list:
     return rooms
 
 
+def _parse_yeogi_review(soup: BeautifulSoup) -> tuple:
+    """
+    여기어때 __NEXT_DATA__에서 별점과 리뷰 수를 추출한다.
+    반환: (review_score: float, review_count: int)
+    여기어때는 10점 만점 기준.
+    """
+    next_data_tag = soup.find("script", id="__NEXT_DATA__")
+    if not next_data_tag:
+        return 0.0, 0
+    try:
+        data = json.loads(next_data_tag.string)
+        info = (
+            data.get("props", {})
+                .get("pageProps", {})
+                .get("accommodationInfo", {})
+        )
+        # 여기어때 별점 필드 탐색 (ratingAvg, ratingScore, avgRating 등)
+        score = (
+            info.get("ratingAvg")
+            or info.get("ratingScore")
+            or info.get("avgRating")
+            or info.get("rating")
+            or 0
+        )
+        count = (
+            info.get("reviewCount")
+            or info.get("totalReviewCount")
+            or info.get("ratingCount")
+            or 0
+        )
+        return float(score), int(count)
+    except Exception:
+        return 0.0, 0
+
+
 # ---------------------------------------------------------------------------
 # Agoda 크롤러 (Selenium)
 # ---------------------------------------------------------------------------
 
 def crawl_agoda(competitor: dict, checkin: str, checkout: str, cfg: dict) -> list:
-    """Agoda 숙소 상세 페이지에서 객실/가격 수집 (Selenium 싱글톤)"""
+    """
+    Agoda 숙소 상세 페이지에서 객실/가격 수집.
+    - 싱글톤 드라이버를 버리고 매 요청 신규 드라이버 사용 (세션 누적 Bot 탐지 방지)
+    - 로드 대기 15s + 스크롤 다운 → 레이지 로딩 트리거
+    - 팝업/오버레이 닫기 시도
+    - 기존 CSS 셀렉터 3단계 + 추가 JSON API 파싱
+    """
     base_url = competitor.get("agoda_url", "")
     if not base_url:
         return []
 
     url = (
         f"{base_url}?checkIn={checkin}&checkOut={checkout}"
-        "&adults=2&rooms=1&children=0"
+        "&adults=2&rooms=1&children=0&isVR=false"
     )
     records = []
+    agoda_driver = None
 
     try:
-        driver = _get_driver()
-        driver.get("about:blank")
-        time.sleep(0.3)
-        driver.get(url)
-        time.sleep(9)  # Agoda 동적 콘텐츠 로드 대기
+        agoda_driver = _make_fresh_driver()
+        agoda_driver.get("about:blank")
+        time.sleep(0.5)
+        agoda_driver.get(url)
 
-        html = driver.page_source
+        # 1차 대기 (초기 렌더링)
+        time.sleep(10)
+
+        # 팝업/모달 닫기 시도 (쿠키 동의, 언어 선택 등)
+        _agoda_close_popups(agoda_driver)
+
+        # 스크롤 다운 → 레이지 로딩 트리거
+        try:
+            agoda_driver.execute_script("window.scrollTo(0, document.body.scrollHeight / 2);")
+            time.sleep(3)
+            agoda_driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(3)
+        except Exception:
+            pass
+
+        html = agoda_driver.page_source
         soup = BeautifulSoup(html, "html.parser")
 
         # 접근 차단 감지
@@ -371,10 +471,19 @@ def crawl_agoda(competitor: dict, checkin: str, checkout: str, cfg: dict) -> lis
 
         rooms = _parse_agoda_rooms(soup)
 
+        # 1차 파싱 실패 시 추가 대기 후 재시도
+        if not rooms:
+            time.sleep(8)
+            html = agoda_driver.page_source
+            soup = BeautifulSoup(html, "html.parser")
+            rooms = _parse_agoda_rooms(soup)
+
         if not rooms:
             logger.warning(f"[Agoda] {competitor['name']} ({checkin}): 객실 데이터 없음")
             records.append(_make_record(competitor, "Agoda", checkin, checkout, url, error="no_room_data"))
             return records
+
+        review_score, review_count = _parse_agoda_review(soup)
 
         for room in rooms:
             records.append(PriceRecord(
@@ -390,27 +499,78 @@ def crawl_agoda(competitor: dict, checkin: str, checkout: str, cfg: dict) -> lis
                 availability=room.get("availability", "unknown"),
                 url=url,
                 is_promo=room.get("is_promo", False),
+                review_score=review_score,
+                review_count=review_count,
             ))
 
     except Exception as e:
         logger.error(f"[Agoda] {competitor['name']} 실패: {e}")
         records.append(_make_record(competitor, "Agoda", checkin, checkout, url, error=str(e)[:100]))
 
+    finally:
+        if agoda_driver:
+            try:
+                agoda_driver.quit()
+            except Exception:
+                pass
+
     return records
 
 
+def _agoda_close_popups(driver) -> None:
+    """
+    Agoda 공통 팝업/오버레이 닫기 시도.
+    존재하지 않아도 오류 없이 넘어간다.
+    """
+    popup_selectors = [
+        # 쿠키 동의 버튼
+        "[data-element-name='cookie-accept']",
+        "[id*='cookie'] button",
+        # 언어/지역 선택 닫기
+        "[data-selenium='close-btn']",
+        "[data-element-name='close-button']",
+        # 일반 모달 닫기
+        "button[aria-label='Close']",
+        ".Modal__closeButton",
+        "[class*='closeButton']",
+        "[class*='modal-close']",
+    ]
+    for sel in popup_selectors:
+        try:
+            els = driver.find_elements("css selector", sel)
+            for el in els[:2]:
+                if el.is_displayed():
+                    el.click()
+                    time.sleep(0.5)
+        except Exception:
+            pass
+
+
 def _parse_agoda_rooms(soup: BeautifulSoup) -> list:
-    """Agoda 숙소 페이지에서 객실/가격 추출 (다중 셀렉터 fallback)"""
+    """
+    Agoda 숙소 페이지에서 객실/가격 추출 (다중 셀렉터 fallback).
+
+    방법 1: data-selenium / data-element-name 속성 기반 (구 레이아웃)
+    방법 2: 2024+ 리뉴얼 레이아웃 — MasterRoom, RoomGrid 클래스
+    방법 3: __NEXT_DATA__ JSON (Next.js 기반 페이지)
+    방법 4: 인라인 JSON 스크립트 (window.__AGODA_DATA__ 등)
+    방법 5: 가격 숫자 텍스트 fallback
+    """
     rooms = []
     seen  = set()
 
-    # ── 방법 1: data-selenium 속성 기반 (현행 Agoda 레이아웃) ────────────────
+    # ── 방법 1: data-selenium 속성 기반 ──────────────────────────────────────
     row_selectors = [
         "[data-selenium='room-grid-row']",
         ".RoomCellContainer",
         ".MasterRoom",
         "[data-element-name='room-cell']",
         "[class*='RoomRow']",
+        # 2024+ 레이아웃
+        "[data-element-name='MasterRoom']",
+        "[class*='masterRoom']",
+        "[class*='PropertyRoomTypeRow']",
+        "[class*='room-type-row']",
     ]
     for sel in row_selectors:
         row_els = soup.select(sel)
@@ -420,13 +580,17 @@ def _parse_agoda_rooms(soup: BeautifulSoup) -> list:
             name_el = row.select_one(
                 "[data-selenium='room-type-feature-name'], "
                 ".RoomCell-info-RoomName, [data-element-name='room-type-name'], "
-                ".RoomName, [class*='roomTypeName'], [class*='room-name']"
+                ".RoomName, [class*='roomTypeName'], [class*='room-name'], "
+                "[class*='RoomTypeFeatureName'], [class*='masterRoomName'], "
+                "h3, h4"
             )
             price_el = row.select_one(
                 "[data-selenium='display-price'], "
                 ".priceValue, .Price__value, .price-exclusive-display, "
                 "[data-element-name='price'], .totalPrice, "
-                "[class*='pricePerRoom'], [class*='displayPrice']"
+                "[class*='pricePerRoom'], [class*='displayPrice'], "
+                "[class*='perRoomPerNight'], [class*='price-info'], "
+                "[class*='PaymentDetails'] [class*='price']"
             )
             name       = name_el.get_text(strip=True) if name_el else ""
             price_text = price_el.get_text(strip=True) if price_el else ""
@@ -455,8 +619,38 @@ def _parse_agoda_rooms(soup: BeautifulSoup) -> list:
         except Exception:
             pass
 
-    # ── 방법 3: 숫자 가격이 있는 큰 텍스트 요소에서 추출 (최후 수단) ──────────
-    # 여러 가격 요소를 찾아 첫 번째 유효한 가격만 반환
+    # ── 방법 3: 인라인 JSON 스크립트 (window.__AGODA__ 등) ───────────────────
+    for script_tag in soup.find_all("script", type="application/json"):
+        try:
+            data = json.loads(script_tag.string or "")
+            rooms_json = _extract_agoda_json_rooms(data)
+            if rooms_json:
+                return rooms_json
+        except Exception:
+            pass
+
+    # ── 방법 4: 텍스트 파싱 — data-ppapi-room-type-id 등 ─────────────────────
+    room_type_els = soup.select(
+        "[data-ppapi-room-type-id], [data-room-type-id], [data-hotel-product-id]"
+    )
+    for el in room_type_els:
+        name = el.get("data-room-type-name") or el.get("data-room-name", "")
+        price_text = el.get("data-price") or el.get("data-display-price", "")
+        price = _parse_price_str(price_text) if price_text else 0
+        if not price:
+            # 하위 가격 요소 탐색
+            sub = el.select_one("[class*='price'], [class*='Price']")
+            if sub:
+                price = _parse_price_str(sub.get_text(strip=True))
+        if name and name not in seen:
+            seen.add(name)
+            rooms.append({"name": name, "price": price,
+                          "availability": "available" if price > 0 else "sold_out",
+                          "is_promo": False})
+    if rooms:
+        return rooms
+
+    # ── 방법 5: 숫자 가격이 있는 큰 텍스트 요소에서 추출 (최후 수단) ──────────
     for el in soup.select("[class*='price'], [class*='Price']")[:30]:
         price = _parse_price_str(el.get_text(strip=True))
         if price > 10000 and "fallback" not in seen:
@@ -497,6 +691,70 @@ def _extract_agoda_json_rooms(data: dict) -> list:
     return rooms
 
 
+def _parse_agoda_review(soup: BeautifulSoup) -> tuple:
+    """
+    Agoda 페이지에서 별점과 리뷰 수 추출.
+    반환: (review_score: float, review_count: int)
+    Agoda는 10점 만점 기준.
+    """
+    # 방법 1: data-selenium 속성
+    score_el = soup.select_one(
+        "[data-selenium='hotel-overall-score'], "
+        "[data-element-name='review-score'], "
+        "[class*='reviewScore'], [class*='review-score'], "
+        "[class*='RatingScore']"
+    )
+    count_el = soup.select_one(
+        "[data-selenium='review-count'], "
+        "[class*='reviewCount'], [class*='review-count']"
+    )
+    if score_el:
+        try:
+            score = float(re.sub(r"[^\d.]", "", score_el.get_text(strip=True)))
+            count = int(re.sub(r"[^\d]", "", count_el.get_text(strip=True))) if count_el else 0
+            if 0 < score <= 10:
+                return score, count
+        except Exception:
+            pass
+
+    # 방법 2: __NEXT_DATA__ JSON
+    next_data_tag = soup.find("script", id="__NEXT_DATA__")
+    if next_data_tag:
+        try:
+            data = json.loads(next_data_tag.string)
+            score_val = _deep_get(data, ["reviewScore", "avgRating", "score", "rating"])
+            count_val = _deep_get(data, ["reviewCount", "totalReviews", "ratingCount"])
+            if score_val:
+                s = float(score_val)
+                if s > 10:
+                    s = round(s / 10, 1)
+                return s, int(count_val or 0)
+        except Exception:
+            pass
+
+    return 0.0, 0
+
+
+def _deep_get(data, keys: list):
+    """딕셔너리/리스트를 재귀 탐색하여 첫 번째로 발견되는 키의 값을 반환."""
+    if not isinstance(data, (dict, list)):
+        return None
+    if isinstance(data, dict):
+        for key in keys:
+            if key in data and data[key]:
+                return data[key]
+        for v in data.values():
+            result = _deep_get(v, keys)
+            if result:
+                return result
+    elif isinstance(data, list):
+        for item in data[:10]:
+            result = _deep_get(item, keys)
+            if result:
+                return result
+    return None
+
+
 # ---------------------------------------------------------------------------
 # Booking.com 크롤러 (Selenium)
 # ---------------------------------------------------------------------------
@@ -523,6 +781,7 @@ def crawl_booking(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
         soup = BeautifulSoup(html, "html.parser")
 
         rooms = _parse_booking_rooms(soup)
+        review_score, review_count = _parse_booking_review(soup)
 
         if not rooms:
             logger.warning(f"[Booking.com] {competitor['name']} ({checkin}): 객실 데이터 없음")
@@ -542,6 +801,8 @@ def crawl_booking(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
                 price=room.get("price", 0),
                 availability=room.get("availability", "unknown"),
                 url=url,
+                review_score=review_score,
+                review_count=review_count,
             ))
 
     except Exception as e:
@@ -597,6 +858,60 @@ def _parse_booking_rooms(soup: BeautifulSoup) -> list:
             rooms.append({"name": name, "price": price_val, "availability": "available"})
 
     return rooms
+
+
+def _parse_booking_review(soup: BeautifulSoup) -> tuple:
+    """
+    Booking.com 페이지에서 별점과 리뷰 수 추출.
+    반환: (review_score: float, review_count: int)
+    Booking.com은 10점 만점 기준.
+    """
+    # 방법 1: data-testid 셀렉터
+    score_el = soup.select_one(
+        "[data-testid='review-score-badge'], "
+        "[data-testid='review-score'], "
+        ".bui-review-score__badge, "
+        "[class*='review-score-badge'], "
+        ".b5cd34be2d"  # Booking.com 인라인 클래스 (버전에 따라 다름)
+    )
+    count_el = soup.select_one(
+        "[data-testid='review-count'], "
+        ".bui-review-score__text, "
+        "[class*='review-count']"
+    )
+
+    if score_el:
+        try:
+            score_text = score_el.get_text(strip=True)
+            # "9.5" 또는 "Excellent 9.5" 형식 처리
+            score_match = re.search(r"([0-9]+(?:[.,][0-9]+)?)", score_text)
+            if score_match:
+                score = float(score_match.group(1).replace(",", "."))
+                if 0 < score <= 10:
+                    count_text = count_el.get_text(strip=True) if count_el else ""
+                    count_match = re.search(r"[\d,]+", count_text.replace(",", ""))
+                    count = int(count_match.group().replace(",", "")) if count_match else 0
+                    return score, count
+        except Exception:
+            pass
+
+    # 방법 2: JSON-LD schema.org (리뷰 점수가 있는 경우)
+    for script_tag in soup.find_all("script", type="application/ld+json"):
+        try:
+            data = json.loads(script_tag.string or "")
+            if isinstance(data, dict):
+                agg = data.get("aggregateRating") or {}
+                score = agg.get("ratingValue") or agg.get("bestRating")
+                count = agg.get("reviewCount") or agg.get("ratingCount")
+                if score:
+                    s = float(score)
+                    if s > 10:
+                        s = round(s / 10, 1)
+                    return s, int(count or 0)
+        except Exception:
+            pass
+
+    return 0.0, 0
 
 
 # ---------------------------------------------------------------------------
@@ -697,9 +1012,15 @@ def generate_date_pairs(days_ahead: int) -> list:
 # 메인 실행
 # ---------------------------------------------------------------------------
 
-def run_crawl(config_path: str = "config.yaml", test_mode: bool = False) -> pd.DataFrame:
+def run_crawl(
+    config_path: str = "config.yaml",
+    test_mode: bool = False,
+    ota_filter: list = None,
+) -> pd.DataFrame:
     """
     test_mode=True: 첫 사업장 첫 경쟁사만, 2일치만 수집 (빠른 검증용)
+    ota_filter: 크롤링할 OTA 목록. None이면 전체.
+                예) ["야놀자"], ["Agoda"], ["여기어때", "Booking.com"]
     각 사업장의 own_urls가 있으면 자사 가격도 함께 수집 (is_own=True)
     """
     cfg = load_config(config_path)
@@ -708,12 +1029,17 @@ def run_crawl(config_path: str = "config.yaml", test_mode: bool = False) -> pd.D
     date_pairs = generate_date_pairs(2 if test_mode else cfg["crawl"]["days_ahead"])
     delay = cfg["crawl"]["request_delay"]
 
-    crawlers = [
+    all_crawlers = [
         (crawl_yanolja, "야놀자"),
         (crawl_yeogiuh, "여기어때"),
         (crawl_booking, "Booking.com"),
         (crawl_agoda,   "Agoda"),
     ]
+    if ota_filter:
+        crawlers = [(fn, name) for fn, name in all_crawlers if name in ota_filter]
+        logger.info(f"OTA 필터 적용: {ota_filter}")
+    else:
+        crawlers = all_crawlers
 
     properties = cfg["properties"][:1] if test_mode else cfg["properties"]
 

@@ -149,7 +149,10 @@ def generate_dashboard(
         else ""
     )
 
-    html = _render_html(df, cfg, summaries, prev_per_date, crawled_at, prev_date)
+    # 경쟁사별 OTA 별점 요약 (review_score 컬럼이 있을 때만)
+    review_summary = _build_review_summary(df)
+
+    html = _render_html(df, cfg, summaries, prev_per_date, crawled_at, prev_date, review_summary)
 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html)
@@ -157,6 +160,32 @@ def generate_dashboard(
     abs_path = str(Path(output_path).resolve())
     logger.info(f"대시보드 생성: {abs_path}")
     return abs_path
+
+
+def _build_review_summary(df: pd.DataFrame) -> dict:
+    """
+    경쟁사별 OTA 별점을 요약한다.
+    반환: {competitor_name: {ota: score, ...}, ...}
+    review_score > 0 인 데이터만 집계.
+    """
+    score_col = "review_score" if "review_score" in df.columns else None
+    if score_col is None:
+        return {}
+
+    valid = df[df[score_col] > 0].copy()
+    if valid.empty:
+        return {}
+
+    ota_col  = "ota"  if "ota"  in valid.columns else "OTA"
+    comp_col = "competitor_name" if "competitor_name" in valid.columns else "경쟁사명"
+
+    result = {}
+    for (comp, ota), grp in valid.groupby([comp_col, ota_col]):
+        score = round(grp[score_col].mean(), 1)
+        if comp not in result:
+            result[comp] = {}
+        result[comp][ota] = score
+    return result
 
 
 # ── 데이터 처리 ───────────────────────────────────────────────────────────────
@@ -398,9 +427,10 @@ def _render_price_cell(
 
 def _render_property_card(
     prop: dict,
-    summaries: dict,      # {day_type: summary_dict}
-    prev_per_date: dict,  # {(prop, comp, ota, checkin_date): price}
+    summaries: dict,        # {day_type: summary_dict}
+    prev_per_date: dict,    # {(prop, comp, ota, checkin_date): price}
     df: pd.DataFrame,
+    review_summary: dict = None,  # {comp_name: {ota: score}}
 ) -> str:
     prop_name    = prop["name"]
     region_str   = prop.get("region", "")
@@ -408,6 +438,7 @@ def _render_property_card(
     competitors  = prop.get("competitors", [])
     own_urls     = prop.get("own_urls", {})
     has_own      = any(own_urls.get(k, "") for k in ("yanolja_url", "yeogiuh_url", "booking_url"))
+    review_summary = review_summary or {}
 
     if not df.empty and "property_name" in df.columns:
         prop_df  = df[df["property_name"] == prop_name]
@@ -415,9 +446,16 @@ def _render_property_card(
     else:
         ok_count = 0
 
+    has_reviews = bool(review_summary)
+
     ota_ths = "".join(
         f'<th class="ota-{OTA_CLASS[ota]}">{OTA_SHORT[ota]}</th>'
         for ota in OTA_ORDER
+    )
+    # 별점 헤더 (별점 데이터 있을 때만 추가)
+    review_ths = (
+        '<th class="review-col" title="OTA 별점 (10점 만점 · 수집된 OTA만 표시)">별점</th>'
+        if has_reviews else ""
     )
 
     rows = []
@@ -433,12 +471,14 @@ def _render_property_card(
             )
             for ota in OTA_ORDER
         )
+        review_cell = _render_review_cell(prop_name, review_summary) if has_reviews else ""
         rows.append(
             f'<tr class="own-row">'
             f'<td class="competitor-name own-label">'
             f'<span class="badge-sono">자사</span>{prop_name}'
             f'</td>'
             f'{own_cells}'
+            f'{review_cell}'
             f'</tr>'
         )
 
@@ -453,8 +493,9 @@ def _render_property_card(
             )
             for ota in OTA_ORDER
         )
+        review_cell = _render_review_cell(comp_name, review_summary) if has_reviews else ""
         rows.append(
-            f'<tr><td class="competitor-name">{comp_name}</td>{cells}</tr>'
+            f'<tr><td class="competitor-name">{comp_name}</td>{cells}{review_cell}</tr>'
         )
 
     rows_html  = "\n          ".join(rows)
@@ -475,7 +516,7 @@ def _render_property_card(
     <table>
       <thead><tr>
         <th class="competitor-col">구분</th>
-        {ota_ths}
+        {ota_ths}{review_ths}
       </tr></thead>
       <tbody>
           {rows_html}
@@ -485,12 +526,42 @@ def _render_property_card(
 </div>"""
 
 
+def _render_review_cell(comp_name: str, review_summary: dict) -> str:
+    """경쟁사 별점을 OTA별로 표시하는 TD 셀 렌더링."""
+    comp_scores = review_summary.get(comp_name, {})
+    if not comp_scores:
+        return '<td class="review-cell review-na">-</td>'
+
+    parts = []
+    for ota in OTA_ORDER:
+        score = comp_scores.get(ota)
+        if score:
+            ota_cls = OTA_CLASS[ota]
+            color_class = (
+                "review-high" if score >= 9.0
+                else "review-mid" if score >= 8.0
+                else "review-low"
+            )
+            parts.append(
+                f'<span class="review-badge ota-{ota_cls} {color_class}" '
+                f'title="{OTA_SHORT[ota]}: {score}점">'
+                f'{OTA_SHORT[ota]}&nbsp;{score}'
+                f'</span>'
+            )
+
+    if not parts:
+        return '<td class="review-cell review-na">-</td>'
+    return f'<td class="review-cell">{"&nbsp;".join(parts)}</td>'
+
+
 def _render_html(
     df: pd.DataFrame, cfg: dict,
     summaries: dict, prev_per_date: dict,
     crawled_at: str, prev_date: str = "",
+    review_summary: dict = None,
 ) -> str:
     properties = cfg.get("properties", [])
+    review_summary = review_summary or {}
 
     total_props = len(properties)
     total_comps = sum(len(p.get("competitors", [])) for p in properties)
@@ -501,7 +572,7 @@ def _render_html(
     prices_ok = int((df["price"].fillna(0) > 0).sum()) if not df.empty and "price" in df.columns else 0
 
     cards_html = "\n\n".join(
-        _render_property_card(p, summaries, prev_per_date, df) for p in properties
+        _render_property_card(p, summaries, prev_per_date, df, review_summary) for p in properties
     )
 
     # 지역 필터 버튼
@@ -907,6 +978,23 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   letter-spacing: .2px;
   vertical-align: middle;
 }
+
+/* ── Review / 별점 ── */
+.review-col   { text-align: center; min-width: 80px; font-size: 11px; color: var(--muted); }
+.review-cell  { text-align: center; padding: 4px 6px; white-space: nowrap; }
+.review-na    { color: #3a3f4b; }
+.review-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 4px;
+  margin: 1px 0;
+  letter-spacing: .2px;
+}
+.review-high  { background: rgba(46,160,67,.20); color: #3fb950; }
+.review-mid   { background: rgba(210,153,34,.20); color: #d29922; }
+.review-low   { background: rgba(248,81,73,.20);  color: #f85149; }
 
 /* ── Footer ── */
 .footer {

@@ -78,6 +78,8 @@ def _prepare_df(df: pd.DataFrame) -> pd.DataFrame:
         "availability": "판매상태",
         "url": "URL",
         "error": "오류",
+        "review_score": "별점(10점)",
+        "review_count": "리뷰수",
     }
     df_out = df.copy()
     df_out.rename(columns={k: v for k, v in col_map.items() if k in df_out.columns}, inplace=True)
