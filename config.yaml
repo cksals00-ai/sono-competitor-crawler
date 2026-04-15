@@ -1,5 +1,5 @@
 # 소노호텔앤리조트 경쟁사 크롤러 설정
-# 전체 국내 주요 17개 사업장 + 해외 1개
+# 전체 국내 주요 18개 사업장 + 해외 1개
 # 최종 수정: 2026-04-15
 #
 # 브랜드 체계:
@@ -170,6 +170,30 @@ properties:
   id: haeundae
   region: 부산 해운대구
   competitors:
+  - name: 신라스테이 해운대
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3009094
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/45597
+    booking_url: https://www.booking.com/hotel/kr/shilla-stay-haeundae.html
+    agoda_url: https://www.agoda.com/ko-kr/shilla-stay-haeundae/hotel/busan-kr.html
+  - name: 이비스 앰배서더 부산 해운대
+    yanolja_url: ''
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7445
+    booking_url: https://www.booking.com/hotel/kr/ibis-ambassador-busan-haeundae.html
+    agoda_url: https://www.agoda.com/ko-kr/ibis-ambassador-busan-haeundae/hotel/busan-kr.html
+  - name: 해운대 센텀 호텔
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000620
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6469
+    booking_url: https://www.booking.com/hotel/kr/haeundae-centum.html
+    agoda_url: https://www.agoda.com/ko-kr/haeundae-centum-hotel/hotel/busan-kr.html
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10058110
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/80379
+    booking_url: https://www.booking.com/hotel/kr/sono-moon-haeundae.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/h55981984/hotel/busan-kr.html
+- name: 팔라티움 해운대
+  id: palatium_haeundae
+  region: 부산 해운대구
+  competitors:
   - name: 파라다이스 호텔 부산
     yanolja_url: https://nol.yanolja.com/stay/domestic/3001112
     yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6910
@@ -196,10 +220,10 @@ properties:
     booking_url: https://www.booking.com/hotel/kr/signiel-busan.ko.html
     agoda_url: https://www.agoda.com/ko-kr/signiel-busan/hotel/busan-kr.html
   own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/10058110
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/80379
-    booking_url: https://www.booking.com/hotel/kr/sono-moon-haeundae.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/h55981984/hotel/busan-kr.html
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10067476
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/89634
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/palatium-haeundae-h84452363/hotel/busan-kr.html
 - name: 소노캄 경주
   id: gyeongju
   region: 경북 경주시
