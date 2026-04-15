@@ -511,5 +511,5 @@ output:
 sono_homepage:
   login_url: https://www.sonohotelsresorts.com/api/hms/user/management/auth/login
   room_list_url: https://www.sonohotelsresorts.com/api/hms/user/memberReservation/room/list/pc
-  user_id: ''       # 소노 회원 ID — 환경변수 SONO_USER_ID 우선
-  password: ''      # 소노 회원 비밀번호 — 환경변수 SONO_PASSWORD 우선
+  user_id: 'cksals00'       # 소노 회원 ID — 환경변수 SONO_USER_ID 우선
+  password: 'Gml0703akd!'      # 소노 회원 비밀번호 — 환경변수 SONO_PASSWORD 우선

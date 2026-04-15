@@ -20,7 +20,7 @@ import yaml
 logger = logging.getLogger(__name__)
 
 # ── OTA 설정 ─────────────────────────────────────────────────────────────────
-OTA_ORDER   = ["야놀자", "여기어때", "Booking.com", "Agoda", "자사홈"]
+OTA_ORDER   = ["야놀자", "여기어때", "Booking.com", "Agoda"]
 OTA_SHORT   = {"야놀자": "야놀자", "여기어때": "여기어때", "Booking.com": "Booking", "Agoda": "Agoda", "자사홈": "자사홈"}
 OTA_URL_KEY = {"야놀자": "yanolja_url", "여기어때": "yeogiuh_url", "Booking.com": "booking_url", "Agoda": "agoda_url", "자사홈": ""}
 OTA_CLASS   = {"야놀자": "yanolja",  "여기어때": "yeogi",       "Booking.com": "booking",     "Agoda": "agoda",  "자사홈": "homepage"}
@@ -524,6 +524,86 @@ def _render_channel_section(prop_name: str, channel_data: dict) -> str:
 </div>"""
 
 
+def _render_homepage_section(
+    prop_name: str,
+    df: pd.DataFrame,
+    prev_per_date: dict,
+) -> str:
+    """자사몰 객실가격 토글 섹션 — 사업장 헤더 아래, 경쟁사 표 위에 삽입."""
+    if df is None or df.empty:
+        return ""
+    needed = {"property_name", "competitor_name", "ota", "price", "checkin_date", "room_type"}
+    if not needed.issubset(df.columns):
+        return ""
+
+    df_ok = df[df["error"].fillna("") == ""].copy() if "error" in df.columns else df.copy()
+    mask = (
+        (df_ok["property_name"] == prop_name) &
+        (df_ok["competitor_name"] == prop_name) &
+        (df_ok["ota"] == "자사홈")
+    )
+    hp_df = df_ok[mask]
+    avail = hp_df[hp_df["price"].fillna(0) > 0].copy()
+    if avail.empty:
+        return ""
+
+    def _make_rows(sub_df: pd.DataFrame) -> str:
+        if sub_df.empty:
+            return '<tr><td colspan="3" style="text-align:center;color:#3a3f4b;padding:8px">데이터 없음</td></tr>'
+        rows = []
+        for rt, grp in sub_df.groupby("room_type", sort=True):
+            row_min  = grp.loc[grp["price"].idxmin()]
+            price    = int(row_min["price"])
+            checkin  = str(row_min["checkin_date"])[:10]
+            is_p     = bool(row_min.get("is_promo", False)) or _is_promo(str(rt))
+            clean_rt = _clean_room_type(str(rt))
+            date_disp = _fmt_date(checkin)
+            prev_price = prev_per_date.get((prop_name, prop_name, "자사홈", checkin), 0)
+            change     = _change_html(price, prev_price) if prev_price > 0 \
+                         else '<span class="badge-new">신규</span>'
+            promo_html = ' <span class="badge-promo">특가</span>' if is_p else ""
+            rows.append(
+                f'<tr>'
+                f'<td class="hp-room">{clean_rt}</td>'
+                f'<td class="hp-price">{_fmt_price(price)}{promo_html}</td>'
+                f'<td class="hp-meta">{date_disp}&ensp;{change}</td>'
+                f'</tr>'
+            )
+        return "\n".join(rows)
+
+    layers = []
+    for dt in DAY_TYPES:
+        active_cls = " dt-active" if dt == "전체" else ""
+        if dt == "전체":
+            sub_df = avail
+        else:
+            sub_df = avail[avail["checkin_date"].apply(_get_day_type) == dt]
+        rows_html = _make_rows(sub_df)
+        layers.append(
+            f'<div class="dt-layer{active_cls}" data-dt="{dt}">'
+            f'<table class="homepage-table">'
+            f'<thead><tr>'
+            f'<th class="hp-th-room">객실타입</th>'
+            f'<th class="hp-th-price">가격</th>'
+            f'<th class="hp-th-meta">날짜 / 변동</th>'
+            f'</tr></thead>'
+            f'<tbody>{rows_html}</tbody>'
+            f'</table>'
+            f'</div>'
+        )
+
+    return f"""\
+<div class="homepage-section">
+  <button class="homepage-toggle" type="button">
+    <span class="homepage-toggle-label">자사몰 객실가격</span>
+    <span class="homepage-arrow">&#9660;</span>
+  </button>
+  <div class="homepage-body">
+    {"".join(layers)}
+  </div>
+</div>"""
+
+
 def _render_property_card(
     prop: dict,
     summaries: dict,        # {day_type: summary_dict}
@@ -603,7 +683,8 @@ def _render_property_card(
     if has_own:
         comp_label = "자사 포함 · " + comp_label
 
-    channel_html = _render_channel_section(prop_name, channel_data)
+    channel_html  = _render_channel_section(prop_name, channel_data)
+    homepage_html = _render_homepage_section(prop_name, df, prev_per_date)
 
     return f"""\
 <div class="property-card" data-region="{region_label}">
@@ -614,6 +695,7 @@ def _render_property_card(
     </div>
     <div class="property-stats">{comp_label}&nbsp;&middot;&nbsp;{ok_count:,}건</div>
   </div>
+{homepage_html}
   <div class="table-wrap">
     <table>
       <thead><tr>
@@ -1231,6 +1313,61 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   color: var(--text);
   padding-top: 6px;
 }
+
+/* ── Homepage section (자사몰 객실가격 토글) ── */
+.homepage-section {
+  border-bottom: 1px solid var(--border);
+}
+.homepage-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  color: var(--muted);
+  font-size: 12px;
+  font-family: inherit;
+  text-align: left;
+  transition: background .15s, color .15s;
+  touch-action: manipulation;
+}
+.homepage-toggle:hover { background: rgba(63,185,80,.06); color: var(--c-homepage); }
+.homepage-toggle-label { font-weight: 600; color: var(--c-homepage); font-size: 12px; }
+.homepage-arrow {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--muted);
+  transition: transform .2s;
+}
+.homepage-section.open .homepage-arrow { transform: rotate(180deg); }
+.homepage-body {
+  display: none;
+  padding: 0 14px 12px;
+}
+.homepage-section.open .homepage-body { display: block; }
+.homepage-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.homepage-table th {
+  background: rgba(63,185,80,.08);
+  color: var(--c-homepage);
+  font-weight: 600;
+  padding: 5px 8px;
+  border-bottom: 1px solid rgba(63,185,80,.2);
+  white-space: nowrap;
+}
+.hp-th-room { text-align: left; }
+.hp-th-price, .hp-th-meta { text-align: right; }
+.homepage-table td { padding: 4px 8px; border-bottom: 1px solid rgba(48,54,61,.6); }
+.homepage-table tr:last-child td { border-bottom: none; }
+.hp-room  { color: var(--text); font-weight: 500; }
+.hp-price { text-align: right; font-variant-numeric: tabular-nums; color: var(--c-homepage); font-weight: 700; }
+.hp-meta  { text-align: right; font-size: 10px; color: var(--muted); }
 """
 
 
@@ -1285,6 +1422,15 @@ _JS = """
   // ── 채널별 판매객실수 토글 ────────────────────────────────────────────────
   var chToggles = toArr(document.querySelectorAll('.channel-toggle'));
   chToggles.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var section = btn.parentElement;
+      section.classList.toggle('open');
+    });
+  });
+
+  // ── 자사몰 객실가격 토글 ──────────────────────────────────────────────────
+  var hpToggles = toArr(document.querySelectorAll('.homepage-toggle'));
+  hpToggles.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var section = btn.parentElement;
       section.classList.toggle('open');
