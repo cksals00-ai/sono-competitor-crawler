@@ -456,7 +456,32 @@ properties:
     yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6601
     booking_url: ''
     agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-danyang/hotel/danyang-gun-kr.html
-    homepage_store_cd: '86'
+    homepage_store_cd: 'BELLE_DY'
+- name: 소노캄 델피노
+  id: delpino
+  region: 강원 동해시
+  competitors:
+  - name: 한화리조트 동해
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001429
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6461
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-donghae/hotel/donghae-si-kr.html
+  - name: 한화리조트 설악
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001428
+    yeogiuh_url: ''
+    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-seorak.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-seorak/hotel/sokcho-si-kr.html
+  - name: 켄싱턴리조트 설악밸리
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000103524
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/kensington-resort-seorak-valley/hotel/sokcho-si-kr.html
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001053
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6610
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-delpino/hotel/donghae-si-kr.html
+    homepage_store_cd: 'CALM_DP'
 - name: 쏠비치 삼척
   id: samcheok
   region: 강원도 삼척시
