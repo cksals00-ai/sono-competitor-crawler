@@ -41,6 +41,8 @@ _driver = None
 
 # 소노 자사 홈페이지 세션 싱글톤
 _sono_session: requests.Session = None
+_sono_mem_no: str = ""         # 로그인 후 회원번호
+_sono_user_ind_cd: str = ""    # 로그인 후 memInd (예: "70")
 
 SONO_BASE_URL      = "https://www.sonohotelsresorts.com"
 SONO_LOGIN_URL     = f"{SONO_BASE_URL}/api/hms/user/management/auth/login"
@@ -930,9 +932,9 @@ def _sono_login(cfg: dict) -> bool:
     """
     소노 홈페이지 로그인.
     자격증명 우선순위: 환경변수 SONO_USER_ID / SONO_PASSWORD > config.yaml sono_homepage
-    성공 시 True 반환, _sono_session 갱신.
+    성공 시 True 반환, _sono_session / _sono_mem_no / _sono_user_ind_cd 갱신.
     """
-    global _sono_session
+    global _sono_session, _sono_mem_no, _sono_user_ind_cd
 
     hp_cfg  = cfg.get("sono_homepage", {})
     user_id = os.environ.get("SONO_USER_ID") or hp_cfg.get("user_id", "")
@@ -971,7 +973,18 @@ def _sono_login(cfg: dict) -> bool:
 
         fail_type = data.get("failMsgType") or data.get("resultCode")
         if resp.status_code == 200 and not fail_type:
-            logger.info("[자사홈] 로그인 성공")
+            # 회원번호 / 회원유형코드 파싱
+            user_info = (
+                data.get("body", {}).get("userInfo")
+                or data.get("userInfo")
+                or {}
+            )
+            _sono_mem_no      = str(user_info.get("memNo", "") or "")
+            _sono_user_ind_cd = str(user_info.get("memInd", "") or "")
+            logger.info(
+                f"[자사홈] 로그인 성공 "
+                f"(memNo={_sono_mem_no}, memInd={_sono_user_ind_cd})"
+            )
             _sono_session = sess
             return True
         else:
@@ -1060,10 +1073,10 @@ def _parse_sono_rooms(data) -> list:
 def crawl_sono_homepage(competitor: dict, checkin: str, checkout: str, cfg: dict) -> list:
     """
     소노 자사 홈페이지 객실 가격 크롤링.
-    competitor dict에 'homepage_store_cd' 키가 필요.
+    competitor dict에 'homepage_store_cd' 키가 필요 (숫자 코드, 예: "07").
     인증: SONO_USER_ID / SONO_PASSWORD 환경변수 또는 config.yaml sono_homepage.
     """
-    global _sono_session
+    global _sono_session, _sono_mem_no, _sono_user_ind_cd
 
     store_cd = competitor.get("homepage_store_cd", "")
     if not store_cd:
@@ -1082,14 +1095,25 @@ def crawl_sono_homepage(competitor: dict, checkin: str, checkout: str, cfg: dict
 
     ci_ymd = checkin.replace("-", "")
     co_ymd = checkout.replace("-", "")
+
+    # nights 계산 (체크아웃 - 체크인)
+    try:
+        from datetime import datetime as _dt
+        nights = (_dt.strptime(co_ymd, "%Y%m%d") - _dt.strptime(ci_ymd, "%Y%m%d")).days
+    except Exception:
+        nights = 1
+
     payload = {
+        "memNo":       _sono_mem_no,
+        "userIndCd":   _sono_user_ind_cd,
+        "rsvIndCd":    "9",
         "ciYmd":       ci_ymd,
         "coYmd":       co_ymd,
+        "nights":      nights,
         "storeCdList": [store_cd],
         "rmCnt":       1,
         "adultCnt":    2,
         "childCnt":    0,
-        "rsvIndCd":    "9",
     }
 
     def _post_room_list():
@@ -1106,6 +1130,8 @@ def crawl_sono_homepage(competitor: dict, checkin: str, checkout: str, cfg: dict
         if resp.status_code == 401:
             logger.info("[자사홈] 세션 만료 — 재로그인 시도")
             _sono_session = None
+            _sono_mem_no = ""
+            _sono_user_ind_cd = ""
             if not _sono_login(cfg):
                 records.append(
                     _make_record(competitor, "자사홈", checkin, checkout, reservation_url, error="login_failed")
@@ -1275,7 +1301,6 @@ def run_crawl(
     all_crawlers = [
         (crawl_yanolja,        "야놀자"),
         (crawl_yeogiuh,        "여기어때"),
-        (crawl_booking,        "Booking.com"),
         (crawl_agoda,          "Agoda"),
         (crawl_sono_homepage,  "자사홈"),
     ]

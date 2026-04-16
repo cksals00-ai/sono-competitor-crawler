@@ -10,7 +10,7 @@ OTA별로 나눠 단계적으로 실행한다.
 단계:
   --phase 1  : 야놀자 전체 크롤링 (약 10-15분)
   --phase 2  : Agoda 전체 크롤링 → 완료 후 오류건 재시도
-  --phase 3  : 여기어때 + Booking.com 전체 크롤링
+  --phase 3  : 여기어때 전체 크롤링
   (인자 없음): 1 → 2 → 3 순서로 전체 실행
 
 각 단계는 오늘 날짜 CSV에 결과를 누적(append)한 뒤 대시보드를 재생성한다.
@@ -19,7 +19,7 @@ Usage:
     python run_phased.py              # 전체 단계 순서 실행
     python run_phased.py --phase 1   # 야놀자만
     python run_phased.py --phase 2   # Agoda만
-    python run_phased.py --phase 3   # 여기어때 + Booking.com만
+    python run_phased.py --phase 3   # 여기어때만
 """
 
 import argparse
@@ -56,6 +56,10 @@ logger = logging.getLogger(__name__)
 
 # ── OTA 단계 정의 ─────────────────────────────────────────────────────────────
 PHASES = {
+    0: {
+        "label": "0단계: 자사홈",
+        "otas":  ["자사홈"],
+    },
     1: {
         "label": "1단계: 야놀자",
         "otas":  ["야놀자"],
@@ -65,8 +69,8 @@ PHASES = {
         "otas":  ["Agoda"],
     },
     3: {
-        "label": "3단계: 여기어때 + Booking.com",
-        "otas":  ["여기어때", "Booking.com"],
+        "label": "3단계: 여기어때",
+        "otas":  ["여기어때"],
     },
 }
 
@@ -318,15 +322,15 @@ def run_phase(phase_num: int):
 def main():
     parser = argparse.ArgumentParser(description="단계별 OTA 크롤링")
     parser.add_argument(
-        "--phase", type=int, choices=[1, 2, 3], default=None,
-        help="실행할 단계 (1=야놀자, 2=Agoda, 3=여기어때+Booking). 생략 시 전체 실행",
+        "--phase", type=int, choices=[0, 1, 2, 3], default=None,
+        help="실행할 단계 (0=자사홈, 1=야놀자, 2=Agoda, 3=여기어때). 생략 시 전체 실행",
     )
     args = parser.parse_args()
 
-    if args.phase:
+    if args.phase is not None:
         run_phase(args.phase)
     else:
-        for p in [1, 2, 3]:
+        for p in [0, 1, 2, 3]:
             run_phase(p)
 
 
