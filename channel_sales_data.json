@@ -324,8 +324,8 @@
       "total": {"rns": 755, "prev": 1347}
     },
     {
-      "key": "소노벨 해운대",
-      "property_names": ["소노벨 해운대"],
+      "key": "소노문 해운대",
+      "property_names": ["소노문 해운대"],
       "channels": {
         "아고다":    {"rns": 491, "prev": 386},
         "야놀자":    {"rns": 265, "prev": 138},
