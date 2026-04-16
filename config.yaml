@@ -1,6 +1,6 @@
 # 소노호텔앤리조트 경쟁사 크롤러 설정
-# 전체 국내 주요 18개 사업장 + 해외 1개
-# 최종 수정: 2026-04-15
+# 전체 국내 주요 20개 사업장 + 해외 1개
+# 최종 수정: 2026-04-16
 #
 # 브랜드 체계:
 #   소노캄 (5성급) / 소노벨 (콘도형) / 쏠비치 (해변특화) / 소노문 (도심) / 소노펠리체 (프리미엄 콘도)
@@ -12,10 +12,35 @@
 #   Agoda: agoda.com 전체 URL  (빈 문자열 = 미등록)
 
 properties:
+- name: 소노벨 비발디파크
+  id: vivaldi
+  region: 강원도 홍천군
+  competitors:
+  - name: 웰리힐리파크
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3016118
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7083
+    booking_url: https://www.booking.com/hotel/kr/wellihillipark-resort.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/welli-hilli-park-resort/hotel/hoengseong-gun-kr.html
+  - name: 휘닉스 리조트 평창
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001676
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/61569
+    booking_url: https://www.booking.com/hotel/kr/phoenic-park-the-amp-condominium.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/phoenix-pyeongchang-condominium/hotel/pyeongchang-gun-kr.html
+  - name: 한화리조트 평창
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001426
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6728
+    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-pheonix-park.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-pyeongchang/hotel/pyeongchang-gun-kr.html
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001803
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6576
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/sono-belle-vivaldi-park/hotel/hongcheon-gun-kr.html
+    homepage_store_cd: 09
 - name: 소노캄 비발디파크
   id: sonocam_vivaldi
   region: 강원도 홍천군
-  competitors:
+  competitors: &id001
   - name: 웰리힐리파크
     yanolja_url: https://nol.yanolja.com/stay/domestic/3016118
     yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7083
@@ -42,31 +67,171 @@ properties:
     booking_url: ''
     agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-vivaldi-park/hotel/hongcheon-gun-kr.html
     homepage_store_cd: '07'
-- name: 소노벨 비발디파크
-  id: vivaldi
+- name: 소노펠리체 비발디파크
+  id: felice_vivaldi
   region: 강원도 홍천군
-  competitors:
-  - name: 웰리힐리파크
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3016118
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7083
-    booking_url: https://www.booking.com/hotel/kr/wellihillipark-resort.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/welli-hilli-park-resort/hotel/hoengseong-gun-kr.html
-  - name: 휘닉스 리조트 평창
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001676
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/61569
-    booking_url: https://www.booking.com/hotel/kr/phoenic-park-the-amp-condominium.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/phoenix-pyeongchang-condominium/hotel/pyeongchang-gun-kr.html
-  - name: 한화리조트 평창
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001426
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6728
-    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-pheonix-park.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-pyeongchang/hotel/pyeongchang-gun-kr.html
+  competitors: *id001
   own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001803
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6576
+    yanolja_url: ''
+    yeogiuh_url: ''
     booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/sono-belle-vivaldi-park/hotel/hongcheon-gun-kr.html
-    homepage_store_cd: '09'
+    agoda_url: ''
+    homepage_store_cd: ''
+- name: 소노벨 델피노
+  id: delfino
+  region: 강원도 고성군
+  competitors:
+  - name: 켄싱턴리조트 설악밸리
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000103524
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/kensington-resort-seorak-valley/hotel/sokcho-si-kr.html
+  - name: 설악 한화리조트
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001423
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6561
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-seorak/hotel/goseong-gun-kr.html
+  - name: 속초 씨사이드 리조트
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10044180
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/67982
+    booking_url: ''
+    agoda_url: ''
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    homepage_store_cd: '70'
+- name: 소노캄 델피노
+  id: delpino
+  region: 강원 동해시
+  competitors: &id002
+  - name: 한화리조트 동해
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001429
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6461
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-donghae/hotel/donghae-si-kr.html
+  - name: 한화리조트 설악
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001428
+    yeogiuh_url: ''
+    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-seorak.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-seorak/hotel/sokcho-si-kr.html
+  - name: 켄싱턴리조트 설악밸리
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000103524
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/kensington-resort-seorak-valley/hotel/sokcho-si-kr.html
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001053
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6610
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-delpino/hotel/donghae-si-kr.html
+    homepage_store_cd: CALM_DP
+- name: 소노펠리체 델피노
+  id: felice_delpino
+  region: 강원 동해시
+  competitors: *id002
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    homepage_store_cd: ''
+- name: 쏠비치 양양
+  id: yangyang
+  region: 강원도 양양군
+  competitors:
+  - name: 더앤리조트 호텔&스파 양양
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000109887
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/65748
+    booking_url: https://www.booking.com/hotel/kr/the-n-resort-amp-spa-yangyang.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/the-n-resort-spa-yangyang/hotel/yangyang-gun-kr.html
+  - name: 브리드호텔 양양
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10044985
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/68602
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/breed-hotel-yangyang/hotel/yangyang-gun-kr.html
+  - name: 켄싱턴리조트 설악밸리
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000103524
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/kensington-resort-seorak-valley/hotel/sokcho-si-kr.html
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001599
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6800
+    booking_url: https://www.booking.com/hotel/kr/sol-beach-yangyang.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/sol-beach-hotel-resort/hotel/yangyang-gun-kr.html
+    homepage_store_cd: '10'
+- name: 쏠비치 삼척
+  id: samcheok
+  region: 강원도 삼척시
+  competitors:
+  - name: 한화리조트 동해
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001429
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6461
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-donghae/hotel/donghae-si-kr.html
+  - name: 삼척 쏠비치 인근 리조트
+    yanolja_url: ''
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/59219
+    booking_url: ''
+    agoda_url: ''
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001981
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7479
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/sol-beach-hotel-resort-samcheok/hotel/samcheok-si-kr.html
+    homepage_store_cd: '61'
+- name: 소노벨 양평
+  id: yangpyeong
+  region: 경기도 양평군
+  competitors:
+  - name: 블룸비스타 호텔
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000806
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6833
+    booking_url: https://www.booking.com/hotel/kr/hyeondae-beulrumbiseuta.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/bloomvista-yangpyeong/hotel/yangpyeong-gun-kr.html
+  - name: 더스타휴 골프&리조트
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3013443
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/63662
+    booking_url: ''
+    agoda_url: ''
+  - name: 쉐르빌 온천관광호텔
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10046363
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/75379
+    booking_url: ''
+    agoda_url: ''
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000933
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6573
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-yangpyeong/hotel/yangpyeong-gun-kr.html
+    homepage_store_cd: '03'
+- name: 소노캄 고양
+  id: goyang
+  region: 경기도 고양시
+  competitors:
+  - name: 글로스터호텔 킨텍스
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000113415
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/88409
+    booking_url: https://www.booking.com/hotel/kr/gloucesterhotel-kintex.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/gloucester-hotel-kintex/hotel/goyang-si-kr.html
+  - name: 킨텍스 바이 케이트리
+    yanolja_url: ''
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/67689
+    booking_url: https://www.booking.com/hotel/kr/po-kintex-by-k-tree-goyang.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/po-kintex-by-k-tree/hotel/goyang-si-kr.html
+  - name: 라마다 앙코르 일산
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000824
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7256
+    booking_url: https://www.booking.com/hotel/kr/ramada-encore-ilsan.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/ramada-encore-ilsan/hotel/goyang-si-kr.html
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000929
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6574
+    booking_url: https://www.booking.com/hotel/kr/the-mvl-kintex.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/the-mvl-hotel-goyang/hotel/goyang-si-kr.html
+    homepage_store_cd: '29'
 - name: 소노벨 천안
   id: cheonan
   region: 충남 천안
@@ -97,56 +262,31 @@ properties:
     booking_url: ''
     agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-cheonan/hotel/cheonan-si-kr.html
     homepage_store_cd: '74'
-- name: 소노벨 델피노
-  id: delfino
-  region: 강원도 고성군
+- name: 소노벨 단양
+  id: danyang
+  region: 충북 단양군
   competitors:
-  - name: 켄싱턴리조트 설악밸리
-    yanolja_url: https://nol.yanolja.com/stay/domestic/1000103524
+  - name: 쏘라노 단양
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001539
     yeogiuh_url: ''
     booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/kensington-resort-seorak-valley/hotel/sokcho-si-kr.html
-  - name: 설악 한화리조트
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001423
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6561
+    agoda_url: https://www.agoda.com/ko-kr/sorano-danyang/hotel/danyang-gun-kr.html
+  - name: 더밸리 호텔 단양
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10049714
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/78606
     booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-seorak/hotel/goseong-gun-kr.html
-  - name: 속초 씨사이드 리조트
-    yanolja_url: https://nol.yanolja.com/stay/domestic/10044180
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/67982
+    agoda_url: ''
+  - name: 단양 아쿠아월드
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001067
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6466
     booking_url: ''
     agoda_url: ''
   own_urls:
-    yanolja_url: ''
-    yeogiuh_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000932
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6601
     booking_url: ''
-    agoda_url: ''
-    homepage_store_cd: '70'
-- name: 쏠비치 양양
-  id: yangyang
-  region: 강원도 양양군
-  competitors:
-  - name: 더앤리조트 호텔&스파 양양
-    yanolja_url: https://nol.yanolja.com/stay/domestic/1000109887
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/65748
-    booking_url: https://www.booking.com/hotel/kr/the-n-resort-amp-spa-yangyang.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/the-n-resort-spa-yangyang/hotel/yangyang-gun-kr.html
-  - name: 브리드호텔 양양
-    yanolja_url: https://nol.yanolja.com/stay/domestic/10044985
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/68602
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/breed-hotel-yangyang/hotel/yangyang-gun-kr.html
-  - name: 켄싱턴리조트 설악밸리
-    yanolja_url: https://nol.yanolja.com/stay/domestic/1000103524
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/kensington-resort-seorak-valley/hotel/sokcho-si-kr.html
-  own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001599
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6800
-    booking_url: https://www.booking.com/hotel/kr/sol-beach-yangyang.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/sol-beach-hotel-resort/hotel/yangyang-gun-kr.html
-    homepage_store_cd: '10'
+    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-danyang/hotel/danyang-gun-kr.html
+    homepage_store_cd: BELLE_DY
 - name: 소노벨 변산
   id: byeonsan
   region: 전북 부안군
@@ -172,31 +312,86 @@ properties:
     booking_url: https://www.booking.com/hotel/kr/sono-belle-byeonsan-formerly-daemyung-resort-byeonsan.ko.html
     agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-byeonsan-cloud-9/hotel/buan-gun-kr.html
     homepage_store_cd: '16'
-- name: 소노캄 고양
-  id: goyang
-  region: 경기도 고양시
+- name: 쏠비치 진도
+  id: jindo
+  region: 전남 진도군
   competitors:
-  - name: 글로스터호텔 킨텍스
-    yanolja_url: https://nol.yanolja.com/stay/domestic/1000113415
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/88409
-    booking_url: https://www.booking.com/hotel/kr/gloucesterhotel-kintex.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/gloucester-hotel-kintex/hotel/goyang-si-kr.html
-  - name: 킨텍스 바이 케이트리
-    yanolja_url: ''
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/67689
-    booking_url: https://www.booking.com/hotel/kr/po-kintex-by-k-tree-goyang.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/po-kintex-by-k-tree/hotel/goyang-si-kr.html
-  - name: 라마다 앙코르 일산
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3000824
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7256
-    booking_url: https://www.booking.com/hotel/kr/ramada-encore-ilsan.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/ramada-encore-ilsan/hotel/goyang-si-kr.html
+  - name: 진도 관광호텔
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000709
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+  - name: 오시아노관광호텔
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000774
+    yeogiuh_url: ''
+    booking_url: https://www.booking.com/hotel/kr/osiano.ko.html
+    agoda_url: ''
   own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3000929
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6574
-    booking_url: https://www.booking.com/hotel/kr/the-mvl-kintex.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/the-mvl-hotel-goyang/hotel/goyang-si-kr.html
-    homepage_store_cd: '29'
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000100490
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/60673
+    booking_url: https://www.booking.com/hotel/kr/sol-beach-jindo.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/sol-beach-jindo/hotel/jindo-gun-kr.html
+    homepage_store_cd: '77'
+- name: 소노캄 여수
+  id: yeosu
+  region: 전남 여수시
+  competitors:
+  - name: 히든베이 호텔
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000669
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6626
+    booking_url: https://www.booking.com/hotel/kr/yeosuhideunbeihotel.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/hidden-bay-hotel/hotel/yeosu-si-kr.html
+  - name: 디오션 호텔&리조트
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000102742
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7951
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/the-ocean-hotel-resort/hotel/yeosu-si-kr.html
+  - name: 여수 벨메르 한화호텔&리조트
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000109882
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/65619
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-yeosu-belmare/hotel/yeosu-si-kr.html
+  - name: 여수 베네치아 호텔&스위트
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3014238
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/53999
+    booking_url: https://www.booking.com/hotel/kr/venezia-and-resort.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/venezia-hotel-resort-yeosu/hotel/yeosu-si-kr.html
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000925
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6607
+    booking_url: https://www.booking.com/hotel/kr/the-mvl-yeosu.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/the-mvl-hotel-yeosu/hotel/yeosu-si-kr.html
+    homepage_store_cd: '22'
+- name: 소노캄 거제
+  id: geoje
+  region: 경남 거제시
+  competitors:
+  - name: 한화리조트 거제 벨버디어
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3015778
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/55495
+    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-geoje-belvedere.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-geoje-belvedere/hotel/geoje-si-kr.html
+  - name: 한화리조트 거제 르씨엘
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10047986
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/82892
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-geoje-le-ciel/hotel/geoje-si-kr.html
+  - name: 라마다 스위츠 거제
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000111911
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/66828
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/ramada-suites-geoje/hotel/geoje-si-kr.html
+  - name: 거제 삼성호텔
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000911
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6757
+    booking_url: https://www.booking.com/hotel/kr/samsung-geoje.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/samsung-hotel-geoje/hotel/geoje-si-kr.html
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000935
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6605
+    booking_url: https://www.booking.com/hotel/kr/daemyung-resort-geoje-marina.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-geoje/hotel/geoje-si-kr.html
+    homepage_store_cd: '24'
 - name: 소노문 해운대
   id: haeundae
   region: 부산 해운대구
@@ -292,66 +487,6 @@ properties:
     booking_url: https://www.booking.com/hotel/kr/daemyung-resort-gyeongju.ko.html
     agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-gyeongju/hotel/gyeongju-si-kr.html
     homepage_store_cd: '05'
-- name: 소노캄 거제
-  id: geoje
-  region: 경남 거제시
-  competitors:
-  - name: 한화리조트 거제 벨버디어
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3015778
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/55495
-    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-geoje-belvedere.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-geoje-belvedere/hotel/geoje-si-kr.html
-  - name: 한화리조트 거제 르씨엘
-    yanolja_url: https://nol.yanolja.com/stay/domestic/10047986
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/82892
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-geoje-le-ciel/hotel/geoje-si-kr.html
-  - name: 라마다 스위츠 거제
-    yanolja_url: https://nol.yanolja.com/stay/domestic/1000111911
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/66828
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/ramada-suites-geoje/hotel/geoje-si-kr.html
-  - name: 거제 삼성호텔
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3000911
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6757
-    booking_url: https://www.booking.com/hotel/kr/samsung-geoje.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/samsung-hotel-geoje/hotel/geoje-si-kr.html
-  own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3000935
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6605
-    booking_url: https://www.booking.com/hotel/kr/daemyung-resort-geoje-marina.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-geoje/hotel/geoje-si-kr.html
-    homepage_store_cd: '24'
-- name: 소노캄 여수
-  id: yeosu
-  region: 전남 여수시
-  competitors:
-  - name: 히든베이 호텔
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3000669
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6626
-    booking_url: https://www.booking.com/hotel/kr/yeosuhideunbeihotel.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/hidden-bay-hotel/hotel/yeosu-si-kr.html
-  - name: 디오션 호텔&리조트
-    yanolja_url: https://nol.yanolja.com/stay/domestic/1000102742
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7951
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/the-ocean-hotel-resort/hotel/yeosu-si-kr.html
-  - name: 여수 벨메르 한화호텔&리조트
-    yanolja_url: https://nol.yanolja.com/stay/domestic/1000109882
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/65619
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-yeosu-belmare/hotel/yeosu-si-kr.html
-  - name: 여수 베네치아 호텔&스위트
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3014238
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/53999
-    booking_url: https://www.booking.com/hotel/kr/venezia-and-resort.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/venezia-hotel-resort-yeosu/hotel/yeosu-si-kr.html
-  own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3000925
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6607
-    booking_url: https://www.booking.com/hotel/kr/the-mvl-yeosu.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/the-mvl-hotel-yeosu/hotel/yeosu-si-kr.html
-    homepage_store_cd: '22'
 - name: 소노벨 제주
   id: jeju_belle
   region: 제주도 제주시 조천읍
@@ -407,121 +542,6 @@ properties:
     booking_url: https://www.booking.com/hotel/kr/daemyung-shinewille-resort.ko.html
     agoda_url: https://www.agoda.com/ko-kr/daemyung-shinewille-resort/hotel/jeju-island-kr.html
     homepage_store_cd: '87'
-- name: 소노벨 양평
-  id: yangpyeong
-  region: 경기도 양평군
-  competitors:
-  - name: 블룸비스타 호텔
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3000806
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6833
-    booking_url: https://www.booking.com/hotel/kr/hyeondae-beulrumbiseuta.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/bloomvista-yangpyeong/hotel/yangpyeong-gun-kr.html
-  - name: 더스타휴 골프&리조트
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3013443
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/63662
-    booking_url: ''
-    agoda_url: ''
-  - name: 쉐르빌 온천관광호텔
-    yanolja_url: https://nol.yanolja.com/stay/domestic/10046363
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/75379
-    booking_url: ''
-    agoda_url: ''
-  own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3000933
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6573
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-yangpyeong/hotel/yangpyeong-gun-kr.html
-    homepage_store_cd: '03'
-- name: 소노벨 단양
-  id: danyang
-  region: 충북 단양군
-  competitors:
-  - name: 쏘라노 단양
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001539
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/sorano-danyang/hotel/danyang-gun-kr.html
-  - name: 더밸리 호텔 단양
-    yanolja_url: https://nol.yanolja.com/stay/domestic/10049714
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/78606
-    booking_url: ''
-    agoda_url: ''
-  - name: 단양 아쿠아월드
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001067
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6466
-    booking_url: ''
-    agoda_url: ''
-  own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3000932
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6601
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-danyang/hotel/danyang-gun-kr.html
-    homepage_store_cd: 'BELLE_DY'
-- name: 소노캄 델피노
-  id: delpino
-  region: 강원 동해시
-  competitors:
-  - name: 한화리조트 동해
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001429
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6461
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-donghae/hotel/donghae-si-kr.html
-  - name: 한화리조트 설악
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001428
-    yeogiuh_url: ''
-    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-seorak.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-seorak/hotel/sokcho-si-kr.html
-  - name: 켄싱턴리조트 설악밸리
-    yanolja_url: https://nol.yanolja.com/stay/domestic/1000103524
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/kensington-resort-seorak-valley/hotel/sokcho-si-kr.html
-  own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001053
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6610
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-delpino/hotel/donghae-si-kr.html
-    homepage_store_cd: 'CALM_DP'
-- name: 쏠비치 삼척
-  id: samcheok
-  region: 강원도 삼척시
-  competitors:
-  - name: 한화리조트 동해
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001429
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6461
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-donghae/hotel/donghae-si-kr.html
-  - name: 삼척 쏠비치 인근 리조트
-    yanolja_url: ''
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/59219
-    booking_url: ''
-    agoda_url: ''
-  own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001981
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7479
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/sol-beach-hotel-resort-samcheok/hotel/samcheok-si-kr.html
-    homepage_store_cd: '61'
-- name: 쏠비치 진도
-  id: jindo
-  region: 전남 진도군
-  competitors:
-  - name: 진도 관광호텔
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3000709
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
-  - name: 오시아노관광호텔
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3000774
-    yeogiuh_url: ''
-    booking_url: https://www.booking.com/hotel/kr/osiano.ko.html
-    agoda_url: ''
-  own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/1000100490
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/60673
-    booking_url: https://www.booking.com/hotel/kr/sol-beach-jindo.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/sol-beach-jindo/hotel/jindo-gun-kr.html
-    homepage_store_cd: '77'
 - name: 소노벨 하이퐁
   id: haiphong
   region: 베트남 하이퐁
@@ -557,9 +577,8 @@ output:
   excel_filename: sono_competitor_prices_{date}.xlsx
   csv_filename: sono_competitor_prices_{date}.csv
   powerbi_filename: sono_competitor_prices_latest.xlsx
-
 sono_homepage:
   login_url: https://www.sonohotelsresorts.com/api/hms/user/management/auth/login
   room_list_url: https://www.sonohotelsresorts.com/api/hms/user/memberReservation/room/list/pc
-  user_id: 'cksals00'       # 소노 회원 ID — 환경변수 SONO_USER_ID 우선
-  password: 'Gml0703akd!'      # 소노 회원 비밀번호 — 환경변수 SONO_PASSWORD 우선
+  user_id: cksals00
+  password: Gml0703akd!
