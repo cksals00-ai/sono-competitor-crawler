@@ -171,10 +171,10 @@ body {
 .legend-note  { color: var(--muted); font-size: 11px; }
 
 /* ── Main / Grid ── */
-.main { padding: 16px; max-width: 1600px; margin: 0 auto; }
+.main { padding: 16px; max-width: 1800px; margin: 0 auto; }
 .property-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+  grid-template-columns: 1fr;
   gap: 16px;
   align-items: stretch;
 }
@@ -345,7 +345,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .property-grid { grid-template-columns: 1fr; gap: 12px; }
+  .property-grid { gap: 12px; }
   .main { padding: 10px; }
   .header { padding: 12px 14px; }
   .header-title { font-size: 16px; }
@@ -364,12 +364,16 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   .header-title { font-size: 14px; }
   .legend-bar { font-size: 10px; }
 }
-
-/* ── Widescreen (1920px+): 2-column grid ── */
-@media (min-width: 1920px) {
-  .main { max-width: 1900px; padding: 16px 60px; }
-  .header-inner { max-width: 1900px; }
+@media (min-width: 768px) {
   .property-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1200px) {
+  .property-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1920px) {
+  .main { max-width: 1900px; padding: 16px 40px; }
+  .header-inner { max-width: 1900px; }
+  .property-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* ── Channel Sales Section ── */
@@ -511,7 +515,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         <span class="header-title">소노 경쟁사 모니터링</span>
         <span class="header-team-badge">GS Team</span>
       </div>
-      <div class="header-meta">수집: 2026-04-16 07:49&ensp;&middot;&ensp;생성: 2026-04-16 09:20&ensp;&middot;&ensp;대상기간: 4/17 ~ 5/16&ensp;&middot;&ensp;비교기준: 전일(4/15)</div>
+      <div class="header-meta">수집: 2026-04-16 07:49&ensp;&middot;&ensp;생성: 2026-04-16 09:24&ensp;&middot;&ensp;대상기간: 4/17 ~ 5/16&ensp;&middot;&ensp;비교기준: 전일(4/15)</div>
     </div>
     <div class="header-badge">LIVE</div>
   </div>
