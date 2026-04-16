@@ -10,7 +10,7 @@ import re
 import json
 import time
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date as _date
 from dataclasses import dataclass, field
 
 import requests
@@ -73,6 +73,9 @@ SONO_ROOM_LIST_URL = f"{SONO_BASE_URL}/api/hms/user/memberReservation/room/list/
 
 # Trip.com 도시 페이지 캐시: (city_id, checkin, checkout) → {hotel_id: price}
 _tripcom_city_cache: dict = {}
+
+# 공휴일 API 캐시: year → frozenset of _date objects
+_holiday_cache: dict = {}
 
 
 @dataclass
@@ -1758,7 +1761,158 @@ def _make_record(competitor, ota, checkin, checkout, url, error="") -> PriceReco
     )
 
 
+# ---------------------------------------------------------------------------
+# 공휴일 기반 크롤링 날짜 결정 (금토 + 연휴)
+# ---------------------------------------------------------------------------
+
+def _fetch_korean_holidays_year(year: int, cfg: dict) -> frozenset:
+    """
+    nager.date API에서 특정 연도 한국 공휴일을 fetch해 _date 집합으로 반환.
+    실패 시 빈 집합 반환 (금토 기준으로만 동작).
+    결과는 _holiday_cache에 저장.
+
+    API: https://date.nager.at/api/v3/PublicHolidays/{year}/KR
+         무료, API 키 불필요. 대체공휴일(substitute holidays) 포함.
+    """
+    global _holiday_cache
+    if year in _holiday_cache:
+        return _holiday_cache[year]
+
+    url = f"https://date.nager.at/api/v3/PublicHolidays/{year}/KR"
+    try:
+        resp = requests.get(url, timeout=10, headers={"Accept": "application/json"})
+        resp.raise_for_status()
+        items = resp.json()
+        dates = frozenset(
+            _date.fromisoformat(item["date"])
+            for item in items
+            if isinstance(item.get("date"), str)
+        )
+        logger.info(f"[공휴일] {year}년 한국 공휴일 {len(dates)}개 수집 (nager.date)")
+        _holiday_cache[year] = dates
+        return dates
+    except Exception as e:
+        logger.warning(f"[공휴일] {year}년 공휴일 조회 실패: {e} — 금토 기준만 적용")
+        _holiday_cache[year] = frozenset()
+        return frozenset()
+
+
+def _add_korean_substitute_holidays(holidays: frozenset) -> frozenset:
+    """
+    nager.date에 누락된 한국 대체공휴일을 보완.
+
+    규칙 (국경일법 기준):
+      1. 공휴일이 일요일 → 다음 월요일 대체공휴일
+      2. 어린이날(5/5)이 토요일 → 다음 월요일 대체공휴일
+         (어린이날이 일요일이면 규칙1로 자동 처리)
+    """
+    substitutes: set = set()
+    for d in holidays:
+        if d.weekday() == 6:  # 일요일
+            sub = d + timedelta(days=1)  # 다음 월요일
+            if sub not in holidays:
+                substitutes.add(sub)
+        elif d.month == 5 and d.day == 5 and d.weekday() == 5:  # 어린이날 토요일
+            sub = d + timedelta(days=2)  # 다음 월요일
+            if sub not in holidays:
+                substitutes.add(sub)
+    if substitutes:
+        logger.debug(f"[공휴일] 대체공휴일 추가: {sorted(substitutes)}")
+    return holidays | frozenset(substitutes)
+
+
+def _get_holiday_blocks(holiday_dates: frozenset, start_d: _date, end_d: _date) -> list:
+    """
+    주말+공휴일이 연속된 구간 중 공휴일 포함 + 3일 이상인 연휴 블록을 탐색.
+    경계 연휴도 포함하도록 start_d/end_d 앞뒤 7일 확장해 탐색.
+
+    반환: [(block_start: _date, block_end: _date), ...]
+    """
+    ext_start = start_d - timedelta(days=7)
+    ext_end   = end_d   + timedelta(days=7)
+
+    blocks = []
+    d = ext_start
+    while d <= ext_end:
+        is_off = d.weekday() >= 5 or d in holiday_dates  # 토=5, 일=6
+        if is_off:
+            block_start  = d
+            has_holiday  = d in holiday_dates
+            d += timedelta(days=1)
+            while d <= ext_end and (d.weekday() >= 5 or d in holiday_dates):
+                if d in holiday_dates:
+                    has_holiday = True
+                d += timedelta(days=1)
+            block_end = d - timedelta(days=1)
+
+            block_len = (block_end - block_start).days + 1
+            # 연휴 조건: 공휴일 포함 + 3일 이상 (예: 금-토-일, 토-일-월, 5일 황금연휴 등)
+            if has_holiday and block_len >= 3:
+                # 이 블록의 체크인 범위 [block_start-1, block_end-1]가
+                # 크롤링 대상 기간 [start_d, end_d]과 겹치는지 확인
+                ci_first = block_start - timedelta(days=1)
+                ci_last  = block_end   - timedelta(days=1)
+                if ci_last >= start_d and ci_first <= end_d:
+                    blocks.append((block_start, block_end))
+        else:
+            d += timedelta(days=1)
+
+    return blocks
+
+
+def generate_crawl_dates(days_ahead: int, cfg: dict) -> list:
+    """
+    크롤링 대상 날짜 쌍 결정 (공휴일 연휴 로직 포함).
+
+    로직:
+      - 평일/주말 기본: 매주 금요일(4), 토요일(5) 체크인
+      - 연휴 기간: 연휴 시작일 전날 ~ 연휴 마지막날 전날 체크인 모두 포함
+        예) 5/3~5/6 연휴 → 5/2, 5/3, 5/4, 5/5 체크인 전부 크롤링
+
+    공휴일 API: nager.date (무료, API 키 불필요)
+    API 조회 실패 시 금토 기준만 적용.
+
+    반환: [(checkin: str, checkout: str), ...]  YYYY-MM-DD 오름차순
+    """
+    today   = datetime.today().date()
+    start_d = today + timedelta(days=1)       # 내일부터
+    end_d   = today + timedelta(days=days_ahead)
+
+    # 범위 내 연도의 공휴일 수집 + 대체공휴일 보완
+    holiday_dates: frozenset = frozenset()
+    for yr in {start_d.year, end_d.year}:
+        holiday_dates = holiday_dates | _fetch_korean_holidays_year(yr, cfg)
+    holiday_dates = _add_korean_substitute_holidays(holiday_dates)
+
+    crawl_dates: set = set()
+
+    # 연휴 블록 → 체크인 날짜 추가
+    for block_start, block_end in _get_holiday_blocks(holiday_dates, start_d, end_d):
+        ci      = block_start - timedelta(days=1)
+        ci_last = block_end   - timedelta(days=1)
+        while ci <= ci_last:
+            if start_d <= ci <= end_d:
+                crawl_dates.add(ci)
+            ci += timedelta(days=1)
+
+    # 매주 금요일·토요일 체크인 추가
+    d = start_d
+    while d <= end_d:
+        if d.weekday() in (4, 5):  # 4=금요일, 5=토요일
+            crawl_dates.add(d)
+        d += timedelta(days=1)
+
+    return [
+        (
+            d.strftime("%Y-%m-%d"),
+            (d + timedelta(days=1)).strftime("%Y-%m-%d"),
+        )
+        for d in sorted(crawl_dates)
+    ]
+
+
 def generate_date_pairs(days_ahead: int) -> list:
+    """내일부터 days_ahead일치 모든 날짜 반환 (테스트 모드용)."""
     today = datetime.today()
     return [
         (
@@ -1787,7 +1941,10 @@ def run_crawl(
     cfg = load_config(config_path)
     all_records = []
 
-    date_pairs = generate_date_pairs(2 if test_mode else cfg["crawl"]["days_ahead"])
+    if test_mode:
+        date_pairs = generate_date_pairs(2)
+    else:
+        date_pairs = generate_crawl_dates(cfg["crawl"]["days_ahead"], cfg)
     delay = cfg["crawl"]["request_delay"]
 
     all_crawlers = [
