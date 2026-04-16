@@ -21,21 +21,25 @@ properties:
     yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7083
     booking_url: https://www.booking.com/hotel/kr/wellihillipark-resort.ko.html
     agoda_url: https://www.agoda.com/ko-kr/welli-hilli-park-resort/hotel/hoengseong-gun-kr.html
+    naver_id: '11583166'
   - name: 휘닉스 리조트 평창
     yanolja_url: https://nol.yanolja.com/stay/domestic/3001676
     yeogiuh_url: https://www.yeogi.com/domestic-accommodations/61569
     booking_url: https://www.booking.com/hotel/kr/phoenic-park-the-amp-condominium.ko.html
     agoda_url: https://www.agoda.com/ko-kr/phoenix-pyeongchang-condominium/hotel/pyeongchang-gun-kr.html
+    naver_id: '11727758'
   - name: 한화리조트 평창
     yanolja_url: https://nol.yanolja.com/stay/domestic/3001426
     yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6728
     booking_url: https://www.booking.com/hotel/kr/hanwha-resort-pheonix-park.ko.html
     agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-pyeongchang/hotel/pyeongchang-gun-kr.html
+    naver_id: '11727920'
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/3001803
     yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6576
     booking_url: ''
     agoda_url: https://www.agoda.com/ko-kr/sono-belle-vivaldi-park/hotel/hongcheon-gun-kr.html
+    naver_id: '13139708'
     homepage_store_cd: 09
 - name: 소노캄 비발디파크
   id: sonocam_vivaldi
@@ -46,26 +50,31 @@ properties:
     yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7083
     booking_url: https://www.booking.com/hotel/kr/wellihillipark-resort.ko.html
     agoda_url: https://www.agoda.com/ko-kr/welli-hilli-park-resort/hotel/hoengseong-gun-kr.html
+    naver_id: '11583166'
   - name: 휘닉스 리조트 평창
     yanolja_url: https://nol.yanolja.com/stay/domestic/3001676
     yeogiuh_url: https://www.yeogi.com/domestic-accommodations/61569
     booking_url: https://www.booking.com/hotel/kr/phoenic-park-the-amp-condominium.ko.html
     agoda_url: https://www.agoda.com/ko-kr/phoenix-pyeongchang-condominium/hotel/pyeongchang-gun-kr.html
+    naver_id: '11727758'
   - name: 한화리조트 평창
     yanolja_url: https://nol.yanolja.com/stay/domestic/3001426
     yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6728
     booking_url: https://www.booking.com/hotel/kr/hanwha-resort-pheonix-park.ko.html
     agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-pyeongchang/hotel/pyeongchang-gun-kr.html
+    naver_id: '11727920'
   - name: 하이원리조트 힐콘도
     yanolja_url: ''
     yeogiuh_url: https://www.yeogi.com/domestic-accommodations/57434
     booking_url: ''
     agoda_url: https://www.agoda.com/ko-kr/high1-resort/hotel/jeongseon-gun-kr.html
+    naver_id: '1188701234'
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/3013069
     yeogiuh_url: https://www.yeogi.com/domestic-accommodations/12521
     booking_url: ''
     agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-vivaldi-park/hotel/hongcheon-gun-kr.html
+    naver_id: '15744164'
     homepage_store_cd: '07'
 - name: 소노펠리체 비발디파크
   id: felice_vivaldi
