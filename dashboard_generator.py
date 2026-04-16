@@ -24,10 +24,23 @@ logger = logging.getLogger(__name__)
 _SHOW_HOMEPAGE_SECTION = False
 
 # ── OTA 설정 ─────────────────────────────────────────────────────────────────
-OTA_ORDER   = ["야놀자", "여기어때", "Agoda"]
-OTA_SHORT   = {"야놀자": "야놀자", "여기어때": "여기어때", "Agoda": "Agoda", "자사홈": "자사홈"}
-OTA_URL_KEY = {"야놀자": "yanolja_url", "여기어때": "yeogiuh_url", "Agoda": "agoda_url", "자사홈": ""}
-OTA_CLASS   = {"야놀자": "yanolja",  "여기어때": "yeogi",  "Agoda": "agoda",  "자사홈": "homepage"}
+OTA_ORDER   = ["야놀자", "네이버호텔", "Trip.com"]
+OTA_SHORT   = {
+    "야놀자":   "야놀자",
+    "네이버호텔": "네이버호텔",
+    "Trip.com": "Trip.com",
+    "여기어때":  "여기어때",
+    "Agoda":   "Agoda",
+    "자사홈":   "자사홈",
+}
+OTA_CLASS   = {
+    "야놀자":   "yanolja",
+    "네이버호텔": "naver",
+    "Trip.com": "tripcom",
+    "여기어때":  "yeogi",
+    "Agoda":   "agoda",
+    "자사홈":   "homepage",
+}
 
 # ── 요일 구분 ─────────────────────────────────────────────────────────────────
 DAY_TYPES  = ["전체", "주중", "금", "토", "연휴"]
@@ -249,6 +262,7 @@ def _build_review_summary(df: pd.DataFrame) -> dict:
 
     ota_col  = "ota"  if "ota"  in valid.columns else "OTA"
     comp_col = "competitor_name" if "competitor_name" in valid.columns else "경쟁사명"
+    valid[ota_col] = valid[ota_col].apply(_normalize_ota)
 
     result = {}
     for (comp, ota), grp in valid.groupby([comp_col, ota_col]):
@@ -310,6 +324,7 @@ def _build_price_summary(df: pd.DataFrame, day_type: str = "전체") -> dict:
         return {}
 
     df_ok = df[df["error"].fillna("") == ""].copy() if "error" in df.columns else df.copy()
+    df_ok["ota"] = df_ok["ota"].apply(_normalize_ota)
 
     if day_type and day_type != "전체":
         df_ok = df_ok[df_ok["checkin_date"].apply(_get_day_type) == day_type]
@@ -354,6 +369,7 @@ def _build_per_date_prices(df: pd.DataFrame) -> dict:
         return {}
 
     df_ok = df[df["error"].fillna("") == ""].copy() if "error" in df.columns else df.copy()
+    df_ok["ota"] = df_ok["ota"].apply(_normalize_ota)
     result = {}
     for (prop, comp, ota, date), grp in df_ok.groupby(
         ["property_name", "competitor_name", "ota", "checkin_date"], sort=False
@@ -362,6 +378,36 @@ def _build_per_date_prices(df: pd.DataFrame) -> dict:
         if not avail.empty:
             result[(prop, comp, ota, str(date)[:10])] = int(avail["price"].min())
     return result
+
+
+# ── OTA 이름 정규화 / URL 헬퍼 ────────────────────────────────────────────────
+
+def _normalize_ota(ota: str) -> str:
+    """'네이버호텔/야놀자' 등 서브채널 → '네이버호텔'으로 통합"""
+    if ota and ota.startswith("네이버호텔/"):
+        return "네이버호텔"
+    return ota
+
+
+def _get_ota_url(entity: dict, ota: str) -> str:
+    """competitor dict 또는 own_urls dict에서 OTA 기본 URL 조합.
+    entity에는 yanolja_url, agoda_url, naver_id, tripcom_hotel_id 등이 있다."""
+    if ota == "야놀자":
+        return entity.get("yanolja_url", "")
+    if ota == "여기어때":
+        return entity.get("yeogiuh_url", "")
+    if ota == "Agoda":
+        return entity.get("agoda_url", "")
+    if ota == "네이버호텔":
+        nid = entity.get("naver_id", "")
+        return f"https://hotel.naver.com/hotels/property/{nid}" if nid else ""
+    if ota == "Trip.com":
+        hotel_id = entity.get("tripcom_hotel_id", 0)
+        city_id  = entity.get("tripcom_city_id", 0)
+        if hotel_id:
+            return f"https://www.trip.com/hotels/detail/?hotelId={hotel_id}&cityId={city_id}"
+        return ""
+    return ""
 
 
 # ── OTA 딥링크 ────────────────────────────────────────────────────────────────
@@ -382,6 +428,10 @@ def _make_ota_link_url(base_url: str, ota: str, checkin: str) -> str:
         return f"{base_url}?checkIn={checkin}&checkOut={checkout}&personal=2"
     if ota == "Agoda":
         return f"{base_url}?checkIn={checkin}&checkOut={checkout}&adults=2&rooms=1"
+    if ota == "네이버호텔":
+        return f"{base_url}?checkin={checkin}&checkout={checkout}&adult=2"
+    if ota == "Trip.com":
+        return f"{base_url}&checkin={checkin}&checkout={checkout}&adult=2&rooms=1"
     return base_url
 
 
@@ -440,15 +490,20 @@ def _render_price_cell(
     is_own: bool = False,
     review_summary: dict = None,  # {comp_name: {ota: score}}
 ) -> str:
-    """요일별 레이어를 포함한 <td> 반환. 가격 클릭 시 해당 OTA 딥링크로 이동."""
-    if not ota_url:
+    """요일별 레이어를 포함한 <td> 반환. 가격 클릭 시 해당 OTA 딥링크로 이동.
+    ota_url이 없어도 summary에 가격 데이터가 있으면 (링크 없이) 가격을 표시한다.
+    ota_url도 없고 데이터도 없으면 no-data 셀을 반환한다."""
+    key = (prop_name, comp_name, ota)
+
+    # URL도 없고 어떤 요일에도 데이터도 없으면 no-data
+    has_data = any(key in summaries.get(dt, {}) for dt in DAY_TYPES)
+    if not ota_url and not has_data:
         return '<td class="price-cell no-data">&#8212;</td>'
 
     # 이 OTA의 별점 (있으면 가격 옆에 인라인 표시)
     review_summary = review_summary or {}
     rating_score = review_summary.get(comp_name, {}).get(ota)
 
-    key    = (prop_name, comp_name, ota)
     layers = []
 
     for dt in DAY_TYPES:
@@ -456,7 +511,6 @@ def _render_price_cell(
         summary    = summaries.get(dt, {})
 
         if key not in summary:
-            # URL은 있지만 해당 요일 데이터 없음
             inner = '<div class="price" style="color:#3a3f4b">&#8212;</div>'
         elif summary[key]["sold_out"]:
             inner = '<div class="sold-out-txt">매진</div>'
@@ -479,18 +533,28 @@ def _render_price_cell(
             clean_rt   = _clean_room_type(room_type)
             room_html  = f'<div class="room-type">{clean_rt}</div>' if clean_rt else ""
 
-            link_url   = _make_ota_link_url(ota_url, ota, checkin)
-
             # 별점 인라인 표시: ₩92,000 ⭐4.8
             rating_html = (
                 f' <span class="inline-rating">&#11088;{rating_score}</span>'
                 if rating_score else ""
             )
 
+            if ota_url:
+                link_url   = _make_ota_link_url(ota_url, ota, checkin)
+                price_html = (
+                    f'<a href="{link_url}" target="_blank" rel="noopener" '
+                    f'class="price-link {price_cls}">'
+                    f'{_fmt_price(price)}{promo_html}</a>'
+                )
+            else:
+                # URL 미설정이지만 데이터 있음 → 링크 없이 가격만 표시
+                price_html = (
+                    f'<span class="price-link {price_cls}">'
+                    f'{_fmt_price(price)}{promo_html}</span>'
+                )
+
             inner = (
-                f'<a href="{link_url}" target="_blank" rel="noopener" '
-                f'class="price-link {price_cls}">'
-                f'{_fmt_price(price)}{promo_html}</a>'
+                f'{price_html}'
                 f'{rating_html}'
                 f'{room_html}'
                 f'<div class="price-meta">{date_disp} {change}</div>'
@@ -769,7 +833,13 @@ def _render_property_card(
     region_label = _get_region(region_str)
     competitors  = prop.get("competitors", [])
     own_urls     = prop.get("own_urls", {})
-    has_own      = any(own_urls.get(k, "") for k in ("yanolja_url", "yeogiuh_url", "agoda_url"))
+    has_own      = any([
+        own_urls.get("yanolja_url", ""),
+        own_urls.get("yeogiuh_url", ""),
+        own_urls.get("agoda_url", ""),
+        own_urls.get("naver_id", ""),
+        own_urls.get("tripcom_hotel_id", 0),
+    ])
     review_summary = review_summary or {}
 
     if not df.empty and "property_name" in df.columns:
@@ -791,7 +861,7 @@ def _render_property_card(
             _render_price_cell(
                 prop_name, prop_name, ota,
                 summaries, prev_per_date,
-                own_urls.get(OTA_URL_KEY[ota], ""),
+                _get_ota_url(own_urls, ota),
                 is_own=True,
                 review_summary=review_summary,
             )
@@ -813,7 +883,7 @@ def _render_property_card(
             _render_price_cell(
                 prop_name, comp_name, ota,
                 summaries, prev_per_date,
-                comp.get(OTA_URL_KEY[ota], ""),
+                _get_ota_url(comp, ota),
                 review_summary=review_summary,
             )
             for ota in OTA_ORDER
@@ -1044,6 +1114,8 @@ _CSS = """
   --yellow:      #e3b341;
   --orange:      #f0883e;
   --c-yanolja:   #ff4081;
+  --c-naver:     #03c75a;
+  --c-tripcom:   #0066cc;
   --c-yeogi:     #4285f4;
   --c-agoda:     #e85d3e;
   --c-homepage:  #3fb950;
@@ -1249,6 +1321,8 @@ th {
 }
 th.competitor-col { text-align: left; min-width: 120px; }
 th.ota-yanolja  { color: var(--c-yanolja);  }
+th.ota-naver    { color: var(--c-naver);    }
+th.ota-tripcom  { color: var(--c-tripcom);  }
 th.ota-yeogi    { color: var(--c-yeogi);    }
 th.ota-agoda    { color: var(--c-agoda);    }
 th.ota-homepage { color: var(--c-homepage); }
