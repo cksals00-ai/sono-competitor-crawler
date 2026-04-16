@@ -44,9 +44,35 @@ _sono_session: requests.Session = None
 _sono_mem_no: str = ""         # 로그인 후 회원번호
 _sono_user_ind_cd: str = ""    # 로그인 후 memInd (예: "70")
 
+# 네이버 호텔 세션 싱글톤
+_naver_session: requests.Session = None
+
+NAVER_GRAPHQL_URL = "https://hermes-hotel-svc-api.naver.com/graphql"
+
+# OTA 코드 → 표시명 매핑 (hotels.naver.com JS 번들에서 추출)
+NAVER_OTA_NAMES: dict = {
+    "NAGD": "Agoda",
+    "NBDC": "Booking.com",
+    "KYK":  "HotelsCombined",
+    "NTTP": "네이버비밀특가",
+    "NBOK": "네이버예약",
+    "PKG":  "호텔패키지",
+    "TBZ":  "TripBToz",
+    "CTE":  "Trip.com",
+    "NGDC": "여기어때",
+    "NCTE": "Trip.com",
+    "NYNJ": "야놀자",
+    "HNJ":  "호텔엔조이",
+    "IAN":  "Hotels.com",
+    "HPA":  "HotelPass",
+}
+
 SONO_BASE_URL      = "https://www.sonohotelsresorts.com"
 SONO_LOGIN_URL     = f"{SONO_BASE_URL}/api/hms/user/management/auth/login"
 SONO_ROOM_LIST_URL = f"{SONO_BASE_URL}/api/hms/user/memberReservation/room/list/pc"
+
+# Trip.com 도시 페이지 캐시: (city_id, checkin, checkout) → {hotel_id: price}
+_tripcom_city_cache: dict = {}
 
 
 @dataclass
@@ -780,6 +806,258 @@ def _deep_get(data, keys: list):
 
 
 # ---------------------------------------------------------------------------
+# 네이버 호텔 크롤러 (requests + GraphQL)
+# ---------------------------------------------------------------------------
+
+# GraphQL 쿼리 상수 — impArea 는 서버 스키마 제약으로 변수가 아닌 인라인 enum 필수
+_NAVER_RATES_QUERY = """
+query domesticHotelRates(
+  $adultCnt: Int!
+  $checkIn: String!
+  $checkOut: String!
+  $id: String!
+  $includeTax: Boolean!
+  $childrenAges: [Int]
+) {
+  domesticHotelRates(
+    adultCnt: $adultCnt
+    checkIn: $checkIn
+    checkOut: $checkOut
+    id: $id
+    includeTax: $includeTax
+    childrenAges: $childrenAges
+    impArea: renewalSingle
+  ) {
+    nHotelId
+    totalCount
+    rates {
+      roomId
+      roomName
+      ota { code isOfficialSite }
+      productFeatures {
+        roomUsageType
+        isFreeCancel
+        isSecretDeal
+        freeCancelDeadline
+      }
+      rate { userRate original }
+      roomFeatures { roomType }
+    }
+  }
+}
+""".strip()
+
+_NAVER_SEARCH_QUERY = """
+query domesticHotelList(
+  $from: Int!
+  $query: String!
+  $size: Int!
+  $sort: DomesticHotelSortOrder!
+  $deviceType: DeviceType!
+) {
+  domesticHotelList(
+    from: $from
+    query: $query
+    size: $size
+    sort: $sort
+    deviceType: $deviceType
+  ) {
+    itemList { id title }
+  }
+}
+""".strip()
+
+
+def _get_naver_session(cfg: dict) -> requests.Session:
+    """
+    네이버 호텔 GraphQL 세션 싱글톤 반환.
+    hotels.naver.com 방문으로 sessionId 쿠키를 취득한다.
+    """
+    global _naver_session
+    if _naver_session is not None:
+        return _naver_session
+
+    sess = requests.Session()
+    sess.headers.update({
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+        ),
+        "Accept-Language":        "ko-KR,ko;q=0.9",
+        "Accept":                 "application/json, */*",
+        "Content-Type":           "application/json",
+        "Origin":                 "https://hotels.naver.com",
+        "Referer":                "https://hotels.naver.com/",
+        "GraphQL-Client-Name":    "gaza-next-hotel",
+        "GraphQL-Client-Version": "1.0.0",
+    })
+
+    try:
+        sess.get("https://hotels.naver.com/", timeout=15, allow_redirects=True)
+    except Exception as e:
+        logger.warning(f"[네이버호텔] 세션 초기화 경고: {e}")
+
+    _naver_session = sess
+    return sess
+
+
+def _naver_find_hotel_id(sess: requests.Session, name: str, cfg: dict) -> tuple:
+    """
+    호텔 이름으로 domesticHotelList 검색 후 (hotel_id, hotel_title) 반환.
+    미발견 시 ("", "").
+    """
+    payload = {
+        "operationName": "domesticHotelList",
+        "query": _NAVER_SEARCH_QUERY,
+        "variables": {
+            "from": 0,
+            "query": name,
+            "size": 5,
+            "sort": "POPULAR_DESC",
+            "deviceType": "PC",
+        },
+    }
+    resp = sess.post(NAVER_GRAPHQL_URL, json=payload, timeout=cfg["crawl"]["timeout"])
+    resp.raise_for_status()
+    data = resp.json()
+    items = (
+        (data.get("data") or {})
+        .get("domesticHotelList", {})
+        .get("itemList", [])
+    )
+    if not items:
+        return "", ""
+    return items[0]["id"], items[0]["title"]
+
+
+def crawl_naver(competitor: dict, checkin: str, checkout: str, cfg: dict) -> list:
+    """
+    네이버 호텔(hotels.naver.com) 경쟁사 가격 크롤링.
+    requests + hermes-hotel-svc-api.naver.com GraphQL API 사용.
+
+    competitor dict 선택 키:
+      naver_id  — 네이버 내부 숫자 ID (지정 시 검색 생략, 미지정 시 이름으로 검색)
+
+    반환: PriceRecord 리스트
+      - roomUsageType == "stay" 인 건만 포함 (대실 제외)
+      - ota 필드: "네이버호텔/{OTA명}" 형식
+      - 동일 (otaCode, roomName) 중복 제거
+    """
+    global _naver_session
+
+    hotel_id   = competitor.get("naver_id", "")
+    hotel_name = competitor.get("name", "")
+    naver_url  = "https://hotels.naver.com/"
+    records: list = []
+
+    try:
+        sess = _get_naver_session(cfg)
+
+        # ── 호텔 ID 조회 (config에 없으면 이름 검색) ──────────────────────
+        if not hotel_id:
+            hotel_id, found_title = _naver_find_hotel_id(sess, hotel_name, cfg)
+            if not hotel_id:
+                logger.warning(f"[네이버호텔] {hotel_name}: 검색 결과 없음")
+                records.append(_make_record(
+                    competitor, "네이버호텔", checkin, checkout,
+                    naver_url, error="hotel_not_found",
+                ))
+                return records
+            logger.debug(f"[네이버호텔] '{hotel_name}' → id={hotel_id} ({found_title})")
+
+        # ── 객실 요금 조회 ──────────────────────────────────────────────────
+        payload = {
+            "operationName": "domesticHotelRates",
+            "query": _NAVER_RATES_QUERY,
+            "variables": {
+                "id":           hotel_id,
+                "checkIn":      checkin,
+                "checkOut":     checkout,
+                "adultCnt":     2,
+                "includeTax":   True,
+                "childrenAges": [],
+            },
+        }
+        resp = sess.post(NAVER_GRAPHQL_URL, json=payload, timeout=cfg["crawl"]["timeout"])
+        resp.raise_for_status()
+        data = resp.json()
+
+        if "errors" in data:
+            err_msg = (data["errors"][0] or {}).get("message", "unknown")
+            logger.error(f"[네이버호텔] {hotel_name} GraphQL 오류: {err_msg}")
+            # 세션 만료 가능성 → 초기화 후 재시도 없이 기록만
+            if err_msg in ("UNAUTHORIZED", "UNAUTHENTICATED"):
+                _naver_session = None
+            records.append(_make_record(
+                competitor, "네이버호텔", checkin, checkout,
+                naver_url, error=f"gql:{err_msg[:50]}",
+            ))
+            return records
+
+        result   = (data.get("data") or {}).get("domesticHotelRates") or {}
+        rates    = result.get("rates") or []
+        n_hotel_id = result.get("nHotelId") or hotel_id
+        naver_url  = f"https://hotels.naver.com/{n_hotel_id}/hotel"
+
+        if not rates:
+            logger.warning(f"[네이버호텔] {hotel_name} ({checkin}): 객실 데이터 없음")
+            records.append(_make_record(
+                competitor, "네이버호텔", checkin, checkout,
+                naver_url, error="no_room_data",
+            ))
+            return records
+
+        # ── PriceRecord 변환 (stay 타입만, OTA×객실명 중복 제거) ──────────
+        seen: set = set()
+        for rate in rates:
+            features  = rate.get("productFeatures") or {}
+            usage_type = features.get("roomUsageType", "")
+            if usage_type != "stay":
+                continue
+
+            ota_code  = (rate.get("ota") or {}).get("code", "")
+            room_name = (rate.get("roomName") or "").strip()
+            key       = (ota_code, room_name)
+            if key in seen:
+                continue
+            seen.add(key)
+
+            try:
+                price = int((rate.get("rate") or {}).get("userRate") or 0)
+            except (TypeError, ValueError):
+                price = 0
+
+            ota_display = "네이버호텔/" + NAVER_OTA_NAMES.get(ota_code, ota_code)
+
+            records.append(PriceRecord(
+                crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                property_name="",
+                property_id="",
+                competitor_name=hotel_name,
+                ota=ota_display,
+                checkin_date=checkin,
+                checkout_date=checkout,
+                room_type=room_name,
+                price=price,
+                currency="KRW",
+                availability="available" if price > 0 else "unknown",
+                url=naver_url,
+                is_promo=bool(features.get("isSecretDeal")),
+            ))
+
+        logger.info(f"[네이버호텔] {hotel_name} ({checkin}): {len(records)}건 수집")
+
+    except requests.RequestException as e:
+        logger.error(f"[네이버호텔] {hotel_name} 요청 실패: {e}")
+        records.append(_make_record(
+            competitor, "네이버호텔", checkin, checkout,
+            naver_url, error=str(e)[:100],
+        ))
+
+    return records
+
+
+# ---------------------------------------------------------------------------
 # Booking.com 크롤러 (Selenium)
 # ---------------------------------------------------------------------------
 
@@ -1198,6 +1476,206 @@ def crawl_sono_homepage(competitor: dict, checkin: str, checkout: str, cfg: dict
 
 
 # ---------------------------------------------------------------------------
+# Trip.com 크롤러 (requests + SSR 파싱)
+# ---------------------------------------------------------------------------
+
+def _parse_tripcom_city_prices(html: str) -> dict:
+    """
+    Trip.com 도시 목록 SSR 페이지에서 날짜별 최저가 추출.
+    두 가지 포맷 지원:
+      - Format 1: window.IBU_HOTEL= → initData.firstPageList.hotelList
+      - Format 2: "ErrorCode":0,"hotelList":[...] (inline BFF 응답)
+    반환: {hotel_id(int): price(int)}  — 최대 10~12개 호텔
+    """
+    def _extract_balanced(text, start, open_char, close_char):
+        depth = in_str = escape = 0
+        for pos, c in enumerate(text[start:], start):
+            if escape:
+                escape = 0
+            elif c == "\\" and in_str:
+                escape = 1
+            elif c == '"':
+                in_str = 1 - in_str
+            elif not in_str:
+                if c == open_char:
+                    depth += 1
+                elif c == close_char:
+                    depth -= 1
+                    if depth == 0:
+                        return pos
+        return -1
+
+    def _hotels_from_list(hotel_list):
+        prices = {}
+        for hotel in hotel_list:
+            info = hotel.get("hotelBasicInfo", {})
+            hotel_id = info.get("hotelId")
+            price = info.get("price")
+            if hotel_id and price:
+                try:
+                    prices[int(hotel_id)] = int(price)
+                except (ValueError, TypeError):
+                    pass
+        return prices
+
+    # Format 1: window.IBU_HOTEL=
+    ibu_idx = html.find("window.IBU_HOTEL=")
+    if ibu_idx >= 0:
+        seg = html[ibu_idx:]
+        start = seg.find("{")
+        if start >= 0:
+            end = _extract_balanced(seg, start, "{", "}")
+            if end >= 0:
+                try:
+                    data = json.loads(seg[start : end + 1])
+                    hotel_list = data["initData"]["firstPageList"]["hotelList"]
+                    prices = _hotels_from_list(hotel_list)
+                    if prices:
+                        return prices
+                except (json.JSONDecodeError, KeyError, TypeError):
+                    pass
+
+    # Format 2: "ErrorCode":0,"hotelList":[ (inline BFF response)
+    inline_idx = html.find('"ErrorCode":0,"hotelList":[')
+    if inline_idx >= 0:
+        start = inline_idx + len('"ErrorCode":0,"hotelList":')
+        end = _extract_balanced(html, start, "[", "]")
+        if end >= 0:
+            try:
+                hotel_list = json.loads(html[start : end + 1])
+                prices = _hotels_from_list(hotel_list)
+                if prices:
+                    return prices
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+    return {}
+
+
+def _fetch_tripcom_city_prices(city_id: int, checkin: str, checkout: str) -> dict:
+    """
+    도시 검색 결과 SSR 페이지 fetch → {hotel_id: price} 반환 (캐시 + 재시도).
+    서버 A/B 테스트로 응답이 일관되지 않아 최대 3회 재시도.
+    """
+    cache_key = (city_id, checkin, checkout)
+    if cache_key in _tripcom_city_cache:
+        return _tripcom_city_cache[cache_key]
+
+    url = (
+        f"https://kr.trip.com/hotels/list/searchresults"
+        f"?city={city_id}&checkIn={checkin}&checkOut={checkout}"
+    )
+    hdrs = {
+        "User-Agent": HEADERS["User-Agent"],
+        "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8",
+        "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
+        "Referer": "https://kr.trip.com/",
+    }
+    prices = {}
+    for attempt in range(3):
+        try:
+            resp = requests.get(url, headers=hdrs, timeout=20)
+            resp.raise_for_status()
+            prices = _parse_tripcom_city_prices(resp.text)
+            if prices:
+                logger.debug(f"[Trip.com] city {city_id} {checkin}: {len(prices)}개 호텔 (시도 {attempt+1})")
+                break
+            if attempt < 2:
+                time.sleep(1)
+        except Exception as e:
+            logger.warning(f"[Trip.com] city {city_id} fetch 실패 (시도 {attempt+1}): {e}")
+            if attempt < 2:
+                time.sleep(1)
+
+    if not prices:
+        logger.debug(f"[Trip.com] city {city_id} {checkin}: 가격 데이터 없음 (3회 재시도 후)")
+
+    _tripcom_city_cache[cache_key] = prices
+    return prices
+
+
+def _fetch_tripcom_pricerange(hotel_id: int, checkin: str, checkout: str) -> int:
+    """
+    호텔 상세 페이지 schema.org priceRange 추출 (날짜 비특정 참고값).
+    반환: 가격(int, 원) 또는 0
+    """
+    url = (
+        f"https://kr.trip.com/hotels/v2/detail/?hotelId={hotel_id}"
+        f"&checkin={checkin}&checkout={checkout}"
+        f"&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+    )
+    hdrs = {
+        "User-Agent": HEADERS["User-Agent"],
+        "Accept-Language": "ko-KR,ko;q=0.9",
+        "Referer": "https://kr.trip.com/",
+    }
+    try:
+        resp = requests.get(url, headers=hdrs, timeout=20)
+        resp.raise_for_status()
+        m = re.search(r'priceRange[^\d]{0,30}([\d,]+)원부터', resp.text)
+        if m:
+            return int(m.group(1).replace(",", ""))
+    except Exception as e:
+        logger.warning(f"[Trip.com] hotel {hotel_id} 상세 fetch 실패: {e}")
+    return 0
+
+
+def crawl_tripcom(competitor: dict, checkin: str, checkout: str, cfg: dict) -> list:
+    """
+    Trip.com 가격 크롤러
+    1차: IBU_HOTEL 도시 목록 SSR → 날짜별 최저가 (top-10 호텔)
+    2차 폴백: 호텔 상세 페이지 schema.org priceRange → 참고 최저가
+    """
+    hotel_id = int(competitor.get("tripcom_hotel_id") or 0)
+    if not hotel_id:
+        return []
+
+    city_id = int(competitor.get("tripcom_city_id") or 0)
+    detail_url = (
+        f"https://kr.trip.com/hotels/v2/detail/?hotelId={hotel_id}"
+        f"&checkin={checkin}&checkout={checkout}"
+        f"&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+    )
+
+    # 1차: 도시 목록 SSR (날짜별 가격)
+    if city_id:
+        city_prices = _fetch_tripcom_city_prices(city_id, checkin, checkout)
+        if hotel_id in city_prices:
+            return [PriceRecord(
+                crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                property_name="",
+                property_id="",
+                competitor_name=competitor["name"],
+                ota="Trip.com",
+                checkin_date=checkin,
+                checkout_date=checkout,
+                room_type="최저가",
+                price=city_prices[hotel_id],
+                availability="available",
+                url=detail_url,
+            )]
+
+    # 2차 폴백: 호텔 상세 priceRange (날짜 비특정)
+    price = _fetch_tripcom_pricerange(hotel_id, checkin, checkout)
+    if price:
+        return [PriceRecord(
+            crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            property_name="",
+            property_id="",
+            competitor_name=competitor["name"],
+            ota="Trip.com",
+            checkin_date=checkin,
+            checkout_date=checkout,
+            room_type="최저가(참고)",
+            price=price,
+            availability="available",
+            url=detail_url,
+        )]
+
+    return [_make_record(competitor, "Trip.com", checkin, checkout, detail_url, error="no_price")]
+
+
+# ---------------------------------------------------------------------------
 # Selenium 드라이버 관리
 # ---------------------------------------------------------------------------
 
@@ -1316,6 +1794,8 @@ def run_crawl(
         (crawl_yanolja,        "야놀자"),
         (crawl_yeogiuh,        "여기어때"),
         (crawl_agoda,          "Agoda"),
+        (crawl_naver,          "네이버호텔"),
+        (crawl_tripcom,        "Trip.com"),
         (crawl_sono_homepage,  "자사홈"),
     ]
     if ota_filter:
@@ -1339,7 +1819,10 @@ def run_crawl(
                     "yeogiuh_url":        own_urls.get("yeogiuh_url", ""),
                     "booking_url":        own_urls.get("booking_url", ""),
                     "agoda_url":          own_urls.get("agoda_url", ""),
+                    "naver_id":           own_urls.get("naver_id", ""),
                     "homepage_store_cd":  own_urls.get("homepage_store_cd", ""),
+                    "tripcom_hotel_id":   own_urls.get("tripcom_hotel_id", 0),
+                    "tripcom_city_id":    own_urls.get("tripcom_city_id", 0),
                 }
                 logger.info(f"  [자사] {prop['name']}")
                 for checkin, checkout in date_pairs:
