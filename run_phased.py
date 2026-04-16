@@ -280,7 +280,12 @@ def _retry_agoda_errors(combined_df: pd.DataFrame) -> pd.DataFrame:
 
 # ── 단계 실행 ─────────────────────────────────────────────────────────────────
 
-def run_phase(phase_num: int):
+def run_phase(phase_num: int, temp_output: bool = False):
+    """
+    phase_num : 1=야놀자, 2=Agoda, 3=여기어때
+    temp_output: True면 exports/temp_phase{N}_{date}.csv 로만 저장하고
+                 대시보드·git push 건너뜀. 병렬 실행 시 경합 방지용.
+    """
     phase = PHASES[phase_num]
     label = phase["label"]
     otas  = phase["otas"]
@@ -297,13 +302,29 @@ def run_phase(phase_num: int):
         logger.error(f"{label} 크롤링 실패: {e}", exc_info=True)
         return
 
+    if temp_output:
+        # 병렬 실행용: 경합 없이 phase별 임시 CSV에 저장
+        today = datetime.today().strftime("%Y%m%d")
+        temp_path = Path(f"exports/temp_phase{phase_num}_{today}.csv")
+        temp_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # 2단계(Agoda) 오류건 재시도
+        if phase_num == 2 and not new_df.empty:
+            logger.info("--- Agoda 오류 재시도 시작 ---")
+            new_df = _retry_agoda_errors(new_df)
+
+        from export_powerbi import _save_csv
+        _save_csv(new_df, temp_path)
+        logger.info(f"{label} 임시 CSV 저장 완료: {temp_path} ({len(new_df)} 행)")
+        logger.info(f"{label} 완료: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        return
+
+    # 순차 실행 경로 (기존 동작 유지)
     combined_df = _merge_and_save(new_df, otas)
 
-    # 2단계(Agoda) 완료 후 오류건 재시도
     if phase_num == 2:
         logger.info("--- Agoda 오류 재시도 시작 ---")
         combined_df = _retry_agoda_errors(combined_df)
-        # 재시도 결과 재저장
         _merge_and_save(combined_df, otas)
 
     try:
@@ -325,10 +346,14 @@ def main():
         "--phase", type=int, choices=[0, 1, 2, 3], default=None,
         help="실행할 단계 (0=자사홈, 1=야놀자, 2=Agoda, 3=여기어때). 생략 시 전체 실행",
     )
+    parser.add_argument(
+        "--temp-output", action="store_true",
+        help="phase별 임시 CSV만 저장 (병렬 실행 시 경합 방지용, 대시보드·push 건너뜀)",
+    )
     args = parser.parse_args()
 
     if args.phase is not None:
-        run_phase(args.phase)
+        run_phase(args.phase, temp_output=args.temp_output)
     else:
         for p in [0, 1, 2, 3]:
             run_phase(p)

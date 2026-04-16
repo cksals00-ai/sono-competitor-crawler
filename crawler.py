@@ -79,6 +79,14 @@ def load_config(path: str = "config.yaml") -> dict:
         return yaml.safe_load(f)
 
 
+_DAYUSE_KEYWORDS = ("대실", "day use", "데이유즈", "dayuse")
+
+def _is_dayuse(name: str) -> bool:
+    """객실명에 대실/day use 키워드 포함 여부 확인."""
+    lower = name.lower()
+    return any(kw in lower for kw in _DAYUSE_KEYWORDS)
+
+
 # ---------------------------------------------------------------------------
 # 야놀자 크롤러 (requests + Next.js RSC JSON 파싱)
 # ---------------------------------------------------------------------------
@@ -107,6 +115,8 @@ def crawl_yanolja(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
             return records
 
         for room in rooms:
+            if _is_dayuse(room.get("name", "")):
+                continue
             records.append(PriceRecord(
                 crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 property_name="",
@@ -291,6 +301,8 @@ def crawl_yeogiuh(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
             return records
 
         for room in rooms:
+            if _is_dayuse(room.get("name", "")):
+                continue
             records.append(PriceRecord(
                 crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 property_name="",
@@ -496,6 +508,8 @@ def crawl_agoda(competitor: dict, checkin: str, checkout: str, cfg: dict) -> lis
         review_score, review_count = _parse_agoda_review(soup)
 
         for room in rooms:
+            if _is_dayuse(room.get("name", "")):
+                continue
             records.append(PriceRecord(
                 crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 property_name="",
