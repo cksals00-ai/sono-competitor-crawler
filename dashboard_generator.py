@@ -1667,10 +1667,11 @@ _JS = """
 """
 
 
-# ── 단독 실행: 더미 데이터로 대시보드 생성 ──────────────────────────────────────
+# ── 단독 실행: 최신 실제 CSV로 대시보드 재생성 ────────────────────────────────────
+# python3 dashboard_generator.py [csv_path]
 
 if __name__ == "__main__":
-    import random
+    import glob
     import subprocess
 
     logging.basicConfig(
@@ -1679,71 +1680,23 @@ if __name__ == "__main__":
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    cfg_data = load_config()
-    random.seed(42)
-    today = datetime.today()
+    # CLI에서 CSV 경로를 직접 지정하거나, exports/ 에서 최신 파일 자동 선택
+    import sys
+    if len(sys.argv) > 1:
+        csv_path = sys.argv[1]
+    else:
+        csvs = sorted(glob.glob("exports/sono_competitor_prices_*.csv"))
+        # _yanolja_only 같은 suffix 파일 제외
+        csvs = [c for c in csvs if not any(s in c for s in ("_yanolja_only", "_agoda", "_yeogi"))]
+        if not csvs:
+            logger.error("exports/ 에 CSV 파일이 없습니다.")
+            sys.exit(1)
+        csv_path = csvs[-1]
 
-    ROOM_TYPES_NORMAL = ["스탠다드 더블", "디럭스 트윈", "슈페리어 오션뷰", "프리미어 더블", "스위트", "패밀리 룸"]
-    ROOM_TYPES_PROMO  = ["[오픈런] 스탠다드 더블", "★특가★ 디럭스", "특가 패밀리룸"]
+    logger.info(f"CSV 로드: {csv_path}")
+    df_today = pd.read_csv(csv_path, encoding="utf-8-sig")
+    prev_df  = load_previous_df("./exports")
 
-    rows, prev_rows = [], []
-
-    for prop in cfg_data["properties"]:
-        is_overseas = "베트남" in prop.get("region", "")
-        price_min, price_max = (150000, 700000) if is_overseas else (80000, 480000)
-
-        own_urls = prop.get("own_urls", {})
-        for ota_name, url_key in [("야놀자", "yanolja_url"), ("여기어때", "yeogiuh_url"), ("Agoda", "agoda_url")]:
-            if not own_urls.get(url_key):
-                continue
-            for day in range(1, 15):
-                checkin  = (today + timedelta(days=day)).strftime("%Y-%m-%d")
-                checkout = (today + timedelta(days=day + 1)).strftime("%Y-%m-%d")
-                wd       = (today + timedelta(days=day)).weekday()
-                surcharge = 1.25 if wd in (4, 5) else 1.0
-                price     = int(random.randint(price_min, price_max) * surcharge // 1000 * 1000)
-                is_p      = random.random() < 0.15
-                rt        = random.choice(ROOM_TYPES_PROMO if is_p else ROOM_TYPES_NORMAL)
-                row = {
-                    "crawled_at": today.strftime("%Y-%m-%d %H:%M:%S"),
-                    "property_name": prop["name"], "property_id": prop["id"],
-                    "competitor_name": prop["name"], "ota": ota_name,
-                    "checkin_date": checkin, "checkout_date": checkout,
-                    "room_type": rt, "price": price, "currency": "KRW",
-                    "availability": "available", "url": own_urls[url_key],
-                    "error": "", "is_own": True, "is_promo": is_p,
-                }
-                rows.append(row)
-                prev_price = max(50000, int(price * random.uniform(0.88, 1.12) // 1000 * 1000))
-                prev_rows.append({**row, "price": prev_price})
-
-        for comp in prop["competitors"]:
-            for ota_name, url_key in [("야놀자", "yanolja_url"), ("여기어때", "yeogiuh_url"), ("Agoda", "agoda_url")]:
-                if not comp.get(url_key):
-                    continue
-                for day in range(1, 15):
-                    checkin  = (today + timedelta(days=day)).strftime("%Y-%m-%d")
-                    checkout = (today + timedelta(days=day + 1)).strftime("%Y-%m-%d")
-                    wd       = (today + timedelta(days=day)).weekday()
-                    surcharge = 1.3 if wd in (4, 5) else 1.0
-                    price     = int(random.randint(price_min, price_max) * surcharge // 1000 * 1000)
-                    is_p      = random.random() < 0.12
-                    rt        = random.choice(ROOM_TYPES_PROMO if is_p else ROOM_TYPES_NORMAL)
-                    row = {
-                        "crawled_at": today.strftime("%Y-%m-%d %H:%M:%S"),
-                        "property_name": prop["name"], "property_id": prop["id"],
-                        "competitor_name": comp["name"], "ota": ota_name,
-                        "checkin_date": checkin, "checkout_date": checkout,
-                        "room_type": rt, "price": price, "currency": "KRW",
-                        "availability": "available", "url": comp[url_key],
-                        "error": "", "is_own": False, "is_promo": is_p,
-                    }
-                    rows.append(row)
-                    prev_price = max(50000, int(price * random.uniform(0.88, 1.12) // 1000 * 1000))
-                    prev_rows.append({**row, "price": prev_price})
-
-    df_today = pd.DataFrame(rows)
-    df_prev  = pd.DataFrame(prev_rows)
-    out = generate_dashboard(df_today, "dashboard/index.html", prev_df=df_prev)
+    out = generate_dashboard(df_today, "dashboard/index.html", prev_df=prev_df)
     print(f"\n대시보드 생성 완료: {out}")
     subprocess.run(["open", out])
