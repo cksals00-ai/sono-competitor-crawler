@@ -72,6 +72,14 @@ PHASES = {
         "label": "3단계: 여기어때",
         "otas":  ["여기어때"],
     },
+    4: {
+        "label": "4단계: 네이버호텔",
+        "otas":  ["네이버호텔"],
+    },
+    5: {
+        "label": "5단계: Trip.com",
+        "otas":  ["Trip.com"],
+    },
 }
 
 
@@ -322,15 +330,15 @@ def run_phase(phase_num: int):
 def main():
     parser = argparse.ArgumentParser(description="단계별 OTA 크롤링")
     parser.add_argument(
-        "--phase", type=int, choices=[0, 1, 2, 3], default=None,
-        help="실행할 단계 (0=자사홈, 1=야놀자, 2=Agoda, 3=여기어때). 생략 시 전체 실행",
+        "--phase", type=int, choices=[0, 1, 2, 3, 4, 5], default=None,
+        help="실행할 단계 (0=자사홈, 1=야놀자, 2=Agoda, 3=여기어때, 4=네이버호텔, 5=Trip.com). 생략 시 전체 실행",
     )
     args = parser.parse_args()
 
     if args.phase is not None:
         run_phase(args.phase)
     else:
-        for p in [0, 1, 2, 3]:
+        for p in [0, 1, 2, 3, 4, 5]:
             run_phase(p)
 
 

@@ -71,6 +71,9 @@ SONO_BASE_URL      = "https://www.sonohotelsresorts.com"
 SONO_LOGIN_URL     = f"{SONO_BASE_URL}/api/hms/user/management/auth/login"
 SONO_ROOM_LIST_URL = f"{SONO_BASE_URL}/api/hms/user/memberReservation/room/list/pc"
 
+# Trip.com 도시 페이지 캐시: (city_id, checkin, checkout) → {hotel_id: price}
+_tripcom_city_cache: dict = {}
+
 
 @dataclass
 class PriceRecord:
@@ -1459,6 +1462,206 @@ def crawl_sono_homepage(competitor: dict, checkin: str, checkout: str, cfg: dict
 
 
 # ---------------------------------------------------------------------------
+# Trip.com 크롤러 (requests + SSR 파싱)
+# ---------------------------------------------------------------------------
+
+def _parse_tripcom_city_prices(html: str) -> dict:
+    """
+    Trip.com 도시 목록 SSR 페이지에서 날짜별 최저가 추출.
+    두 가지 포맷 지원:
+      - Format 1: window.IBU_HOTEL= → initData.firstPageList.hotelList
+      - Format 2: "ErrorCode":0,"hotelList":[...] (inline BFF 응답)
+    반환: {hotel_id(int): price(int)}  — 최대 10~12개 호텔
+    """
+    def _extract_balanced(text, start, open_char, close_char):
+        depth = in_str = escape = 0
+        for pos, c in enumerate(text[start:], start):
+            if escape:
+                escape = 0
+            elif c == "\\" and in_str:
+                escape = 1
+            elif c == '"':
+                in_str = 1 - in_str
+            elif not in_str:
+                if c == open_char:
+                    depth += 1
+                elif c == close_char:
+                    depth -= 1
+                    if depth == 0:
+                        return pos
+        return -1
+
+    def _hotels_from_list(hotel_list):
+        prices = {}
+        for hotel in hotel_list:
+            info = hotel.get("hotelBasicInfo", {})
+            hotel_id = info.get("hotelId")
+            price = info.get("price")
+            if hotel_id and price:
+                try:
+                    prices[int(hotel_id)] = int(price)
+                except (ValueError, TypeError):
+                    pass
+        return prices
+
+    # Format 1: window.IBU_HOTEL=
+    ibu_idx = html.find("window.IBU_HOTEL=")
+    if ibu_idx >= 0:
+        seg = html[ibu_idx:]
+        start = seg.find("{")
+        if start >= 0:
+            end = _extract_balanced(seg, start, "{", "}")
+            if end >= 0:
+                try:
+                    data = json.loads(seg[start : end + 1])
+                    hotel_list = data["initData"]["firstPageList"]["hotelList"]
+                    prices = _hotels_from_list(hotel_list)
+                    if prices:
+                        return prices
+                except (json.JSONDecodeError, KeyError, TypeError):
+                    pass
+
+    # Format 2: "ErrorCode":0,"hotelList":[ (inline BFF response)
+    inline_idx = html.find('"ErrorCode":0,"hotelList":[')
+    if inline_idx >= 0:
+        start = inline_idx + len('"ErrorCode":0,"hotelList":')
+        end = _extract_balanced(html, start, "[", "]")
+        if end >= 0:
+            try:
+                hotel_list = json.loads(html[start : end + 1])
+                prices = _hotels_from_list(hotel_list)
+                if prices:
+                    return prices
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+    return {}
+
+
+def _fetch_tripcom_city_prices(city_id: int, checkin: str, checkout: str) -> dict:
+    """
+    도시 검색 결과 SSR 페이지 fetch → {hotel_id: price} 반환 (캐시 + 재시도).
+    서버 A/B 테스트로 응답이 일관되지 않아 최대 3회 재시도.
+    """
+    cache_key = (city_id, checkin, checkout)
+    if cache_key in _tripcom_city_cache:
+        return _tripcom_city_cache[cache_key]
+
+    url = (
+        f"https://kr.trip.com/hotels/list/searchresults"
+        f"?city={city_id}&checkIn={checkin}&checkOut={checkout}"
+    )
+    hdrs = {
+        "User-Agent": HEADERS["User-Agent"],
+        "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8",
+        "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
+        "Referer": "https://kr.trip.com/",
+    }
+    prices = {}
+    for attempt in range(3):
+        try:
+            resp = requests.get(url, headers=hdrs, timeout=20)
+            resp.raise_for_status()
+            prices = _parse_tripcom_city_prices(resp.text)
+            if prices:
+                logger.debug(f"[Trip.com] city {city_id} {checkin}: {len(prices)}개 호텔 (시도 {attempt+1})")
+                break
+            if attempt < 2:
+                time.sleep(1)
+        except Exception as e:
+            logger.warning(f"[Trip.com] city {city_id} fetch 실패 (시도 {attempt+1}): {e}")
+            if attempt < 2:
+                time.sleep(1)
+
+    if not prices:
+        logger.debug(f"[Trip.com] city {city_id} {checkin}: 가격 데이터 없음 (3회 재시도 후)")
+
+    _tripcom_city_cache[cache_key] = prices
+    return prices
+
+
+def _fetch_tripcom_pricerange(hotel_id: int, checkin: str, checkout: str) -> int:
+    """
+    호텔 상세 페이지 schema.org priceRange 추출 (날짜 비특정 참고값).
+    반환: 가격(int, 원) 또는 0
+    """
+    url = (
+        f"https://kr.trip.com/hotels/v2/detail/?hotelId={hotel_id}"
+        f"&checkin={checkin}&checkout={checkout}"
+        f"&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+    )
+    hdrs = {
+        "User-Agent": HEADERS["User-Agent"],
+        "Accept-Language": "ko-KR,ko;q=0.9",
+        "Referer": "https://kr.trip.com/",
+    }
+    try:
+        resp = requests.get(url, headers=hdrs, timeout=20)
+        resp.raise_for_status()
+        m = re.search(r'priceRange[^\d]{0,30}([\d,]+)원부터', resp.text)
+        if m:
+            return int(m.group(1).replace(",", ""))
+    except Exception as e:
+        logger.warning(f"[Trip.com] hotel {hotel_id} 상세 fetch 실패: {e}")
+    return 0
+
+
+def crawl_tripcom(competitor: dict, checkin: str, checkout: str, cfg: dict) -> list:
+    """
+    Trip.com 가격 크롤러
+    1차: IBU_HOTEL 도시 목록 SSR → 날짜별 최저가 (top-10 호텔)
+    2차 폴백: 호텔 상세 페이지 schema.org priceRange → 참고 최저가
+    """
+    hotel_id = int(competitor.get("tripcom_hotel_id") or 0)
+    if not hotel_id:
+        return []
+
+    city_id = int(competitor.get("tripcom_city_id") or 0)
+    detail_url = (
+        f"https://kr.trip.com/hotels/v2/detail/?hotelId={hotel_id}"
+        f"&checkin={checkin}&checkout={checkout}"
+        f"&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+    )
+
+    # 1차: 도시 목록 SSR (날짜별 가격)
+    if city_id:
+        city_prices = _fetch_tripcom_city_prices(city_id, checkin, checkout)
+        if hotel_id in city_prices:
+            return [PriceRecord(
+                crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                property_name="",
+                property_id="",
+                competitor_name=competitor["name"],
+                ota="Trip.com",
+                checkin_date=checkin,
+                checkout_date=checkout,
+                room_type="최저가",
+                price=city_prices[hotel_id],
+                availability="available",
+                url=detail_url,
+            )]
+
+    # 2차 폴백: 호텔 상세 priceRange (날짜 비특정)
+    price = _fetch_tripcom_pricerange(hotel_id, checkin, checkout)
+    if price:
+        return [PriceRecord(
+            crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            property_name="",
+            property_id="",
+            competitor_name=competitor["name"],
+            ota="Trip.com",
+            checkin_date=checkin,
+            checkout_date=checkout,
+            room_type="최저가(참고)",
+            price=price,
+            availability="available",
+            url=detail_url,
+        )]
+
+    return [_make_record(competitor, "Trip.com", checkin, checkout, detail_url, error="no_price")]
+
+
+# ---------------------------------------------------------------------------
 # Selenium 드라이버 관리
 # ---------------------------------------------------------------------------
 
@@ -1578,6 +1781,7 @@ def run_crawl(
         (crawl_yeogiuh,        "여기어때"),
         (crawl_agoda,          "Agoda"),
         (crawl_naver,          "네이버호텔"),
+        (crawl_tripcom,        "Trip.com"),
         (crawl_sono_homepage,  "자사홈"),
     ]
     if ota_filter:
@@ -1603,6 +1807,8 @@ def run_crawl(
                     "agoda_url":          own_urls.get("agoda_url", ""),
                     "naver_id":           own_urls.get("naver_id", ""),
                     "homepage_store_cd":  own_urls.get("homepage_store_cd", ""),
+                    "tripcom_hotel_id":   own_urls.get("tripcom_hotel_id", 0),
+                    "tripcom_city_id":    own_urls.get("tripcom_city_id", 0),
                 }
                 logger.info(f"  [자사] {prop['name']}")
                 for checkin, checkout in date_pairs:
