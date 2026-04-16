@@ -508,6 +508,59 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
 .hp-room  { color: var(--text); font-weight: 500; }
 .hp-price { text-align: right; font-variant-numeric: tabular-nums; color: var(--c-homepage); font-weight: 700; }
 .hp-meta  { text-align: right; font-size: 10px; color: var(--muted); }
+
+/* ── FIT 요금 Section ── */
+.fit-section {
+  border-bottom: 1px solid var(--border);
+}
+.fit-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  color: var(--muted);
+  font-size: 12px;
+  font-family: inherit;
+  text-align: left;
+  transition: background .15s, color .15s;
+  touch-action: manipulation;
+}
+.fit-toggle:hover { background: rgba(227,179,65,.06); color: var(--yellow); }
+.fit-toggle-label { font-weight: 600; color: var(--yellow); font-size: 12px; }
+.fit-toggle-meta {
+  background: rgba(227,179,65,.15);
+  color: var(--yellow);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 10px;
+  border: 1px solid rgba(227,179,65,.25);
+}
+.fit-arrow {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--muted);
+  transition: transform .2s;
+}
+.fit-section.open .fit-arrow { transform: rotate(180deg); }
+.fit-body {
+  display: none;
+  padding: 0 14px 12px;
+}
+.fit-section.open .fit-body { display: block; }
+.fit-season {
+  background: rgba(227,179,65,.15);
+  color: var(--yellow);
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid rgba(227,179,65,.2);
+}
 </style>
 </head>
 <body>
@@ -519,7 +572,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         <span class="header-title">소노 경쟁사 모니터링</span>
         <span class="header-team-badge">GS Team</span>
       </div>
-      <div class="header-meta">수집: 2026-04-16 10:19&ensp;&middot;&ensp;생성: 2026-04-16 10:19&ensp;&middot;&ensp;대상기간: 4/17 ~ 4/30&ensp;&middot;&ensp;비교기준: 전일(4/16)</div>
+      <div class="header-meta">수집: 2026-04-16 10:29&ensp;&middot;&ensp;생성: 2026-04-16 10:29&ensp;&middot;&ensp;대상기간: 4/17 ~ 4/30&ensp;&middot;&ensp;비교기준: 전일(4/16)</div>
     </div>
     <div class="header-badge">LIVE</div>
   </div>
@@ -592,6 +645,61 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 4개 경쟁사&nbsp;&middot;&nbsp;196건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;179,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(코너 취사/스탠다드/침대)</td><td class="hp-price">&#8361;196,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;206,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄A(클린/스탠다드/침대)</td><td class="hp-price">&#8361;262,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄A(클린/파크뷰/침대)</td><td class="hp-price">&#8361;291,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄A(코너 클린/스탠다드/침대)</td><td class="hp-price">&#8361;285,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄A(코너 클린/파크뷰/침대)</td><td class="hp-price">&#8361;314,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/스탠다드/침대)</td><td class="hp-price">&#8361;298,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/파크뷰/침대)</td><td class="hp-price">&#8361;328,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/탑스위트/침대)</td><td class="hp-price">&#8361;374,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;179,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(코너 취사/스탠다드/침대)</td><td class="hp-price">&#8361;196,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;206,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄A(클린/스탠다드/침대)</td><td class="hp-price">&#8361;262,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄A(클린/파크뷰/침대)</td><td class="hp-price">&#8361;291,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄A(코너 클린/스탠다드/침대)</td><td class="hp-price">&#8361;285,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄A(코너 클린/파크뷰/침대)</td><td class="hp-price">&#8361;314,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/스탠다드/침대)</td><td class="hp-price">&#8361;298,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/파크뷰/침대)</td><td class="hp-price">&#8361;328,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/탑스위트/침대)</td><td class="hp-price">&#8361;374,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;203,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(코너 취사/스탠다드/침대)</td><td class="hp-price">&#8361;220,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;230,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">소노캄A(클린/스탠다드/침대)</td><td class="hp-price">&#8361;289,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">소노캄A(클린/파크뷰/침대)</td><td class="hp-price">&#8361;327,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">소노캄A(코너 클린/스탠다드/침대)</td><td class="hp-price">&#8361;311,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">소노캄A(코너 클린/파크뷰/침대)</td><td class="hp-price">&#8361;350,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/스탠다드/침대)</td><td class="hp-price">&#8361;324,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/파크뷰/침대)</td><td class="hp-price">&#8361;362,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/탑스위트/침대)</td><td class="hp-price">&#8361;408,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;240,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(코너 취사/스탠다드/침대)</td><td class="hp-price">&#8361;258,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;281,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">소노캄A(클린/스탠다드/침대)</td><td class="hp-price">&#8361;329,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">소노캄A(클린/파크뷰/침대)</td><td class="hp-price">&#8361;375,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">소노캄A(코너 클린/스탠다드/침대)</td><td class="hp-price">&#8361;352,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">소노캄A(코너 클린/파크뷰/침대)</td><td class="hp-price">&#8361;398,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/스탠다드/침대)</td><td class="hp-price">&#8361;382,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/파크뷰/침대)</td><td class="hp-price">&#8361;428,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/탑스위트/침대)</td><td class="hp-price">&#8361;473,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;167,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(코너 취사/스탠다드/침대)</td><td class="hp-price">&#8361;184,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄A(클린/스탠다드/침대)</td><td class="hp-price">&#8361;262,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄A(클린/파크뷰/침대)</td><td class="hp-price">&#8361;291,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄A(코너 클린/스탠다드/침대)</td><td class="hp-price">&#8361;285,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄A(코너 클린/파크뷰/침대)</td><td class="hp-price">&#8361;314,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/스탠다드/침대)</td><td class="hp-price">&#8361;298,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/파크뷰/침대)</td><td class="hp-price">&#8361;328,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">소노캄B(클린/탑스위트/침대)</td><td class="hp-price">&#8361;374,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -653,6 +761,31 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;168건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;166,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파크뷰/침대)</td><td class="hp-price">&#8361;189,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;166,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파크뷰/침대)</td><td class="hp-price">&#8361;189,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;166,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파크뷰/침대)</td><td class="hp-price">&#8361;189,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;166,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파크뷰/침대)</td><td class="hp-price">&#8361;189,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;189,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파크뷰/침대)</td><td class="hp-price">&#8361;218,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;189,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파크뷰/침대)</td><td class="hp-price">&#8361;218,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;239,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파크뷰/침대)</td><td class="hp-price">&#8361;275,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;239,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파크뷰/침대)</td><td class="hp-price">&#8361;275,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;159,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파크뷰/침대)</td><td class="hp-price">&#8361;179,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;159,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파크뷰/침대)</td><td class="hp-price">&#8361;179,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -713,6 +846,24 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 4개 경쟁사&nbsp;&middot;&nbsp;182건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(A 취사/스탠다드/더블)</td><td class="hp-price">&#8361;141,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(B 취사/스탠다드/더블)</td><td class="hp-price">&#8361;167,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">실버(취사/스탠다드/침대)</td><td class="hp-price">&#8361;233,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(A 취사/스탠다드/더블)</td><td class="hp-price">&#8361;141,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(B 취사/스탠다드/더블)</td><td class="hp-price">&#8361;167,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">실버(취사/스탠다드/침대)</td><td class="hp-price">&#8361;233,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(A 취사/스탠다드/더블)</td><td class="hp-price">&#8361;164,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(B 취사/스탠다드/더블)</td><td class="hp-price">&#8361;191,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(A 취사/스탠다드/더블)</td><td class="hp-price">&#8361;215,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(B 취사/스탠다드/더블)</td><td class="hp-price">&#8361;251,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(A 취사/스탠다드/더블)</td><td class="hp-price">&#8361;131,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(B 취사/스탠다드/더블)</td><td class="hp-price">&#8361;157,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">실버(취사/스탠다드/침대)</td><td class="hp-price">&#8361;233,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -774,6 +925,31 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">3개 경쟁사&nbsp;&middot;&nbsp;98건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;230,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;230,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;230,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;230,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;218,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;258,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;218,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;258,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;275,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;334,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;275,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;334,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;175,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;210,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;175,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;210,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -833,6 +1009,51 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;154건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;169,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;259,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">실버(취사/오션뷰/침대)</td><td class="hp-price">&#8361;283,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">골드(취사/오션뷰/침대)</td><td class="hp-price">&#8361;323,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;169,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;259,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">실버(취사/오션뷰/침대)</td><td class="hp-price">&#8361;283,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">골드(취사/오션뷰/침대)</td><td class="hp-price">&#8361;323,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;209,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;287,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;287,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;303,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">실버(취사/오션뷰/침대)</td><td class="hp-price">&#8361;405,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">골드(취사/오션뷰/침대)</td><td class="hp-price">&#8361;450,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;290,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;323,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;389,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;323,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;389,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;393,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">실버(취사/오션뷰/침대)</td><td class="hp-price">&#8361;499,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">골드(취사/오션뷰/침대)</td><td class="hp-price">&#8361;529,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;169,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;259,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">실버(취사/오션뷰/침대)</td><td class="hp-price">&#8361;283,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">골드(취사/오션뷰/침대)</td><td class="hp-price">&#8361;323,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -893,6 +1114,66 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;84건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;138,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;168,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;138,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;168,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;164,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;164,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/선셋오션뷰/침대)</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;164,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/선셋오션뷰/침대)</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;138,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;168,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;138,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;168,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;164,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;164,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/선셋오션뷰/침대)</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;164,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/선셋오션뷰/침대)</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;170,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;200,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;170,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;200,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;197,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;197,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;227,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/선셋오션뷰/침대)</td><td class="hp-price">&#8361;257,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;197,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;227,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/선셋오션뷰/침대)</td><td class="hp-price">&#8361;257,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;259,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;259,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;265,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;265,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;295,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/선셋오션뷰/침대)</td><td class="hp-price">&#8361;325,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;265,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;295,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/선셋오션뷰/침대)</td><td class="hp-price">&#8361;325,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;128,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;158,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;128,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;158,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;154,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;154,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;179,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/선셋오션뷰/침대)</td><td class="hp-price">&#8361;212,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;154,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;179,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/선셋오션뷰/침대)</td><td class="hp-price">&#8361;212,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -953,6 +1234,81 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;154건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어 엑세서블/스탠다드/…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/스탠다드/더블)</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/스탠다드/트윈)</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어 엑세서블/스…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어/스탠다드/더…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어/스탠다드/트…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(레지던스 슈페리어/스탠다드/…</td><td class="hp-price">&#8361;198,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;265,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/스탠다드/트윈)</td><td class="hp-price">&#8361;252,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(패밀리/스탠다드/패밀리 트윈)</td><td class="hp-price">&#8361;252,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(주니어 스위트/스탠다드/패밀…</td><td class="hp-price">&#8361;288,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/스탠다드…</td><td class="hp-price">&#8361;313,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/스탠다드…</td><td class="hp-price">&#8361;313,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/스탠다드/트…</td><td class="hp-price">&#8361;345,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어 엑세서블/스탠다드/…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/스탠다드/더블)</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/스탠다드/트윈)</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어 엑세서블/스…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어/스탠다드/더…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어/스탠다드/트…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(레지던스 슈페리어/스탠다드/…</td><td class="hp-price">&#8361;198,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;265,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/스탠다드/트윈)</td><td class="hp-price">&#8361;252,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(패밀리/스탠다드/패밀리 트윈)</td><td class="hp-price">&#8361;252,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(주니어 스위트/스탠다드/패밀…</td><td class="hp-price">&#8361;288,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/스탠다드…</td><td class="hp-price">&#8361;313,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/스탠다드…</td><td class="hp-price">&#8361;313,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/스탠다드/트…</td><td class="hp-price">&#8361;345,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어 엑세서블/스탠다드/…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/스탠다드/더블)</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/스탠다드/트윈)</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어 엑세서블/스…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어/스탠다드/더…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어/스탠다드/트…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(레지던스 슈페리어/스탠다드/…</td><td class="hp-price">&#8361;198,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;265,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/스탠다드/트윈)</td><td class="hp-price">&#8361;252,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(패밀리/스탠다드/패밀리 트윈)</td><td class="hp-price">&#8361;252,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(주니어 스위트/스탠다드/패밀…</td><td class="hp-price">&#8361;288,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/스탠다드…</td><td class="hp-price">&#8361;313,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/스탠다드…</td><td class="hp-price">&#8361;313,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/스탠다드/트…</td><td class="hp-price">&#8361;345,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어 엑세서블/스탠다드/…</td><td class="hp-price">&#8361;237,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/스탠다드/더블)</td><td class="hp-price">&#8361;237,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/스탠다드/트윈)</td><td class="hp-price">&#8361;237,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어 엑세서블/스…</td><td class="hp-price">&#8361;237,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어/스탠다드/더…</td><td class="hp-price">&#8361;237,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어/스탠다드/트…</td><td class="hp-price">&#8361;237,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(레지던스 슈페리어/스탠다드/…</td><td class="hp-price">&#8361;247,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;314,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/스탠다드/트윈)</td><td class="hp-price">&#8361;320,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(패밀리/스탠다드/패밀리 트윈)</td><td class="hp-price">&#8361;320,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(주니어 스위트/스탠다드/패밀…</td><td class="hp-price">&#8361;354,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/스탠다드…</td><td class="hp-price">&#8361;408,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/스탠다드…</td><td class="hp-price">&#8361;408,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/스탠다드/트…</td><td class="hp-price">&#8361;455,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어 엑세서블/스탠다드/…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/스탠다드/더블)</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/스탠다드/트윈)</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어 엑세서블/스…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어/스탠다드/더…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(웨스트 슈페리어/스탠다드/트…</td><td class="hp-price">&#8361;188,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(레지던스 슈페리어/스탠다드/…</td><td class="hp-price">&#8361;198,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;265,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/스탠다드/트윈)</td><td class="hp-price">&#8361;252,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(패밀리/스탠다드/패밀리 트윈)</td><td class="hp-price">&#8361;252,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(주니어 스위트/스탠다드/패밀…</td><td class="hp-price">&#8361;288,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/스탠다드…</td><td class="hp-price">&#8361;313,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/스탠다드…</td><td class="hp-price">&#8361;313,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/스탠다드/트…</td><td class="hp-price">&#8361;345,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -1014,6 +1370,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;154건</div>
   </div>
 
+
   <div class="table-wrap">
     <table>
       <thead><tr>
@@ -1074,6 +1431,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     <div class="property-stats">자사 포함 · 5개 경쟁사&nbsp;&middot;&nbsp;210건</div>
   </div>
 
+
   <div class="table-wrap">
     <table>
       <thead><tr>
@@ -1100,6 +1458,81 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 5개 경쟁사&nbsp;&middot;&nbsp;224건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/뷰프리/1더블,2싱글)</td><td class="hp-price">&#8361;202,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/레이크/1더블,2싱글)</td><td class="hp-price">&#8361;232,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly 취사…</td><td class="hp-price">&#8361;242,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/뷰프리/1더블,2싱글)</td><td class="hp-price">&#8361;233,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(엑세서블 취사/뷰프리/1더블…</td><td class="hp-price">&#8361;233,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/레이크/1더블,2싱글)</td><td class="hp-price">&#8361;263,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly 취사…</td><td class="hp-price">&#8361;273,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(A 클린/뷰프리/1더…</td><td class="hp-price">&#8361;260,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(A 클린/레이크/1더…</td><td class="hp-price">&#8361;291,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(B 클린/뷰프리/1더…</td><td class="hp-price">&#8361;298,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(B 클린/레이크/1더…</td><td class="hp-price">&#8361;322,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">프리미어 스위트(취사/레이크/2더블)</td><td class="hp-price">&#8361;509,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">프레스티지 스위트(취사/레이크/2더…</td><td class="hp-price">&#8361;621,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">프레지덴셜 스위트(취사/레이크/3더블</td><td class="hp-price">&#8361;20,000,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/뷰프리/1더블,2싱글)</td><td class="hp-price">&#8361;202,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/레이크/1더블,2싱글)</td><td class="hp-price">&#8361;232,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly 취사…</td><td class="hp-price">&#8361;242,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/뷰프리/1더블,2싱글)</td><td class="hp-price">&#8361;233,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(엑세서블 취사/뷰프리/1더블…</td><td class="hp-price">&#8361;233,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/레이크/1더블,2싱글)</td><td class="hp-price">&#8361;263,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly 취사…</td><td class="hp-price">&#8361;273,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(A 클린/뷰프리/1더…</td><td class="hp-price">&#8361;260,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(A 클린/레이크/1더…</td><td class="hp-price">&#8361;291,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(B 클린/뷰프리/1더…</td><td class="hp-price">&#8361;298,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(B 클린/레이크/1더…</td><td class="hp-price">&#8361;322,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">프리미어 스위트(취사/레이크/2더블)</td><td class="hp-price">&#8361;509,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">프레스티지 스위트(취사/레이크/2더…</td><td class="hp-price">&#8361;621,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">프레지덴셜 스위트(취사/레이크/3더블</td><td class="hp-price">&#8361;20,000,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/뷰프리/1더블,2싱글)</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/레이크/1더블,2싱글)</td><td class="hp-price">&#8361;273,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly 취사…</td><td class="hp-price">&#8361;283,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/뷰프리/1더블,2싱글)</td><td class="hp-price">&#8361;275,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(엑세서블 취사/뷰프리/1더블…</td><td class="hp-price">&#8361;275,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/레이크/1더블,2싱글)</td><td class="hp-price">&#8361;305,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly 취사…</td><td class="hp-price">&#8361;315,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(A 클린/뷰프리/1더…</td><td class="hp-price">&#8361;288,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(A 클린/레이크/1더…</td><td class="hp-price">&#8361;326,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(B 클린/뷰프리/1더…</td><td class="hp-price">&#8361;325,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(B 클린/레이크/1더…</td><td class="hp-price">&#8361;363,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">프리미어 스위트(취사/레이크/2더블)</td><td class="hp-price">&#8361;582,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">프레스티지 스위트(취사/레이크/2더…</td><td class="hp-price">&#8361;709,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">프레지덴셜 스위트(취사/레이크/3더블</td><td class="hp-price">&#8361;20,000,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/뷰프리/1더블,2싱글)</td><td class="hp-price">&#8361;320,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/레이크/1더블,2싱글)</td><td class="hp-price">&#8361;350,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly 취사…</td><td class="hp-price">&#8361;360,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/뷰프리/1더블,2싱글)</td><td class="hp-price">&#8361;371,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(엑세서블 취사/뷰프리/1더블…</td><td class="hp-price">&#8361;371,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/레이크/1더블,2싱글)</td><td class="hp-price">&#8361;401,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly 취사…</td><td class="hp-price">&#8361;411,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(A 클린/뷰프리/1더…</td><td class="hp-price">&#8361;351,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(A 클린/레이크/1더…</td><td class="hp-price">&#8361;397,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(B 클린/뷰프리/1더…</td><td class="hp-price">&#8361;402,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(B 클린/레이크/1더…</td><td class="hp-price">&#8361;448,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">프리미어 스위트(취사/레이크/2더블)</td><td class="hp-price">&#8361;736,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">프레스티지 스위트(취사/레이크/2더…</td><td class="hp-price">&#8361;888,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">프레지덴셜 스위트(취사/레이크/3더블</td><td class="hp-price">&#8361;20,000,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/뷰프리/1더블,2싱글)</td><td class="hp-price">&#8361;202,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/레이크/1더블,2싱글)</td><td class="hp-price">&#8361;232,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly 취사…</td><td class="hp-price">&#8361;242,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/뷰프리/1더블,2싱글)</td><td class="hp-price">&#8361;233,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(엑세서블 취사/뷰프리/1더블…</td><td class="hp-price">&#8361;233,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/레이크/1더블,2싱글)</td><td class="hp-price">&#8361;263,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly 취사…</td><td class="hp-price">&#8361;273,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(A 클린/뷰프리/1더…</td><td class="hp-price">&#8361;260,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(A 클린/레이크/1더…</td><td class="hp-price">&#8361;291,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(B 클린/뷰프리/1더…</td><td class="hp-price">&#8361;298,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">디럭스 스위트(B 클린/레이크/1더…</td><td class="hp-price">&#8361;322,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">프리미어 스위트(취사/레이크/2더블)</td><td class="hp-price">&#8361;509,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">프레스티지 스위트(취사/레이크/2더…</td><td class="hp-price">&#8361;621,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">프레지덴셜 스위트(취사/레이크/3더블</td><td class="hp-price">&#8361;20,000,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -1162,6 +1595,81 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 4개 경쟁사&nbsp;&middot;&nbsp;210건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/오션뷰/침대)</td><td class="hp-price">&#8361;177,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/오션뷰/침대)</td><td class="hp-price">&#8361;177,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/파노라마/침대)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/오션…</td><td class="hp-price">&#8361;232,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;215,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/마리나뷰/침대)</td><td class="hp-price">&#8361;215,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파노라마/침대)</td><td class="hp-price">&#8361;237,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;215,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파노라마/침대)</td><td class="hp-price">&#8361;237,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(테마/오션뷰/침대)</td><td class="hp-price">&#8361;255,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Top Suite/파노라마/…</td><td class="hp-price">&#8361;272,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/오션…</td><td class="hp-price">&#8361;289,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">실버(취사/오션뷰/침대)</td><td class="hp-price">&#8361;325,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">골드(취사/오션뷰/침대)</td><td class="hp-price">&#8361;364,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/오션뷰/침대)</td><td class="hp-price">&#8361;177,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/오션뷰/침대)</td><td class="hp-price">&#8361;177,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/파노라마/침대)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/오션…</td><td class="hp-price">&#8361;232,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;215,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/마리나뷰/침대)</td><td class="hp-price">&#8361;215,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파노라마/침대)</td><td class="hp-price">&#8361;237,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;215,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파노라마/침대)</td><td class="hp-price">&#8361;237,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(테마/오션뷰/침대)</td><td class="hp-price">&#8361;255,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Top Suite/파노라마/…</td><td class="hp-price">&#8361;272,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/오션…</td><td class="hp-price">&#8361;289,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">실버(취사/오션뷰/침대)</td><td class="hp-price">&#8361;325,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">골드(취사/오션뷰/침대)</td><td class="hp-price">&#8361;364,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/오션뷰/침대)</td><td class="hp-price">&#8361;213,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/오션뷰/침대)</td><td class="hp-price">&#8361;213,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/파노라마/침대)</td><td class="hp-price">&#8361;225,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/오션…</td><td class="hp-price">&#8361;278,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;258,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/마리나뷰/침대)</td><td class="hp-price">&#8361;258,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파노라마/침대)</td><td class="hp-price">&#8361;280,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;258,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파노라마/침대)</td><td class="hp-price">&#8361;270,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(테마/오션뷰/침대)</td><td class="hp-price">&#8361;288,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(Top Suite/파노라마/…</td><td class="hp-price">&#8361;305,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/오션…</td><td class="hp-price">&#8361;337,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">실버(취사/오션뷰/침대)</td><td class="hp-price">&#8361;383,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">골드(취사/오션뷰/침대)</td><td class="hp-price">&#8361;433,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/오션뷰/침대)</td><td class="hp-price">&#8361;262,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/오션뷰/침대)</td><td class="hp-price">&#8361;262,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/파노라마/침대)</td><td class="hp-price">&#8361;295,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/오션…</td><td class="hp-price">&#8361;347,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;309,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/마리나뷰/침대)</td><td class="hp-price">&#8361;309,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파노라마/침대)</td><td class="hp-price">&#8361;342,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;309,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파노라마/침대)</td><td class="hp-price">&#8361;342,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(테마/오션뷰/침대)</td><td class="hp-price">&#8361;339,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(Top Suite/파노라마/…</td><td class="hp-price">&#8361;377,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/오션…</td><td class="hp-price">&#8361;408,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">실버(취사/오션뷰/침대)</td><td class="hp-price">&#8361;509,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">골드(취사/오션뷰/침대)</td><td class="hp-price">&#8361;559,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/오션뷰/침대)</td><td class="hp-price">&#8361;197,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/오션뷰/침대)</td><td class="hp-price">&#8361;197,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/파노라마/침대)</td><td class="hp-price">&#8361;209,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/오션…</td><td class="hp-price">&#8361;232,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;235,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/마리나뷰/침대)</td><td class="hp-price">&#8361;235,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파노라마/침대)</td><td class="hp-price">&#8361;247,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;235,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파노라마/침대)</td><td class="hp-price">&#8361;247,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(테마/오션뷰/침대)</td><td class="hp-price">&#8361;275,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Top Suite/파노라마/…</td><td class="hp-price">&#8361;282,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/오션…</td><td class="hp-price">&#8361;289,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">실버(취사/오션뷰/침대)</td><td class="hp-price">&#8361;325,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">골드(취사/오션뷰/침대)</td><td class="hp-price">&#8361;364,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -1223,6 +1731,86 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 4개 경쟁사&nbsp;&middot;&nbsp;210건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어/스탠다드/트윈)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/오션뷰/더블)</td><td class="hp-price">&#8361;228,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/오션뷰/트윈)</td><td class="hp-price">&#8361;228,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/스탠다드/패밀리 트윈)</td><td class="hp-price">&#8361;249,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/오션뷰/패밀리 트윈)</td><td class="hp-price">&#8361;266,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(이그제큐티브 디럭스/오션뷰/…</td><td class="hp-price">&#8361;308,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(테마 한실/오션뷰/더블)</td><td class="hp-price">&#8361;266,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(테마 타다미/오션뷰/패밀리 …</td><td class="hp-price">&#8361;266,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/스탠다드/더블)</td><td class="hp-price">&#8361;266,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/오션뷰/더블)</td><td class="hp-price">&#8361;299,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/오션뷰/패밀리 트…</td><td class="hp-price">&#8361;299,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/오션뷰/더블)</td><td class="hp-price">&#8361;363,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/오션뷰/트윈)</td><td class="hp-price">&#8361;363,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/오션뷰/…</td><td class="hp-price">&#8361;396,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/오션뷰/…</td><td class="hp-price">&#8361;396,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어/스탠다드/트윈)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/오션뷰/더블)</td><td class="hp-price">&#8361;228,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/오션뷰/트윈)</td><td class="hp-price">&#8361;228,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/스탠다드/패밀리 트윈)</td><td class="hp-price">&#8361;249,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/오션뷰/패밀리 트윈)</td><td class="hp-price">&#8361;266,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(이그제큐티브 디럭스/오션뷰/…</td><td class="hp-price">&#8361;308,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(테마 한실/오션뷰/더블)</td><td class="hp-price">&#8361;266,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(테마 타다미/오션뷰/패밀리 …</td><td class="hp-price">&#8361;266,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/스탠다드/더블)</td><td class="hp-price">&#8361;266,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/오션뷰/더블)</td><td class="hp-price">&#8361;299,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/오션뷰/패밀리 트…</td><td class="hp-price">&#8361;299,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/오션뷰/더블)</td><td class="hp-price">&#8361;363,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/오션뷰/트윈)</td><td class="hp-price">&#8361;363,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/오션뷰/…</td><td class="hp-price">&#8361;396,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/오션뷰/…</td><td class="hp-price">&#8361;396,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어/스탠다드/트윈)</td><td class="hp-price">&#8361;248,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/오션뷰/더블)</td><td class="hp-price">&#8361;281,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/오션뷰/트윈)</td><td class="hp-price">&#8361;281,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/스탠다드/패밀리 트윈)</td><td class="hp-price">&#8361;282,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/오션뷰/패밀리 트윈)</td><td class="hp-price">&#8361;309,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(이그제큐티브 디럭스/오션뷰/…</td><td class="hp-price">&#8361;341,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(테마 한실/오션뷰/더블)</td><td class="hp-price">&#8361;309,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(테마 타다미/오션뷰/패밀리 …</td><td class="hp-price">&#8361;309,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/스탠다드/더블)</td><td class="hp-price">&#8361;299,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/오션뷰/더블)</td><td class="hp-price">&#8361;332,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/오션뷰/패밀리 트…</td><td class="hp-price">&#8361;332,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/오션뷰/더블)</td><td class="hp-price">&#8361;386,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/오션뷰/트윈)</td><td class="hp-price">&#8361;386,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/오션뷰/…</td><td class="hp-price">&#8361;419,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/오션뷰/…</td><td class="hp-price">&#8361;419,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어/스탠다드/트윈)</td><td class="hp-price">&#8361;300,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/오션뷰/더블)</td><td class="hp-price">&#8361;333,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/오션뷰/트윈)</td><td class="hp-price">&#8361;333,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/스탠다드/패밀리 트윈)</td><td class="hp-price">&#8361;344,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/오션뷰/패밀리 트윈)</td><td class="hp-price">&#8361;371,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(이그제큐티브 디럭스/오션뷰/…</td><td class="hp-price">&#8361;393,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(테마 한실/오션뷰/더블)</td><td class="hp-price">&#8361;371,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(테마 타다미/오션뷰/패밀리 …</td><td class="hp-price">&#8361;371,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/스탠다드/더블)</td><td class="hp-price">&#8361;371,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/오션뷰/더블)</td><td class="hp-price">&#8361;404,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/오션뷰/패밀리 트…</td><td class="hp-price">&#8361;404,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/오션뷰/더블)</td><td class="hp-price">&#8361;458,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/오션뷰/트윈)</td><td class="hp-price">&#8361;458,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/오션뷰/…</td><td class="hp-price">&#8361;491,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/오션뷰/…</td><td class="hp-price">&#8361;491,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어/스탠다드/트윈)</td><td class="hp-price">&#8361;215,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/오션뷰/더블)</td><td class="hp-price">&#8361;248,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어/오션뷰/트윈)</td><td class="hp-price">&#8361;248,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/스탠다드/패밀리 트윈)</td><td class="hp-price">&#8361;269,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(디럭스/오션뷰/패밀리 트윈)</td><td class="hp-price">&#8361;286,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(이그제큐티브 디럭스/오션뷰/…</td><td class="hp-price">&#8361;308,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(테마 한실/오션뷰/더블)</td><td class="hp-price">&#8361;286,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(테마 타다미/오션뷰/패밀리 …</td><td class="hp-price">&#8361;286,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/스탠다드/더블)</td><td class="hp-price">&#8361;308,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/오션뷰/더블)</td><td class="hp-price">&#8361;299,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(타워스위트/오션뷰/패밀리 트…</td><td class="hp-price">&#8361;299,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/오션뷰/더블)</td><td class="hp-price">&#8361;363,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 스위트/오션뷰/트윈)</td><td class="hp-price">&#8361;363,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/오션뷰/…</td><td class="hp-price">&#8361;396,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(이그제큐티브 스위트/오션뷰/…</td><td class="hp-price">&#8361;396,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -1284,6 +1872,46 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;154건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/더블)</td><td class="hp-price">&#8361;164,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/오션뷰/더블)</td><td class="hp-price">&#8361;204,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/트윈)</td><td class="hp-price">&#8361;164,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/더블)</td><td class="hp-price">&#8361;194,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/더블)</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/더블)</td><td class="hp-price">&#8361;216,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;317,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/더블)</td><td class="hp-price">&#8361;164,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/오션뷰/더블)</td><td class="hp-price">&#8361;204,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/트윈)</td><td class="hp-price">&#8361;164,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/더블)</td><td class="hp-price">&#8361;194,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/더블)</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/더블)</td><td class="hp-price">&#8361;216,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;317,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/더블)</td><td class="hp-price">&#8361;196,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/오션뷰/더블)</td><td class="hp-price">&#8361;246,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/트윈)</td><td class="hp-price">&#8361;196,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/더블)</td><td class="hp-price">&#8361;233,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/더블)</td><td class="hp-price">&#8361;292,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/더블)</td><td class="hp-price">&#8361;255,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;376,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/더블)</td><td class="hp-price">&#8361;240,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/오션뷰/더블)</td><td class="hp-price">&#8361;300,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/트윈)</td><td class="hp-price">&#8361;240,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/더블)</td><td class="hp-price">&#8361;277,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/더블)</td><td class="hp-price">&#8361;346,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/더블)</td><td class="hp-price">&#8361;299,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;400,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/더블)</td><td class="hp-price">&#8361;164,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/오션뷰/더블)</td><td class="hp-price">&#8361;204,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/트윈)</td><td class="hp-price">&#8361;164,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/더블)</td><td class="hp-price">&#8361;194,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/더블)</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/더블)</td><td class="hp-price">&#8361;216,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;317,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -1344,6 +1972,116 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 4개 경쟁사&nbsp;&middot;&nbsp;210건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어 취사/스탠다드/패밀…</td><td class="hp-price">&#8361;145,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 취사/가든오션뷰/패…</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;231,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/스탠다드/패밀…</td><td class="hp-price">&#8361;145,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/가든오션뷰/패…</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/스탠다드/더블)</td><td class="hp-price">&#8361;145,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 취사/스탠다드/더블)</td><td class="hp-price">&#8361;177,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 취사/가든오션뷰/더블)</td><td class="hp-price">&#8361;304,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 클린/스탠다드/더블)</td><td class="hp-price">&#8361;177,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/스탠다드/더블)</td><td class="hp-price">&#8361;214,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;310,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/가든오션뷰/더…</td><td class="hp-price">&#8361;268,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 클린/가든오션뷰/더…</td><td class="hp-price">&#8361;268,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 취사/스탠다드/더블)</td><td class="hp-price">&#8361;231,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 클린/스탠다드/패밀…</td><td class="hp-price">&#8361;231,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;327,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;238,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;354,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 Pet Friend…</td><td class="hp-price">&#8361;337,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 Pet Friendl…</td><td class="hp-price">&#8361;320,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">로얄(그랜드 취사/가든오션뷰/침대)</td><td class="hp-price">&#8361;1,150,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어 취사/스탠다드/패밀…</td><td class="hp-price">&#8361;145,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 취사/가든오션뷰/패…</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;231,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/스탠다드/패밀…</td><td class="hp-price">&#8361;145,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/가든오션뷰/패…</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/스탠다드/더블)</td><td class="hp-price">&#8361;145,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 취사/스탠다드/더블)</td><td class="hp-price">&#8361;177,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 취사/가든오션뷰/더블)</td><td class="hp-price">&#8361;304,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 클린/스탠다드/더블)</td><td class="hp-price">&#8361;177,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/스탠다드/더블)</td><td class="hp-price">&#8361;214,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;310,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/가든오션뷰/더…</td><td class="hp-price">&#8361;268,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 클린/가든오션뷰/더…</td><td class="hp-price">&#8361;268,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 취사/스탠다드/더블)</td><td class="hp-price">&#8361;231,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 클린/스탠다드/패밀…</td><td class="hp-price">&#8361;231,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;327,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;238,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;354,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 Pet Friend…</td><td class="hp-price">&#8361;337,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 Pet Friendl…</td><td class="hp-price">&#8361;320,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">로얄(그랜드 취사/가든오션뷰/침대)</td><td class="hp-price">&#8361;1,150,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어 취사/스탠다드/패밀…</td><td class="hp-price">&#8361;178,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 취사/가든오션뷰/패…</td><td class="hp-price">&#8361;252,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;264,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/스탠다드/패밀…</td><td class="hp-price">&#8361;178,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/가든오션뷰/패…</td><td class="hp-price">&#8361;252,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/스탠다드/더블)</td><td class="hp-price">&#8361;178,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 취사/스탠다드/더블)</td><td class="hp-price">&#8361;213,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 취사/가든오션뷰/더블)</td><td class="hp-price">&#8361;350,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 클린/스탠다드/더블)</td><td class="hp-price">&#8361;213,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/스탠다드/더블)</td><td class="hp-price">&#8361;244,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;360,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/가든오션뷰/더…</td><td class="hp-price">&#8361;298,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 클린/가든오션뷰/더…</td><td class="hp-price">&#8361;298,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 취사/스탠다드/더블)</td><td class="hp-price">&#8361;262,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 클린/스탠다드/패밀…</td><td class="hp-price">&#8361;262,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;378,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;271,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;405,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 Pet Friend…</td><td class="hp-price">&#8361;387,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 Pet Friendl…</td><td class="hp-price">&#8361;356,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">로얄(그랜드 취사/가든오션뷰/침대)</td><td class="hp-price">&#8361;1,400,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어 취사/스탠다드/패밀…</td><td class="hp-price">&#8361;210,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 취사/가든오션뷰/패…</td><td class="hp-price">&#8361;284,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;306,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/스탠다드/패밀…</td><td class="hp-price">&#8361;210,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/가든오션뷰/패…</td><td class="hp-price">&#8361;284,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/스탠다드/더블)</td><td class="hp-price">&#8361;210,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 취사/스탠다드/더블)</td><td class="hp-price">&#8361;251,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 취사/가든오션뷰/더블)</td><td class="hp-price">&#8361;378,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 클린/스탠다드/더블)</td><td class="hp-price">&#8361;251,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/스탠다드/더블)</td><td class="hp-price">&#8361;300,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;386,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/가든오션뷰/더…</td><td class="hp-price">&#8361;354,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 클린/가든오션뷰/더…</td><td class="hp-price">&#8361;354,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 취사/스탠다드/더블)</td><td class="hp-price">&#8361;323,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 클린/스탠다드/패밀…</td><td class="hp-price">&#8361;323,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;409,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;323,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;446,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 Pet Friend…</td><td class="hp-price">&#8361;423,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 Pet Friendl…</td><td class="hp-price">&#8361;404,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">로얄(그랜드 취사/가든오션뷰/침대)</td><td class="hp-price">&#8361;1,500,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(슈페리어 취사/스탠다드/패밀…</td><td class="hp-price">&#8361;145,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 취사/가든오션뷰/패…</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;231,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/스탠다드/패밀…</td><td class="hp-price">&#8361;145,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/가든오션뷰/패…</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(슈페리어 클린/스탠다드/더블)</td><td class="hp-price">&#8361;145,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 취사/스탠다드/더블)</td><td class="hp-price">&#8361;177,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 취사/가든오션뷰/더블)</td><td class="hp-price">&#8361;304,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 클린/스탠다드/더블)</td><td class="hp-price">&#8361;177,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/스탠다드/더블)</td><td class="hp-price">&#8361;214,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;310,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 취사/가든오션뷰/더…</td><td class="hp-price">&#8361;268,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 클린/가든오션뷰/더…</td><td class="hp-price">&#8361;268,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 취사/스탠다드/더블)</td><td class="hp-price">&#8361;231,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 클린/스탠다드/패밀…</td><td class="hp-price">&#8361;231,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(파밀리에 취사/빌리지오션뷰/…</td><td class="hp-price">&#8361;327,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;238,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;354,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(프리미어 Pet Friend…</td><td class="hp-price">&#8361;337,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(디럭스 Pet Friendl…</td><td class="hp-price">&#8361;320,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">로얄(그랜드 취사/가든오션뷰/침대)</td><td class="hp-price">&#8361;1,150,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -1405,6 +2143,81 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;140건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;108,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;108,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/가든뷰/온돌)</td><td class="hp-price">&#8361;124,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/가든뷰/침대)</td><td class="hp-price">&#8361;124,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;108,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/가든뷰/침대)</td><td class="hp-price">&#8361;124,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;177,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;132,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;132,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/가든뷰/온돌)</td><td class="hp-price">&#8361;148,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/가든뷰/침대)</td><td class="hp-price">&#8361;148,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/가든뷰/침대)</td><td class="hp-price">&#8361;148,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;132,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;221,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;108,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;108,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/가든뷰/온돌)</td><td class="hp-price">&#8361;124,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/가든뷰/침대)</td><td class="hp-price">&#8361;124,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;108,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/가든뷰/침대)</td><td class="hp-price">&#8361;124,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;177,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;132,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;132,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/가든뷰/온돌)</td><td class="hp-price">&#8361;148,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/가든뷰/침대)</td><td class="hp-price">&#8361;148,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/가든뷰/침대)</td><td class="hp-price">&#8361;148,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;132,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;221,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;121,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;121,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/가든뷰/온돌)</td><td class="hp-price">&#8361;137,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/가든뷰/침대)</td><td class="hp-price">&#8361;137,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;121,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/가든뷰/침대)</td><td class="hp-price">&#8361;137,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;209,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;152,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;152,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/가든뷰/온돌)</td><td class="hp-price">&#8361;168,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/가든뷰/침대)</td><td class="hp-price">&#8361;168,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/가든뷰/침대)</td><td class="hp-price">&#8361;168,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;152,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;262,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;167,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;167,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/가든뷰/온돌)</td><td class="hp-price">&#8361;183,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/가든뷰/침대)</td><td class="hp-price">&#8361;183,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;167,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/가든뷰/침대)</td><td class="hp-price">&#8361;183,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;269,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;202,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;202,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/가든뷰/온돌)</td><td class="hp-price">&#8361;218,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/가든뷰/침대)</td><td class="hp-price">&#8361;218,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/가든뷰/침대)</td><td class="hp-price">&#8361;218,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;202,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;328,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;108,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;108,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/가든뷰/온돌)</td><td class="hp-price">&#8361;124,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/가든뷰/침대)</td><td class="hp-price">&#8361;124,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;108,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/가든뷰/침대)</td><td class="hp-price">&#8361;124,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;177,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;132,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;132,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/가든뷰/온돌)</td><td class="hp-price">&#8361;148,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/가든뷰/침대)</td><td class="hp-price">&#8361;148,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/가든뷰/침대)</td><td class="hp-price">&#8361;148,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;132,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;221,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -1465,6 +2278,51 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;126건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;121,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/레이크뷰/침대)</td><td class="hp-price">&#8361;143,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;121,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/레이크뷰/침대)</td><td class="hp-price">&#8361;143,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;147,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/레이크뷰/침대)</td><td class="hp-price">&#8361;169,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;147,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/레이크뷰/침대)</td><td class="hp-price">&#8361;169,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;121,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/레이크뷰/침대)</td><td class="hp-price">&#8361;143,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;121,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/레이크뷰/침대)</td><td class="hp-price">&#8361;143,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;147,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/레이크뷰/침대)</td><td class="hp-price">&#8361;169,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;147,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/레이크뷰/침대)</td><td class="hp-price">&#8361;169,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;156,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/레이크뷰/침대)</td><td class="hp-price">&#8361;178,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;156,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/레이크뷰/침대)</td><td class="hp-price">&#8361;178,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;187,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/레이크뷰/침대)</td><td class="hp-price">&#8361;209,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;187,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/레이크뷰/침대)</td><td class="hp-price">&#8361;209,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;209,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/레이크뷰/침대)</td><td class="hp-price">&#8361;231,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;209,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/레이크뷰/침대)</td><td class="hp-price">&#8361;231,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;246,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/레이크뷰/침대)</td><td class="hp-price">&#8361;268,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;246,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/레이크뷰/침대)</td><td class="hp-price">&#8361;268,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;103,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/레이크뷰/침대)</td><td class="hp-price">&#8361;135,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;103,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/레이크뷰/침대)</td><td class="hp-price">&#8361;135,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;139,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/레이크뷰/침대)</td><td class="hp-price">&#8361;162,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;139,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/레이크뷰/침대)</td><td class="hp-price">&#8361;162,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -1525,6 +2383,31 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 3개 경쟁사&nbsp;&middot;&nbsp;140건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;230,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;230,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;230,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;195,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;230,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;218,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;258,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;218,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;258,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;275,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;334,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;275,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;334,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;175,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;210,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;175,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/설악마운틴뷰/침대)</td><td class="hp-price">&#8361;210,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -1585,6 +2468,86 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 2개 경쟁사&nbsp;&middot;&nbsp;98건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;172,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/비치오션뷰/침대)</td><td class="hp-price">&#8361;209,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;172,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/비치오션뷰/침대)</td><td class="hp-price">&#8361;209,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;212,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스퀘어오션뷰/침대)</td><td class="hp-price">&#8361;247,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파노라마/침대)</td><td class="hp-price">&#8361;269,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파노라마/침대)</td><td class="hp-price">&#8361;269,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;259,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/파노…</td><td class="hp-price">&#8361;329,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;172,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/비치오션뷰/침대)</td><td class="hp-price">&#8361;209,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;172,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/비치오션뷰/침대)</td><td class="hp-price">&#8361;209,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;212,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스퀘어오션뷰/침대)</td><td class="hp-price">&#8361;247,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파노라마/침대)</td><td class="hp-price">&#8361;269,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;199,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;229,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파노라마/침대)</td><td class="hp-price">&#8361;269,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;259,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/파노…</td><td class="hp-price">&#8361;329,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;213,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/비치오션뷰/침대)</td><td class="hp-price">&#8361;250,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;213,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/비치오션뷰/침대)</td><td class="hp-price">&#8361;250,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;253,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;246,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;246,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;273,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스퀘어오션뷰/침대)</td><td class="hp-price">&#8361;294,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파노라마/침대)</td><td class="hp-price">&#8361;316,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;246,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;273,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파노라마/침대)</td><td class="hp-price">&#8361;316,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;306,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/파노…</td><td class="hp-price">&#8361;376,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;308,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/비치오션뷰/침대)</td><td class="hp-price">&#8361;310,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;308,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/비치오션뷰/침대)</td><td class="hp-price">&#8361;310,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;312,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;325,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;325,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;332,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스퀘어오션뷰/침대)</td><td class="hp-price">&#8361;365,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파노라마/침대)</td><td class="hp-price">&#8361;395,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;295,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;332,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파노라마/침대)</td><td class="hp-price">&#8361;395,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;365,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/파노…</td><td class="hp-price">&#8361;465,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;152,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/비치오션뷰/침대)</td><td class="hp-price">&#8361;189,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;152,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/비치오션뷰/침대)</td><td class="hp-price">&#8361;189,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/스탠…</td><td class="hp-price">&#8361;192,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/온돌)</td><td class="hp-price">&#8361;179,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;179,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;209,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스퀘어오션뷰/침대)</td><td class="hp-price">&#8361;227,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파노라마/침대)</td><td class="hp-price">&#8361;249,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;179,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파셜오션뷰/침대)</td><td class="hp-price">&#8361;209,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/파노라마/침대)</td><td class="hp-price">&#8361;249,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/스탠…</td><td class="hp-price">&#8361;239,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/파노…</td><td class="hp-price">&#8361;309,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -1644,6 +2607,71 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">자사 포함 · 2개 경쟁사&nbsp;&middot;&nbsp;70건</div>
   </div>
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">기준일 2026-04-16</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    <div class="dt-layer dt-active" data-dt="전체"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;180,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;213,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/오션뷰/침대)</td><td class="hp-price">&#8361;235,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;180,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/오션뷰/침대)</td><td class="hp-price">&#8361;235,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/파셜…</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;225,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;258,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;280,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;225,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;280,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/파셜…</td><td class="hp-price">&#8361;308,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="주중"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;180,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;213,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/오션뷰/침대)</td><td class="hp-price">&#8361;235,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;180,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/오션뷰/침대)</td><td class="hp-price">&#8361;235,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/파셜…</td><td class="hp-price">&#8361;243,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;225,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;258,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;280,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;225,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;280,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/파셜…</td><td class="hp-price">&#8361;308,000</td><td class="hp-meta">4/16&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="금"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;244,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;287,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/오션뷰/침대)</td><td class="hp-price">&#8361;309,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;244,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/오션뷰/침대)</td><td class="hp-price">&#8361;309,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/파셜…</td><td class="hp-price">&#8361;307,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;279,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;322,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;344,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;279,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;344,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/파셜…</td><td class="hp-price">&#8361;362,000</td><td class="hp-meta">4/17&ensp;<span class="fit-season">비수기 금요일</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="토"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;310,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;354,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/오션뷰/침대)</td><td class="hp-price">&#8361;387,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;310,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/오션뷰/침대)</td><td class="hp-price">&#8361;387,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/파셜…</td><td class="hp-price">&#8361;404,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;356,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;400,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;433,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;356,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;433,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/파셜…</td><td class="hp-price">&#8361;470,000</td><td class="hp-meta">4/18&ensp;<span class="fit-season">비수기 주말</span></td></tr></tbody></table></div><div class="dt-layer" data-dt="연휴"><table class="homepage-table"><thead><tr><th class="hp-th-room">객실타입</th><th class="hp-th-price">FIT 요금</th><th class="hp-th-meta">날짜 / 시즌</th></tr></thead><tbody><tr><td class="hp-room">패밀리(취사/스탠다드/침대)</td><td class="hp-price">&#8361;175,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;208,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(취사/오션뷰/침대)</td><td class="hp-price">&#8361;230,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/스탠다드/침대)</td><td class="hp-price">&#8361;170,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(클린/오션뷰/침대)</td><td class="hp-price">&#8361;225,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">패밀리(Pet Friendly/파셜…</td><td class="hp-price">&#8361;253,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/스탠다드/침대)</td><td class="hp-price">&#8361;215,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/파셜오션뷰/침대)</td><td class="hp-price">&#8361;248,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(취사/오션뷰/침대)</td><td class="hp-price">&#8361;270,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/스탠다드/침대)</td><td class="hp-price">&#8361;205,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(클린/오션뷰/침대)</td><td class="hp-price">&#8361;260,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr>
+<tr><td class="hp-room">스위트(Pet Friendly/파셜…</td><td class="hp-price">&#8361;318,000</td><td class="hp-meta">5/5&ensp;<span class="fit-season">비수기 주중</span></td></tr></tbody></table></div>
+  </div>
+</div>
 
   <div class="table-wrap">
     <table>
@@ -1703,6 +2731,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     </div>
     <div class="property-stats">3개 경쟁사&nbsp;&middot;&nbsp;42건</div>
   </div>
+
 
   <div class="table-wrap">
     <table>
@@ -1784,6 +2813,15 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   // ── 자사몰 객실가격 토글 ──────────────────────────────────────────────────
   var hpToggles = toArr(document.querySelectorAll('.homepage-toggle'));
   hpToggles.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var section = btn.parentElement;
+      section.classList.toggle('open');
+    });
+  });
+
+  // ── FIT 요금 토글 ─────────────────────────────────────────────────────────
+  var fitToggles = toArr(document.querySelectorAll('.fit-toggle'));
+  fitToggles.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var section = btn.parentElement;
       section.classList.toggle('open');

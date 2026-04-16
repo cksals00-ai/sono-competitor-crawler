@@ -19,11 +19,15 @@ import yaml
 
 logger = logging.getLogger(__name__)
 
+# ── 기능 플래그 ───────────────────────────────────────────────────────────────
+# 자사몰 API 수정 완료 전까지 자사몰 섹션 숨김
+_SHOW_HOMEPAGE_SECTION = False
+
 # ── OTA 설정 ─────────────────────────────────────────────────────────────────
-OTA_ORDER   = ["야놀자", "여기어때", "Booking.com", "Agoda"]
-OTA_SHORT   = {"야놀자": "야놀자", "여기어때": "여기어때", "Booking.com": "Booking", "Agoda": "Agoda", "자사홈": "자사홈"}
-OTA_URL_KEY = {"야놀자": "yanolja_url", "여기어때": "yeogiuh_url", "Booking.com": "booking_url", "Agoda": "agoda_url", "자사홈": ""}
-OTA_CLASS   = {"야놀자": "yanolja",  "여기어때": "yeogi",       "Booking.com": "booking",     "Agoda": "agoda",  "자사홈": "homepage"}
+OTA_ORDER   = ["야놀자", "여기어때", "Agoda"]
+OTA_SHORT   = {"야놀자": "야놀자", "여기어때": "여기어때", "Agoda": "Agoda", "자사홈": "자사홈"}
+OTA_URL_KEY = {"야놀자": "yanolja_url", "여기어때": "yeogiuh_url", "Agoda": "agoda_url", "자사홈": ""}
+OTA_CLASS   = {"야놀자": "yanolja",  "여기어때": "yeogi",  "Agoda": "agoda",  "자사홈": "homepage"}
 
 # ── 요일 구분 ─────────────────────────────────────────────────────────────────
 DAY_TYPES  = ["전체", "주중", "금", "토", "연휴"]
@@ -86,6 +90,19 @@ REGION_LABELS = {
 def load_config(config_path: str = "config.yaml") -> dict:
     with open(config_path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
+
+
+def _load_fit_rates(json_path: str = "fit_rates.json") -> dict:
+    """자사 FIT 요금 JSON 로드. 없으면 빈 dict 반환."""
+    try:
+        p = Path(json_path)
+        if not p.exists():
+            return {}
+        with open(p, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        logger.warning(f"fit_rates.json 로드 실패: {e}")
+        return {}
 
 
 def _load_channel_data(json_path: str = "channel_sales_data.json") -> dict:
@@ -363,11 +380,6 @@ def _make_ota_link_url(base_url: str, ota: str, checkin: str) -> str:
         return f"{base_url}?checkInDate={checkin}&checkOutDate={checkout}"
     if ota == "여기어때":
         return f"{base_url}?checkIn={checkin}&checkOut={checkout}&personal=2"
-    if ota == "Booking.com":
-        return (
-            f"{base_url}?checkin={checkin}&checkout={checkout}"
-            "&group_adults=2&no_rooms=1&lang=ko"
-        )
     if ota == "Agoda":
         return f"{base_url}?checkIn={checkin}&checkOut={checkout}&adults=2&rooms=1"
     return base_url
@@ -426,10 +438,15 @@ def _render_price_cell(
     prev_per_date: dict,    # {(prop, comp, ota, checkin_date): price}
     ota_url: str,           # 실제 OTA URL (없으면 빈 문자열)
     is_own: bool = False,
+    review_summary: dict = None,  # {comp_name: {ota: score}}
 ) -> str:
     """요일별 레이어를 포함한 <td> 반환. 가격 클릭 시 해당 OTA 딥링크로 이동."""
     if not ota_url:
         return '<td class="price-cell no-data">&#8212;</td>'
+
+    # 이 OTA의 별점 (있으면 가격 옆에 인라인 표시)
+    review_summary = review_summary or {}
+    rating_score = review_summary.get(comp_name, {}).get(ota)
 
     key    = (prop_name, comp_name, ota)
     layers = []
@@ -454,7 +471,7 @@ def _render_price_cell(
             # 전일 동일 체크인일 기준 가격 변동 (조회날짜 기준)
             prev_price = prev_per_date.get((prop_name, comp_name, ota, checkin), 0)
             change     = _change_html(price, prev_price) if prev_price > 0 \
-                         else '<span class="badge-new">신규</span>'
+                         else ('<span class="badge-new">신규</span>' if prev_per_date else "")
 
             price_cls  = "own-price" if is_own else ""
             promo_html = ' <span class="badge-promo">특가</span>' if is_promo else ""
@@ -464,10 +481,17 @@ def _render_price_cell(
 
             link_url   = _make_ota_link_url(ota_url, ota, checkin)
 
+            # 별점 인라인 표시: ₩92,000 ⭐4.8
+            rating_html = (
+                f' <span class="inline-rating">&#11088;{rating_score}</span>'
+                if rating_score else ""
+            )
+
             inner = (
                 f'<a href="{link_url}" target="_blank" rel="noopener" '
                 f'class="price-link {price_cls}">'
                 f'{_fmt_price(price)}{promo_html}</a>'
+                f'{rating_html}'
                 f'{room_html}'
                 f'<div class="price-meta">{date_disp} {change}</div>'
             )
@@ -594,7 +618,7 @@ def _render_homepage_section(
             date_disp = _fmt_date(checkin)
             prev_price = prev_per_date.get((prop_name, prop_name, "자사홈", checkin), 0)
             change     = _change_html(price, prev_price) if prev_price > 0 \
-                         else '<span class="badge-new">신규</span>'
+                         else ('<span class="badge-new">신규</span>' if prev_per_date else "")
             promo_html = ' <span class="badge-promo">특가</span>' if is_p else ""
             rows.append(
                 f'<tr>'
@@ -638,6 +662,99 @@ def _render_homepage_section(
 </div>"""
 
 
+def _render_fit_section(prop_name: str, fit_data: dict) -> str:
+    """자사 FIT 요금 토글 섹션 HTML 생성.
+
+    fit_data 구조:
+    {
+      "generated_at": "YYYY-MM-DD",
+      "properties": {
+        "<prop_name>": {
+          "room_types": [...],
+          "rates": [{"date": "YYYY-MM-DD", "요일": str, "시즌명": str,
+                     "rooms": {rt: price, ...}}, ...]
+        }
+      }
+    }
+    """
+    if not fit_data:
+        return ""
+    prop_entry = fit_data.get("properties", {}).get(prop_name)
+    if not prop_entry:
+        return ""
+
+    room_types: list[str] = prop_entry.get("room_types", [])
+    rates: list[dict]     = prop_entry.get("rates", [])
+    gen_date: str         = fit_data.get("generated_at", "")
+
+    if not room_types or not rates:
+        return ""
+
+    # 요일별로 가장 가까운 날짜 찾기
+    def nearest_for_dt(dt_filter: str) -> dict | None:
+        for r in rates:
+            dt = _get_day_type(r["date"])
+            if dt_filter == "전체" or dt == dt_filter:
+                return r
+        return None
+
+    layers = []
+    for dt in DAY_TYPES:
+        active_cls = " dt-active" if dt == "전체" else ""
+        row = nearest_for_dt(dt)
+
+        if row is None:
+            inner = '<tr><td colspan="3" style="text-align:center;color:#3a3f4b;padding:8px">해당 요일 데이터 없음</td></tr>'
+        else:
+            date_disp = _fmt_date(row["date"])
+            시즌명    = row.get("시즌명", "")
+            rooms     = row.get("rooms", {})
+            tr_rows   = []
+            for rt in room_types:
+                price = rooms.get(rt, 0)
+                if price <= 0:
+                    continue
+                short_rt = rt if len(rt) <= 20 else rt[:19] + "…"
+                tr_rows.append(
+                    f'<tr>'
+                    f'<td class="hp-room">{short_rt}</td>'
+                    f'<td class="hp-price">{_fmt_price(price)}</td>'
+                    f'<td class="hp-meta">{date_disp}'
+                    + (f'&ensp;<span class="fit-season">{시즌명}</span>' if 시즌명 else "")
+                    + f'</td></tr>'
+                )
+            if tr_rows:
+                inner = "\n".join(tr_rows)
+            else:
+                inner = '<tr><td colspan="3" style="text-align:center;color:#3a3f4b;padding:8px">가격 없음</td></tr>'
+
+        layers.append(
+            f'<div class="dt-layer{active_cls}" data-dt="{dt}">'
+            f'<table class="homepage-table">'
+            f'<thead><tr>'
+            f'<th class="hp-th-room">객실타입</th>'
+            f'<th class="hp-th-price">FIT 요금</th>'
+            f'<th class="hp-th-meta">날짜 / 시즌</th>'
+            f'</tr></thead>'
+            f'<tbody>{inner}</tbody>'
+            f'</table>'
+            f'</div>'
+        )
+
+    gen_label = f"기준일 {gen_date}" if gen_date else ""
+    return f"""\
+<div class="fit-section">
+  <button class="fit-toggle" type="button">
+    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-meta">{gen_label}</span>
+    <span class="fit-arrow">&#9660;</span>
+  </button>
+  <div class="fit-body">
+    {"".join(layers)}
+  </div>
+</div>"""
+
+
 def _render_property_card(
     prop: dict,
     summaries: dict,        # {day_type: summary_dict}
@@ -645,13 +762,14 @@ def _render_property_card(
     df: pd.DataFrame,
     review_summary: dict = None,  # {comp_name: {ota: score}}
     channel_data: dict = None,    # _load_channel_data() 결과
+    fit_data: dict = None,        # _load_fit_rates() 결과
 ) -> str:
     prop_name    = prop["name"]
     region_str   = prop.get("region", "")
     region_label = _get_region(region_str)
     competitors  = prop.get("competitors", [])
     own_urls     = prop.get("own_urls", {})
-    has_own      = any(own_urls.get(k, "") for k in ("yanolja_url", "yeogiuh_url", "booking_url"))
+    has_own      = any(own_urls.get(k, "") for k in ("yanolja_url", "yeogiuh_url", "agoda_url"))
     review_summary = review_summary or {}
 
     if not df.empty and "property_name" in df.columns:
@@ -660,16 +778,9 @@ def _render_property_card(
     else:
         ok_count = 0
 
-    has_reviews = bool(review_summary)
-
     ota_ths = "".join(
         f'<th class="ota-{OTA_CLASS[ota]}">{OTA_SHORT[ota]}</th>'
         for ota in OTA_ORDER
-    )
-    # 별점 헤더 (별점 데이터 있을 때만 추가)
-    review_ths = (
-        '<th class="review-col" title="OTA 별점 (10점 만점 · 수집된 OTA만 표시)">별점</th>'
-        if has_reviews else ""
     )
 
     rows = []
@@ -682,17 +793,16 @@ def _render_property_card(
                 summaries, prev_per_date,
                 own_urls.get(OTA_URL_KEY[ota], ""),
                 is_own=True,
+                review_summary=review_summary,
             )
             for ota in OTA_ORDER
         )
-        review_cell = _render_review_cell(prop_name, review_summary) if has_reviews else ""
         rows.append(
             f'<tr class="own-row">'
             f'<td class="competitor-name own-label">'
             f'<span class="badge-sono">자사</span>{prop_name}'
             f'</td>'
             f'{own_cells}'
-            f'{review_cell}'
             f'</tr>'
         )
 
@@ -704,12 +814,12 @@ def _render_property_card(
                 prop_name, comp_name, ota,
                 summaries, prev_per_date,
                 comp.get(OTA_URL_KEY[ota], ""),
+                review_summary=review_summary,
             )
             for ota in OTA_ORDER
         )
-        review_cell = _render_review_cell(comp_name, review_summary) if has_reviews else ""
         rows.append(
-            f'<tr><td class="competitor-name">{comp_name}</td>{cells}{review_cell}</tr>'
+            f'<tr><td class="competitor-name">{comp_name}</td>{cells}</tr>'
         )
 
     rows_html    = "\n          ".join(rows)
@@ -719,6 +829,7 @@ def _render_property_card(
 
     channel_html  = _render_channel_section(prop_name, channel_data)
     homepage_html = _render_homepage_section(prop_name, df, prev_per_date)
+    fit_html      = _render_fit_section(prop_name, fit_data or {})
 
     return f"""\
 <div class="property-card" data-region="{region_label}">
@@ -729,12 +840,13 @@ def _render_property_card(
     </div>
     <div class="property-stats">{comp_label}&nbsp;&middot;&nbsp;{ok_count:,}건</div>
   </div>
+{fit_html}
 {homepage_html}
   <div class="table-wrap">
     <table>
       <thead><tr>
         <th class="competitor-col">구분</th>
-        {ota_ths}{review_ths}
+        {ota_ths}
       </tr></thead>
       <tbody>
           {rows_html}
@@ -790,9 +902,10 @@ def _render_html(
     prices_ok = int((df["price"].fillna(0) > 0).sum()) if not df.empty and "price" in df.columns else 0
 
     channel_data = _load_channel_data()
+    fit_data     = _load_fit_rates()
 
     cards_html = "\n\n".join(
-        _render_property_card(p, summaries, prev_per_date, df, review_summary, channel_data)
+        _render_property_card(p, summaries, prev_per_date, df, review_summary, channel_data, fit_data)
         for p in properties
     )
 
@@ -842,6 +955,7 @@ def _render_html(
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>소노 경쟁사 모니터링 | GS Team</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>{_CSS}</style>
 </head>
 <body>
@@ -902,10 +1016,12 @@ def _render_html(
 </main>
 
 <footer class="footer">
-  소노호텔앤리조트 경쟁사 가격 모니터링&ensp;&middot;&ensp;매일 07:00 자동 업데이트<br>
-  <small>각 OTA 기준 30일 내 최저가 (1박, 성인 2인)&ensp;&middot;&ensp;요일 탭은 체크인 날짜 기준</small><br>
-  <small class="copyright">&copy; GS Alfred Park</small>
+  소노호텔앤리조트 경쟁사 가격 모니터링&ensp;&middot;&ensp;매일 04:00 자동 업데이트<br>
+  <small>각 OTA 기준 30일 내 최저가 (1박, 성인 2인)&ensp;&middot;&ensp;요일 탭은 체크인 날짜 기준</small>
 </footer>
+<div class="copyright-bar">
+  Copyright &copy; GS Team Chanmin Park. All rights reserved.
+</div>
 
 <script>{_JS}</script>
 </body>
@@ -929,13 +1045,12 @@ _CSS = """
   --orange:      #f0883e;
   --c-yanolja:   #ff4081;
   --c-yeogi:     #4285f4;
-  --c-booking:   #5cb8ff;
   --c-agoda:     #e85d3e;
   --c-homepage:  #3fb950;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic",
+  font-family: 'Noto Sans KR', -apple-system, "Apple SD Gothic Neo", "Malgun Gothic",
                BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: var(--bg);
   color: var(--text);
@@ -1081,11 +1196,12 @@ body {
 .legend-note  { color: var(--muted); font-size: 11px; }
 
 /* ── Main / Grid ── */
-.main { padding: 16px; max-width: 1400px; margin: 0 auto; }
+.main { padding: 16px; max-width: 1800px; margin: 0 auto; }
 .property-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-template-columns: 1fr;
   gap: 16px;
+  align-items: stretch;
 }
 
 /* ── Property card ── */
@@ -1095,7 +1211,11 @@ body {
   border-radius: 12px;
   overflow: hidden;
   transition: border-color .2s, box-shadow .2s;
+  display: flex;
+  flex-direction: column;
 }
+.table-wrap { flex: 1; }
+.channel-section { margin-top: auto; }
 .property-card:hover {
   border-color: rgba(88,166,255,.35);
   box-shadow: 0 0 24px rgba(88,166,255,.08);
@@ -1130,7 +1250,6 @@ th {
 th.competitor-col { text-align: left; min-width: 120px; }
 th.ota-yanolja  { color: var(--c-yanolja);  }
 th.ota-yeogi    { color: var(--c-yeogi);    }
-th.ota-booking  { color: var(--c-booking);  }
 th.ota-agoda    { color: var(--c-agoda);    }
 th.ota-homepage { color: var(--c-homepage); }
 td {
@@ -1223,22 +1342,15 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   vertical-align: middle;
 }
 
-/* ── Review / 별점 ── */
-.review-col   { text-align: center; min-width: 80px; font-size: 11px; color: var(--muted); }
-.review-cell  { text-align: center; padding: 4px 6px; white-space: nowrap; }
-.review-na    { color: #3a3f4b; }
-.review-badge {
-  display: inline-block;
+/* ── 별점 인라인 표시 (가격 바로 옆) ── */
+.inline-rating {
   font-size: 10px;
-  font-weight: 700;
-  padding: 2px 5px;
-  border-radius: 4px;
-  margin: 1px 0;
-  letter-spacing: .2px;
+  font-weight: 600;
+  color: #d29922;
+  margin-left: 3px;
+  vertical-align: middle;
+  white-space: nowrap;
 }
-.review-high  { background: rgba(46,160,67,.20); color: #3fb950; }
-.review-mid   { background: rgba(210,153,34,.20); color: #d29922; }
-.review-low   { background: rgba(248,81,73,.20);  color: #f85149; }
 
 /* ── Footer ── */
 .footer {
@@ -1250,11 +1362,19 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   border-top: 1px solid var(--border);
   margin-top: 8px;
 }
-.copyright { font-size: 11px; color: #444; letter-spacing: .2px; }
+.copyright-bar {
+  background: #0a0d11;
+  color: rgba(255,255,255,.55);
+  text-align: center;
+  font-size: 12px;
+  padding: 14px 24px;
+  border-top: 1px solid var(--border);
+  letter-spacing: .3px;
+}
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .property-grid { grid-template-columns: 1fr; gap: 12px; }
+  .property-grid { gap: 12px; }
   .main { padding: 10px; }
   .header { padding: 12px 14px; }
   .header-title { font-size: 16px; }
@@ -1272,6 +1392,17 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   .property-title { font-size: 13px; }
   .header-title { font-size: 14px; }
   .legend-bar { font-size: 10px; }
+}
+@media (min-width: 768px) {
+  .property-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1200px) {
+  .property-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1920px) {
+  .main { max-width: 1900px; padding: 16px 40px; }
+  .header-inner { max-width: 1900px; }
+  .property-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* ── Channel Sales Section ── */
@@ -1402,6 +1533,59 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
 .hp-room  { color: var(--text); font-weight: 500; }
 .hp-price { text-align: right; font-variant-numeric: tabular-nums; color: var(--c-homepage); font-weight: 700; }
 .hp-meta  { text-align: right; font-size: 10px; color: var(--muted); }
+
+/* ── FIT 요금 Section ── */
+.fit-section {
+  border-bottom: 1px solid var(--border);
+}
+.fit-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  color: var(--muted);
+  font-size: 12px;
+  font-family: inherit;
+  text-align: left;
+  transition: background .15s, color .15s;
+  touch-action: manipulation;
+}
+.fit-toggle:hover { background: rgba(227,179,65,.06); color: var(--yellow); }
+.fit-toggle-label { font-weight: 600; color: var(--yellow); font-size: 12px; }
+.fit-toggle-meta {
+  background: rgba(227,179,65,.15);
+  color: var(--yellow);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 10px;
+  border: 1px solid rgba(227,179,65,.25);
+}
+.fit-arrow {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--muted);
+  transition: transform .2s;
+}
+.fit-section.open .fit-arrow { transform: rotate(180deg); }
+.fit-body {
+  display: none;
+  padding: 0 14px 12px;
+}
+.fit-section.open .fit-body { display: block; }
+.fit-season {
+  background: rgba(227,179,65,.15);
+  color: var(--yellow);
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid rgba(227,179,65,.2);
+}
 """
 
 
@@ -1470,6 +1654,15 @@ _JS = """
       section.classList.toggle('open');
     });
   });
+
+  // ── FIT 요금 토글 ─────────────────────────────────────────────────────────
+  var fitToggles = toArr(document.querySelectorAll('.fit-toggle'));
+  fitToggles.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var section = btn.parentElement;
+      section.classList.toggle('open');
+    });
+  });
 })();
 """
 
@@ -1500,7 +1693,7 @@ if __name__ == "__main__":
         price_min, price_max = (150000, 700000) if is_overseas else (80000, 480000)
 
         own_urls = prop.get("own_urls", {})
-        for ota_name, url_key in [("야놀자", "yanolja_url"), ("여기어때", "yeogiuh_url"), ("Booking.com", "booking_url")]:
+        for ota_name, url_key in [("야놀자", "yanolja_url"), ("여기어때", "yeogiuh_url"), ("Agoda", "agoda_url")]:
             if not own_urls.get(url_key):
                 continue
             for day in range(1, 15):
@@ -1525,7 +1718,7 @@ if __name__ == "__main__":
                 prev_rows.append({**row, "price": prev_price})
 
         for comp in prop["competitors"]:
-            for ota_name, url_key in [("야놀자", "yanolja_url"), ("여기어때", "yeogiuh_url"), ("Booking.com", "booking_url")]:
+            for ota_name, url_key in [("야놀자", "yanolja_url"), ("여기어때", "yeogiuh_url"), ("Agoda", "agoda_url")]:
                 if not comp.get(url_key):
                     continue
                 for day in range(1, 15):
