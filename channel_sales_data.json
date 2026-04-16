@@ -101,7 +101,7 @@
     },
     {
       "key": "델피노",
-      "property_names": ["소노 델피노"],
+      "property_names": ["소노벨 델피노"],
       "channels": {
         "아고다":    {"rns": 1456, "prev": 974},
         "야놀자":    {"rns": 775,  "prev": 921},
