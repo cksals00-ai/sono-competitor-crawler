@@ -73,6 +73,7 @@ def _prepare_df(df: pd.DataFrame) -> pd.DataFrame:
         "checkin_date": "체크인",
         "checkout_date": "체크아웃",
         "room_type": "객실유형",
+        "room_category": "객실카테고리",
         "price": "판매가(원)",
         "currency": "통화",
         "availability": "판매상태",
