@@ -74,7 +74,7 @@ properties:
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 2198674
     tripcom_city_id: 72360
 
 - name: 소노펠리체 비발디파크
@@ -104,7 +104,7 @@ properties:
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 100919564
     tripcom_city_id: 72360
 
 # ── 아시아퍼시픽 ──────────────────────────────────────────────────────────────
@@ -244,7 +244,7 @@ properties:
     booking_url: ''
     agoda_url: ''
     naver_id: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 133618481
     tripcom_city_id: 78911
   - name: 변산반도 스테이리조트
     yanolja_url: ''
@@ -576,7 +576,7 @@ properties:
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 150283843
     tripcom_city_id: 432
 
 # ── 아시아퍼시픽 ──────────────────────────────────────────────────────────────
