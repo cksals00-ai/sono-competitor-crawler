@@ -194,11 +194,27 @@ def _normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 # ── 메인 공개 함수 ────────────────────────────────────────────────────────────
 
+def load_golf_df(export_dir: str = "./exports") -> pd.DataFrame:
+    """최신 golf_prices_*.csv 로드. 없으면 빈 DataFrame 반환."""
+    paths = sorted(Path(export_dir).glob("golf_prices_*.csv"))
+    if not paths:
+        return pd.DataFrame()
+    csv_path = paths[-1]
+    try:
+        df = pd.read_csv(csv_path, encoding="utf-8-sig")
+        logger.info(f"골프 데이터 로드: {csv_path}")
+        return df
+    except Exception as e:
+        logger.warning(f"골프 데이터 로드 실패: {e}")
+        return pd.DataFrame()
+
+
 def generate_dashboard(
     df: pd.DataFrame,
     output_path: str = "dashboard/index.html",
     config_path: str = "config.yaml",
     prev_df: pd.DataFrame = None,
+    golf_df: pd.DataFrame = None,
 ) -> str:
     """
     Parameters
@@ -248,7 +264,7 @@ def generate_dashboard(
     # 경쟁사별 OTA 별점 요약 (review_score 컬럼이 있을 때만)
     review_summary = _build_review_summary(df)
 
-    html = _render_html(df, cfg, summaries, prev_per_date, crawled_at, prev_date, review_summary)
+    html = _render_html(df, cfg, summaries, prev_per_date, crawled_at, prev_date, review_summary, golf_df)
 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html)
@@ -985,11 +1001,174 @@ def _render_review_cell(comp_name: str, review_summary: dict) -> str:
     return f'<td class="review-cell">{"&nbsp;".join(parts)}</td>'
 
 
+def _render_golf_property_card(property_name: str, golf_df: pd.DataFrame) -> str:
+    """골프 사업장 카드 HTML 생성."""
+    prop_df = golf_df[golf_df["property_name"] == property_name].copy()
+    if prop_df.empty:
+        return ""
+
+    region_map = {
+        "하이퐁": "베트남 하이퐁",
+        "망길라오": "괌 망길라오",
+        "탈로포포": "괌 탈로포포",
+    }
+    region = next((v for k, v in region_map.items() if k in property_name), "")
+
+    channels = sorted(prop_df["channel"].dropna().unique().tolist())
+    all_comps = prop_df["competitor_name"].dropna().unique().tolist()
+    own_comps = [c for c in all_comps if c == "자사"]
+    other_comps = sorted([c for c in all_comps if c != "자사"])
+    competitors_ordered = own_comps + other_comps
+
+    weekday_df = prop_df[prop_df["day_of_week"] == "주중"]
+    weekend_df = prop_df[prop_df["day_of_week"] == "주말"]
+
+    rows = []
+    for comp in competitors_ordered:
+        comp_df = prop_df[prop_df["competitor_name"] == comp]
+        is_own = comp == "자사"
+        badge = '<span class="badge-sono">자사</span>' if is_own else ""
+        row_cls = ' class="own-row"' if is_own else ""
+
+        for (channel, course_name), grp in comp_df.groupby(["channel", "course_name"], sort=True):
+            holes = grp["holes"].dropna()
+            holes_str = f" {int(holes.iloc[0])}H" if not holes.empty else ""
+
+            wkd = weekday_df[
+                (weekday_df["competitor_name"] == comp) &
+                (weekday_df["channel"] == channel) &
+                (weekday_df["course_name"] == course_name)
+            ]
+            wknd = weekend_df[
+                (weekend_df["competitor_name"] == comp) &
+                (weekend_df["channel"] == channel) &
+                (weekend_df["course_name"] == course_name)
+            ]
+
+            def _min_krw(sub):
+                if sub.empty:
+                    return None
+                v = sub["green_fee_krw"].min()
+                return None if pd.isna(v) else int(v)
+
+            def _min_usd(sub):
+                if sub.empty:
+                    return None
+                v = sub["green_fee_usd"].min()
+                return None if pd.isna(v) else round(float(v), 0)
+
+            wkd_krw  = _min_krw(wkd)
+            wkd_usd  = _min_usd(wkd)
+            wknd_krw = _min_krw(wknd)
+            wknd_usd = _min_usd(wknd)
+
+            def _price_html(krw, usd):
+                if krw is None:
+                    return "<span class='golf-na'>-</span>"
+                s = f"{krw:,}원"
+                if usd:
+                    s += f'<span class="golf-usd"> (${usd:.0f})</span>'
+                return s
+
+            cart = grp["cart_included"].dropna()
+            cart_str = "포함" if not cart.empty and bool(cart.any()) else "별도"
+
+            rows.append(
+                f'<tr{row_cls}>'
+                f'<td class="competitor-name">{badge}{comp}</td>'
+                f'<td class="golf-channel">{channel}</td>'
+                f'<td class="golf-course">{course_name}{holes_str}</td>'
+                f'<td class="golf-price">{_price_html(wkd_krw, wkd_usd)}</td>'
+                f'<td class="golf-price">{_price_html(wknd_krw, wknd_usd)}</td>'
+                f'<td class="golf-cart">{cart_str}</td>'
+                f'</tr>'
+            )
+
+    rows_html = "\n          ".join(rows)
+    comp_label = f"{len(other_comps)}개 경쟁사"
+
+    return f"""\
+<div class="property-card">
+  <div class="property-header">
+    <div>
+      <div class="property-title">{property_name}</div>
+      <div class="property-region">{region}</div>
+    </div>
+    <div class="property-stats">{comp_label}&nbsp;&middot;&nbsp;{'&middot;'.join(channels)}</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th class="competitor-col">구분</th>
+        <th class="golf-th-channel">채널</th>
+        <th class="golf-th-course">코스명</th>
+        <th class="golf-th-price">주중 최저가</th>
+        <th class="golf-th-price">주말 최저가</th>
+        <th class="golf-th-cart">카트비</th>
+      </tr></thead>
+      <tbody>
+          {rows_html}
+      </tbody>
+    </table>
+  </div>
+</div>"""
+
+
+def _render_golf_section(golf_df: pd.DataFrame) -> str:
+    """골프 전체 섹션 HTML 생성."""
+    if golf_df is None or golf_df.empty:
+        return (
+            '<div id="golf-section" style="display:none">'
+            '<p style="padding:40px;text-align:center;color:var(--muted)">골프 데이터가 없습니다.</p>'
+            '</div>'
+        )
+
+    properties = golf_df["property_name"].dropna().unique().tolist()
+
+    def _sort_key(p):
+        return (0, p) if "괌" in p else (1, p)
+
+    properties = sorted(properties, key=_sort_key)
+
+    crawled_at = str(golf_df["crawled_at"].max())[:16] if "crawled_at" in golf_df.columns else ""
+
+    date_range_html = ""
+    if "play_date" in golf_df.columns:
+        valid = golf_df["play_date"].dropna()
+        if not valid.empty:
+            try:
+                dm = datetime.strptime(str(valid.min())[:10], "%Y-%m-%d")
+                dx = datetime.strptime(str(valid.max())[:10], "%Y-%m-%d")
+                date_range_html = f"대상기간: {dm.month}/{dm.day} ~ {dx.month}/{dx.day}&ensp;&middot;&ensp;"
+            except Exception:
+                pass
+
+    cards_html = "\n\n".join(_render_golf_property_card(p, golf_df) for p in properties)
+
+    return f"""\
+<div id="golf-section" style="display:none">
+  <div class="golf-meta-bar">
+    수집: {crawled_at}&ensp;&middot;&ensp;{date_range_html}채널: 몽키트래블 &middot; AGL &middot; KKday
+  </div>
+  <div class="legend-bar">
+    <span class="legend-label">골프 그린피 최저가</span>
+    &emsp;&middot;&emsp;<span class="legend-note">주중(월~금) / 주말(토·일) 기준 오전·오후 통합 최저가</span>
+    &emsp;&middot;&emsp;<span class="legend-note">카트비 포함 여부는 해당 채널 기준</span>
+  </div>
+  <main class="main">
+    <div class="property-grid">
+{cards_html}
+    </div>
+  </main>
+</div>"""
+
+
 def _render_html(
     df: pd.DataFrame, cfg: dict,
     summaries: dict, prev_per_date: dict,
     crawled_at: str, prev_date: str = "",
     review_summary: dict = None,
+    golf_df: pd.DataFrame = None,
 ) -> str:
     properties = cfg.get("properties", [])
     review_summary = review_summary or {}
@@ -1044,6 +1223,11 @@ def _render_html(
     crawled_disp = crawled_at[:16] if crawled_at else "&#8212;"
     gen_time     = datetime.now().strftime("%Y-%m-%d %H:%M")
 
+    # 골프 섹션
+    golf_section_html = _render_golf_section(golf_df)
+    has_golf = golf_df is not None and not golf_df.empty
+    golf_tab_btn = '<button class="cat-btn" data-cat="golf">골프 그린피</button>' if has_golf else ""
+
     if not df.empty and "checkin_date" in df.columns:
         try:
             dm = datetime.strptime(str(df["checkin_date"].min())[:10], "%Y-%m-%d")
@@ -1097,6 +1281,12 @@ def _render_html(
   </div>
 </div>
 
+<div class="cat-tab-bar">
+  <button class="cat-btn active" data-cat="hotel">호텔 OTA</button>
+  {golf_tab_btn}
+</div>
+
+<div id="hotel-section">
 <div class="filter-section">
   <div class="filter-group">
     <span class="filter-group-label">지역</span>
@@ -1120,6 +1310,9 @@ def _render_html(
 {cards_html}
   </div>
 </main>
+</div>
+
+{golf_section_html}
 
 <footer class="footer">
   소노호텔앤리조트 경쟁사 가격 모니터링&ensp;&middot;&ensp;매일 04:00 자동 업데이트<br>
@@ -1287,6 +1480,54 @@ body {
 .filter-btn.active       { background: var(--accent); border-color: var(--accent); color: #0d1117; font-weight: 700; }
 .filter-btn.dt-btn.active { background: var(--yellow); border-color: var(--yellow); color: #0d1117; font-weight: 700; }
 .holiday-notice { font-size: 0.75em; color: #888; align-self: center; white-space: nowrap; padding-left: 4px; }
+
+/* ── Category Tab Bar ── */
+.cat-tab-bar {
+  display: flex;
+  gap: 0;
+  background: var(--card-header);
+  border-bottom: 2px solid var(--border);
+  padding: 0 16px;
+}
+.cat-btn {
+  padding: 10px 20px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: -.2px;
+  transition: all .15s;
+  margin-bottom: -2px;
+  -webkit-tap-highlight-color: transparent;
+}
+.cat-btn:hover { color: var(--text); }
+.cat-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Golf ── */
+.golf-meta-bar {
+  padding: 7px 16px;
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.golf-th-channel { min-width: 90px; }
+.golf-th-course  { min-width: 160px; }
+.golf-th-price   { min-width: 120px; text-align: right; }
+.golf-th-cart    { min-width: 60px;  text-align: center; }
+td.golf-channel  { color: var(--muted); font-size: 12px; }
+td.golf-course   { color: var(--text); }
+td.golf-price    { text-align: right; font-variant-numeric: tabular-nums; }
+td.golf-cart     { text-align: center; color: var(--muted); font-size: 12px; }
+.golf-usd        { color: var(--muted); font-size: 11px; }
+.golf-na         { color: var(--muted); }
 
 /* ── Legend bar ── */
 .legend-bar {
@@ -1724,6 +1965,21 @@ _JS = """
 (function () {
   function toArr(nl) { return Array.prototype.slice.call(nl); }
 
+  // ── 카테고리 탭 (호텔 / 골프) ─────────────────────────────────────────────
+  var catBtns      = toArr(document.querySelectorAll('.cat-btn'));
+  var hotelSection = document.getElementById('hotel-section');
+  var golfSection  = document.getElementById('golf-section');
+
+  catBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      catBtns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var cat = btn.getAttribute('data-cat');
+      if (hotelSection) hotelSection.style.display = (cat === 'hotel') ? '' : 'none';
+      if (golfSection)  golfSection.style.display  = (cat === 'golf')  ? '' : 'none';
+    });
+  });
+
   // ── 지역 필터 ─────────────────────────────────────────────────────────────
   var regionBtns = toArr(document.querySelectorAll('.filter-btn[data-region]'));
   var cards      = toArr(document.querySelectorAll('.property-card'));
@@ -1822,7 +2078,8 @@ if __name__ == "__main__":
     logger.info(f"CSV 로드: {csv_path}")
     df_today = pd.read_csv(csv_path, encoding="utf-8-sig")
     prev_df  = load_previous_df("./exports")
+    golf_df  = load_golf_df("./exports")
 
-    out = generate_dashboard(df_today, "dashboard/index.html", prev_df=prev_df)
+    out = generate_dashboard(df_today, "dashboard/index.html", prev_df=prev_df, golf_df=golf_df)
     print(f"\n대시보드 생성 완료: {out}")
     subprocess.run(["open", out])
