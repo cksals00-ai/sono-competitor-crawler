@@ -363,8 +363,17 @@ def main():
     if args.phase is not None:
         run_phase(args.phase, temp_output=args.temp_output)
     else:
-        for p in [0, 1, 2, 3, 4, 5]:
+        for p in [1, 2, 3, 4, 5]:
             run_phase(p)
+
+        # 전체 phase 완료 후 Power BI RNS 수집
+        try:
+            from powerbi_collector import collect as collect_powerbi
+            logger.info("=== Power BI RNS 수집 시작 ===")
+            collect_powerbi(update_channel_sales=True)
+            logger.info("=== Power BI RNS 수집 완료 ===")
+        except Exception as e:
+            logger.error(f"Power BI 수집 실패 (크롤링 결과에는 영향 없음): {e}", exc_info=True)
 
 
 if __name__ == "__main__":
