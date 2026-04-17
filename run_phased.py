@@ -366,6 +366,17 @@ def main():
         for p in [1, 4, 5]:
             run_phase(p)
 
+        # 골프 그린피 크롤링 (호텔 크롤링 완료 후)
+        try:
+            from golf_crawler import run_golf_crawl, export_golf_df
+            logger.info("=== 골프 그린피 크롤링 시작 ===")
+            golf_df = run_golf_crawl()
+            if not golf_df.empty:
+                export_golf_df(golf_df)
+            logger.info("=== 골프 그린피 크롤링 완료 ===")
+        except Exception as e:
+            logger.error(f"골프 크롤링 실패 (Power BI 수집에는 영향 없음): {e}", exc_info=True)
+
         # 전체 phase 완료 후 Power BI RNS 수집
         try:
             from powerbi_collector import collect as collect_powerbi
