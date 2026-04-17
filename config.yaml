@@ -706,3 +706,91 @@ holidays:
   # 대체공휴일(substitute holidays)이 누락되는 경우 아래 data.go.kr API 키를 입력하면
   # 향후 확장 코드에서 자동 전환됩니다. (현재는 nager.date 고정)
   # data_go_kr_api_key: ""  # 공공데이터포털 API 키 (선택사항)
+
+# ── 골프 그린피 크롤링 ────────────────────────────────────────────────────────
+#
+# 채널별 식별자:
+#   agl_field_id      : Tiger Booking (www.tigerbooking.com) 필드 코드
+#   monkey_product_id : 몽키트래블 product_id (guam.monkeytravel.com)
+#   baigolf_course_id : BaiGolf golf_course_id (www.baigolf.com) — 미구현
+#
+# own: 자사 골프장 정보
+# competitors: 경쟁 골프장 목록
+
+golf_properties:
+
+# ── 하이퐁 (베트남) ───────────────────────────────────────────────────────────
+- name: 소노펠리체CC 하이퐁
+  id: golf_haiphong
+  region: 베트남 하이퐁
+  own:
+    course_name: 소노펠리체CC 하이퐁
+    agl_field_id: EVT074
+    monkey_product_id: ''
+    baigolf_course_id: ''
+  competitors:
+  - name: 빈펄 골프 하이퐁
+    course_name: 빈펄 골프 하이퐁
+    agl_field_id: ACA022
+    monkey_product_id: ''
+    baigolf_course_id: ''
+
+# ── 괌 망길라오 ───────────────────────────────────────────────────────────────
+- name: 소노펠리체CC 괌 망길라오
+  id: golf_guam_mangilao
+  region: 괌
+  own:
+    course_name: 망길라오 골프 클럽
+    agl_field_id: AGA001
+    monkey_product_id: '1076788723'
+    baigolf_course_id: ''
+  competitors:
+  - name: 레오팔레스 괌 골프
+    course_name: 레오팔레스 괌 골프
+    agl_field_id: GU0001
+    monkey_product_id: '1076788717'
+    baigolf_course_id: ''
+  - name: 파인이스트 골프 클럽
+    course_name: 파인이스트 골프 클럽
+    agl_field_id: RQ0011
+    monkey_product_id: ''
+    baigolf_course_id: ''
+  - name: 퍼시픽 아일랜드 CC
+    course_name: 퍼시픽 아일랜드 CC
+    agl_field_id: AGA008
+    monkey_product_id: ''
+    baigolf_course_id: ''
+
+# ── 괌 탈로포포 ───────────────────────────────────────────────────────────────
+- name: 소노펠리체CC 괌 탈로포포
+  id: golf_guam_talofofo
+  region: 괌
+  own:
+    course_name: 탈로포포 골프 클럽
+    agl_field_id: AGA002
+    monkey_product_id: '1076788720'
+    baigolf_course_id: ''
+  competitors:
+  - name: 레오팔레스 괌 골프
+    course_name: 레오팔레스 괌 골프
+    agl_field_id: GU0001
+    monkey_product_id: '1076788717'
+    baigolf_course_id: ''
+  - name: 파인이스트 골프 클럽
+    course_name: 파인이스트 골프 클럽
+    agl_field_id: RQ0011
+    monkey_product_id: ''
+    baigolf_course_id: ''
+  - name: 퍼시픽 아일랜드 CC
+    course_name: 퍼시픽 아일랜드 CC
+    agl_field_id: AGA008
+    monkey_product_id: ''
+    baigolf_course_id: ''
+
+golf_crawl:
+  days_ahead: 14          # 오늘로부터 N일 후까지 조회
+  request_delay: 1.5      # 요청 간 대기 (초)
+  retry_count: 2
+  timeout: 30
+  holes: 18               # 기본 홀수
+  adult_count: 2          # 최소 인원 (몽키트래블 checkMinPax=2)
