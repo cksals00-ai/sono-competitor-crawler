@@ -62,6 +62,51 @@ properties:
     tripcom_hotel_id: 114782107
     tripcom_city_id: 72360
 
+- name: 소노벨 비발디파크
+  id: sonobell_vivaldi
+  display_region: 비발디파크
+  region: 강원도 홍천군
+  competitors: []
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+
+- name: 소노펠리체 비발디파크
+  id: sonofelice_vivaldi
+  display_region: 비발디파크
+  region: 강원도 홍천군
+  competitors: []
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+
+- name: 소노펠리체 빌리지 비발디파크
+  id: sonofelice_village_vivaldi
+  display_region: 비발디파크
+  region: 강원도 홍천군
+  competitors: []
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+
 # ── 아시아퍼시픽 ──────────────────────────────────────────────────────────────
 - name: 소노캄 고양
   id: goyang
@@ -227,6 +272,50 @@ properties:
     tripcom_hotel_id: 22890741
     tripcom_city_id: 78911
 
+- name: 소노벨 델피노
+  id: sonobell_delpino
+  display_region: 한국중부
+  region: 강원 동해시
+  competitors: []
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+
+- name: 소노펠리체 델피노
+  id: sonofelice_delpino
+  display_region: 한국중부
+  region: 강원 동해시
+  competitors: []
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+
+- name: 소노펠리체 빌리지 델피노
+  id: sonofelice_village_delpino
+  display_region: 한국중부
+  region: 강원 동해시
+  competitors: []
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
 - name: 소노벨 청송
   id: cheongsong
   display_region: 한국중부
@@ -414,6 +503,21 @@ properties:
     homepage_store_cd: '87'
     tripcom_hotel_id: 0
     tripcom_city_id: 35796
+
+- name: 소노벨 제주
+  id: sonobell_jeju
+  display_region: 한국남부
+  region: 제주도
+  competitors: []
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
 
 - name: 소노문 해운대
   id: haeundae
