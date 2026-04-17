@@ -11,13 +11,13 @@
 #   Agoda: agoda.com 전체 URL  (빈 문자열 = 미등록)
 #   Trip.com: tripcom_hotel_id (0 = 미등록), tripcom_city_id (0 = 도시페이지 없음)
 #
-# display_region: 대시보드 지역 필터 표시용 (고양/서울 / 비발디파크 / 델피노 / 충청/경상 / 제주 / 해외/기타)
+# display_region: 대시보드 지역 필터 표시용 (아시아퍼시픽 / 비발디파크 / 한국중부 / 한국남부)
 
 properties:
-# ── 고양/서울 ──────────────────────────────────────────────────────────────────
+# ── 한국중부 ────────────────────────────────────────────────────────────────────
 - name: 소노캄 고양
   id: goyang
-  display_region: 고양/서울
+  display_region: 한국중부
   region: 경기도 고양시
   competitors:
   - name: 글로스터호텔 킨텍스
@@ -53,6 +53,92 @@ properties:
     homepage_store_cd: '29'
     tripcom_hotel_id: 988365
     tripcom_city_id: 61345
+
+- name: 소노캄 델피노
+  id: delpino
+  display_region: 한국중부
+  region: 강원 동해시
+  competitors:
+  - name: 한화리조트 동해
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001429
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6461
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-donghae/hotel/donghae-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+  - name: 한화리조트 설악
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001428
+    yeogiuh_url: ''
+    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-seorak.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-seorak/hotel/sokcho-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 1015097
+    tripcom_city_id: 35793
+  - name: 켄싱턴리조트 설악밸리
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000103524
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/kensington-resort-seorak-valley/hotel/sokcho-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 51809324
+    tripcom_city_id: 78910
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001053
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6610
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-delpino/hotel/donghae-si-kr.html
+    naver_id: ''
+    homepage_store_cd: CALM_DP
+    tripcom_hotel_id: 3695339
+    tripcom_city_id: 78910
+
+- name: 소노벨 천안
+  id: cheonan
+  display_region: 한국중부
+  region: 충남 천안
+  competitors:
+  - name: 천안 상록리조트
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10054528
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/74553
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 58525
+  - name: 아산 온양관광호텔
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000858
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6638
+    booking_url: https://www.booking.com/hotel/kr/onyang-tourist.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/onyang-tourist-hotel/hotel/asan-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 5894622
+    tripcom_city_id: 61169
+  - name: 아산 르카운티 호텔
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10050963
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/80128
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 61169
+  - name: 스플라스 리솜 덕산
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10054606
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/87530
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/splash-resort-deoksan/hotel/yesan-gun-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 79254
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3010962
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/68374
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-cheonan/hotel/cheonan-si-kr.html
+    naver_id: ''
+    homepage_store_cd: '74'
+    tripcom_hotel_id: 6479369
+    tripcom_city_id: 58525
 
 # ── 비발디파크 ─────────────────────────────────────────────────────────────────
 - name: 소노캄 비발디파크
@@ -102,112 +188,10 @@ properties:
     tripcom_hotel_id: 114782107
     tripcom_city_id: 72360
 
-- name: 소노문 영월
-  id: yeongwol
-  display_region: 비발디파크
-  region: 강원도 영월군
-  competitors: []
-  own_urls:
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
-    naver_id: ''
-    homepage_store_cd: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
-
-# ── 델피노 ─────────────────────────────────────────────────────────────────────
-- name: 소노캄 델피노
-  id: delpino
-  display_region: 델피노
-  region: 강원 동해시
-  competitors:
-  - name: 한화리조트 동해
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001429
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6461
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-donghae/hotel/donghae-si-kr.html
-    naver_id: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
-  - name: 한화리조트 설악
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001428
-    yeogiuh_url: ''
-    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-seorak.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-seorak/hotel/sokcho-si-kr.html
-    naver_id: ''
-    tripcom_hotel_id: 1015097
-    tripcom_city_id: 35793
-  - name: 켄싱턴리조트 설악밸리
-    yanolja_url: https://nol.yanolja.com/stay/domestic/1000103524
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/kensington-resort-seorak-valley/hotel/sokcho-si-kr.html
-    naver_id: ''
-    tripcom_hotel_id: 51809324
-    tripcom_city_id: 78910
-  own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3001053
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6610
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-delpino/hotel/donghae-si-kr.html
-    naver_id: ''
-    homepage_store_cd: CALM_DP
-    tripcom_hotel_id: 3695339
-    tripcom_city_id: 78910
-
-# ── 충청/경상 ──────────────────────────────────────────────────────────────────
-- name: 소노벨 천안
-  id: cheonan
-  display_region: 충청/경상
-  region: 충남 천안
-  competitors:
-  - name: 천안 상록리조트
-    yanolja_url: https://nol.yanolja.com/stay/domestic/10054528
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/74553
-    booking_url: ''
-    agoda_url: ''
-    naver_id: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 58525
-  - name: 아산 온양관광호텔
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3000858
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6638
-    booking_url: https://www.booking.com/hotel/kr/onyang-tourist.ko.html
-    agoda_url: https://www.agoda.com/ko-kr/onyang-tourist-hotel/hotel/asan-si-kr.html
-    naver_id: ''
-    tripcom_hotel_id: 5894622
-    tripcom_city_id: 61169
-  - name: 아산 르카운티 호텔
-    yanolja_url: https://nol.yanolja.com/stay/domestic/10050963
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/80128
-    booking_url: ''
-    agoda_url: ''
-    naver_id: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 61169
-  - name: 스플라스 리솜 덕산
-    yanolja_url: https://nol.yanolja.com/stay/domestic/10054606
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/87530
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/splash-resort-deoksan/hotel/yesan-gun-kr.html
-    naver_id: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 79254
-  own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3010962
-    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/68374
-    booking_url: ''
-    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-cheonan/hotel/cheonan-si-kr.html
-    naver_id: ''
-    homepage_store_cd: '74'
-    tripcom_hotel_id: 6479369
-    tripcom_city_id: 58525
-
+# ── 한국남부 ────────────────────────────────────────────────────────────────────
 - name: 소노벨 변산
   id: byeonsan
-  display_region: 충청/경상
+  display_region: 한국남부
   region: 전북 부안군
   competitors:
   - name: 더웨스트변산리조트
@@ -246,7 +230,7 @@ properties:
 
 - name: 소노벨 청송
   id: cheongsong
-  display_region: 충청/경상
+  display_region: 한국남부
   region: 경북 청송군
   competitors: []
   own_urls:
@@ -259,9 +243,9 @@ properties:
     tripcom_hotel_id: 0
     tripcom_city_id: 0
 
-- name: 소노벨 거제
+- name: 소노캄 거제
   id: geoje
-  display_region: 충청/경상
+  display_region: 한국남부
   region: 경남 거제시
   competitors:
   - name: 한화리조트 거제 벨버디어
@@ -308,7 +292,7 @@ properties:
 
 - name: 소노캄 여수
   id: yeosu
-  display_region: 충청/경상
+  display_region: 한국남부
   region: 전남 여수시
   competitors:
   - name: 히든베이 호텔
@@ -353,9 +337,9 @@ properties:
     tripcom_hotel_id: 1982952
     tripcom_city_id: 4016
 
-- name: 소노캄 진도
+- name: 쏠비치 진도
   id: jindo
-  display_region: 충청/경상
+  display_region: 한국남부
   region: 전남 진도군
   competitors:
   - name: 진도 관광호텔
@@ -384,10 +368,9 @@ properties:
     tripcom_hotel_id: 47376616
     tripcom_city_id: 128271
 
-# ── 제주 ───────────────────────────────────────────────────────────────────────
 - name: 소노캄 제주
   id: jeju_cam
-  display_region: 제주
+  display_region: 한국남부
   region: 제주도 서귀포시 표선면
   competitors:
   - name: 해비치 호텔앤리조트 제주
@@ -432,11 +415,10 @@ properties:
     tripcom_hotel_id: 0
     tripcom_city_id: 35796
 
-# ── 해외/기타 ──────────────────────────────────────────────────────────────────
-- name: 소노문 하운오대
-  id: haun_odaesan
-  display_region: 해외/기타
-  region: 강원도 평창군
+- name: 소노문 해운대
+  id: haundae
+  display_region: 한국남부
+  region: 부산 해운대구
   competitors: []
   own_urls:
     yanolja_url: ''
@@ -448,10 +430,41 @@ properties:
     tripcom_hotel_id: 0
     tripcom_city_id: 0
 
+# ── 아시아퍼시픽 ────────────────────────────────────────────────────────────────
 - name: 와이키키 리조트 하와이
   id: waikiki
-  display_region: 해외/기타
+  display_region: 아시아퍼시픽
   region: 미국 하와이
+  competitors: []
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+
+- name: 르네블루나
+  id: rene_bleuna
+  display_region: 아시아퍼시픽
+  region: ''
+  competitors: []
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+
+- name: 파나크
+  id: panark
+  display_region: 아시아퍼시픽
+  region: ''
   competitors: []
   own_urls:
     yanolja_url: ''
