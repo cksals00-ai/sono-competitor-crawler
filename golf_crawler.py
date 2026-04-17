@@ -6,7 +6,8 @@
   ✅ 몽키트래블 (MonkeyTravel) : JSON REST API — 검증 완료
   ✅ AGL (Tiger Booking)       : requests 기반 listing 최저가 — 검증 완료
                                  (날짜별 API 미노출 → 일일 최저가 방식)
-  ❌ BaiGolf                   : 괌 코스 미등록 (DB 전수조사 결과)
+  ✅ KKday                     : 상품 페이지 JSON-LD 파싱 — 검증 완료
+                                 (망길라오 156010, 탈로포포 156016)
 
 출력 DataFrame 컬럼:
   crawled_at, property_name, property_id, competitor_name, channel,
@@ -34,6 +35,7 @@ logger = logging.getLogger(__name__)
 
 MONKEY_BASE = "https://www.monkeytravel.com"
 AGL_BASE    = "https://www.tigerbooking.com"
+KKDAY_BASE  = "https://www.kkday.com"
 
 _HTTP_HEADERS = {
     "User-Agent": (
@@ -52,8 +54,8 @@ _TIME_OF_DAY_KO = {
     "Night":     "야간",
 }
 
-# AGL은 날짜 필터 없이 일일 최저가만 제공 → 날짜 루프 불필요
-_DATE_INDEPENDENT_CHANNELS = {"AGL"}
+# AGL·KKday는 날짜 필터 없이 일일 최저가만 제공 → 날짜 루프 불필요
+_DATE_INDEPENDENT_CHANNELS = {"AGL", "KKday"}
 
 
 # ---------------------------------------------------------------------------
@@ -66,7 +68,7 @@ class GolfPriceRecord:
     property_name:  str     # 소노 사업장명 (예: 소노펠리체CC 괌 망길라오)
     property_id:    str     # 사업장 ID
     competitor_name: str    # 경쟁사명 ("자사" if own)
-    channel:        str     # 몽키트래블 / AGL / BaiGolf
+    channel:        str     # 몽키트래블 / AGL / KKday
     course_name:    str     # 골프장 실제 이름 (예: 망길라오 골프 클럽)
     holes:          int     # 홀수 (18)
     play_date:      str     # YYYY-MM-DD
@@ -496,87 +498,106 @@ def crawl_agl(course_info: dict, play_date: str, cfg: dict) -> list:
 
 
 # ---------------------------------------------------------------------------
-# BaiGolf 크롤러
+# KKday 크롤러
 # ---------------------------------------------------------------------------
 #
-# 2026-04-18 조사 결과:
-#   www.baigolf.com/course_price.php?id={id}&callback=cb JSONP API 확인
-#   ID 1~200, 500~600, 1000~1100 전수조사: 모두 중국(CNY) 코스
-#   괌/베트남 코스 미등록 → BaiGolf 채널 사용 불가
-#   baigolf_course_id가 설정된 경우에만 크롤링 시도 (추후 등록 대비)
+# KKday (www.kkday.com) 상품 페이지에서 JSON-LD schema.org 마크업으로
+# AggregateOffer.lowPrice (USD) 를 파싱합니다.
+#
+# 확인된 상품 (2026-04-18):
+#   156010 = 소노 펠리체 컨트리 클럽 괌 망길라오 ✅ (~203 USD)
+#   156016 = 소노 펠리체 컨트리 클럽 괌 탈로포포 ✅ (~155 USD)
+#   156004 = Country Club of the Pacific Golf     ⚠️ 현재 404 (일시 중단)
+#
+# 주의:
+#   - Chrome UA → HTTP 403 / iPhone Mobile UA → HTTP 200
+#   - 'en-au' 로케일 URL → AUD 가격 반환 → 반드시 'en' 로케일 사용
+#   - 가격은 날짜 독립적 최저가(starting from)이므로 _DATE_INDEPENDENT_CHANNELS 등록
 # ---------------------------------------------------------------------------
 
-_BAIGOLF_PRICE_URL = "https://www.baigolf.com/course_price.php"
-_BAIGOLF_HEADERS = {
+_KKDAY_MOBILE_HEADERS = {
     "User-Agent": (
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) "
+        "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+        "Version/17.0 Mobile/15E148 Safari/604.1"
     ),
-    "Referer": "https://www.baigolf.com/",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
 }
 
 
-def crawl_baigolf(course_info: dict, play_date: str, cfg: dict) -> list:
+def crawl_kkday(course_info: dict, play_date: str, cfg: dict) -> list:
     """
-    BaiGolf 그린피 크롤러.
+    KKday 상품 페이지에서 그린피 조회.
 
-    JSONP API: course_price.php?id={course_id}&callback=cb
-    응답 형식: cb({"YYYY-MM-DD": {"price": 1480, "currency_code": "CNY"}, ...})
+    JSON-LD (schema.org AggregateOffer.lowPrice) 파싱 방식.
+    가격은 날짜 독립적 최저가(starting from)이므로 play_date별 루프 없이
+    오늘 기준 1회만 호출됩니다 (_DATE_INDEPENDENT_CHANNELS 참조).
 
-    현재 괌/베트남 코스 미등록 → baigolf_course_id가 설정된 경우에만 동작
+    course_info 필수 키: kkday_product_id, course_name
     """
-    course_id = str(course_info.get("baigolf_course_id", "") or "")
-    if not course_id:
+    product_id = str(course_info.get("kkday_product_id", "") or "")
+    if not product_id:
         return []
 
     golf_cfg = cfg.get("golf_crawl", {})
     timeout  = golf_cfg.get("timeout", 30)
-    url      = f"https://www.baigolf.com/course.php?id={course_id}"
-
-    try:
-        resp = requests.get(
-            _BAIGOLF_PRICE_URL,
-            params={"id": course_id, "callback": "cb"},
-            headers=_BAIGOLF_HEADERS,
-            timeout=timeout,
-        )
-        resp.raise_for_status()
-    except Exception as e:
-        logger.error(f"[BaiGolf] {course_id} {play_date} 요청 실패: {e}")
-        return [_make_golf_error("BaiGolf", url, str(e)[:120])]
-
-    # JSONP → JSON 파싱
-    text = resp.text.strip()
-    m = re.match(r"cb\((.+)\)\s*$", text, re.DOTALL)
-    if not m:
-        return [_make_golf_error("BaiGolf", url, "invalid_jsonp_response")]
-
-    try:
-        data = json.loads(m.group(1))
-    except json.JSONDecodeError as e:
-        return [_make_golf_error("BaiGolf", url, f"json_parse_error:{e}")]
-
-    if not data:
-        return [_make_golf_error("BaiGolf", url, "no_data")]
-
-    # 특정 날짜 데이터 조회
-    date_data = data.get(play_date)
-    if not date_data:
-        # 날짜가 없으면 가장 가까운 날짜 사용
-        available_dates = sorted(data.keys())
-        future_dates = [d for d in available_dates if d >= play_date]
-        if not future_dates:
-            return [_make_golf_error("BaiGolf", url, f"no_data_for_{play_date}")]
-        date_data = data[future_dates[0]]
-
-    raw_price = date_data.get("price", 0)
-    currency  = date_data.get("currency_code", "CNY")
-
-    if not raw_price:
-        return [_make_golf_error("BaiGolf", url, "price_zero")]
-
-    golf_cfg = cfg.get("golf_crawl", {})
     holes    = course_info.get("holes", golf_cfg.get("holes", 18))
+    url      = f"{KKDAY_BASE}/en/product/{product_id}"
+
+    try:
+        resp = requests.get(url, headers=_KKDAY_MOBILE_HEADERS, timeout=timeout)
+        if resp.status_code == 404:
+            logger.warning(f"[KKday] {product_id}: 상품 없음 (404)")
+            return [_make_golf_error("KKday", url, "product_not_found_404")]
+        resp.raise_for_status()
+    except requests.HTTPError as e:
+        return [_make_golf_error("KKday", url, str(e)[:120])]
+    except Exception as e:
+        logger.error(f"[KKday] {product_id} 요청 실패: {e}")
+        return [_make_golf_error("KKday", url, str(e)[:120])]
+
+    # JSON-LD (schema.org) 에서 가격 추출
+    price_raw = 0.0
+    currency  = "USD"
+    jsonld_blocks = re.findall(
+        r'<script[^>]*application/ld\+json[^>]*>(.*?)</script>',
+        resp.text,
+        re.DOTALL,
+    )
+    for block in jsonld_blocks:
+        try:
+            data  = json.loads(block)
+            graph = data.get("@graph", [data])
+            for node in graph:
+                offers = node.get("offers", {})
+                if offers:
+                    p = offers.get("lowPrice") or offers.get("price")
+                    if p:
+                        price_raw = float(p)
+                        currency  = offers.get("priceCurrency", "USD")
+                        break
+        except Exception:
+            continue
+        if price_raw:
+            break
+
+    if not price_raw:
+        logger.warning(f"[KKday] {product_id}: 가격 정보 없음")
+        return [_make_golf_error("KKday", url, "price_not_found")]
+
+    # 환율 변환: USD → KRW
+    rates = get_exchange_rates()
+    if currency == "USD":
+        green_fee_usd = price_raw
+        green_fee_krw = usd_to_krw(price_raw, rates)
+    elif currency == "KRW":
+        green_fee_krw = int(price_raw)
+        green_fee_usd = krw_to_usd(green_fee_krw, rates)
+    else:
+        # 기타 통화: USD로 간주
+        green_fee_usd = price_raw
+        green_fee_krw = usd_to_krw(price_raw, rates)
 
     try:
         dt = datetime.strptime(play_date, "%Y-%m-%d")
@@ -584,39 +605,27 @@ def crawl_baigolf(course_info: dict, play_date: str, cfg: dict) -> list:
     except Exception:
         day_of_week = ""
 
-    # CNY → KRW 변환 (환율 적용)
-    rates = get_exchange_rates()
-    if currency == "CNY" and rates:
-        cny_rate = rates.get("CNY", 0)
-        krw_rate = rates.get("KRW", 0)
-        if cny_rate and krw_rate:
-            green_fee_krw = int(round(raw_price / cny_rate * krw_rate))
-        else:
-            green_fee_krw = 0
-    elif currency == "KRW":
-        green_fee_krw = int(raw_price)
-    else:
-        green_fee_krw = 0  # 알 수 없는 통화
-
     record = GolfPriceRecord(
         crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         property_name="",
         property_id="",
         competitor_name="",
-        channel="BaiGolf",
+        channel="KKday",
         course_name=course_info.get("course_name", ""),
         holes=holes,
         play_date=play_date,
         day_of_week=day_of_week,
-        time_of_day="오전",       # BaiGolf는 시간대 정보 없음
+        time_of_day="최저가",      # KKday는 starting from 최저가
         green_fee_krw=green_fee_krw,
-        green_fee_usd=0.0,
+        green_fee_usd=green_fee_usd,
         cart_included=False,
         caddy_included=False,
         url=url,
     )
 
-    logger.info(f"[BaiGolf] {course_id} {play_date}: {green_fee_krw:,}원 ({raw_price} {currency})")
+    logger.info(
+        f"[KKday] {product_id}: {price_raw} {currency} → {green_fee_krw:,}원"
+    )
     return [record]
 
 
@@ -652,14 +661,14 @@ def _make_golf_error(channel: str, url: str, error: str) -> GolfPriceRecord:
 _CHANNEL_CRAWLERS = {
     "몽키트래블": crawl_monkey_travel,
     "AGL":        crawl_agl,
-    "BaiGolf":    crawl_baigolf,
+    "KKday":      crawl_kkday,
 }
 
 # 채널 → course_info에서 사용하는 ID 키
 _CHANNEL_ID_KEY = {
     "몽키트래블": "monkey_product_id",
     "AGL":        "tigerbooking_prod_id",
-    "BaiGolf":    "baigolf_course_id",
+    "KKday":      "kkday_product_id",
 }
 
 
@@ -825,7 +834,7 @@ if __name__ == "__main__":
         "--channel",
         nargs="+",
         default=None,
-        help="크롤링 채널 (몽키트래블 / AGL / BaiGolf). 생략 시 전체.",
+        help="크롤링 채널 (몽키트래블 / AGL / KKday). 생략 시 전체.",
     )
     parser.add_argument(
         "--days", type=int, default=None,

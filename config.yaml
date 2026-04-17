@@ -595,96 +595,6 @@ properties:
     tripcom_hotel_id: 737619
     tripcom_city_id: 0
 
-
-
-# ── 골프장 ──────────────────────────────────────────────────────────────────────
-golf_properties:
-- name: 소노펠리체CC 하이퐁
-  id: haiphong
-  display_region: 아시아퍼시픽
-  region: 베트남 하이퐁
-  type: golf
-  holes: 27
-  own_urls:
-    monkeytravel_id: ''
-    agl_field_id: 'EVT074'
-    baigolf_id: ''
-  competitors:
-  - name: 빈펄 골프 하이퐁
-    holes: 36
-    monkeytravel_id: ''
-    agl_field_id: 'ACA022'
-    baigolf_id: ''
-  - name: 드래곤 골프 링크스
-    holes: 27
-    monkeytravel_id: ''
-    agl_field_id: ''
-    baigolf_id: ''
-  - name: BRG 루비트리 골프
-    holes: 18
-    monkeytravel_id: ''
-    agl_field_id: ''
-    baigolf_id: ''
-  - name: FLC 하롱 골프
-    holes: 18
-    monkeytravel_id: ''
-    agl_field_id: ''
-    baigolf_id: ''
-
-- name: 소노펠리체CC 괌 망길라오
-  id: guam_mangilao
-  display_region: 아시아퍼시픽
-  region: 괌 망길라오
-  type: golf
-  holes: 18
-  own_urls:
-    monkeytravel_id: '1076788723'
-    agl_field_id: 'AGA001'
-    baigolf_id: ''
-  competitors:
-  - name: 레오팔레스 리조트 CC
-    holes: 36
-    monkeytravel_id: '1076788717'
-    agl_field_id: 'GU0001'
-    baigolf_id: ''
-  - name: 파인이스트 골프리조트
-    holes: 27
-    monkeytravel_id: ''
-    agl_field_id: 'RQ0011'
-    baigolf_id: ''
-  - name: 퍼시픽 컨트리클럽
-    holes: 18
-    monkeytravel_id: ''
-    agl_field_id: 'AGA008'
-    baigolf_id: ''
-
-- name: 소노펠리체CC 괌 탈로포포
-  id: guam_talofofo
-  display_region: 아시아퍼시픽
-  region: 괌 탈로포포
-  type: golf
-  holes: 18
-  own_urls:
-    monkeytravel_id: '1076788720'
-    agl_field_id: 'AGA002'
-    baigolf_id: ''
-  competitors:
-  - name: 레오팔레스 리조트 CC
-    holes: 36
-    monkeytravel_id: '1076788717'
-    agl_field_id: 'GU0001'
-    baigolf_id: ''
-  - name: 파인이스트 골프리조트
-    holes: 27
-    monkeytravel_id: ''
-    agl_field_id: 'RQ0011'
-    baigolf_id: ''
-  - name: 퍼시픽 컨트리클럽
-    holes: 18
-    monkeytravel_id: ''
-    agl_field_id: 'AGA008'
-    baigolf_id: ''
-
 crawl:
   days_ahead: 30
   request_delay: 2
@@ -712,7 +622,7 @@ holidays:
 # 채널별 식별자:
 #   agl_field_id      : Tiger Booking (www.tigerbooking.com) 필드 코드
 #   monkey_product_id : 몽키트래블 product_id (guam.monkeytravel.com)
-#   baigolf_course_id : BaiGolf golf_course_id (www.baigolf.com) — 미구현
+#   kkday_product_id  : KKday 상품 ID (www.kkday.com/en/product/{id})
 #
 # own: 자사 골프장 정보
 # competitors: 경쟁 골프장 목록
@@ -720,8 +630,14 @@ holidays:
 golf_properties:
 
 # ── 하이퐁 (베트남) ───────────────────────────────────────────────────────────
-# AGL(Tiger Booking): 하이퐁 코스는 Tiger Booking에 미등록
-# MonkeyTravel: monkey_product_id 미확인 (추후 등록 시 업데이트)
+# Tiger Booking: 하이퐁 코스들은 온라인 예약 미지원 (tigerbooking_prod_id 없음)
+# KKday: 하이퐁 골프 코스 미등록 확인 (2026-04-18)
+#
+# 경쟁사 OTA ID 조사 결과 (2026-04-18):
+#   드래곤 골프 링크스  — MT:1076866782 / AGL:미등록 / KKday:미등록
+#   빈펄 골프 하이퐁    — MT:1076782321 / AGL:ACA022(field) / KKday:미등록
+#   뚜언쩌우 골프 리조트 — MT:1076862695 / AGL:미등록 / KKday:미등록
+#     ※ "두안저우" = "뚜언쩌우(Tuần Châu)" Ha Long Bay 인근 골프코스
 - name: 소노펠리체CC 하이퐁
   id: golf_haiphong
   region: 베트남 하이퐁
@@ -731,22 +647,45 @@ golf_properties:
     tigerbooking_prod_id: ''       # Tiger Booking 미등록
     tigerbooking_country: VN
     monkey_product_id: ''
-    baigolf_course_id: ''
+    kkday_product_id: ''           # KKday 미등록
   competitors:
+  - name: 드래곤 골프 링크스
+    course_name: 드래곤 골프 링크스
+    agl_field_id: ''               # Tiger Booking 미등록
+    tigerbooking_prod_id: ''
+    tigerbooking_country: VN
+    monkey_product_id: '1076866782'
+    kkday_product_id: ''           # KKday 미등록
   - name: 빈펄 골프 하이퐁
     course_name: 빈펄 골프 하이퐁
-    agl_field_id: ACA022
-    tigerbooking_prod_id: ''       # Tiger Booking 미등록
+    agl_field_id: ACA022           # Tiger GDS field_id (온라인 예약 미지원)
+    tigerbooking_prod_id: ''
     tigerbooking_country: VN
-    monkey_product_id: ''
-    baigolf_course_id: ''
+    monkey_product_id: '1076782321'
+    kkday_product_id: ''           # KKday 미등록
+  - name: 뚜언쩌우 골프 리조트
+    course_name: 뚜언쩌우 골프 리조트
+    agl_field_id: ''               # Tiger Booking 미등록
+    tigerbooking_prod_id: ''
+    tigerbooking_country: VN
+    monkey_product_id: '1076862695'
+    kkday_product_id: ''           # KKday 미등록
 
 # ── 괌 망길라오 ───────────────────────────────────────────────────────────────
-# AGL(Tiger Booking) Tiger Booking prod_id 조사 완료 (2026-04-18)
-#   TOGU0004 = 소노 펠리체 컨트리 클럽 괌 망길라오 (실시간예약, book_type=2)
-#   TOGU0001 = 레오팔레스 CC (실시간예약, book_type=2)
-#   TOGU0005 = 컨트리 클럽 오브 더 퍼시픽 (예약문의, book_type=3 → 가격 없음)
-#   QOGU0001 = 파인이스트 괌 골프앤리조트 (예약문의, book_type=3 → 가격 없음)
+# AGL(Tiger Booking) prod_id 조사 완료 (2026-04-18)
+#   TOGU0004 = 소노 펠리체 컨트리 클럽 괌 망길라오 (실시간예약)
+#   TOGU0001 = 레오팔레스 CC (실시간예약)
+#   TOGU0005 = CCP 컨트리 클럽 오브 더 퍼시픽 (예약문의, book_type=3)
+#   QOGU0002 = 괌 인터내셔널 CC / 퍼시픽링스 (예약문의, book_type=3)
+# KKday (2026-04-18 확인)
+#   156010 = 소노 펠리체 괌 망길라오 ✅
+#   156004 = CCP — 검색 인덱스 존재하나 현재 404 (상품 일시 중단)
+#
+# 경쟁사 OTA ID 조사 결과 (2026-04-18):
+#   레오팔레스 — AGL:TOGU0001 / MT:1076788717 / KKday:미등록
+#   CCP        — AGL:TOGU0005(문의전용) / MT:1076788719 / KKday:156004(404)
+#   퍼시픽링스  — AGL:QOGU0002(문의전용) / MT:1076788718 / KKday:미등록
+#     ※ 퍼시픽링스 Guam = 괌 인터내셔널 컨트리 클럽 (GICC)
 - name: 소노펠리체CC 괌 망길라오
   id: golf_guam_mangilao
   region: 괌
@@ -756,33 +695,35 @@ golf_properties:
     tigerbooking_prod_id: TOGU0004
     tigerbooking_country: GU
     monkey_product_id: '1076788723'
-    baigolf_course_id: ''
+    kkday_product_id: '156010'
   competitors:
-  - name: 레오팔레스 괌 골프
-    course_name: 레오팔레스 괌 골프
+  - name: 레오팔레스 리조트 CC
+    course_name: 레오팔레스 리조트 CC
     agl_field_id: GU0001
     tigerbooking_prod_id: TOGU0001
     tigerbooking_country: GU
     monkey_product_id: '1076788717'
-    baigolf_course_id: ''
-  - name: 파인이스트 골프 클럽
-    course_name: 파인이스트 골프 클럽
-    agl_field_id: RQ0011
-    tigerbooking_prod_id: ''       # 예약문의 전용 (가격정보 없음)
-    tigerbooking_country: GU
-    monkey_product_id: ''
-    baigolf_course_id: ''
-  - name: 퍼시픽 아일랜드 CC
-    course_name: 퍼시픽 아일랜드 CC
+    kkday_product_id: ''           # KKday 미등록
+  - name: CCP (컨트리 클럽 오브 더 퍼시픽)
+    course_name: CCP (컨트리 클럽 오브 더 퍼시픽)
     agl_field_id: AGA008
-    tigerbooking_prod_id: ''       # 예약문의 전용 (가격정보 없음)
+    tigerbooking_prod_id: TOGU0005  # book_type=3 예약문의 → 가격수집 불가
     tigerbooking_country: GU
-    monkey_product_id: ''
-    baigolf_course_id: ''
+    monkey_product_id: '1076788719'
+    kkday_product_id: '156004'      # 현재 404 (크롤러에서 graceful 처리)
+  - name: 퍼시픽링스 괌 (GICC)
+    course_name: 괌 인터내셔널 컨트리 클럽
+    agl_field_id: ''
+    tigerbooking_prod_id: QOGU0002  # book_type=3 예약문의 → 가격수집 불가
+    tigerbooking_country: GU
+    monkey_product_id: '1076788718'
+    kkday_product_id: ''           # KKday 미등록
 
 # ── 괌 탈로포포 ───────────────────────────────────────────────────────────────
-# AGL(Tiger Booking) Tiger Booking prod_id 조사 완료 (2026-04-18)
-#   TOGU0006 = 소노 펠리체 컨트리 클럽 괌 탈로포포 (실시간예약, book_type=2)
+# AGL(Tiger Booking) prod_id 조사 완료 (2026-04-18)
+#   TOGU0006 = 소노 펠리체 컨트리 클럽 괌 탈로포포 (실시간예약)
+# KKday (2026-04-18 확인)
+#   156016 = 소노 펠리체 괌 탈로포포 ✅
 - name: 소노펠리체CC 괌 탈로포포
   id: golf_guam_talofofo
   region: 괌
@@ -792,29 +733,29 @@ golf_properties:
     tigerbooking_prod_id: TOGU0006
     tigerbooking_country: GU
     monkey_product_id: '1076788720'
-    baigolf_course_id: ''
+    kkday_product_id: '156016'
   competitors:
-  - name: 레오팔레스 괌 골프
-    course_name: 레오팔레스 괌 골프
+  - name: 레오팔레스 리조트 CC
+    course_name: 레오팔레스 리조트 CC
     agl_field_id: GU0001
     tigerbooking_prod_id: TOGU0001
     tigerbooking_country: GU
     monkey_product_id: '1076788717'
-    baigolf_course_id: ''
-  - name: 파인이스트 골프 클럽
-    course_name: 파인이스트 골프 클럽
-    agl_field_id: RQ0011
-    tigerbooking_prod_id: ''       # 예약문의 전용 (가격정보 없음)
-    tigerbooking_country: GU
-    monkey_product_id: ''
-    baigolf_course_id: ''
-  - name: 퍼시픽 아일랜드 CC
-    course_name: 퍼시픽 아일랜드 CC
+    kkday_product_id: ''           # KKday 미등록
+  - name: CCP (컨트리 클럽 오브 더 퍼시픽)
+    course_name: CCP (컨트리 클럽 오브 더 퍼시픽)
     agl_field_id: AGA008
-    tigerbooking_prod_id: ''       # 예약문의 전용 (가격정보 없음)
+    tigerbooking_prod_id: TOGU0005  # book_type=3 예약문의 → 가격수집 불가
     tigerbooking_country: GU
-    monkey_product_id: ''
-    baigolf_course_id: ''
+    monkey_product_id: '1076788719'
+    kkday_product_id: '156004'      # 현재 404 (크롤러에서 graceful 처리)
+  - name: 퍼시픽링스 괌 (GICC)
+    course_name: 괌 인터내셔널 컨트리 클럽
+    agl_field_id: ''
+    tigerbooking_prod_id: QOGU0002  # book_type=3 예약문의 → 가격수집 불가
+    tigerbooking_country: GU
+    monkey_product_id: '1076788718'
+    kkday_product_id: ''           # KKday 미등록
 
 golf_crawl:
   days_ahead: 14          # 오늘로부터 N일 후까지 조회
