@@ -712,7 +712,7 @@ holidays:
 # 채널별 식별자:
 #   agl_field_id      : Tiger Booking (www.tigerbooking.com) 필드 코드
 #   monkey_product_id : 몽키트래블 product_id (guam.monkeytravel.com)
-#   baigolf_course_id : BaiGolf golf_course_id (www.baigolf.com) — 미구현
+#   kkday_product_id  : KKday 상품 ID (www.kkday.com/en/product/{id})
 #
 # own: 자사 골프장 정보
 # competitors: 경쟁 골프장 목록
@@ -722,6 +722,7 @@ golf_properties:
 # ── 하이퐁 (베트남) ───────────────────────────────────────────────────────────
 # AGL(Tiger Booking): 하이퐁 코스는 Tiger Booking에 미등록
 # MonkeyTravel: monkey_product_id 미확인 (추후 등록 시 업데이트)
+# KKday: 하이퐁 골프 카테고리 조회 결과 등록 코스 없음 (2026-04-18 확인)
 - name: 소노펠리체CC 하이퐁
   id: golf_haiphong
   region: 베트남 하이퐁
@@ -731,7 +732,7 @@ golf_properties:
     tigerbooking_prod_id: ''       # Tiger Booking 미등록
     tigerbooking_country: VN
     monkey_product_id: ''
-    baigolf_course_id: ''
+    kkday_product_id: ''           # KKday 미등록
   competitors:
   - name: 빈펄 골프 하이퐁
     course_name: 빈펄 골프 하이퐁
@@ -739,7 +740,7 @@ golf_properties:
     tigerbooking_prod_id: ''       # Tiger Booking 미등록
     tigerbooking_country: VN
     monkey_product_id: ''
-    baigolf_course_id: ''
+    kkday_product_id: ''           # KKday 미등록
 
 # ── 괌 망길라오 ───────────────────────────────────────────────────────────────
 # AGL(Tiger Booking) Tiger Booking prod_id 조사 완료 (2026-04-18)
@@ -747,6 +748,9 @@ golf_properties:
 #   TOGU0001 = 레오팔레스 CC (실시간예약, book_type=2)
 #   TOGU0005 = 컨트리 클럽 오브 더 퍼시픽 (예약문의, book_type=3 → 가격 없음)
 #   QOGU0001 = 파인이스트 괌 골프앤리조트 (예약문의, book_type=3 → 가격 없음)
+# KKday (2026-04-18 확인)
+#   156010 = 소노 펠리체 컨트리 클럽 괌 망길라오 ✅
+#   156004 = Country Club of the Pacific Golf (퍼시픽CC) — 현재 404 (상품 일시 중단)
 - name: 소노펠리체CC 괌 망길라오
   id: golf_guam_mangilao
   region: 괌
@@ -756,7 +760,7 @@ golf_properties:
     tigerbooking_prod_id: TOGU0004
     tigerbooking_country: GU
     monkey_product_id: '1076788723'
-    baigolf_course_id: ''
+    kkday_product_id: '156010'
   competitors:
   - name: 레오팔레스 괌 골프
     course_name: 레오팔레스 괌 골프
@@ -764,25 +768,27 @@ golf_properties:
     tigerbooking_prod_id: TOGU0001
     tigerbooking_country: GU
     monkey_product_id: '1076788717'
-    baigolf_course_id: ''
+    kkday_product_id: ''           # KKday 미등록
   - name: 파인이스트 골프 클럽
     course_name: 파인이스트 골프 클럽
     agl_field_id: RQ0011
     tigerbooking_prod_id: ''       # 예약문의 전용 (가격정보 없음)
     tigerbooking_country: GU
     monkey_product_id: ''
-    baigolf_course_id: ''
+    kkday_product_id: ''           # KKday 미등록
   - name: 퍼시픽 아일랜드 CC
     course_name: 퍼시픽 아일랜드 CC
     agl_field_id: AGA008
     tigerbooking_prod_id: ''       # 예약문의 전용 (가격정보 없음)
     tigerbooking_country: GU
     monkey_product_id: ''
-    baigolf_course_id: ''
+    kkday_product_id: ''           # KKday 미등록 (156004=CCP는 별도 코스)
 
 # ── 괌 탈로포포 ───────────────────────────────────────────────────────────────
 # AGL(Tiger Booking) Tiger Booking prod_id 조사 완료 (2026-04-18)
 #   TOGU0006 = 소노 펠리체 컨트리 클럽 괌 탈로포포 (실시간예약, book_type=2)
+# KKday (2026-04-18 확인)
+#   156016 = 소노 펠리체 컨트리 클럽 괌 탈로포포 ✅
 - name: 소노펠리체CC 괌 탈로포포
   id: golf_guam_talofofo
   region: 괌
@@ -792,7 +798,7 @@ golf_properties:
     tigerbooking_prod_id: TOGU0006
     tigerbooking_country: GU
     monkey_product_id: '1076788720'
-    baigolf_course_id: ''
+    kkday_product_id: '156016'
   competitors:
   - name: 레오팔레스 괌 골프
     course_name: 레오팔레스 괌 골프
@@ -800,21 +806,21 @@ golf_properties:
     tigerbooking_prod_id: TOGU0001
     tigerbooking_country: GU
     monkey_product_id: '1076788717'
-    baigolf_course_id: ''
+    kkday_product_id: ''           # KKday 미등록
   - name: 파인이스트 골프 클럽
     course_name: 파인이스트 골프 클럽
     agl_field_id: RQ0011
     tigerbooking_prod_id: ''       # 예약문의 전용 (가격정보 없음)
     tigerbooking_country: GU
     monkey_product_id: ''
-    baigolf_course_id: ''
+    kkday_product_id: ''           # KKday 미등록
   - name: 퍼시픽 아일랜드 CC
     course_name: 퍼시픽 아일랜드 CC
     agl_field_id: AGA008
     tigerbooking_prod_id: ''       # 예약문의 전용 (가격정보 없음)
     tigerbooking_country: GU
     monkey_product_id: ''
-    baigolf_course_id: ''
+    kkday_product_id: ''           # KKday 미등록 (156004=CCP는 별도 코스)
 
 golf_crawl:
   days_ahead: 14          # 오늘로부터 N일 후까지 조회
