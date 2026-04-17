@@ -1,20 +1,27 @@
 """
-골프장 그린피 크롤러 v1
+골프장 그린피 크롤러 v2
 작성: 2026-04-18
 
 채널별 구현 상태:
   ✅ 몽키트래블 (MonkeyTravel) : JSON REST API — 검증 완료
-  ⚠️  AGL (Tiger Booking)       : Selenium headless Chrome — SPA, 선택기 확인 필요
-  ❌ BaiGolf                    : API 미접근 (2026-04-18 기준 모든 엔드포인트 404)
+  ✅ AGL (Tiger Booking)       : requests 기반 listing 최저가 — 검증 완료
+                                 (날짜별 API 미노출 → 일일 최저가 방식)
+  ❌ BaiGolf                   : 괌 코스 미등록 (DB 전수조사 결과)
 
 출력 DataFrame 컬럼:
   crawled_at, property_name, property_id, competitor_name, channel,
   course_name, holes, play_date, day_of_week, time_of_day,
   green_fee_krw, green_fee_usd, cart_included, caddy_included,
   url, error, is_own
+
+환율 적용:
+  run_golf_crawl() 완료 후 green_fee_usd 컬럼 자동 채움
+  소스: open.er-api.com/v6/latest/USD (일 1회 갱신 캐시)
 """
 
+import json
 import logging
+import re
 import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -45,6 +52,9 @@ _TIME_OF_DAY_KO = {
     "Night":     "야간",
 }
 
+# AGL은 날짜 필터 없이 일일 최저가만 제공 → 날짜 루프 불필요
+_DATE_INDEPENDENT_CHANNELS = {"AGL"}
+
 
 # ---------------------------------------------------------------------------
 # 데이터 모델
@@ -61,7 +71,7 @@ class GolfPriceRecord:
     holes:          int     # 홀수 (18)
     play_date:      str     # YYYY-MM-DD
     day_of_week:    str     # 주중 / 주말
-    time_of_day:    str     # 오전 / 오후 / 트와일라잇 / 야간
+    time_of_day:    str     # 오전 / 오후 / 트와일라잇 / 야간 / 최저가
     green_fee_krw:  int     # 1인 그린피 (KRW, 0 if unavailable)
     green_fee_usd:  float   # 1인 그린피 (USD, 0 if unavailable)
     cart_included:  bool    # 카트비 포함 여부
@@ -78,6 +88,86 @@ class GolfPriceRecord:
 def load_golf_config(path: str = "config.yaml") -> dict:
     with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
+
+
+# ---------------------------------------------------------------------------
+# 환율 조회 (일일 캐시)
+# ---------------------------------------------------------------------------
+
+_EXCHANGE_RATE_CACHE: dict = {}   # {"rates": {KRW: ..., VND: ...}, "ts": datetime}
+_EXCHANGE_RATE_TTL_HOURS = 12     # 12시간 캐시
+
+
+def get_exchange_rates() -> dict:
+    """
+    USD 기준 환율 반환 (KRW, VND, JPY 등 포함).
+
+    Returns:
+        dict: {"KRW": 1478.0, "VND": 26247.0, ...}  USD 대비 비율
+              조회 실패 시 빈 dict (변환 건너뜀)
+
+    소스: open.er-api.com/v6/latest/USD (무료, 일 1회 갱신)
+    폴백: fawazahmed0/currency-api
+    """
+    global _EXCHANGE_RATE_CACHE
+
+    # 캐시 유효성 확인
+    cached_ts = _EXCHANGE_RATE_CACHE.get("ts")
+    if cached_ts and (datetime.now() - cached_ts).total_seconds() < _EXCHANGE_RATE_TTL_HOURS * 3600:
+        return _EXCHANGE_RATE_CACHE.get("rates", {})
+
+    # 1차: open.er-api.com
+    try:
+        r = requests.get(
+            "https://open.er-api.com/v6/latest/USD",
+            headers={"Accept": "application/json"},
+            timeout=10,
+        )
+        r.raise_for_status()
+        data = r.json()
+        if data.get("result") == "success":
+            rates = data["rates"]
+            _EXCHANGE_RATE_CACHE = {"rates": rates, "ts": datetime.now()}
+            logger.info(f"[환율] open.er-api.com 로드: 1 USD = {rates.get('KRW', '?')} KRW")
+            return rates
+    except Exception as e:
+        logger.warning(f"[환율] open.er-api.com 실패: {e}")
+
+    # 2차: fawazahmed0/currency-api (폴백)
+    try:
+        today = datetime.now().strftime("%Y-%m-%d")
+        r = requests.get(
+            f"https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@{today}/v1/currencies/usd.json",
+            timeout=10,
+        )
+        r.raise_for_status()
+        data = r.json()
+        usd_rates = data.get("usd", {})
+        # 통화 코드를 대문자로 변환
+        rates = {k.upper(): v for k, v in usd_rates.items()}
+        _EXCHANGE_RATE_CACHE = {"rates": rates, "ts": datetime.now()}
+        logger.info(f"[환율] fawazahmed0 폴백 로드: 1 USD = {rates.get('KRW', '?')} KRW")
+        return rates
+    except Exception as e:
+        logger.warning(f"[환율] fawazahmed0 폴백도 실패: {e}")
+
+    return {}
+
+
+def krw_to_usd(krw: int, rates: dict) -> float:
+    """KRW → USD 변환. rates 없으면 0.0 반환"""
+    krw_rate = rates.get("KRW", 0)
+    if not krw_rate or not krw:
+        return 0.0
+    return round(krw / krw_rate, 2)
+
+
+def usd_to_krw(usd: float, rates: dict) -> int:
+    """USD → KRW 변환. rates 없으면 0 반환"""
+    krw_rate = rates.get("KRW", 0)
+    if not krw_rate or not usd:
+        return 0
+    return int(round(usd * krw_rate))
 
 
 # ---------------------------------------------------------------------------
@@ -219,350 +309,315 @@ def crawl_monkey_travel(course_info: dict, play_date: str, cfg: dict) -> list:
 
 
 # ---------------------------------------------------------------------------
-# AGL (Tiger Booking) 크롤러 — Selenium
+# AGL (Tiger Booking) 크롤러 — requests 기반 listing 최저가
 # ---------------------------------------------------------------------------
 #
-# URL: https://www.tigerbooking.com/ko/golf-course/teetime/{field_id}
-# 방식: Selenium headless Chrome (SPA — 가격 데이터는 JavaScript로만 로드됨)
+# Tiger Booking (www.tigerbooking.com) 의 구조:
+#   - 국가별 목록: /ko/golf-course/teetime/1/{country_code}
+#   - 각 상품에 tigerbooking_prod_id (예: TOGU0004, TOGU0006, TOGU0001)
+#   - 응답 HTML의 RSC payload에 "sales_price" (일일 최저가, 날짜 무관) 포함
+#   - 날짜별 필터 API 미공개 → 현재가 최저가(최근 가용 슬롯) 방식으로 수집
 #
-# 구현 상태:
-#   - 페이지 로드 + 날짜 설정까지 구현
-#   - 가격 파싱 선택기(CSS selector)는 실제 Selenium 실행 후 확인 필요
-#   - _parse_agl_prices() 함수에서 TODO 표시된 부분 업데이트 필요
+# 조사 결과 (2026-04-18):
+#   GU 목록 URL: /ko/golf-course/teetime/1/GU
+#   TOGU0004 = 소노 펠리체 컨트리 클럽 괌 망길라오 (실시간, book_type=2)
+#   TOGU0006 = 소노 펠리체 컨트리 클럽 괌 탈로포포 (실시간, book_type=2)
+#   TOGU0001 = 레오팔레스 CC                      (실시간, book_type=2)
+#   TOGU0005 = 컨트리 클럽 오브 더 퍼시픽          (예약문의, book_type=3)
+#   QOGU0001 = 파인이스트 괌 골프앤리조트           (예약문의, book_type=3)
 # ---------------------------------------------------------------------------
+
+_AGL_LISTING_URL = f"{AGL_BASE}/ko/golf-course/teetime/1/{{country_code}}"
+_AGL_RSC_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    ),
+    "Accept-Language": "ko-KR,ko;q=0.9",
+    "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
+    "Referer": f"{AGL_BASE}/",
+}
+
+# 국가별 listing 캐시: country_code → (products list, fetch_time)
+_AGL_LISTING_CACHE: dict = {}
+_AGL_LISTING_TTL_HOURS = 1
+
+
+def _fetch_agl_listing(country_code: str, timeout: int = 30) -> list:
+    """
+    Tiger Booking 국가별 목록 페이지에서 상품 목록 조회.
+
+    Returns:
+        list[dict]: products (prod_id, gcprd_seq, product_name, price, book_type, ...)
+    """
+    global _AGL_LISTING_CACHE
+
+    # 캐시 확인
+    cached = _AGL_LISTING_CACHE.get(country_code)
+    if cached:
+        products, ts = cached
+        if (datetime.now() - ts).total_seconds() < _AGL_LISTING_TTL_HOURS * 3600:
+            return products
+
+    url = _AGL_LISTING_URL.format(country_code=country_code)
+    try:
+        resp = requests.get(url, headers=_AGL_RSC_HEADERS, timeout=timeout)
+        resp.raise_for_status()
+    except Exception as e:
+        logger.error(f"[AGL] {country_code} 목록 조회 실패: {e}")
+        return []
+
+    products = _parse_agl_rsc_products(resp.text)
+    _AGL_LISTING_CACHE[country_code] = (products, datetime.now())
+    logger.info(f"[AGL] {country_code} 목록 로드: {len(products)}개 상품")
+    return products
+
+
+def _parse_agl_rsc_products(html: str) -> list:
+    """
+    Tiger Booking HTML의 Next.js RSC payload에서 상품 목록 추출.
+
+    Returns:
+        list[dict]: [{prod_id, product_name, price, book_type, ...}, ...]
+    """
+    scripts_raw = re.findall(
+        r'self\.__next_f\.push\(\[1,"((?:[^"\\]|\\.)*)"\]\)',
+        html,
+        re.DOTALL,
+    )
+
+    for raw in scripts_raw:
+        try:
+            # RSC payload는 JSON unicode escape로 인코딩됨
+            # raw 문자열을 utf-8 bytes로 해석 후 unicode_escape 디코딩
+            decoded = bytes(raw, "utf-8").decode("unicode_escape")
+        except Exception:
+            decoded = raw
+
+        if '"prod_id"' not in decoded or '"products"' not in decoded:
+            continue
+
+        start_idx = decoded.find('"products"')
+        if start_idx == -1:
+            continue
+
+        arr_start = decoded.find("[", start_idx)
+        if arr_start == -1:
+            continue
+
+        depth = 0
+        end_idx = arr_start
+        for j, ch in enumerate(decoded[arr_start:]):
+            if ch in "[{":
+                depth += 1
+            elif ch in "]}":
+                depth -= 1
+            if depth == 0:
+                end_idx = arr_start + j + 1
+                break
+
+        try:
+            products = json.loads(decoded[arr_start:end_idx])
+            if products:
+                return products
+        except json.JSONDecodeError:
+            continue
+
+    return []
+
 
 def crawl_agl(course_info: dict, play_date: str, cfg: dict) -> list:
     """
     Tiger Booking (AGL) 그린피 크롤러.
-    Selenium headless Chrome을 사용하여 SPA 페이지에서 가격 추출.
 
-    course_info 필수 키: agl_field_id, course_name
+    Tiger Booking은 날짜별 API를 공개하지 않으므로
+    국가별 listing 페이지의 RSC 페이로드에서 일일 최저가를 수집합니다.
+
+    - play_date: 수집 기준일 (실제로는 listing 최저가 = 가장 가까운 가용 슬롯 가격)
+    - time_of_day: "최저가" (특정 시간대 아님)
+
+    course_info 필수 키: tigerbooking_prod_id, tigerbooking_country, course_name
     """
-    field_id = course_info.get("agl_field_id", "")
-    if not field_id:
+    prod_id      = str(course_info.get("tigerbooking_prod_id", "") or "")
+    country_code = str(course_info.get("tigerbooking_country", "GU") or "GU")
+
+    if not prod_id:
         return []
 
-    golf_cfg    = cfg.get("golf_crawl", {})
-    adult_count = golf_cfg.get("adult_count", 2)
-    holes       = course_info.get("holes", golf_cfg.get("holes", 18))
-    url         = f"{AGL_BASE}/ko/golf-course/teetime/{field_id}"
+    golf_cfg = cfg.get("golf_crawl", {})
+    timeout  = golf_cfg.get("timeout", 30)
+    holes    = course_info.get("holes", golf_cfg.get("holes", 18))
+    url      = _AGL_LISTING_URL.format(country_code=country_code)
 
-    driver = None
+    products = _fetch_agl_listing(country_code, timeout)
+    if not products:
+        return [_make_golf_error("AGL", url, "listing_fetch_failed")]
+
+    # prod_id로 코스 찾기
+    product = next((p for p in products if p.get("prod_id") == prod_id), None)
+    if product is None:
+        return [_make_golf_error("AGL", url, f"prod_id_not_found:{prod_id}")]
+
+    price_info = product.get("price") or {}
+    sales_price = int(price_info.get("sales_price") or 0)
+    book_type = int(product.get("book_type") or 0)
+
+    # book_type=3 = 예약문의 전용 (실시간 가격 없음)
+    if book_type == 3 or sales_price == 0:
+        return [_make_golf_error("AGL", url, "inquiry_only_no_price")]
+
+    # 요일 계산
     try:
-        driver = _make_agl_driver()
-        records = _run_agl_session(driver, course_info, play_date, adult_count, holes, url, cfg)
-        return records
-
-    except ImportError:
-        logger.warning("[AGL] selenium 미설치 — AGL 크롤링 건너뜀")
-        return [_make_golf_error("AGL", url, "selenium_not_installed")]
-    except Exception as e:
-        logger.error(f"[AGL] {field_id} {play_date} 실패: {e}")
-        return [_make_golf_error("AGL", url, str(e)[:120])]
-    finally:
-        if driver:
-            try:
-                driver.quit()
-            except Exception:
-                pass
-
-
-def _make_agl_driver():
-    """AGL 전용 headless Chrome 드라이버 생성"""
-    from selenium import webdriver
-    from selenium.webdriver.chrome.options import Options
-
-    options = Options()
-    options.add_argument("--headless=new")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--window-size=1920,1080")
-    options.add_argument(
-        "user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-    )
-    options.add_argument("--lang=ko-KR")
-    options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    options.add_experimental_option("useAutomationExtension", False)
-
-    d = webdriver.Chrome(options=options)
-    d.execute_cdp_cmd(
-        "Page.addScriptToEvaluateOnNewDocument",
-        {"source": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"},
-    )
-    return d
-
-
-def _run_agl_session(
-    driver,
-    course_info: dict,
-    play_date: str,
-    adult_count: int,
-    holes: int,
-    url: str,
-    cfg: dict,
-) -> list:
-    """
-    Selenium 드라이버로 Tiger Booking 페이지를 조작하여 가격 추출.
-
-    페이지 인터랙션 순서:
-      1. 페이지 로드 및 React hydration 대기
-      2. 날짜 선택 (calendar picker 조작)
-      3. 인원 수 설정
-      4. 검색 버튼 클릭
-      5. 결과 로딩 대기
-      6. 가격 데이터 파싱
-
-    NOTE: Tiger Booking SPA의 정확한 CSS 선택기는 Selenium 실행 후
-          실제 렌더링된 HTML을 확인하여 _parse_agl_prices()에서 업데이트 필요.
-    """
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
-    from bs4 import BeautifulSoup
-    import re
-
-    field_id = course_info.get("agl_field_id", "")
-
-    # ── 1. 페이지 로드 ────────────────────────────────────────────────────────
-    driver.get(url)
-
-    # React 앱 초기화 대기 (최대 15초)
-    try:
-        WebDriverWait(driver, 15).until(
-            lambda d: d.execute_script("return document.readyState") == "complete"
-        )
+        dt = datetime.strptime(play_date, "%Y-%m-%d")
+        day_of_week = "주말" if dt.weekday() >= 5 else "주중"
     except Exception:
-        pass
-    time.sleep(3)  # 추가 hydration 대기
+        day_of_week = ""
 
-    # ── 2. 날짜 설정 ─────────────────────────────────────────────────────────
-    # Tiger Booking은 React date picker를 사용하므로 JS로 직접 값 설정 시도
-    # 형식: YYYY-MM-DD
-    date_selectors = [
-        "input[type='date']",
-        "input[name='date']",
-        "input[name='checkInDate']",
-        "[data-testid='date-input'] input",
-        ".date-input input",
-        "input[placeholder]",  # 날짜 입력 필드 (placeholder 있는 input)
-    ]
+    record = GolfPriceRecord(
+        crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        property_name="",
+        property_id="",
+        competitor_name="",
+        channel="AGL",
+        course_name=course_info.get("course_name") or product.get("product_name", ""),
+        holes=holes,
+        play_date=play_date,
+        day_of_week=day_of_week,
+        time_of_day="최저가",      # Tiger Booking은 최저가만 노출
+        green_fee_krw=sales_price,
+        green_fee_usd=0.0,
+        cart_included=False,       # 포함 여부 정보 없음
+        caddy_included=False,
+        url=url,
+    )
 
-    date_set = False
-    for selector in date_selectors:
-        try:
-            el = driver.find_element(By.CSS_SELECTOR, selector)
-            driver.execute_script(
-                """
-                arguments[0].value = arguments[1];
-                arguments[0].dispatchEvent(new Event('input',  {bubbles: true}));
-                arguments[0].dispatchEvent(new Event('change', {bubbles: true}));
-                """,
-                el,
-                play_date,
-            )
-            date_set = True
-            logger.debug(f"[AGL] {field_id}: 날짜 설정 ({selector})")
-            break
-        except Exception:
-            continue
-
-    if not date_set:
-        logger.warning(f"[AGL] {field_id} {play_date}: 날짜 입력 요소 미발견")
-
-    time.sleep(1)
-
-    # ── 3. 인원 설정 ─────────────────────────────────────────────────────────
-    adult_selectors = [
-        "input[name='adultCount']",
-        "select[name='adults']",
-        "[data-testid='adult-count'] input",
-    ]
-    for selector in adult_selectors:
-        try:
-            el = driver.find_element(By.CSS_SELECTOR, selector)
-            driver.execute_script(
-                "arguments[0].value = arguments[1]; "
-                "arguments[0].dispatchEvent(new Event('change', {bubbles:true}));",
-                el,
-                str(adult_count),
-            )
-            logger.debug(f"[AGL] {field_id}: 인원 설정 ({adult_count}명)")
-            break
-        except Exception:
-            continue
-
-    # ── 4. 검색 버튼 클릭 ────────────────────────────────────────────────────
-    btn_selectors = [
-        "button[type='submit']",
-        "[data-testid='search-button']",
-        "button.search-btn",
-        # 텍스트로 찾기 (XPath)
-    ]
-    btn_clicked = False
-    for selector in btn_selectors:
-        try:
-            btn = driver.find_element(By.CSS_SELECTOR, selector)
-            btn.click()
-            btn_clicked = True
-            logger.debug(f"[AGL] {field_id}: 검색 버튼 클릭 ({selector})")
-            break
-        except Exception:
-            continue
-
-    if not btn_clicked:
-        # XPath로 "검색" 텍스트 버튼 시도
-        try:
-            btn = driver.find_element(
-                By.XPATH, "//button[contains(text(),'검색') or contains(text(),'Search')]"
-            )
-            btn.click()
-            btn_clicked = True
-        except Exception:
-            pass
-
-    time.sleep(4)  # 결과 로딩 대기
-
-    # ── 5. 가격 파싱 ─────────────────────────────────────────────────────────
-    html = driver.page_source
-    soup = BeautifulSoup(html, "html.parser")
-
-    records = _parse_agl_prices(soup, course_info, play_date, holes, url)
-
-    if not records:
-        # 파싱 실패 시 페이지 소스 일부를 디버그 로그에 남김
-        logger.warning(
-            f"[AGL] {field_id} {play_date}: 가격 파싱 실패\n"
-            f"  페이지 소스 (500자): {html[:500]}"
-        )
-        return [_make_golf_error("AGL", url, "no_parsed_data")]
-
-    logger.info(f"[AGL] {field_id} {play_date}: {len(records)}건 수집")
-    return records
-
-
-def _parse_agl_prices(
-    soup,
-    course_info: dict,
-    play_date: str,
-    holes: int,
-    url: str,
-) -> list:
-    """
-    Tiger Booking 렌더링 HTML에서 그린피 파싱.
-
-    TODO: Tiger Booking의 실제 가격 HTML 구조를 Selenium으로 확인 후
-          아래 선택기를 업데이트해야 합니다.
-
-    현재 구현:
-      - 숫자+KRW/USD 패턴으로 가격 후보 탐색
-      - 테이블/카드 구조에서 시간대별 파싱 시도
-    """
-    import re
-    records = []
-
-    # ── 패턴 1: 테이블 행에서 시간대 + 가격 추출 ────────────────────────────
-    # Tiger Booking의 결과는 tbody > tr 구조일 가능성이 높음
-    for row in soup.select("tbody tr, .price-row, .teetime-row"):
-        cells = row.find_all(["td", "th"])
-        text_cells = [c.get_text(strip=True) for c in cells]
-
-        price_val = 0
-        time_of_day = ""
-
-        for txt in text_cells:
-            # 시간대 감지
-            for en, ko in _TIME_OF_DAY_KO.items():
-                if en.lower() in txt.lower() or ko in txt:
-                    time_of_day = ko
-                    break
-            # 가격 감지
-            m = re.search(r"([\d,]{4,})", txt)
-            if m:
-                candidate = int(m.group(1).replace(",", ""))
-                if 10_000 <= candidate <= 5_000_000:
-                    price_val = candidate
-
-        if price_val:
-            records.append(GolfPriceRecord(
-                crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                property_name="",
-                property_id="",
-                competitor_name="",
-                channel="AGL",
-                course_name=course_info.get("course_name", ""),
-                holes=holes,
-                play_date=play_date,
-                day_of_week="",
-                time_of_day=time_of_day or "오전",
-                green_fee_krw=price_val,
-                green_fee_usd=0.0,
-                cart_included=False,
-                caddy_included=False,
-                url=url,
-            ))
-
-    if records:
-        return records
-
-    # ── 패턴 2: 모든 텍스트에서 숫자 + 통화 패턴 ────────────────────────────
-    price_pattern = re.compile(r"([\d,]{5,})\s*(?:원|KRW)")
-    candidates = []
-    for txt in soup.stripped_strings:
-        m = price_pattern.search(txt)
-        if m:
-            val = int(m.group(1).replace(",", ""))
-            if 10_000 <= val <= 5_000_000:
-                candidates.append(val)
-
-    if candidates:
-        # 가장 낮은 가격을 대표값으로 사용
-        price_val = min(candidates)
-        records.append(GolfPriceRecord(
-            crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            property_name="",
-            property_id="",
-            competitor_name="",
-            channel="AGL",
-            course_name=course_info.get("course_name", ""),
-            holes=holes,
-            play_date=play_date,
-            day_of_week="",
-            time_of_day="오전",
-            green_fee_krw=price_val,
-            green_fee_usd=0.0,
-            cart_included=False,
-            caddy_included=False,
-            url=url,
-        ))
-
-    return records
+    logger.info(f"[AGL] {prod_id} {play_date}: {sales_price:,}원 (최저가)")
+    return [record]
 
 
 # ---------------------------------------------------------------------------
-# BaiGolf 크롤러 — 미구현
+# BaiGolf 크롤러
 # ---------------------------------------------------------------------------
 #
-# 2026-04-18 기준 조사 결과:
-#   www.baigolf.com/api.php 엔드포인트 모두 404 응답
-#   w.baigolf.com (모바일) 응답 없음
-#   SPA 기반으로 추정 — 추후 접근 방법 파악 후 구현 필요
+# 2026-04-18 조사 결과:
+#   www.baigolf.com/course_price.php?id={id}&callback=cb JSONP API 확인
+#   ID 1~200, 500~600, 1000~1100 전수조사: 모두 중국(CNY) 코스
+#   괌/베트남 코스 미등록 → BaiGolf 채널 사용 불가
+#   baigolf_course_id가 설정된 경우에만 크롤링 시도 (추후 등록 대비)
 # ---------------------------------------------------------------------------
+
+_BAIGOLF_PRICE_URL = "https://www.baigolf.com/course_price.php"
+_BAIGOLF_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    ),
+    "Referer": "https://www.baigolf.com/",
+}
+
 
 def crawl_baigolf(course_info: dict, play_date: str, cfg: dict) -> list:
     """
-    BaiGolf 그린피 크롤러 (미구현).
+    BaiGolf 그린피 크롤러.
 
-    TODO: API 접근 방법 확인 후 구현
+    JSONP API: course_price.php?id={course_id}&callback=cb
+    응답 형식: cb({"YYYY-MM-DD": {"price": 1480, "currency_code": "CNY"}, ...})
+
+    현재 괌/베트남 코스 미등록 → baigolf_course_id가 설정된 경우에만 동작
     """
     course_id = str(course_info.get("baigolf_course_id", "") or "")
     if not course_id:
         return []
 
-    url = f"https://w.baigolf.com/course.php?act=detail&golf_course_id={course_id}"
-    logger.debug(f"[BaiGolf] {course_id}: 미구현 채널 — 건너뜀")
-    return [_make_golf_error("BaiGolf", url, "not_implemented")]
+    golf_cfg = cfg.get("golf_crawl", {})
+    timeout  = golf_cfg.get("timeout", 30)
+    url      = f"https://www.baigolf.com/course.php?id={course_id}"
+
+    try:
+        resp = requests.get(
+            _BAIGOLF_PRICE_URL,
+            params={"id": course_id, "callback": "cb"},
+            headers=_BAIGOLF_HEADERS,
+            timeout=timeout,
+        )
+        resp.raise_for_status()
+    except Exception as e:
+        logger.error(f"[BaiGolf] {course_id} {play_date} 요청 실패: {e}")
+        return [_make_golf_error("BaiGolf", url, str(e)[:120])]
+
+    # JSONP → JSON 파싱
+    text = resp.text.strip()
+    m = re.match(r"cb\((.+)\)\s*$", text, re.DOTALL)
+    if not m:
+        return [_make_golf_error("BaiGolf", url, "invalid_jsonp_response")]
+
+    try:
+        data = json.loads(m.group(1))
+    except json.JSONDecodeError as e:
+        return [_make_golf_error("BaiGolf", url, f"json_parse_error:{e}")]
+
+    if not data:
+        return [_make_golf_error("BaiGolf", url, "no_data")]
+
+    # 특정 날짜 데이터 조회
+    date_data = data.get(play_date)
+    if not date_data:
+        # 날짜가 없으면 가장 가까운 날짜 사용
+        available_dates = sorted(data.keys())
+        future_dates = [d for d in available_dates if d >= play_date]
+        if not future_dates:
+            return [_make_golf_error("BaiGolf", url, f"no_data_for_{play_date}")]
+        date_data = data[future_dates[0]]
+
+    raw_price = date_data.get("price", 0)
+    currency  = date_data.get("currency_code", "CNY")
+
+    if not raw_price:
+        return [_make_golf_error("BaiGolf", url, "price_zero")]
+
+    golf_cfg = cfg.get("golf_crawl", {})
+    holes    = course_info.get("holes", golf_cfg.get("holes", 18))
+
+    try:
+        dt = datetime.strptime(play_date, "%Y-%m-%d")
+        day_of_week = "주말" if dt.weekday() >= 5 else "주중"
+    except Exception:
+        day_of_week = ""
+
+    # CNY → KRW 변환 (환율 적용)
+    rates = get_exchange_rates()
+    if currency == "CNY" and rates:
+        cny_rate = rates.get("CNY", 0)
+        krw_rate = rates.get("KRW", 0)
+        if cny_rate and krw_rate:
+            green_fee_krw = int(round(raw_price / cny_rate * krw_rate))
+        else:
+            green_fee_krw = 0
+    elif currency == "KRW":
+        green_fee_krw = int(raw_price)
+    else:
+        green_fee_krw = 0  # 알 수 없는 통화
+
+    record = GolfPriceRecord(
+        crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        property_name="",
+        property_id="",
+        competitor_name="",
+        channel="BaiGolf",
+        course_name=course_info.get("course_name", ""),
+        holes=holes,
+        play_date=play_date,
+        day_of_week=day_of_week,
+        time_of_day="오전",       # BaiGolf는 시간대 정보 없음
+        green_fee_krw=green_fee_krw,
+        green_fee_usd=0.0,
+        cart_included=False,
+        caddy_included=False,
+        url=url,
+    )
+
+    logger.info(f"[BaiGolf] {course_id} {play_date}: {green_fee_krw:,}원 ({raw_price} {currency})")
+    return [record]
 
 
 # ---------------------------------------------------------------------------
@@ -603,7 +658,7 @@ _CHANNEL_CRAWLERS = {
 # 채널 → course_info에서 사용하는 ID 키
 _CHANNEL_ID_KEY = {
     "몽키트래블": "monkey_product_id",
-    "AGL":        "agl_field_id",
+    "AGL":        "tigerbooking_prod_id",
     "BaiGolf":    "baigolf_course_id",
 }
 
@@ -624,6 +679,7 @@ def run_golf_crawl(
         channel_filter: 크롤링할 채널 목록. None이면 전체.
                         예: ["몽키트래블"] / ["AGL", "몽키트래블"]
         days_ahead:     오늘로부터 며칠 후까지 조회. None이면 config 값 사용.
+                        AGL은 날짜 독립적이므로 days_ahead와 무관하게 1회 수집.
         config_path:    config.yaml 경로.
 
     Returns:
@@ -649,6 +705,12 @@ def run_golf_crawl(
         (today + timedelta(days=i)).strftime("%Y-%m-%d")
         for i in range(1, days_ahead + 1)
     ]
+
+    # 환율 미리 로드 (run 시작 시 1회)
+    exchange_rates = get_exchange_rates()
+    if exchange_rates:
+        logger.info(f"[환율] 1 USD = {exchange_rates.get('KRW', '?')} KRW / "
+                    f"{exchange_rates.get('VND', '?')} VND")
 
     all_records: list = []
 
@@ -685,9 +747,13 @@ def run_golf_crawl(
                 if not course.get(id_key):
                     continue  # 해당 채널 ID 없음 — 스킵
 
-                crawl_fn = _CHANNEL_CRAWLERS[ch]
+                crawl_fn  = _CHANNEL_CRAWLERS[ch]
+                date_indep = ch in _DATE_INDEPENDENT_CHANNELS
 
-                for play_date in play_dates:
+                # 날짜 루프: 날짜 독립 채널(AGL)은 오늘 날짜 한 번만 실행
+                dates_to_run = [today.strftime("%Y-%m-%d")] if date_indep else play_dates
+
+                for play_date in dates_to_run:
                     try:
                         records = crawl_fn(course, play_date, cfg)
                     except Exception as e:
@@ -705,8 +771,14 @@ def run_golf_crawl(
                             rec.course_name = course_name
                         rec.is_own = is_own
 
+                        # 환율 적용: green_fee_usd 채움
+                        if rec.green_fee_krw and rec.green_fee_usd == 0.0:
+                            rec.green_fee_usd = krw_to_usd(rec.green_fee_krw, exchange_rates)
+
                     all_records.extend(records)
-                    time.sleep(delay)
+
+                    if not date_indep:
+                        time.sleep(delay)
 
     if not all_records:
         logger.warning("수집된 골프 가격 데이터 없음")
@@ -771,8 +843,12 @@ if __name__ == "__main__":
     )
 
     if not df.empty:
-        print(df[df["error"] == ""].to_string(max_rows=20))
-        print(f"\n총 {len(df)}행 (성공: {(df['error']=='').sum()}건)")
+        ok = df[df["error"] == ""]
+        print(ok[["property_name", "competitor_name", "channel", "course_name",
+                   "play_date", "day_of_week", "time_of_day",
+                   "green_fee_krw", "green_fee_usd",
+                   "cart_included"]].to_string(max_rows=30))
+        print(f"\n총 {len(df)}행 (성공: {len(ok)}건 / 오류: {len(df)-len(ok)}건)")
         if args.export:
             export_golf_df(df)
     else:

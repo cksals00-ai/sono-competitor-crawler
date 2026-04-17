@@ -720,70 +720,99 @@ holidays:
 golf_properties:
 
 # ── 하이퐁 (베트남) ───────────────────────────────────────────────────────────
+# AGL(Tiger Booking): 하이퐁 코스는 Tiger Booking에 미등록
+# MonkeyTravel: monkey_product_id 미확인 (추후 등록 시 업데이트)
 - name: 소노펠리체CC 하이퐁
   id: golf_haiphong
   region: 베트남 하이퐁
   own:
     course_name: 소노펠리체CC 하이퐁
     agl_field_id: EVT074
+    tigerbooking_prod_id: ''       # Tiger Booking 미등록
+    tigerbooking_country: VN
     monkey_product_id: ''
     baigolf_course_id: ''
   competitors:
   - name: 빈펄 골프 하이퐁
     course_name: 빈펄 골프 하이퐁
     agl_field_id: ACA022
+    tigerbooking_prod_id: ''       # Tiger Booking 미등록
+    tigerbooking_country: VN
     monkey_product_id: ''
     baigolf_course_id: ''
 
 # ── 괌 망길라오 ───────────────────────────────────────────────────────────────
+# AGL(Tiger Booking) Tiger Booking prod_id 조사 완료 (2026-04-18)
+#   TOGU0004 = 소노 펠리체 컨트리 클럽 괌 망길라오 (실시간예약, book_type=2)
+#   TOGU0001 = 레오팔레스 CC (실시간예약, book_type=2)
+#   TOGU0005 = 컨트리 클럽 오브 더 퍼시픽 (예약문의, book_type=3 → 가격 없음)
+#   QOGU0001 = 파인이스트 괌 골프앤리조트 (예약문의, book_type=3 → 가격 없음)
 - name: 소노펠리체CC 괌 망길라오
   id: golf_guam_mangilao
   region: 괌
   own:
     course_name: 망길라오 골프 클럽
     agl_field_id: AGA001
+    tigerbooking_prod_id: TOGU0004
+    tigerbooking_country: GU
     monkey_product_id: '1076788723'
     baigolf_course_id: ''
   competitors:
   - name: 레오팔레스 괌 골프
     course_name: 레오팔레스 괌 골프
     agl_field_id: GU0001
+    tigerbooking_prod_id: TOGU0001
+    tigerbooking_country: GU
     monkey_product_id: '1076788717'
     baigolf_course_id: ''
   - name: 파인이스트 골프 클럽
     course_name: 파인이스트 골프 클럽
     agl_field_id: RQ0011
+    tigerbooking_prod_id: ''       # 예약문의 전용 (가격정보 없음)
+    tigerbooking_country: GU
     monkey_product_id: ''
     baigolf_course_id: ''
   - name: 퍼시픽 아일랜드 CC
     course_name: 퍼시픽 아일랜드 CC
     agl_field_id: AGA008
+    tigerbooking_prod_id: ''       # 예약문의 전용 (가격정보 없음)
+    tigerbooking_country: GU
     monkey_product_id: ''
     baigolf_course_id: ''
 
 # ── 괌 탈로포포 ───────────────────────────────────────────────────────────────
+# AGL(Tiger Booking) Tiger Booking prod_id 조사 완료 (2026-04-18)
+#   TOGU0006 = 소노 펠리체 컨트리 클럽 괌 탈로포포 (실시간예약, book_type=2)
 - name: 소노펠리체CC 괌 탈로포포
   id: golf_guam_talofofo
   region: 괌
   own:
     course_name: 탈로포포 골프 클럽
     agl_field_id: AGA002
+    tigerbooking_prod_id: TOGU0006
+    tigerbooking_country: GU
     monkey_product_id: '1076788720'
     baigolf_course_id: ''
   competitors:
   - name: 레오팔레스 괌 골프
     course_name: 레오팔레스 괌 골프
     agl_field_id: GU0001
+    tigerbooking_prod_id: TOGU0001
+    tigerbooking_country: GU
     monkey_product_id: '1076788717'
     baigolf_course_id: ''
   - name: 파인이스트 골프 클럽
     course_name: 파인이스트 골프 클럽
     agl_field_id: RQ0011
+    tigerbooking_prod_id: ''       # 예약문의 전용 (가격정보 없음)
+    tigerbooking_country: GU
     monkey_product_id: ''
     baigolf_course_id: ''
   - name: 퍼시픽 아일랜드 CC
     course_name: 퍼시픽 아일랜드 CC
     agl_field_id: AGA008
+    tigerbooking_prod_id: ''       # 예약문의 전용 (가격정보 없음)
+    tigerbooking_country: GU
     monkey_product_id: ''
     baigolf_course_id: ''
 
