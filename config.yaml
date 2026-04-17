@@ -62,10 +62,10 @@ properties:
     tripcom_hotel_id: 114782107
     tripcom_city_id: 72360
 
-# ── 한국중부 ───────────────────────────────────────────────────────────────────
+# ── 아시아퍼시픽 ──────────────────────────────────────────────────────────────
 - name: 소노캄 고양
   id: goyang
-  display_region: 한국중부
+  display_region: 아시아퍼시픽
   region: 경기도 고양시
   competitors:
   - name: 글로스터호텔 킨텍스
@@ -227,10 +227,9 @@ properties:
     tripcom_hotel_id: 22890741
     tripcom_city_id: 78911
 
-# ── 한국남부 ───────────────────────────────────────────────────────────────────
 - name: 소노벨 청송
   id: cheongsong
-  display_region: 한국남부
+  display_region: 한국중부
   region: 경북 청송군
   competitors: []
   own_urls:
@@ -243,6 +242,7 @@ properties:
     tripcom_hotel_id: 0
     tripcom_city_id: 0
 
+# ── 한국남부 ─────────────────────────────────────────────────────────────────
 - name: 소노캄 거제
   id: geoje
   display_region: 한국남부
@@ -370,7 +370,7 @@ properties:
 
 - name: 소노캄 제주
   id: jeju_cam
-  display_region: 한국남부
+  display_region: 아시아퍼시픽
   region: 제주도 서귀포시 표선면
   competitors:
   - name: 해비치 호텔앤리조트 제주
