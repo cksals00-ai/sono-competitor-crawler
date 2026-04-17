@@ -14,7 +14,9 @@ venv/
 env/
 
 # Data outputs (too large / regenerated every run)
-exports/
+exports/*
+!exports/golf_prices_*.csv
+!exports/golf_prices_*.xlsx
 logs/
 
 # Secrets / local config overrides
