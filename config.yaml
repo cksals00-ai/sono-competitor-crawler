@@ -595,37 +595,8 @@ properties:
     tripcom_hotel_id: 0
     tripcom_city_id: 0
 
-- name: 르네블루나
-  id: rene_luna
-  display_region: 아시아퍼시픽
-  region: ''
-  competitors: []
-  own_urls:
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
-    naver_id: ''
-    homepage_store_cd: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
 
-- name: 파나크
-  id: panak
-  display_region: 아시아퍼시픽
-  region: ''
-  competitors: []
-  own_urls:
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
-    naver_id: ''
-    homepage_store_cd: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
-
-- name: 하이퐁
+- name: 소노펠리체CC 하이퐁
   id: haiphong
   display_region: 아시아퍼시픽
   region: ''
