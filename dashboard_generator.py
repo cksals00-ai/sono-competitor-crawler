@@ -366,8 +366,10 @@ def _build_price_summary(df: pd.DataFrame, day_type: str = "전체") -> dict:
             }
         else:
             row  = avail.loc[avail["price"].idxmin()]
-            rt   = str(row.get("room_type", "") or "")
-            rc   = str(row.get("room_category", "") or "")
+            rt_val = row.get("room_type", "")
+            rc_val = row.get("room_category", "")
+            rt   = "" if pd.isna(rt_val) else str(rt_val)
+            rc   = "" if pd.isna(rc_val) else str(rc_val)
             is_p = bool(row.get("is_promo", False)) or _is_promo(rt)
             result[(prop, comp, ota)] = {
                 "min_price":     int(row["price"]),
