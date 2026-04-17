@@ -68,14 +68,14 @@ properties:
   region: 강원도 홍천군
   competitors: []
   own_urls:
-    yanolja_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3013070
     yeogiuh_url: ''
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
     tripcom_hotel_id: 0
-    tripcom_city_id: 0
+    tripcom_city_id: 72360
 
 - name: 소노펠리체 비발디파크
   id: sonofelice_vivaldi
@@ -83,14 +83,14 @@ properties:
   region: 강원도 홍천군
   competitors: []
   own_urls:
-    yanolja_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3007706
     yeogiuh_url: ''
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
+    tripcom_hotel_id: 72207417
+    tripcom_city_id: 72360
 
 - name: 소노펠리체 빌리지 비발디파크
   id: sonofelice_village_vivaldi
@@ -98,14 +98,14 @@ properties:
   region: 강원도 홍천군
   competitors: []
   own_urls:
-    yanolja_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3009615
     yeogiuh_url: ''
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
     tripcom_hotel_id: 0
-    tripcom_city_id: 0
+    tripcom_city_id: 72360
 
 # ── 아시아퍼시픽 ──────────────────────────────────────────────────────────────
 - name: 소노캄 고양
@@ -278,14 +278,14 @@ properties:
   region: 강원 동해시
   competitors: []
   own_urls:
-    yanolja_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000934
     yeogiuh_url: ''
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
     tripcom_hotel_id: 0
-    tripcom_city_id: 0
+    tripcom_city_id: 78910
 
 - name: 소노펠리체 델피노
   id: sonofelice_delpino
@@ -293,14 +293,14 @@ properties:
   region: 강원 동해시
   competitors: []
   own_urls:
-    yanolja_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10040685
     yeogiuh_url: ''
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
+    tripcom_hotel_id: 80329879
+    tripcom_city_id: 78910
 
 - name: 소노펠리체 빌리지 델피노
   id: sonofelice_village_delpino
@@ -308,42 +308,42 @@ properties:
   region: 강원 동해시
   competitors: []
   own_urls:
-    yanolja_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10043462
     yeogiuh_url: ''
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
     tripcom_hotel_id: 0
-    tripcom_city_id: 0
+    tripcom_city_id: 78910
 - name: 소노벨 청송
   id: cheongsong
   display_region: 한국남부
   region: 경북 청송군
   competitors: []
   own_urls:
-    yanolja_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3009871
     yeogiuh_url: ''
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 14222658
     tripcom_city_id: 0
 
 - name: 르네블루 바이 쏠비치
   id: reneblue_solbeach
   display_region: 한국중부
-  region: ''
+  region: 강원도 고성군
   competitors: []
   own_urls:
-    yanolja_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000109326
     yeogiuh_url: ''
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 62987959
     tripcom_city_id: 0
 
 # ── 한국남부 ─────────────────────────────────────────────────────────────────
@@ -525,14 +525,14 @@ properties:
   region: 제주도
   competitors: []
   own_urls:
-    yanolja_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000931
     yeogiuh_url: ''
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
+    tripcom_hotel_id: 988307
+    tripcom_city_id: 35796
 
 - name: 소노문 해운대
   id: haeundae
@@ -540,44 +540,44 @@ properties:
   region: 부산광역시 해운대구
   competitors: []
   own_urls:
-    yanolja_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10058110
     yeogiuh_url: ''
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
+    tripcom_hotel_id: 120174012
+    tripcom_city_id: 432
 
 - name: 파나크 영덕 바이 소노벨
   id: panak_yeongdeok
   display_region: 한국남부
-  region: ''
+  region: 경북 영덕군
   competitors: []
   own_urls:
-    yanolja_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10061469
     yeogiuh_url: ''
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 124743045
     tripcom_city_id: 0
 
 - name: 팔리티움 해운대 바이 쏠비치
   id: pallatium_haeundae
   display_region: 한국남부
-  region: ''
+  region: 부산광역시 해운대구
   competitors: []
   own_urls:
-    yanolja_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10067476
     yeogiuh_url: ''
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
     tripcom_hotel_id: 0
-    tripcom_city_id: 0
+    tripcom_city_id: 432
 
 # ── 아시아퍼시픽 ──────────────────────────────────────────────────────────────
 - name: 와이키키 리조트 하와이
@@ -592,7 +592,7 @@ properties:
     agoda_url: ''
     naver_id: ''
     homepage_store_cd: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 737619
     tripcom_city_id: 0
 
 
