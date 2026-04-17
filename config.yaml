@@ -596,20 +596,94 @@ properties:
     tripcom_city_id: 0
 
 
+
+# ── 골프장 ──────────────────────────────────────────────────────────────────────
+golf_properties:
 - name: 소노펠리체CC 하이퐁
   id: haiphong
   display_region: 아시아퍼시픽
-  region: ''
-  competitors: []
+  region: 베트남 하이퐁
+  type: golf
+  holes: 27
   own_urls:
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
-    naver_id: ''
-    homepage_store_cd: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
+    monkeytravel_id: ''
+    agl_field_id: 'EVT074'
+    baigolf_id: ''
+  competitors:
+  - name: 빈펄 골프 하이퐁
+    holes: 36
+    monkeytravel_id: ''
+    agl_field_id: 'ACA022'
+    baigolf_id: ''
+  - name: 드래곤 골프 링크스
+    holes: 27
+    monkeytravel_id: ''
+    agl_field_id: ''
+    baigolf_id: ''
+  - name: BRG 루비트리 골프
+    holes: 18
+    monkeytravel_id: ''
+    agl_field_id: ''
+    baigolf_id: ''
+  - name: FLC 하롱 골프
+    holes: 18
+    monkeytravel_id: ''
+    agl_field_id: ''
+    baigolf_id: ''
+
+- name: 소노펠리체CC 괌 망길라오
+  id: guam_mangilao
+  display_region: 아시아퍼시픽
+  region: 괌 망길라오
+  type: golf
+  holes: 18
+  own_urls:
+    monkeytravel_id: '1076788723'
+    agl_field_id: 'AGA001'
+    baigolf_id: ''
+  competitors:
+  - name: 레오팔레스 리조트 CC
+    holes: 36
+    monkeytravel_id: '1076788717'
+    agl_field_id: 'GU0001'
+    baigolf_id: ''
+  - name: 파인이스트 골프리조트
+    holes: 27
+    monkeytravel_id: ''
+    agl_field_id: 'RQ0011'
+    baigolf_id: ''
+  - name: 퍼시픽 컨트리클럽
+    holes: 18
+    monkeytravel_id: ''
+    agl_field_id: 'AGA008'
+    baigolf_id: ''
+
+- name: 소노펠리체CC 괌 탈로포포
+  id: guam_talofofo
+  display_region: 아시아퍼시픽
+  region: 괌 탈로포포
+  type: golf
+  holes: 18
+  own_urls:
+    monkeytravel_id: '1076788720'
+    agl_field_id: 'AGA002'
+    baigolf_id: ''
+  competitors:
+  - name: 레오팔레스 리조트 CC
+    holes: 36
+    monkeytravel_id: '1076788717'
+    agl_field_id: 'GU0001'
+    baigolf_id: ''
+  - name: 파인이스트 골프리조트
+    holes: 27
+    monkeytravel_id: ''
+    agl_field_id: 'RQ0011'
+    baigolf_id: ''
+  - name: 퍼시픽 컨트리클럽
+    holes: 18
+    monkeytravel_id: ''
+    agl_field_id: 'AGA008'
+    baigolf_id: ''
 
 crawl:
   days_ahead: 30
