@@ -318,8 +318,23 @@ properties:
     tripcom_city_id: 0
 - name: 소노벨 청송
   id: cheongsong
-  display_region: 한국중부
+  display_region: 한국남부
   region: 경북 청송군
+  competitors: []
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+
+- name: 르네블루 바이 쏠비치
+  id: reneblue_solbeach
+  display_region: 한국중부
+  region: ''
   competitors: []
   own_urls:
     yanolja_url: ''
@@ -534,6 +549,36 @@ properties:
     tripcom_hotel_id: 0
     tripcom_city_id: 0
 
+- name: 파나크 영덕 바이 소노벨
+  id: panak_yeongdeok
+  display_region: 한국남부
+  region: ''
+  competitors: []
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+
+- name: 팔리티움 해운대 바이 쏠비치
+  id: pallatium_haeundae
+  display_region: 한국남부
+  region: ''
+  competitors: []
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+
 # ── 아시아퍼시픽 ──────────────────────────────────────────────────────────────
 - name: 와이키키 리조트 하와이
   id: waikiki
@@ -567,6 +612,21 @@ properties:
 
 - name: 파나크
   id: panak
+  display_region: 아시아퍼시픽
+  region: ''
+  competitors: []
+  own_urls:
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+
+- name: 하이퐁
+  id: haiphong
   display_region: 아시아퍼시픽
   region: ''
   competitors: []
