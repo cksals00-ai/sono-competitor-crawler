@@ -98,7 +98,7 @@ REGION_LABELS = {
 }
 
 # display_region 기준 필터 순서 (config.yaml 의 display_region 필드 값)
-DISPLAY_REGION_ORDER = ["고양/서울", "비발디파크", "델피노", "충청/경상", "제주", "해외/기타"]
+DISPLAY_REGION_ORDER = ["아시아퍼시픽", "비발디파크", "한국중부", "한국남부"]
 
 
 def _get_display_region(prop: dict) -> str:
