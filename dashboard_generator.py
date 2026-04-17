@@ -243,6 +243,14 @@ def generate_dashboard(
 
     abs_path = str(Path(output_path).resolve())
     logger.info(f"대시보드 생성: {abs_path}")
+
+    # GitHub Pages 서빙 경로 (docs/index.html) 동기화
+    docs_path = Path(output_path).parent.parent / "docs" / "index.html"
+    if docs_path.parent.exists():
+        with open(docs_path, "w", encoding="utf-8") as f:
+            f.write(html)
+        logger.info(f"GitHub Pages 동기화: {docs_path}")
+
     return abs_path
 
 
@@ -301,9 +309,14 @@ def _is_promo(room_type: str) -> bool:
 
 
 def _clean_room_type(room_type: str) -> str:
-    """프로모션 접두어 제거 후 16자 이내로 반환"""
+    """프로모션 접두어 제거 후 16자 이내로 반환.
+    Trip.com 최저가 레이블('최저가', '최저가(참고)')은 실제 객실명 대신 최저가 기준임을 표시."""
     if not room_type:
         return ""
+    if room_type.strip() == "최저가":
+        return "최저가 기준"
+    if room_type.strip() == "최저가(참고)":
+        return "최저가(참고)"
     rt = room_type
     for pfx in PROMO_PREFIXES:
         rt = rt.replace(pfx, "").strip()

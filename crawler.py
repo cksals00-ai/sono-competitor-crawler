@@ -851,6 +851,8 @@ query domesticHotelRates(
   ) {
     nHotelId
     totalCount
+    reviewScore
+    reviewCount
     rates {
       roomId
       roomName
@@ -1020,6 +1022,16 @@ def crawl_naver(competitor: dict, checkin: str, checkout: str, cfg: dict) -> lis
         n_hotel_id = result.get("nHotelId") or hotel_id
         naver_url  = f"https://hotels.naver.com/{n_hotel_id}/hotel"
 
+        # 호텔 별점 (GraphQL이 지원하는 경우; 미지원 시 0)
+        try:
+            hotel_score = float(result.get("reviewScore") or 0)
+        except (TypeError, ValueError):
+            hotel_score = 0.0
+        try:
+            hotel_count = int(result.get("reviewCount") or 0)
+        except (TypeError, ValueError):
+            hotel_count = 0
+
         if not rates:
             logger.warning(f"[네이버호텔] {hotel_name} ({checkin}): 객실 데이터 없음")
             records.append(_make_record(
@@ -1064,6 +1076,8 @@ def crawl_naver(competitor: dict, checkin: str, checkout: str, cfg: dict) -> lis
                 availability="available" if price > 0 else "unknown",
                 url=naver_url,
                 is_promo=bool(features.get("isSecretDeal")),
+                review_score=hotel_score,
+                review_count=hotel_count,
             ))
 
         logger.info(f"[네이버호텔] {hotel_name} ({checkin}): {len(records)}건 수집")
@@ -1534,7 +1548,11 @@ def _parse_tripcom_city_prices(html: str) -> dict:
             price = info.get("price")
             if hotel_id and price:
                 try:
-                    prices[int(hotel_id)] = int(price)
+                    # commentScore: 10점 만점 (Trip.com 기본 포맷)
+                    raw_score = info.get("commentScore") or info.get("rating") or 0
+                    score = round(float(raw_score), 1) if raw_score else 0.0
+                    count = int(info.get("commentCount") or info.get("reviewCount") or 0)
+                    prices[int(hotel_id)] = {"price": int(price), "score": score, "count": count}
                 except (ValueError, TypeError):
                     pass
         return prices
@@ -1662,6 +1680,16 @@ def crawl_tripcom(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
     if city_id:
         city_prices = _fetch_tripcom_city_prices(city_id, checkin, checkout)
         if hotel_id in city_prices:
+            entry = city_prices[hotel_id]
+            # 구형 {hotel_id: price} 캐시와 신형 {hotel_id: dict} 모두 지원
+            if isinstance(entry, dict):
+                price_val = entry.get("price", 0)
+                score_val = entry.get("score", 0.0)
+                count_val = entry.get("count", 0)
+            else:
+                price_val = int(entry)
+                score_val = 0.0
+                count_val = 0
             return [PriceRecord(
                 crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 property_name="",
@@ -1671,9 +1699,11 @@ def crawl_tripcom(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
                 checkin_date=checkin,
                 checkout_date=checkout,
                 room_type="최저가",
-                price=city_prices[hotel_id],
+                price=price_val,
                 availability="available",
                 url=detail_url,
+                review_score=score_val,
+                review_count=count_val,
             )]
 
     # 2차 폴백: 호텔 상세 priceRange (날짜 비특정)
