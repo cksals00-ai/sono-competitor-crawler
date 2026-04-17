@@ -78,6 +78,34 @@ _tripcom_city_cache: dict = {}
 _holiday_cache: dict = {}
 
 
+# ---------------------------------------------------------------------------
+# 객실 카테고리 매칭 — 3채널(야놀자/네이버/Trip.com) 공통
+# ---------------------------------------------------------------------------
+
+# (카테고리명, 정규식 패턴)  — 더 구체적인 것을 앞에 배치
+_ROOM_CATEGORY_RULES: list = [
+    ("스위트",    r"스위트|suite"),
+    ("패밀리",    r"패밀리|family"),
+    ("프리미어",  r"프리미어|프리미엄|premier|premium"),
+    ("디럭스",    r"디럭스|deluxe|dlx"),
+    ("슈페리어",  r"슈페리어|superior"),
+    ("스탠다드",  r"스탠다드|standard|std"),
+    ("클래식",    r"클래식|classic"),
+    ("빌라",      r"빌라|villa|코티지|cottage"),
+    ("온돌",      r"온돌|ondol"),
+]
+
+
+def _categorize_room(room_type: str) -> str:
+    """room_type 문자열 → 표준 카테고리명. 매칭 안 되면 '' 반환."""
+    if not room_type or room_type in ("최저가", "최저가(참고)"):
+        return ""
+    for category, pattern in _ROOM_CATEGORY_RULES:
+        if re.search(pattern, room_type, re.IGNORECASE):
+            return category
+    return ""
+
+
 @dataclass
 class PriceRecord:
     crawled_at: str
@@ -88,6 +116,7 @@ class PriceRecord:
     checkin_date: str
     checkout_date: str
     room_type: str = ""
+    room_category: str = ""  # 자동 분류 카테고리 (스탠다드/디럭스/스위트 등)
     price: int = 0
     currency: str = "KRW"
     availability: str = "unknown"
@@ -97,6 +126,10 @@ class PriceRecord:
     is_promo: bool = False  # True = 프로모션/특가 진행중
     review_score: float = 0.0  # OTA 별점 (0 = 미수집, 1.0~10.0 범위)
     review_count: int = 0      # 리뷰 수
+
+    def __post_init__(self):
+        if not self.room_category and self.room_type:
+            self.room_category = _categorize_room(self.room_type)
 
 
 # ---------------------------------------------------------------------------
@@ -851,8 +884,6 @@ query domesticHotelRates(
   ) {
     nHotelId
     totalCount
-    reviewScore
-    reviewCount
     rates {
       roomId
       roomName
@@ -1514,6 +1545,96 @@ def crawl_sono_homepage(competitor: dict, checkin: str, checkout: str, cfg: dict
 # Trip.com 크롤러 (requests + SSR 파싱)
 # ---------------------------------------------------------------------------
 
+def _extract_balanced(text: str, start: int, open_char: str, close_char: str) -> int:
+    """JSON 중괄호/대괄호 균형 탐색 → 닫는 위치 반환 (없으면 -1)."""
+    depth = in_str = escape = 0
+    for pos, c in enumerate(text[start:], start):
+        if escape:
+            escape = 0
+        elif c == "\\" and in_str:
+            escape = 1
+        elif c == '"':
+            in_str = 1 - in_str
+        elif not in_str:
+            if c == open_char:
+                depth += 1
+            elif c == close_char:
+                depth -= 1
+                if depth == 0:
+                    return pos
+    return -1
+
+
+def _parse_tripcom_ibu_hotel(html: str) -> dict:
+    """window.IBU_HOTEL= 블록 추출 → dict. 파싱 실패 시 {} 반환."""
+    ibu_idx = html.find("window.IBU_HOTEL=")
+    if ibu_idx < 0:
+        return {}
+    seg = html[ibu_idx:]
+    start = seg.find("{")
+    if start < 0:
+        return {}
+    end = _extract_balanced(seg, start, "{", "}")
+    if end < 0:
+        return {}
+    try:
+        return json.loads(seg[start : end + 1])
+    except json.JSONDecodeError:
+        return {}
+
+
+def _parse_tripcom_detail_rooms(html: str) -> list:
+    """
+    Trip.com 호텔 상세 SSR (window.IBU_HOTEL)에서 객실 목록 파싱.
+    반환: [{"name": str, "price": int}, ...]  — 빈 리스트면 파싱 실패
+    """
+    data = _parse_tripcom_ibu_hotel(html)
+    if not data:
+        return []
+
+    # Trip.com SSR 상세 페이지의 가능한 객실 데이터 경로를 순서대로 시도
+    candidate_paths = [
+        # 경로 1: initData.hotelDetailInfo.roomInfo.roomTypeList
+        lambda d: d["initData"]["hotelDetailInfo"]["roomInfo"]["roomTypeList"],
+        # 경로 2: initData.roomInfo.roomTypeList
+        lambda d: d["initData"]["roomInfo"]["roomTypeList"],
+        # 경로 3: initData.hotelRoomInfo.roomList
+        lambda d: d["initData"]["hotelRoomInfo"]["roomList"],
+        # 경로 4: initData.hotelInfo.roomTypeList
+        lambda d: d["initData"]["hotelInfo"]["roomTypeList"],
+        # 경로 5: initData.roomTypeList
+        lambda d: d["initData"]["roomTypeList"],
+    ]
+
+    for path_fn in candidate_paths:
+        try:
+            room_list = path_fn(data)
+            if not isinstance(room_list, list):
+                continue
+            rooms = []
+            for room in room_list:
+                name = (
+                    room.get("roomName") or room.get("name") or
+                    room.get("roomTypeName") or ""
+                ).strip()
+                price = (
+                    room.get("lowestPrice") or room.get("price") or
+                    room.get("roomLowestPrice") or 0
+                )
+                try:
+                    price = int(price)
+                except (TypeError, ValueError):
+                    price = 0
+                if name and price > 0:
+                    rooms.append({"name": name, "price": price})
+            if rooms:
+                return rooms
+        except (KeyError, TypeError):
+            continue
+
+    return []
+
+
 def _parse_tripcom_city_prices(html: str) -> dict:
     """
     Trip.com 도시 목록 SSR 페이지에서 날짜별 최저가 추출.
@@ -1522,24 +1643,6 @@ def _parse_tripcom_city_prices(html: str) -> dict:
       - Format 2: "ErrorCode":0,"hotelList":[...] (inline BFF 응답)
     반환: {hotel_id(int): price(int)}  — 최대 10~12개 호텔
     """
-    def _extract_balanced(text, start, open_char, close_char):
-        depth = in_str = escape = 0
-        for pos, c in enumerate(text[start:], start):
-            if escape:
-                escape = 0
-            elif c == "\\" and in_str:
-                escape = 1
-            elif c == '"':
-                in_str = 1 - in_str
-            elif not in_str:
-                if c == open_char:
-                    depth += 1
-                elif c == close_char:
-                    depth -= 1
-                    if depth == 0:
-                        return pos
-        return -1
-
     def _hotels_from_list(hotel_list):
         prices = {}
         for hotel in hotel_list:
@@ -1659,11 +1762,52 @@ def _fetch_tripcom_pricerange(hotel_id: int, checkin: str, checkout: str) -> int
     return 0
 
 
+# 상세 페이지 객실 캐시: (hotel_id, checkin, checkout) → [{"name":str,"price":int}]
+_tripcom_detail_cache: dict = {}
+
+
+def _fetch_tripcom_detail_rooms(hotel_id: int, checkin: str, checkout: str) -> list:
+    """
+    Trip.com 호텔 상세 SSR → 실제 객실 목록 fetch (캐시 지원).
+    반환: [{"name": str, "price": int}, ...]  — 빈 리스트면 파싱 실패
+    """
+    cache_key = (hotel_id, checkin, checkout)
+    if cache_key in _tripcom_detail_cache:
+        return _tripcom_detail_cache[cache_key]
+
+    url = (
+        f"https://kr.trip.com/hotels/v2/detail/?hotelId={hotel_id}"
+        f"&checkin={checkin}&checkout={checkout}"
+        f"&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+    )
+    hdrs = {
+        "User-Agent": HEADERS["User-Agent"],
+        "Accept-Language": "ko-KR,ko;q=0.9",
+        "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
+        "Referer": "https://kr.trip.com/",
+    }
+    rooms = []
+    try:
+        resp = requests.get(url, headers=hdrs, timeout=20)
+        resp.raise_for_status()
+        rooms = _parse_tripcom_detail_rooms(resp.text)
+        if rooms:
+            logger.debug(f"[Trip.com] hotel {hotel_id} {checkin}: 객실 {len(rooms)}개 파싱 성공")
+        else:
+            logger.debug(f"[Trip.com] hotel {hotel_id} {checkin}: 상세 페이지 객실 데이터 없음")
+    except Exception as e:
+        logger.warning(f"[Trip.com] hotel {hotel_id} 상세 fetch 실패: {e}")
+
+    _tripcom_detail_cache[cache_key] = rooms
+    return rooms
+
+
 def crawl_tripcom(competitor: dict, checkin: str, checkout: str, cfg: dict) -> list:
     """
     Trip.com 가격 크롤러
-    1차: IBU_HOTEL 도시 목록 SSR → 날짜별 최저가 (top-10 호텔)
-    2차 폴백: 호텔 상세 페이지 schema.org priceRange → 참고 최저가
+    1차: 호텔 상세 SSR (window.IBU_HOTEL) → 실제 객실 목록 + 날짜별 가격
+    2차: IBU_HOTEL 도시 목록 SSR → 날짜별 최저가 (top-10~12 호텔, 캐시)
+    3차 폴백: 호텔 상세 schema.org priceRange → 참고 최저가
     """
     hotel_id = int(competitor.get("tripcom_hotel_id") or 0)
     if not hotel_id:
@@ -1676,7 +1820,27 @@ def crawl_tripcom(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
         f"&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
     )
 
-    # 1차: 도시 목록 SSR (날짜별 가격)
+    # 1차: 호텔 상세 SSR → 실제 객실 목록
+    detail_rooms = _fetch_tripcom_detail_rooms(hotel_id, checkin, checkout)
+    if detail_rooms:
+        return [
+            PriceRecord(
+                crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                property_name="",
+                property_id="",
+                competitor_name=competitor["name"],
+                ota="Trip.com",
+                checkin_date=checkin,
+                checkout_date=checkout,
+                room_type=room["name"],
+                price=room["price"],
+                availability="available",
+                url=detail_url,
+            )
+            for room in detail_rooms
+        ]
+
+    # 2차: 도시 목록 SSR (날짜별 최저가, 캐시)
     if city_id:
         city_prices = _fetch_tripcom_city_prices(city_id, checkin, checkout)
         if hotel_id in city_prices:
@@ -1706,7 +1870,7 @@ def crawl_tripcom(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
                 review_count=count_val,
             )]
 
-    # 2차 폴백: 호텔 상세 priceRange (날짜 비특정)
+    # 3차 폴백: priceRange (날짜 비특정)
     price = _fetch_tripcom_pricerange(hotel_id, checkin, checkout)
     if price:
         return [PriceRecord(
