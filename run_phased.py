@@ -363,7 +363,7 @@ def main():
     if args.phase is not None:
         run_phase(args.phase, temp_output=args.temp_output)
     else:
-        for p in [1, 2, 3, 4, 5]:
+        for p in [1, 4, 5]:
             run_phase(p)
 
         # 전체 phase 완료 후 Power BI RNS 수집
