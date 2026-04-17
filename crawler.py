@@ -110,10 +110,19 @@ def load_config(path: str = "config.yaml") -> dict:
 
 _DAYUSE_KEYWORDS = ("대실", "day use", "데이유즈", "dayuse")
 
+# "3시간 이용", "4시간 대실" 등 명확한 시간제 대실 패턴만 매칭.
+# "1시간 레이트 체크아웃"처럼 숙박 혜택으로 붙는 경우는 제외하기 위해
+# 이용/대실/룸/체류/패키지 단어가 뒤따르는 경우로 한정.
+_DAYUSE_HOUR_RE = re.compile(r'\d+\s*시간\s*(?:이용|대실|룸|체류|패키지)')
+
 def _is_dayuse(name: str) -> bool:
-    """객실명에 대실/day use 키워드 포함 여부 확인."""
+    """객실명에 대실/day use 키워드 또는 시간제 대실 패턴 포함 여부 확인."""
     lower = name.lower()
-    return any(kw in lower for kw in _DAYUSE_KEYWORDS)
+    if any(kw in lower for kw in _DAYUSE_KEYWORDS):
+        return True
+    if _DAYUSE_HOUR_RE.search(name):
+        return True
+    return False
 
 
 # ---------------------------------------------------------------------------
@@ -200,6 +209,10 @@ def _extract_rooms_from_decoded_chunk(decoded: str) -> list:
     """
     디코딩된 RSC 청크에서 bestPrice 섹션을 찾고
     역방향으로 roomTypeName을 연결하여 객실 리스트 반환.
+
+    대실(DayUse) 필터링:
+      priceInfos 배열 안의 useType 필드를 확인 — "DayUse"이면 스킵.
+      (야놀자 RSC 구조: "bestPrice":{"priceInfos":[null,{"useType":"DayUse"|"숙박",...}]})
     """
     rooms = []
     seen_names = set()
@@ -207,6 +220,11 @@ def _extract_rooms_from_decoded_chunk(decoded: str) -> list:
     for bp_m in re.finditer(r'"bestPrice"\s*:\s*\{', decoded):
         bp_start = bp_m.start()
         region = decoded[bp_start: bp_start + 600]
+
+        # ── useType 확인: DayUse이면 대실 → 스킵 ──────────────────────────
+        usetype_m = re.search(r'"useType"\s*:\s*"([^"]+)"', region)
+        if usetype_m and usetype_m.group(1) == "DayUse":
+            continue
 
         # bestPrice 안의 totalRate 추출
         rate_m = re.search(r'"totalRate"\s*:\s*"(\d[\d,]+)"', region)
