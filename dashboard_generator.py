@@ -94,8 +94,19 @@ REGION_LABELS = {
     "경북": ["경북"],
     "경남": ["경남"],
     "제주": ["제주"],
-    "해외": ["베트남", "Vietnam"],
+    "해외": ["베트남", "Vietnam", "미국", "하와이"],
 }
+
+# display_region 기준 필터 순서 (config.yaml 의 display_region 필드 값)
+DISPLAY_REGION_ORDER = ["고양/서울", "비발디파크", "델피노", "충청/경상", "제주", "해외/기타"]
+
+
+def _get_display_region(prop: dict) -> str:
+    """config prop의 display_region 우선, 없으면 region 문자열로 추정."""
+    dr = prop.get("display_region", "")
+    if dr:
+        return dr
+    return _get_region(prop.get("region", ""))
 
 
 # ── 설정·데이터 로드 ──────────────────────────────────────────────────────────
@@ -163,6 +174,7 @@ def _normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
         "체크인":     "checkin_date",
         "체크아웃":   "checkout_date",
         "객실유형":   "room_type",
+        "객실카테고리": "room_category",
         "판매가(원)": "price",
         "통화":      "currency",
         "판매상태":   "availability",
@@ -355,13 +367,15 @@ def _build_price_summary(df: pd.DataFrame, day_type: str = "전체") -> dict:
         else:
             row  = avail.loc[avail["price"].idxmin()]
             rt   = str(row.get("room_type", "") or "")
+            rc   = str(row.get("room_category", "") or "")
             is_p = bool(row.get("is_promo", False)) or _is_promo(rt)
             result[(prop, comp, ota)] = {
-                "min_price": int(row["price"]),
-                "min_date":  str(row["checkin_date"])[:10],
-                "sold_out":  False,
-                "room_type": rt,
-                "is_promo":  is_p,
+                "min_price":     int(row["price"]),
+                "min_date":      str(row["checkin_date"])[:10],
+                "sold_out":      False,
+                "room_type":     rt,
+                "room_category": rc,
+                "is_promo":      is_p,
             }
     return result
 
@@ -413,7 +427,7 @@ def _get_ota_url(entity: dict, ota: str) -> str:
         return entity.get("agoda_url", "")
     if ota == "네이버호텔":
         nid = entity.get("naver_id", "")
-        return f"https://hotel.naver.com/hotels/property/{nid}" if nid else ""
+        return f"https://hotels.naver.com/{nid}/hotel" if nid else ""
     if ota == "Trip.com":
         hotel_id = entity.get("tripcom_hotel_id", 0)
         city_id  = entity.get("tripcom_city_id", 0)
@@ -442,7 +456,7 @@ def _make_ota_link_url(base_url: str, ota: str, checkin: str) -> str:
     if ota == "Agoda":
         return f"{base_url}?checkIn={checkin}&checkOut={checkout}&adults=2&rooms=1"
     if ota == "네이버호텔":
-        return f"{base_url}?checkin={checkin}&checkout={checkout}&adult=2"
+        return f"{base_url}?checkIn={checkin}&checkOut={checkout}&adultCnt=2"
     if ota == "Trip.com":
         return f"{base_url}&checkin={checkin}&checkout={checkout}&adult=2&rooms=1"
     return base_url
@@ -543,8 +557,10 @@ def _render_price_cell(
             price_cls  = "own-price" if is_own else ""
             promo_html = ' <span class="badge-promo">특가</span>' if is_promo else ""
 
-            clean_rt   = _clean_room_type(room_type)
-            room_html  = f'<div class="room-type">{clean_rt}</div>' if clean_rt else ""
+            clean_rt      = _clean_room_type(room_type)
+            room_category = info.get("room_category", "")
+            cat_badge     = f' <span class="badge-category">{room_category}</span>' if room_category else ""
+            room_html     = f'<div class="room-type">{clean_rt}{cat_badge}</div>' if clean_rt else ""
 
             # 별점 인라인 표시: ₩92,000 ⭐4.8
             rating_html = (
@@ -843,7 +859,7 @@ def _render_property_card(
 ) -> str:
     prop_name    = prop["name"]
     region_str   = prop.get("region", "")
-    region_label = _get_region(region_str)
+    region_label = _get_display_region(prop)
     competitors  = prop.get("competitors", [])
     own_urls     = prop.get("own_urls", {})
     has_own      = any([
@@ -992,8 +1008,12 @@ def _render_html(
         for p in properties
     )
 
-    # 지역 필터 버튼
-    regions     = ["전체"] + sorted(set(_get_region(p.get("region", "")) for p in properties))
+    # 지역 필터 버튼 — display_region 기준, DISPLAY_REGION_ORDER 순서 유지
+    prop_regions = [_get_display_region(p) for p in properties]
+    region_set   = set(prop_regions)
+    ordered      = [r for r in DISPLAY_REGION_ORDER if r in region_set]
+    remaining    = sorted(r for r in region_set if r not in DISPLAY_REGION_ORDER)
+    regions      = ["전체"] + ordered + remaining
     filter_btns = "\n    ".join(
         f'<button class="filter-btn{"  active" if r == "전체" else ""}" data-region="{r}">{r}</button>'
         for r in regions
@@ -1086,6 +1106,7 @@ def _render_html(
     <span class="filter-group-label">요일</span>
     <div class="filter-bar">
     {dt_btns}
+    <span class="holiday-notice">※ 공휴일: 한국 공휴일 기준</span>
     </div>
   </div>
 </div>
@@ -1263,6 +1284,7 @@ body {
 .filter-btn:hover        { border-color: var(--accent); color: var(--accent); }
 .filter-btn.active       { background: var(--accent); border-color: var(--accent); color: #0d1117; font-weight: 700; }
 .filter-btn.dt-btn.active { background: var(--yellow); border-color: var(--yellow); color: #0d1117; font-weight: 700; }
+.holiday-notice { font-size: 0.75em; color: #888; align-self: center; white-space: nowrap; padding-left: 4px; }
 
 /* ── Legend bar ── */
 .legend-bar {
@@ -1427,6 +1449,21 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   margin-left: 3px;
   letter-spacing: .2px;
   vertical-align: middle;
+}
+
+/* ── Room category badge ── */
+.badge-category {
+  display: inline-block;
+  background: #2a3a4a;
+  color: #7db8e8;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 3px;
+  letter-spacing: .1px;
+  vertical-align: middle;
+  border: 1px solid #3a5068;
 }
 
 /* ── 별점 인라인 표시 (가격 바로 옆) ── */
