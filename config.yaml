@@ -646,7 +646,7 @@ golf_properties:
     agl_field_id: EVT074
     tigerbooking_prod_id: ''       # Tiger Booking 미등록
     tigerbooking_country: VN
-    monkey_product_id: ''
+    monkey_product_id: '1076765242'
     kkday_product_id: ''           # KKday 미등록
   competitors:
   - name: 드래곤 골프 링크스
