@@ -810,25 +810,25 @@ properties:
   display_region: 한국남부
   region: 부산광역시 해운대구
   competitors:
-  - name: 파라다이스호텔 부산
-    yanolja_url: ''
-    yeogiuh_url: ''
+  - name: 신라스테이 해운대
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3009094
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/45597
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     tripcom_hotel_id: 0
     tripcom_city_id: 432
-  - name: 시그니엘 부산
+  - name: 이비스 앰배서더 부산시티센터
     yanolja_url: ''
-    yeogiuh_url: ''
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6871
     booking_url: ''
     agoda_url: ''
     naver_id: ''
     tripcom_hotel_id: 0
     tripcom_city_id: 432
-  - name: 파크하얏트 부산
-    yanolja_url: ''
-    yeogiuh_url: ''
+  - name: 호텔농심
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000590
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6462
     booking_url: ''
     agoda_url: ''
     naver_id: ''
