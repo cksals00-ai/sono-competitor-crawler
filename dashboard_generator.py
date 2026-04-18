@@ -1542,17 +1542,18 @@ body {
   background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
-/* 채널 열 헤더 */
-.golf-th-chan   { min-width: 80px; text-align: left; }
-/* 경쟁사 열 헤더 */
-.golf-th-comp   { min-width: 160px; text-align: center; }
+/* 채널 열 헤더 (호텔 competitor-col 기준: min-width 120px) */
+.golf-th-chan   { min-width: 120px; text-align: left; }
+/* 경쟁사 열 헤더 (호텔 price-cell 기준: min-width 110px) */
+.golf-th-comp   { min-width: 110px; text-align: center; }
 th.golf-own-col { color: var(--accent); }
-/* 채널 이름 셀 */
+/* 채널 이름 셀 (호텔 competitor-name 기준: max-width 136px, word-break: keep-all) */
 td.golf-chan-col {
   color: var(--muted);
   font-size: 12px;
   font-weight: 600;
-  white-space: nowrap;
+  word-break: keep-all;
+  max-width: 136px;
   vertical-align: middle;
 }
 /* 가격 셀 공통 */
