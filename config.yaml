@@ -1,5 +1,5 @@
 # 소노호텔앤리조트 경쟁사 크롤러 설정
-# 최종 수정: 2026-04-17
+# 최종 수정: 2026-04-18
 #
 # 브랜드 체계:
 #   소노캄 (5성급) / 소노벨 (콘도형) / 소노문 (도심/부티크) / 소노펠리체 (프리미엄 콘도)
@@ -523,24 +523,17 @@ properties:
     homepage_store_cd: '16'
     tripcom_hotel_id: 22890741
     tripcom_city_id: 78911
+
 - name: 소노벨 청송
   id: cheongsong
   display_region: 한국남부
   region: 경북 청송군
   competitors:
-  - name: 그랜드 오크힐 리조트
-    yanolja_url: ''
-    yeogiuh_url: ''
+  - name: 주왕산 온천관광호텔
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10041107
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/68202
     booking_url: ''
-    agoda_url: ''
-    naver_id: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
-  - name: 주왕산관광호텔
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/juwangsan-spa-tourist-hotel/hotel/cheongsong-gun-kr.html
     naver_id: ''
     tripcom_hotel_id: 0
     tripcom_city_id: 0
@@ -559,22 +552,22 @@ properties:
   display_region: 한국중부
   region: 강원도 고성군
   competitors:
-  - name: 한화리조트 설악소라노
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
-    naver_id: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
   - name: 켄싱턴리조트 설악비치
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001057
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6737
+    booking_url: https://www.booking.com/hotel/kr/kensington-resort-seorak.html
+    agoda_url: https://www.agoda.com/ko-kr/kensington-resort-seorak-beach/hotel/sokcho-si-kr.html
     naver_id: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
+    tripcom_hotel_id: 3903903
+    tripcom_city_id: 35793
+  - name: 한화리조트 설악 쏘라노
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001403
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6426
+    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-seorak-sorano.html
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-seorak-sorano/hotel/sokcho-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 1015097
+    tripcom_city_id: 35793
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/1000109326
     yeogiuh_url: ''
@@ -810,29 +803,29 @@ properties:
   display_region: 한국남부
   region: 부산광역시 해운대구
   competitors:
-  - name: 파라다이스호텔 부산
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
+  - name: 파라다이스 호텔 부산
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001112
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6910
+    booking_url: https://www.booking.com/hotel/kr/paradise-busan.html
+    agoda_url: https://www.agoda.com/ko-kr/paradise-hotel-busan/hotel/busan-kr.html
     naver_id: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 689014
     tripcom_city_id: 432
-  - name: 시그니엘 부산
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
+  - name: 웨스틴 조선 부산
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000956
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6499
+    booking_url: https://www.booking.com/hotel/kr/the-westin-chosun-busan.html
+    agoda_url: https://www.agoda.com/ko-kr/the-westin-chosun-busan/hotel/busan-kr.html
     naver_id: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 992194
     tripcom_city_id: 432
-  - name: 파크하얏트 부산
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
+  - name: 그랜드 조선 부산
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000110883
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/66692
+    booking_url: https://www.booking.com/hotel/kr/grand-josun-busan.html
+    agoda_url: https://www.agoda.com/ko-kr/grand-josun-busan/hotel/busan-kr.html
     naver_id: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 67688375
     tripcom_city_id: 432
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/10058110
@@ -849,19 +842,19 @@ properties:
   display_region: 한국남부
   region: 경북 영덕군
   competitors:
-  - name: 그랜드 오크힐 리조트
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
+  - name: 영덕 힐링턴 리조트
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3009074
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/84131
+    booking_url: https://www.booking.com/hotel/kr/yeongdeok-hillington-resort-pension.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/healing-turn-condo/hotel/yeongdeok-gun-kr.html
     naver_id: ''
     tripcom_hotel_id: 0
     tripcom_city_id: 0
-  - name: 울진 기성오션리조트
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
+  - name: 영덕 시포트리조트
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10063261
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/65541
+    booking_url: https://www.booking.com/hotel/kr/siport-resort.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/siport-resort/hotel/yeongdeok-gun-kr.html
     naver_id: ''
     tripcom_hotel_id: 0
     tripcom_city_id: 0
@@ -880,29 +873,29 @@ properties:
   display_region: 한국남부
   region: 부산광역시 해운대구
   competitors:
-  - name: 파라다이스호텔 부산
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
+  - name: 파라다이스 호텔 부산
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001112
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6910
+    booking_url: https://www.booking.com/hotel/kr/paradise-busan.html
+    agoda_url: https://www.agoda.com/ko-kr/paradise-hotel-busan/hotel/busan-kr.html
     naver_id: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 689014
     tripcom_city_id: 432
-  - name: 시그니엘 부산
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
+  - name: 웨스틴 조선 부산
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000956
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6499
+    booking_url: https://www.booking.com/hotel/kr/the-westin-chosun-busan.html
+    agoda_url: https://www.agoda.com/ko-kr/the-westin-chosun-busan/hotel/busan-kr.html
     naver_id: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 992194
     tripcom_city_id: 432
-  - name: 파크하얏트 부산
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
+  - name: 그랜드 조선 부산
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000110883
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/66692
+    booking_url: https://www.booking.com/hotel/kr/grand-josun-busan.html
+    agoda_url: https://www.agoda.com/ko-kr/grand-josun-busan/hotel/busan-kr.html
     naver_id: ''
-    tripcom_hotel_id: 0
+    tripcom_hotel_id: 67688375
     tripcom_city_id: 432
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/10067476
@@ -920,39 +913,39 @@ properties:
   display_region: 아시아퍼시픽
   region: 미국 하와이
   competitors:
-  - name: 하얏트 리젠시 와이키키
+  - name: 아웃리거 와이키키 비치 리조트
     yanolja_url: ''
     yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
+    booking_url: https://www.booking.com/hotel/us/outrigger-waikiki-beach-resort.html
+    agoda_url: https://www.agoda.com/outrigger-waikiki-beach-resort_2/hotel/honolulu-hi-us.html
     naver_id: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
-  - name: 힐튼 하와이안빌리지
-    yanolja_url: ''
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
-    naver_id: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
+    tripcom_hotel_id: 1980254
+    tripcom_city_id: 757
   - name: 쉐라톤 와이키키
     yanolja_url: ''
     yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
+    booking_url: https://www.booking.com/hotel/us/sheraton-waikiki.html
+    agoda_url: https://www.agoda.com/sheraton-waikiki/hotel/honolulu-hi-us.html
     naver_id: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 0
+    tripcom_hotel_id: 1504760
+    tripcom_city_id: 757
+  - name: 로열 하와이안 럭셔리 컬렉션 리조트
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: https://www.booking.com/hotel/us/the-royal-hawaiian.html
+    agoda_url: https://www.agoda.com/the-royal-hawaiian-a-luxury-collection-resort-waikiki/hotel/honolulu-hi-us.html
+    naver_id: ''
+    tripcom_hotel_id: 1395182
+    tripcom_city_id: 757
   own_urls:
     yanolja_url: ''
     yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
+    booking_url: https://www.booking.com/hotel/us/waikiki-resort.html
+    agoda_url: https://www.agoda.com/waikiki-resort-hotel/hotel/honolulu-hi-us.html
     naver_id: ''
     homepage_store_cd: ''
     tripcom_hotel_id: 737619
-    tripcom_city_id: 0
+    tripcom_city_id: 757
 
 crawl:
   days_ahead: 30
