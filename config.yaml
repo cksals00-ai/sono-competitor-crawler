@@ -66,7 +66,39 @@ properties:
   id: sonobell_vivaldi
   display_region: 비발디파크
   region: 강원도 홍천군
-  competitors: []
+  competitors:
+  - name: 웰리힐리파크
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3016118
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7083
+    booking_url: https://www.booking.com/hotel/kr/wellihillipark-resort.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/welli-hilli-park-resort/hotel/hoengseong-gun-kr.html
+    naver_id: '11583166'
+    tripcom_hotel_id: 3462424
+    tripcom_city_id: 78905
+  - name: 휘닉스 리조트 평창
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001676
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/61569
+    booking_url: https://www.booking.com/hotel/kr/phoenic-park-the-amp-condominium.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/phoenix-pyeongchang-condominium/hotel/pyeongchang-gun-kr.html
+    naver_id: '11727758'
+    tripcom_hotel_id: 689087
+    tripcom_city_id: 35792
+  - name: 한화리조트 평창
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001426
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6728
+    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-pheonix-park.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-pyeongchang/hotel/pyeongchang-gun-kr.html
+    naver_id: '11727920'
+    tripcom_hotel_id: 6027694
+    tripcom_city_id: 35792
+  - name: 하이원리조트 힐콘도
+    yanolja_url: ''
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/57434
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/high1-resort/hotel/jeongseon-gun-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 21857914
+    tripcom_city_id: 61379
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/3013070
     yeogiuh_url: ''
@@ -81,7 +113,39 @@ properties:
   id: sonofelice_vivaldi
   display_region: 비발디파크
   region: 강원도 홍천군
-  competitors: []
+  competitors:
+  - name: 웰리힐리파크
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3016118
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7083
+    booking_url: https://www.booking.com/hotel/kr/wellihillipark-resort.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/welli-hilli-park-resort/hotel/hoengseong-gun-kr.html
+    naver_id: '11583166'
+    tripcom_hotel_id: 3462424
+    tripcom_city_id: 78905
+  - name: 휘닉스 리조트 평창
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001676
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/61569
+    booking_url: https://www.booking.com/hotel/kr/phoenic-park-the-amp-condominium.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/phoenix-pyeongchang-condominium/hotel/pyeongchang-gun-kr.html
+    naver_id: '11727758'
+    tripcom_hotel_id: 689087
+    tripcom_city_id: 35792
+  - name: 한화리조트 평창
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001426
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6728
+    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-pheonix-park.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-pyeongchang/hotel/pyeongchang-gun-kr.html
+    naver_id: '11727920'
+    tripcom_hotel_id: 6027694
+    tripcom_city_id: 35792
+  - name: 하이원리조트 힐콘도
+    yanolja_url: ''
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/57434
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/high1-resort/hotel/jeongseon-gun-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 21857914
+    tripcom_city_id: 61379
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/3007706
     yeogiuh_url: ''
@@ -96,7 +160,39 @@ properties:
   id: sonofelice_village_vivaldi
   display_region: 비발디파크
   region: 강원도 홍천군
-  competitors: []
+  competitors:
+  - name: 웰리힐리파크
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3016118
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7083
+    booking_url: https://www.booking.com/hotel/kr/wellihillipark-resort.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/welli-hilli-park-resort/hotel/hoengseong-gun-kr.html
+    naver_id: '11583166'
+    tripcom_hotel_id: 3462424
+    tripcom_city_id: 78905
+  - name: 휘닉스 리조트 평창
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001676
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/61569
+    booking_url: https://www.booking.com/hotel/kr/phoenic-park-the-amp-condominium.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/phoenix-pyeongchang-condominium/hotel/pyeongchang-gun-kr.html
+    naver_id: '11727758'
+    tripcom_hotel_id: 689087
+    tripcom_city_id: 35792
+  - name: 한화리조트 평창
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001426
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6728
+    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-pheonix-park.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-pyeongchang/hotel/pyeongchang-gun-kr.html
+    naver_id: '11727920'
+    tripcom_hotel_id: 6027694
+    tripcom_city_id: 35792
+  - name: 하이원리조트 힐콘도
+    yanolja_url: ''
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/57434
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/high1-resort/hotel/jeongseon-gun-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 21857914
+    tripcom_city_id: 61379
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/3009615
     yeogiuh_url: ''
@@ -229,7 +325,31 @@ properties:
   id: sonobell_delpino
   display_region: 한국중부
   region: 강원 동해시
-  competitors: []
+  competitors:
+  - name: 한화리조트 동해
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001429
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6461
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-donghae/hotel/donghae-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+  - name: 한화리조트 설악
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001428
+    yeogiuh_url: ''
+    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-seorak.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-seorak/hotel/sokcho-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 1015097
+    tripcom_city_id: 35793
+  - name: 켄싱턴리조트 설악밸리
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000103524
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/kensington-resort-seorak-valley/hotel/sokcho-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 51809324
+    tripcom_city_id: 78910
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/3000934
     yeogiuh_url: ''
@@ -244,7 +364,31 @@ properties:
   id: sonofelice_delpino
   display_region: 한국중부
   region: 강원 동해시
-  competitors: []
+  competitors:
+  - name: 한화리조트 동해
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001429
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6461
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-donghae/hotel/donghae-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+  - name: 한화리조트 설악
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001428
+    yeogiuh_url: ''
+    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-seorak.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-seorak/hotel/sokcho-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 1015097
+    tripcom_city_id: 35793
+  - name: 켄싱턴리조트 설악밸리
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000103524
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/kensington-resort-seorak-valley/hotel/sokcho-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 51809324
+    tripcom_city_id: 78910
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/10040685
     yeogiuh_url: ''
@@ -259,7 +403,31 @@ properties:
   id: sonofelice_village_delpino
   display_region: 한국중부
   region: 강원 동해시
-  competitors: []
+  competitors:
+  - name: 한화리조트 동해
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001429
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6461
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-donghae/hotel/donghae-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+  - name: 한화리조트 설악
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001428
+    yeogiuh_url: ''
+    booking_url: https://www.booking.com/hotel/kr/hanwha-resort-seorak.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/hanwha-resort-seorak/hotel/sokcho-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 1015097
+    tripcom_city_id: 35793
+  - name: 켄싱턴리조트 설악밸리
+    yanolja_url: https://nol.yanolja.com/stay/domestic/1000103524
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/kensington-resort-seorak-valley/hotel/sokcho-si-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 51809324
+    tripcom_city_id: 78910
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/10043462
     yeogiuh_url: ''
@@ -359,7 +527,23 @@ properties:
   id: cheongsong
   display_region: 한국남부
   region: 경북 청송군
-  competitors: []
+  competitors:
+  - name: 그랜드 오크힐 리조트
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+  - name: 주왕산관광호텔
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/3009871
     yeogiuh_url: ''
@@ -374,7 +558,23 @@ properties:
   id: reneblue_solbeach
   display_region: 한국중부
   region: 강원도 고성군
-  competitors: []
+  competitors:
+  - name: 한화리조트 설악소라노
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+  - name: 켄싱턴리조트 설악비치
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/1000109326
     yeogiuh_url: ''
@@ -562,7 +762,39 @@ properties:
   id: sonobell_jeju
   display_region: 한국남부
   region: 제주도
-  competitors: []
+  competitors:
+  - name: 해비치 호텔앤리조트 제주
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001286
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6654
+    booking_url: https://www.booking.com/hotel/kr/haevichi.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/haevichi-hotel-jeju/hotel/jeju-island-kr.html
+    naver_id: '988329'
+    tripcom_hotel_id: 988329
+    tripcom_city_id: 35796
+  - name: 휘닉스 아일랜드 섭지코지
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001109
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6766
+    booking_url: https://www.booking.com/hotel/kr/phoenix-island.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/phoenix-island-seongsan/hotel/jeju-island-kr.html
+    naver_id: '6475676'
+    tripcom_hotel_id: 6475676
+    tripcom_city_id: 35796
+  - name: 제주 신화월드 호텔앤리조트
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3015955
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/54798
+    booking_url: https://www.booking.com/hotel/kr/sinhwagwan-jejusinhwaweoldeu-aen-rijoteu.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/jeju-shinhwa-world-shinhwa-resort/hotel/jeju-island-kr.html
+    naver_id: '25673737'
+    tripcom_hotel_id: 25673737
+    tripcom_city_id: 35796
+  - name: 제주 부영호텔&리조트
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3016760
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/11964
+    booking_url: https://www.booking.com/hotel/kr/jeju-booyoung-amp-resort-seogwiposi.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/jeju-booyoung-hotel-resort/hotel/jeju-island-kr.html
+    naver_id: '3912580'
+    tripcom_hotel_id: 3912580
+    tripcom_city_id: 35796
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/3000931
     yeogiuh_url: ''
@@ -577,7 +809,31 @@ properties:
   id: haeundae
   display_region: 한국남부
   region: 부산광역시 해운대구
-  competitors: []
+  competitors:
+  - name: 파라다이스호텔 부산
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 432
+  - name: 시그니엘 부산
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 432
+  - name: 파크하얏트 부산
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 432
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/10058110
     yeogiuh_url: ''
@@ -592,7 +848,23 @@ properties:
   id: panak_yeongdeok
   display_region: 한국남부
   region: 경북 영덕군
-  competitors: []
+  competitors:
+  - name: 그랜드 오크힐 리조트
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+  - name: 울진 기성오션리조트
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/10061469
     yeogiuh_url: ''
@@ -607,7 +879,31 @@ properties:
   id: pallatium_haeundae
   display_region: 한국남부
   region: 부산광역시 해운대구
-  competitors: []
+  competitors:
+  - name: 파라다이스호텔 부산
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 432
+  - name: 시그니엘 부산
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 432
+  - name: 파크하얏트 부산
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 432
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/10067476
     yeogiuh_url: ''
@@ -623,7 +919,31 @@ properties:
   id: waikiki
   display_region: 아시아퍼시픽
   region: 미국 하와이
-  competitors: []
+  competitors:
+  - name: 하얏트 리젠시 와이키키
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+  - name: 힐튼 하와이안빌리지
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
+  - name: 쉐라톤 와이키키
+    yanolja_url: ''
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 0
   own_urls:
     yanolja_url: ''
     yeogiuh_url: ''
