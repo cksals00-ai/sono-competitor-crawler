@@ -373,7 +373,23 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
                         },
                     }
                 }
-            }
+            },
+            {
+                "Condition": {
+                    "Comparison": {
+                        "ComparisonKind": 0,  # Equal
+                        "Left": {
+                            "Column": {
+                                "Expression": {"SourceRef": {"Source": "d1"}},
+                                "Property": date_column,
+                            }
+                        },
+                        "Right": {
+                            "Literal": {"Value": literal_value}
+                        },
+                    }
+                }
+            },
         ]
         sem_cmd = (
             query_body["queries"][0]["Query"]["Commands"][0]
@@ -646,26 +662,52 @@ def to_channel_sales_format(data: dict, stay_month: str | None = None) -> dict:
     else:
         label = f"{year}년 누적 (Power BI)"
 
-    # 전체 채널 목록 (정규화된 이름)
+    # 전체 채널 목록 (정규화된 이름, OTA/GOTA + RNS>0 필터)
     all_channels_set: set[str] = set()
     for prop_data in data["properties"].values():
-        for raw_ch in prop_data["channels"]:
+        for raw_ch, ch_data in prop_data["channels"].items():
+            if not (raw_ch.startswith("OTA") or raw_ch.startswith("GOTA")):
+                continue
+            if (ch_data.get("rns") or 0) <= 0:
+                continue
             normalized = CHANNEL_NAME_MAP.get(raw_ch, raw_ch)
             all_channels_set.add(normalized)
-    all_channels = sorted(all_channels_set)
+
+    # 채널 목록을 전체 RNS 합계 기준 내림차순 정렬
+    channel_total_rns: dict[str, int] = {}
+    for raw_ch, ch_data in data["channels_summary"].items():
+        if not (raw_ch.startswith("OTA") or raw_ch.startswith("GOTA")):
+            continue
+        normalized = CHANNEL_NAME_MAP.get(raw_ch, raw_ch)
+        channel_total_rns[normalized] = (
+            channel_total_rns.get(normalized, 0) + (ch_data.get("total_rns") or 0)
+        )
+    all_channels = sorted(
+        all_channels_set,
+        key=lambda ch: channel_total_rns.get(ch, 0),
+        reverse=True,
+    )
 
     properties_out = []
     for raw_prop, prop_data in data["properties"].items():
         display_name = PROPERTY_NAME_MAP.get(raw_prop, raw_prop)
 
-        # 채널별 RNS
+        # 채널별 RNS (OTA/GOTA + RNS>0 필터, RNS 내림차순 정렬)
         channels_out: dict[str, dict] = {}
         for raw_ch, ch_data in prop_data["channels"].items():
+            if not (raw_ch.startswith("OTA") or raw_ch.startswith("GOTA")):
+                continue
+            rns = ch_data.get("rns") or 0
+            if rns <= 0:
+                continue
             normalized = CHANNEL_NAME_MAP.get(raw_ch, raw_ch)
             channels_out[normalized] = {
-                "rns":  ch_data.get("rns") or 0,
+                "rns":  rns,
                 "prev": ch_data.get("rns_ly") or 0,
             }
+        channels_out = dict(
+            sorted(channels_out.items(), key=lambda x: x[1]["rns"], reverse=True)
+        )
 
         properties_out.append({
             "key":            raw_prop,
