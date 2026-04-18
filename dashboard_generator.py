@@ -248,18 +248,19 @@ def generate_dashboard(
     # 전일 날짜 레이블 (범례용)
     prev_date = ""
     if has_prev and "crawled_at" in prev_df.columns:
-        raw = str(prev_df["crawled_at"].max())[:10]
+        _prev_ca = prev_df["crawled_at"].dropna().astype(str)
+        raw = str(_prev_ca.max())[:10] if len(_prev_ca) > 0 else ""
         try:
             pd_ = datetime.strptime(raw, "%Y-%m-%d")
             prev_date = f"{pd_.month}/{pd_.day}"
         except Exception:
             prev_date = raw
 
-    crawled_at = (
-        str(df["crawled_at"].max())
-        if not df.empty and "crawled_at" in df.columns
-        else ""
-    )
+    if not df.empty and "crawled_at" in df.columns:
+        _ca = df["crawled_at"].dropna().astype(str)
+        crawled_at = str(_ca.max()) if len(_ca) > 0 else ""
+    else:
+        crawled_at = ""
 
     # 경쟁사별 OTA 별점 요약 (review_score 컬럼이 있을 때만)
     review_summary = _build_review_summary(df)
