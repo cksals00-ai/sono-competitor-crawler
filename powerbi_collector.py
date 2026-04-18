@@ -348,6 +348,15 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
 
     # 투숙월 필터 삽입
     if stay_month:
+        # YYYYMM(6자리) 형식이면 월 번호만 추출, 그 외는 그대로 사용
+        if len(stay_month) == 6 and stay_month.isdigit():
+            month_int = int(stay_month[4:6])
+            literal_value = f"{month_int}L"  # Int64 리터럴
+            log_val = f"{month_int} (정수)"
+        else:
+            literal_value = f"'{stay_month}'"
+            log_val = stay_month
+
         where_clause = [
             {
                 "Condition": {
@@ -360,7 +369,7 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
                             }
                         },
                         "Right": {
-                            "Literal": {"Value": f"'{stay_month}'"}
+                            "Literal": {"Value": literal_value}
                         },
                     }
                 }
@@ -371,7 +380,7 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
             ["SemanticQueryDataShapeCommand"]["Query"]
         )
         sem_cmd["Where"] = where_clause
-        logger.info(f"투숙월 필터 적용: {date_column} = '{stay_month}'")
+        logger.info(f"투숙월 필터 적용: {date_column} = {log_val}")
 
     return query_body
 
