@@ -230,7 +230,7 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
 
     Args:
         stay_month:  "YYYYMM" 형식의 투숙월 필터 (None이면 전체 누적)
-        date_column: data_raw 테이블에서 투숙월을 나타내는 컬럼명 (기본: "투숙월")
+        date_column: data_raw 및 data_lastraw 테이블의 투숙월 컬럼명 (기본: "월")
     """
     query_body: dict = {
         "version": "1.0.0",
@@ -358,6 +358,7 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
             log_val = stay_month
 
         where_clause = [
+            # TY: data_raw.월 = month
             {
                 "Condition": {
                     "Comparison": {
@@ -373,14 +374,31 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
                         },
                     }
                 }
-            }
+            },
+            # LY: data_lastraw.월 = month (전년동월 필터)
+            {
+                "Condition": {
+                    "Comparison": {
+                        "ComparisonKind": 0,  # Equal
+                        "Left": {
+                            "Column": {
+                                "Expression": {"SourceRef": {"Source": "d1"}},
+                                "Property": date_column,
+                            }
+                        },
+                        "Right": {
+                            "Literal": {"Value": literal_value}
+                        },
+                    }
+                }
+            },
         ]
         sem_cmd = (
             query_body["queries"][0]["Query"]["Commands"][0]
             ["SemanticQueryDataShapeCommand"]["Query"]
         )
         sem_cmd["Where"] = where_clause
-        logger.info(f"투숙월 필터 적용: {date_column} = {log_val}")
+        logger.info(f"투숙월 필터 적용: data_raw.{date_column} = data_lastraw.{date_column} = {log_val}")
 
     return query_body
 
@@ -646,21 +664,35 @@ def to_channel_sales_format(data: dict, stay_month: str | None = None) -> dict:
     else:
         label = f"{year}년 누적 (Power BI)"
 
-    # 전체 채널 목록 (정규화된 이름)
-    all_channels_set: set[str] = set()
+    # OTA/GOTA 거래처만 취합 + 채널별 총 RNS 집계
+    channel_total_rns: dict[str, int] = {}
     for prop_data in data["properties"].values():
-        for raw_ch in prop_data["channels"]:
+        for raw_ch, ch_data in prop_data["channels"].items():
+            if not (raw_ch.startswith("OTA") or raw_ch.startswith("GOTA")):
+                continue
             normalized = CHANNEL_NAME_MAP.get(raw_ch, raw_ch)
-            all_channels_set.add(normalized)
-    all_channels = sorted(all_channels_set)
+            channel_total_rns[normalized] = (
+                channel_total_rns.get(normalized, 0) + (ch_data.get("rns") or 0)
+            )
+
+    # 실적 없는 채널 제거 + RNS 내림차순 정렬
+    all_channels = [
+        ch
+        for ch, total in sorted(
+            channel_total_rns.items(), key=lambda x: x[1], reverse=True
+        )
+        if total > 0
+    ]
 
     properties_out = []
     for raw_prop, prop_data in data["properties"].items():
         display_name = PROPERTY_NAME_MAP.get(raw_prop, raw_prop)
 
-        # 채널별 RNS
+        # 채널별 RNS — OTA/GOTA 거래처만 포함
         channels_out: dict[str, dict] = {}
         for raw_ch, ch_data in prop_data["channels"].items():
+            if not (raw_ch.startswith("OTA") or raw_ch.startswith("GOTA")):
+                continue
             normalized = CHANNEL_NAME_MAP.get(raw_ch, raw_ch)
             channels_out[normalized] = {
                 "rns":  ch_data.get("rns") or 0,
