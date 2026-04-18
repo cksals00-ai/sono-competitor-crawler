@@ -107,6 +107,45 @@ properties:
     tripcom_hotel_id: 100919564
     tripcom_city_id: 72360
 
+- name: 소노벨 양평
+  id: yangpyeong
+  display_region: 비발디파크
+  region: 경기도 양평군
+  competitors:
+  - name: 블룸비스타 호텔
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000806
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6833
+    booking_url: https://www.booking.com/hotel/kr/hyeondae-beulrumbiseuta.ko.html
+    agoda_url: https://www.agoda.com/ko-kr/bloomvista-yangpyeong/hotel/yangpyeong-gun-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 8580755
+    tripcom_city_id: 62228
+  - name: 더스타휴 골프&리조트
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3013443
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/63662
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 62228
+  - name: 쉐르빌 온천관광호텔
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10046363
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/75379
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    tripcom_hotel_id: 10718793
+    tripcom_city_id: 62228
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000933
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/6573
+    booking_url: ''
+    agoda_url: https://www.agoda.com/ko-kr/daemyung-resort-yangpyeong/hotel/yangpyeong-gun-kr.html
+    naver_id: ''
+    homepage_store_cd: '03'
+    tripcom_hotel_id: 5073863
+    tripcom_city_id: 62228
+
 # ── 아시아퍼시픽 ──────────────────────────────────────────────────────────────
 - name: 소노캄 고양
   id: goyang
@@ -184,6 +223,51 @@ properties:
     naver_id: ''
     homepage_store_cd: CALM_DP
     tripcom_hotel_id: 3695339
+    tripcom_city_id: 78910
+
+- name: 소노벨 델피노
+  id: sonobell_delpino
+  display_region: 한국중부
+  region: 강원 동해시
+  competitors: []
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3000934
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
+    tripcom_city_id: 78910
+
+- name: 소노펠리체 델피노
+  id: sonofelice_delpino
+  display_region: 한국중부
+  region: 강원 동해시
+  competitors: []
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10040685
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 80329879
+    tripcom_city_id: 78910
+
+- name: 소노펠리체 빌리지 델피노
+  id: sonofelice_village_delpino
+  display_region: 한국중부
+  region: 강원 동해시
+  competitors: []
+  own_urls:
+    yanolja_url: https://nol.yanolja.com/stay/domestic/10043462
+    yeogiuh_url: ''
+    booking_url: ''
+    agoda_url: ''
+    naver_id: ''
+    homepage_store_cd: ''
+    tripcom_hotel_id: 0
     tripcom_city_id: 78910
 
 - name: 소노벨 천안
@@ -271,51 +355,6 @@ properties:
     homepage_store_cd: '16'
     tripcom_hotel_id: 22890741
     tripcom_city_id: 78911
-
-- name: 소노벨 델피노
-  id: sonobell_delpino
-  display_region: 한국중부
-  region: 강원 동해시
-  competitors: []
-  own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/3000934
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
-    naver_id: ''
-    homepage_store_cd: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 78910
-
-- name: 소노펠리체 델피노
-  id: sonofelice_delpino
-  display_region: 한국중부
-  region: 강원 동해시
-  competitors: []
-  own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/10040685
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
-    naver_id: ''
-    homepage_store_cd: ''
-    tripcom_hotel_id: 80329879
-    tripcom_city_id: 78910
-
-- name: 소노펠리체 빌리지 델피노
-  id: sonofelice_village_delpino
-  display_region: 한국중부
-  region: 강원 동해시
-  competitors: []
-  own_urls:
-    yanolja_url: https://nol.yanolja.com/stay/domestic/10043462
-    yeogiuh_url: ''
-    booking_url: ''
-    agoda_url: ''
-    naver_id: ''
-    homepage_store_cd: ''
-    tripcom_hotel_id: 0
-    tripcom_city_id: 78910
 - name: 소노벨 청송
   id: cheongsong
   display_region: 한국남부
