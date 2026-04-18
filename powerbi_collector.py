@@ -14,11 +14,11 @@ URL: https://app.powerbi.com/view?r=eyJrIjoiZWMwYmUyOTUtODg4MC00MmRkLWIyYWMtMzIx
   - data/powerbi_rns_latest.json     (항상 최신 덮어쓰기)
 
 실행:
-  python powerbi_collector.py
-  python powerbi_collector.py --output-dir ./data --pretty
+  python powerbi_collector.py                                # 당월 투숙기준 (기본)
+  python powerbi_collector.py --stay-month 202604            # 4월 투숙기준
+  python powerbi_collector.py --cumulative                   # 연간 누적
   python powerbi_collector.py --discover                     # 스키마/페이지 탐색
-  python powerbi_collector.py --stay-month 202604            # 4월 투숙기준 데이터
-  python powerbi_collector.py --stay-month 202604 --date-column 투숙월
+  python powerbi_collector.py --output-dir ./data --pretty
 """
 
 import json
@@ -734,9 +734,19 @@ def collect(
         output_dir:           저장 디렉토리
         pretty:               JSON 들여쓰기 여부
         update_channel_sales: True이면 channel_sales_data.json도 갱신
-        stay_month:           "YYYYMM" 형식 투숙월 필터 (None이면 전체 누적)
-        date_column:          data_raw 테이블의 날짜 컬럼명 (기본: "투숙월")
+        stay_month:           "YYYYMM" 형식 투숙월 필터.
+                              None이면 당월 자동 적용. "0"이면 누적(필터 없음).
+        date_column:          data_raw 테이블의 날짜 컬럼명 (기본: "월")
     """
+    # 기본값: 당월 자동 적용
+    if stay_month is None:
+        now = datetime.now()
+        stay_month = f"{now.year}{now.month:02d}"
+        logger.info(f"투숙월 미지정 → 당월({stay_month}) 자동 적용")
+    elif stay_month == "0":
+        stay_month = None  # 누적 모드
+        logger.info("누적 모드 (월 필터 없음)")
+
     cluster_uri = get_cluster_uri()
     apim        = _apim_url(cluster_uri)
     logger.info(f"APIM 엔드포인트: {apim}")
@@ -800,7 +810,9 @@ if __name__ == "__main__":
     parser.add_argument("--discover",             action="store_true",
                         help="스키마/페이지 탐색 후 종료 (데이터 수집 없음)")
     parser.add_argument("--stay-month",           default=None, metavar="YYYYMM",
-                        help="투숙월 필터 (예: 202604). 없으면 전체 누적")
+                        help="투숙월 필터 (예: 202604). 미지정시 당월 자동 적용")
+    parser.add_argument("--cumulative",           action="store_true",
+                        help="연간 누적 데이터 수집 (월 필터 없음)")
     parser.add_argument("--date-column",          default="월",
                         help="data_raw 테이블의 월 컬럼명 (기본: 월, --discover로 확인 가능)")
     args = parser.parse_args()
@@ -811,11 +823,12 @@ if __name__ == "__main__":
     if args.discover:
         discover_schema(apim_base)
     else:
+        stay_month = "0" if args.cumulative else args.stay_month
         result = collect(
             output_dir=args.output_dir,
             pretty=not args.no_pretty,
             update_channel_sales=args.update_channel_sales,
-            stay_month=args.stay_month,
+            stay_month=stay_month,
             date_column=args.date_column,
         )
 
