@@ -1002,7 +1002,7 @@ def _render_review_cell(comp_name: str, review_summary: dict) -> str:
 
 
 def _render_golf_property_card(property_name: str, golf_df: pd.DataFrame) -> str:
-    """골프 사업장 카드 HTML 생성."""
+    """골프 사업장 카드 HTML 생성 - 경쟁사를 열(column)로 배치, 호텔 카드와 동일한 스타일."""
     prop_df = golf_df[golf_df["property_name"] == property_name].copy()
     if prop_df.empty:
         return ""
@@ -1014,78 +1014,105 @@ def _render_golf_property_card(property_name: str, golf_df: pd.DataFrame) -> str
     }
     region = next((v for k, v in region_map.items() if k in property_name), "")
 
-    channels = sorted(prop_df["channel"].dropna().unique().tolist())
+    # 경쟁사를 열(column)로 배치: 자사 먼저, 이후 경쟁사 가나다순
     all_comps = prop_df["competitor_name"].dropna().unique().tolist()
     own_comps = [c for c in all_comps if c == "자사"]
     other_comps = sorted([c for c in all_comps if c != "자사"])
     competitors_ordered = own_comps + other_comps
 
+    # 채널을 행(row)으로 배치
+    channel_order = ["몽키트래블", "AGL", "KKday"]
+    present_channels = prop_df["channel"].dropna().unique().tolist()
+    channels = [ch for ch in channel_order if ch in present_channels]
+    channels += [ch for ch in present_channels if ch not in channel_order]
+
     weekday_df = prop_df[prop_df["day_of_week"] == "주중"]
     weekend_df = prop_df[prop_df["day_of_week"] == "주말"]
 
-    rows = []
-    for comp in competitors_ordered:
-        comp_df = prop_df[prop_df["competitor_name"] == comp]
-        is_own = comp == "자사"
-        badge = '<span class="badge-sono">자사</span>' if is_own else ""
-        row_cls = ' class="own-row"' if is_own else ""
+    def _min_krw(sub):
+        if sub.empty:
+            return None
+        v = sub["green_fee_krw"].min()
+        return None if pd.isna(v) else int(v)
 
-        for (channel, course_name), grp in comp_df.groupby(["channel", "course_name"], sort=True):
-            holes = grp["holes"].dropna()
+    def _min_usd(sub):
+        if sub.empty:
+            return None
+        v = sub["green_fee_usd"].min()
+        return None if pd.isna(v) else round(float(v), 0)
+
+    def _price_html(krw, usd):
+        if krw is None:
+            return "<span class='golf-na'>-</span>"
+        s = f"{krw:,}원"
+        if usd:
+            s += f'<span class="golf-usd"> (${usd:.0f})</span>'
+        return s
+
+    # 헤더 행: 채널 열 + 경쟁사별 열
+    comp_header_cells = ""
+    for comp in competitors_ordered:
+        is_own = comp == "자사"
+        if is_own:
+            badge = '<span class="badge-sono">자사</span>'
+            comp_header_cells += f'<th class="golf-th-comp golf-own-col">{badge}{property_name}</th>'
+        else:
+            comp_header_cells += f'<th class="golf-th-comp">{comp}</th>'
+
+    # 데이터 행: 채널별 1행, 각 셀에 코스명+주중/주말 가격
+    rows = []
+    for channel in channels:
+        cells = f'<td class="golf-chan-col">{channel}</td>'
+        for comp in competitors_ordered:
+            is_own = comp == "자사"
+            cell_cls = "golf-cell" + (" golf-own-cell" if is_own else "")
+
+            sub = prop_df[
+                (prop_df["competitor_name"] == comp) &
+                (prop_df["channel"] == channel)
+            ]
+            if sub.empty:
+                cells += f'<td class="{cell_cls} golf-na-cell">&#8212;</td>'
+                continue
+
+            course_name = sub["course_name"].iloc[0]
+            holes = sub["holes"].dropna()
             holes_str = f" {int(holes.iloc[0])}H" if not holes.empty else ""
 
-            wkd = weekday_df[
-                (weekday_df["competitor_name"] == comp) &
-                (weekday_df["channel"] == channel) &
-                (weekday_df["course_name"] == course_name)
-            ]
-            wknd = weekend_df[
-                (weekend_df["competitor_name"] == comp) &
-                (weekend_df["channel"] == channel) &
-                (weekend_df["course_name"] == course_name)
-            ]
-
-            def _min_krw(sub):
-                if sub.empty:
-                    return None
-                v = sub["green_fee_krw"].min()
-                return None if pd.isna(v) else int(v)
-
-            def _min_usd(sub):
-                if sub.empty:
-                    return None
-                v = sub["green_fee_usd"].min()
-                return None if pd.isna(v) else round(float(v), 0)
+            wkd  = weekday_df[(weekday_df["competitor_name"] == comp) & (weekday_df["channel"] == channel)]
+            wknd = weekend_df[(weekend_df["competitor_name"] == comp) & (weekend_df["channel"] == channel)]
 
             wkd_krw  = _min_krw(wkd)
             wkd_usd  = _min_usd(wkd)
             wknd_krw = _min_krw(wknd)
             wknd_usd = _min_usd(wknd)
 
-            def _price_html(krw, usd):
-                if krw is None:
-                    return "<span class='golf-na'>-</span>"
-                s = f"{krw:,}원"
-                if usd:
-                    s += f'<span class="golf-usd"> (${usd:.0f})</span>'
-                return s
+            cart = sub["cart_included"].dropna()
+            cart_str = "카트포함" if not cart.empty and bool(cart.any()) else "카트별도"
 
-            cart = grp["cart_included"].dropna()
-            cart_str = "포함" if not cart.empty and bool(cart.any()) else "별도"
+            urls = sub["url"].dropna()
+            url = urls.iloc[0] if not urls.empty else ""
 
-            rows.append(
-                f'<tr{row_cls}>'
-                f'<td class="competitor-name">{badge}{comp}</td>'
-                f'<td class="golf-channel">{channel}</td>'
-                f'<td class="golf-course">{course_name}{holes_str}</td>'
-                f'<td class="golf-price">{_price_html(wkd_krw, wkd_usd)}</td>'
-                f'<td class="golf-price">{_price_html(wknd_krw, wknd_usd)}</td>'
-                f'<td class="golf-cart">{cart_str}</td>'
-                f'</tr>'
+            inner = (
+                f'<div class="golf-course-label">{course_name}{holes_str}</div>'
+                f'<div class="golf-day-row">'
+                f'<span class="golf-day-badge wkd">주중</span>{_price_html(wkd_krw, wkd_usd)}'
+                f'</div>'
+                f'<div class="golf-day-row">'
+                f'<span class="golf-day-badge wknd">주말</span>{_price_html(wknd_krw, wknd_usd)}'
+                f'</div>'
+                f'<div class="golf-cart-info">{cart_str}</div>'
             )
+            if url:
+                inner = f'<a href="{url}" target="_blank" rel="noopener" class="golf-cell-link">{inner}</a>'
+
+            cells += f'<td class="{cell_cls}">{inner}</td>'
+
+        rows.append(f'<tr>{cells}</tr>')
 
     rows_html = "\n          ".join(rows)
     comp_label = f"{len(other_comps)}개 경쟁사"
+    channels_str = " &middot; ".join(channels)
 
     return f"""\
 <div class="property-card">
@@ -1094,17 +1121,13 @@ def _render_golf_property_card(property_name: str, golf_df: pd.DataFrame) -> str
       <div class="property-title">{property_name}</div>
       <div class="property-region">{region}</div>
     </div>
-    <div class="property-stats">{comp_label}&nbsp;&middot;&nbsp;{'&middot;'.join(channels)}</div>
+    <div class="property-stats">{comp_label}&nbsp;&middot;&nbsp;{channels_str}</div>
   </div>
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th class="competitor-col">구분</th>
-        <th class="golf-th-channel">채널</th>
-        <th class="golf-th-course">코스명</th>
-        <th class="golf-th-price">주중 최저가</th>
-        <th class="golf-th-price">주말 최저가</th>
-        <th class="golf-th-cart">카트비</th>
+        <th class="golf-th-chan">채널</th>
+        {comp_header_cells}
       </tr></thead>
       <tbody>
           {rows_html}
@@ -1518,16 +1541,59 @@ body {
   background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
-.golf-th-channel { min-width: 90px; }
-.golf-th-course  { min-width: 160px; }
-.golf-th-price   { min-width: 120px; text-align: right; }
-.golf-th-cart    { min-width: 60px;  text-align: center; }
-td.golf-channel  { color: var(--muted); font-size: 12px; }
-td.golf-course   { color: var(--text); }
-td.golf-price    { text-align: right; font-variant-numeric: tabular-nums; }
-td.golf-cart     { text-align: center; color: var(--muted); font-size: 12px; }
-.golf-usd        { color: var(--muted); font-size: 11px; }
-.golf-na         { color: var(--muted); }
+/* 채널 열 헤더 */
+.golf-th-chan   { min-width: 80px; text-align: left; }
+/* 경쟁사 열 헤더 */
+.golf-th-comp   { min-width: 160px; text-align: center; }
+th.golf-own-col { color: var(--accent); }
+/* 채널 이름 셀 */
+td.golf-chan-col {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+/* 가격 셀 공통 */
+td.golf-cell {
+  text-align: center;
+  vertical-align: top;
+  padding: 8px 10px;
+}
+td.golf-own-cell  { background: rgba(88,166,255,.04); }
+td.golf-na-cell   { text-align: center; color: var(--muted); vertical-align: middle; }
+/* 셀 내부 링크 */
+.golf-cell-link   { text-decoration: none; color: inherit; display: block; }
+.golf-cell-link:hover .golf-course-label { color: var(--accent); }
+/* 코스명 */
+.golf-course-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 5px;
+  transition: color .15s;
+}
+/* 주중/주말 가격 행 */
+.golf-day-row {
+  font-size: 12px;
+  line-height: 2;
+  font-variant-numeric: tabular-nums;
+}
+/* 주중/주말 뱃지 */
+.golf-day-badge {
+  display: inline-block;
+  font-size: 10px;
+  border-radius: 3px;
+  padding: 0 4px;
+  margin-right: 4px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.golf-day-badge.wkd  { background: rgba(80,200,120,.15); color: #50c878; }
+.golf-day-badge.wknd { background: rgba(255,150,50,.15);  color: #ff9632; }
+/* 카트 정보 */
+.golf-cart-info { font-size: 10px; color: var(--muted); margin-top: 3px; }
+.golf-usd       { color: var(--muted); font-size: 11px; }
+.golf-na        { color: var(--muted); }
 
 /* ── Legend bar ── */
 .legend-bar {
