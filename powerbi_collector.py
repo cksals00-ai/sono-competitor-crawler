@@ -16,6 +16,9 @@ URL: https://app.powerbi.com/view?r=eyJrIjoiZWMwYmUyOTUtODg4MC00MmRkLWIyYWMtMzIx
 실행:
   python powerbi_collector.py
   python powerbi_collector.py --output-dir ./data --pretty
+  python powerbi_collector.py --discover                     # 스키마/페이지 탐색
+  python powerbi_collector.py --stay-month 202604            # 4월 투숙기준 데이터
+  python powerbi_collector.py --stay-month 202604 --date-column 투숙월
 """
 
 import json
@@ -134,14 +137,102 @@ def get_cluster_uri() -> str:
 # Step 2: querydata 호출
 # ─────────────────────────────────────────────
 
-def _build_query_body() -> dict:
+# ─────────────────────────────────────────────
+# 스키마 / 페이지 탐색
+# ─────────────────────────────────────────────
+
+def discover_schema(apim_cluster: str) -> None:
+    """
+    Power BI Analysis Services conceptualschema API를 호출해서
+    data_raw 테이블의 엔티티와 컬럼 목록을 출력한다.
+
+    실행: python powerbi_collector.py --discover
+    """
+    # 1. conceptualschema — 테이블/컬럼 목록 (POST + modelId/datasetId)
+    schema_url = f"{apim_cluster}/public/reports/conceptualschema"
+    schema_body = {
+        "ModelIds":   [MODEL_ID],
+        "DatasetIds": [DATASET_ID],
+    }
+    logger.info(f"conceptualschema 호출: {schema_url}")
+    try:
+        headers = {**_make_headers(), "Content-Type": "application/json"}
+        r = requests.post(schema_url, headers=headers, json=schema_body, timeout=30)
+        if r.status_code != 200:
+            logger.warning(f"conceptualschema POST 응답 {r.status_code}, GET 재시도")
+            r = requests.get(schema_url, headers=_make_headers(), timeout=30)
+        r.raise_for_status()
+        schema = r.json()
+        # 응답 형식: { "schemas": [{ "modelId": ..., "schema": { "Entities": [...] } }] }
+        # 또는 구버전: { "schema": { "Entities": [...] } }
+        schemas_list = schema.get("schemas", [])
+        if schemas_list:
+            all_entities: list = []
+            for s in schemas_list:
+                ents = s.get("schema", {}).get("Entities", [])
+                all_entities.extend(ents)
+        else:
+            raw_schema = schema.get("schema", schema)
+            all_entities = raw_schema.get("Entities", raw_schema.get("entities", []))
+
+        print(f"\n{'='*60}")
+        print(f"[스키마 엔티티 목록]  (총 {len(all_entities)}개)")
+        print(f"{'='*60}")
+        if all_entities:
+            for ent in all_entities:
+                name = ent.get("Name", ent.get("name", ""))
+                props = ent.get("Properties", ent.get("properties", []))
+                print(f"\n  ▶ {name}  (컬럼 {len(props)}개)")
+                for p in props:
+                    pname = p.get("Name", p.get("name", ""))
+                    ptype = p.get("DataType", p.get("dataType", ""))
+                    print(f"      - {pname}  [{ptype}]")
+        else:
+            print("  (엔티티 없음 — 원본 응답 출력)")
+            print(json.dumps(schema, ensure_ascii=False, indent=2)[:2000])
+    except Exception as e:
+        logger.error(f"conceptualschema 호출 실패: {e}")
+
+    # 2. 리포트 페이지 목록
+    pages_url = f"{apim_cluster}/public/reports/{REPORT_ID}/pages"
+    logger.info(f"pages 목록 호출: {pages_url}")
+    try:
+        r = requests.get(pages_url, headers=_make_headers(), timeout=30)
+        if r.status_code == 200:
+            pages_data = r.json()
+            pages = pages_data if isinstance(pages_data, list) else pages_data.get("value", [])
+            print(f"\n{'='*60}")
+            print(f"[리포트 페이지 목록]  (총 {len(pages)}개)")
+            print(f"{'='*60}")
+            for pg in pages:
+                pg_name    = pg.get("displayName", pg.get("name", ""))
+                pg_order   = pg.get("order", "")
+                pg_id      = pg.get("name", "")
+                visuals    = pg.get("visuals", [])
+                print(f"  [{pg_order:>2}] {pg_name}  (id={pg_id}, visuals={len(visuals)})")
+                for v in visuals:
+                    v_id   = v.get("visualId", v.get("name", ""))
+                    v_type = v.get("visualType", "")
+                    v_title= v.get("title", "")
+                    print(f"        visual_id={v_id}  type={v_type}  title={v_title}")
+        else:
+            logger.warning(f"pages API 응답 {r.status_code}: {r.text[:200]}")
+    except Exception as e:
+        logger.error(f"pages 목록 호출 실패: {e}")
+
+
+def _build_query_body(stay_month: str | None = None, date_column: str = "월") -> dict:
     """
     26거래처 페이지 pivotTable 쿼리 구성.
     행: DimAgent.AGENT명 (채널)
     열: data_raw.영업장변경 (사업장)
     값: RNS, REV, RNS_last(전년동기)
+
+    Args:
+        stay_month:  "YYYYMM" 형식의 투숙월 필터 (None이면 전체 누적)
+        date_column: data_raw 테이블에서 투숙월을 나타내는 컬럼명 (기본: "투숙월")
     """
-    return {
+    query_body: dict = {
         "version": "1.0.0",
         "queries": [
             {
@@ -255,11 +346,44 @@ def _build_query_body() -> dict:
         "modelId": MODEL_ID,
     }
 
+    # 투숙월 필터 삽입
+    if stay_month:
+        where_clause = [
+            {
+                "Condition": {
+                    "Comparison": {
+                        "ComparisonKind": 0,  # Equal
+                        "Left": {
+                            "Column": {
+                                "Expression": {"SourceRef": {"Source": "d"}},
+                                "Property": date_column,
+                            }
+                        },
+                        "Right": {
+                            "Literal": {"Value": f"'{stay_month}'"}
+                        },
+                    }
+                }
+            }
+        ]
+        sem_cmd = (
+            query_body["queries"][0]["Query"]["Commands"][0]
+            ["SemanticQueryDataShapeCommand"]["Query"]
+        )
+        sem_cmd["Where"] = where_clause
+        logger.info(f"투숙월 필터 적용: {date_column} = '{stay_month}'")
 
-def fetch_raw_data(apim_cluster: str) -> dict:
+    return query_body
+
+
+def fetch_raw_data(
+    apim_cluster: str,
+    stay_month: str | None = None,
+    date_column: str = "월",
+) -> dict:
     """querydata API 호출 후 raw JSON 반환"""
     url = f"{apim_cluster}/public/reports/querydata?synchronous=true"
-    body = _build_query_body()
+    body = _build_query_body(stay_month=stay_month, date_column=date_column)
     headers = {**_make_headers(), "Content-Type": "application/json"}
 
     logger.info(f"querydata API 호출: {url}")
@@ -267,6 +391,20 @@ def fetch_raw_data(apim_cluster: str) -> dict:
     r.raise_for_status()
 
     result = r.json()
+
+    # 에러 응답 감지 — 컬럼명이 틀렸거나 필터 오류
+    if "error" in result or (
+        result.get("results") and
+        result["results"][0].get("result", {}).get("error")
+    ):
+        err_msg = (
+            result.get("error")
+            or result["results"][0]["result"].get("error", {})
+        )
+        raise ValueError(
+            f"Power BI 쿼리 오류 (컬럼명이나 필터 값을 확인하세요): {err_msg}"
+        )
+
     logger.info("데이터 수신 완료")
     return result
 
@@ -465,7 +603,7 @@ PROPERTY_NAME_MAP: dict[str, str] = {
 }
 
 
-def to_channel_sales_format(data: dict) -> dict:
+def to_channel_sales_format(data: dict, stay_month: str | None = None) -> dict:
     """
     powerbi_rns_latest.json 형식 → channel_sales_data.json 호환 형식 변환.
 
@@ -483,10 +621,21 @@ def to_channel_sales_format(data: dict) -> dict:
         }
       ]
     }
+
+    Args:
+        data:        parse_channel_rns() 반환값
+        stay_month:  "YYYYMM" (예: "202604") 또는 None (누적)
     """
     collected_at = data.get("collected_at", "")
     date_str = collected_at[:10] if collected_at else datetime.now().strftime("%Y-%m-%d")
     year = date_str[:4]
+
+    # 레이블 결정
+    if stay_month and len(stay_month) == 6:
+        month_num = int(stay_month[4:6])
+        label = f"{month_num}월 투숙기준 (Power BI)"
+    else:
+        label = f"{year}년 누적 (Power BI)"
 
     # 전체 채널 목록 (정규화된 이름)
     all_channels_set: set[str] = set()
@@ -524,7 +673,7 @@ def to_channel_sales_format(data: dict) -> dict:
 
     return {
         "date":       date_str,
-        "label":      f"{year}년 누적 (Power BI)",
+        "label":      label,
         "source":     "powerbi",
         "channels":   all_channels,
         "properties": properties_out,
@@ -566,20 +715,24 @@ def collect(
     output_dir: str = "./data",
     pretty: bool = True,
     update_channel_sales: bool = False,
+    stay_month: str | None = None,
+    date_column: str = "월",
 ) -> dict:
     """
     전체 수집 파이프라인 실행. 구조화된 데이터 반환.
 
     Args:
-        output_dir: 저장 디렉토리
-        pretty: JSON 들여쓰기 여부
+        output_dir:           저장 디렉토리
+        pretty:               JSON 들여쓰기 여부
         update_channel_sales: True이면 channel_sales_data.json도 갱신
+        stay_month:           "YYYYMM" 형식 투숙월 필터 (None이면 전체 누적)
+        date_column:          data_raw 테이블의 날짜 컬럼명 (기본: "투숙월")
     """
     cluster_uri = get_cluster_uri()
     apim        = _apim_url(cluster_uri)
     logger.info(f"APIM 엔드포인트: {apim}")
 
-    raw    = fetch_raw_data(apim)
+    raw    = fetch_raw_data(apim, stay_month=stay_month, date_column=date_column)
     parsed = parse_channel_rns(raw)
 
     n_props    = len(parsed["properties"])
@@ -589,7 +742,7 @@ def collect(
     save_result(parsed, output_dir=output_dir, pretty=pretty)
 
     if update_channel_sales:
-        compat = to_channel_sales_format(parsed)
+        compat = to_channel_sales_format(parsed, stay_month=stay_month)
         compat_path = Path("channel_sales_data.json")
         compat_path.write_text(
             json.dumps(compat, ensure_ascii=False, indent=2 if pretty else None),
@@ -635,13 +788,27 @@ if __name__ == "__main__":
     parser.add_argument("--summary",              action="store_true", help="콘솔 요약 출력")
     parser.add_argument("--update-channel-sales", action="store_true",
                         help="channel_sales_data.json 도 함께 갱신 (대시보드 연동)")
+    parser.add_argument("--discover",             action="store_true",
+                        help="스키마/페이지 탐색 후 종료 (데이터 수집 없음)")
+    parser.add_argument("--stay-month",           default=None, metavar="YYYYMM",
+                        help="투숙월 필터 (예: 202604). 없으면 전체 누적")
+    parser.add_argument("--date-column",          default="월",
+                        help="data_raw 테이블의 월 컬럼명 (기본: 월, --discover로 확인 가능)")
     args = parser.parse_args()
 
-    result = collect(
-        output_dir=args.output_dir,
-        pretty=not args.no_pretty,
-        update_channel_sales=args.update_channel_sales,
-    )
+    cluster_uri = get_cluster_uri()
+    apim_base   = _apim_url(cluster_uri)
 
-    if args.summary:
-        print_summary(result)
+    if args.discover:
+        discover_schema(apim_base)
+    else:
+        result = collect(
+            output_dir=args.output_dir,
+            pretty=not args.no_pretty,
+            update_channel_sales=args.update_channel_sales,
+            stay_month=args.stay_month,
+            date_column=args.date_column,
+        )
+
+        if args.summary:
+            print_summary(result)
