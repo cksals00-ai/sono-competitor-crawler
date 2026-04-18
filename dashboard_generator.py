@@ -1049,22 +1049,23 @@ def _render_golf_property_card(property_name: str, golf_df: pd.DataFrame) -> str
             s += f'<span class="golf-usd"> (${usd:.0f})</span>'
         return s
 
-    # 헤더 행: 채널 열 + 경쟁사별 열
-    comp_header_cells = ""
+    # 헤더 행: 경쟁사 열 + 채널별 열
+    chan_header_cells = ""
+    for channel in channels:
+        chan_header_cells += f'<th class="golf-th-comp">{channel}</th>'
+
+    # 데이터 행: 경쟁사별 1행, 각 셀에 채널별 코스명+주중/주말 가격
+    rows = []
     for comp in competitors_ordered:
         is_own = comp == "자사"
         if is_own:
             badge = '<span class="badge-sono">자사</span>'
-            comp_header_cells += f'<th class="golf-th-comp golf-own-col">{badge}{property_name}</th>'
+            comp_cell = f'<td class="golf-chan-col golf-own-col">{badge}{property_name}</td>'
         else:
-            comp_header_cells += f'<th class="golf-th-comp">{comp}</th>'
+            comp_cell = f'<td class="golf-chan-col">{comp}</td>'
 
-    # 데이터 행: 채널별 1행, 각 셀에 코스명+주중/주말 가격
-    rows = []
-    for channel in channels:
-        cells = f'<td class="golf-chan-col">{channel}</td>'
-        for comp in competitors_ordered:
-            is_own = comp == "자사"
+        cells = comp_cell
+        for channel in channels:
             cell_cls = "golf-cell" + (" golf-own-cell" if is_own else "")
 
             sub = prop_df[
@@ -1126,8 +1127,8 @@ def _render_golf_property_card(property_name: str, golf_df: pd.DataFrame) -> str
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th class="golf-th-chan">채널</th>
-        {comp_header_cells}
+        <th class="golf-th-chan">경쟁사</th>
+        {chan_header_cells}
       </tr></thead>
       <tbody>
           {rows_html}
