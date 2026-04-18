@@ -753,7 +753,7 @@ properties:
 
 - name: 소노벨 제주
   id: sonobell_jeju
-  display_region: 한국남부
+  display_region: 아시아퍼시픽
   region: 제주도
   competitors:
   - name: 해비치 호텔앤리조트 제주
