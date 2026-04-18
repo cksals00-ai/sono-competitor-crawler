@@ -429,9 +429,15 @@ def _build_per_date_prices(df: pd.DataFrame) -> dict:
 
 def _normalize_ota(ota) -> str:
     """'네이버호텔/야놀자' 등 서브채널 → '네이버호텔'으로 통합"""
-    if isinstance(ota, str) and ota.startswith("네이버호텔/"):
+    # Handle NaN, None, float and other non-string types
+    if not isinstance(ota, str):
+        ota_str = str(ota) if ota is not None and not (isinstance(ota, float) and pd.isna(ota)) else ""
+    else:
+        ota_str = ota
+
+    if ota_str and ota_str.startswith("네이버호텔/"):
         return "네이버호텔"
-    return ota if isinstance(ota, str) else ""
+    return ota_str
 
 
 def _get_ota_url(entity: dict, ota: str) -> str:
