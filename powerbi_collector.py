@@ -14,11 +14,11 @@ URL: https://app.powerbi.com/view?r=eyJrIjoiZWMwYmUyOTUtODg4MC00MmRkLWIyYWMtMzIx
   - data/powerbi_rns_latest.json     (항상 최신 덮어쓰기)
 
 실행:
-  python powerbi_collector.py                           # 당월 투숙기준 (기본)
-  python powerbi_collector.py --stay-month 4            # 4월 투숙기준
-  python powerbi_collector.py --cumulative              # 연간 누적
-  python powerbi_collector.py --discover                # 스키마 탐색
+  python powerbi_collector.py
   python powerbi_collector.py --output-dir ./data --pretty
+  python powerbi_collector.py --discover                     # 스키마/페이지 탐색
+  python powerbi_collector.py --stay-month 202604            # 4월 투숙기준 데이터
+  python powerbi_collector.py --stay-month 202604 --date-column 투숙월
 """
 
 import json
@@ -134,61 +134,94 @@ def get_cluster_uri() -> str:
 
 
 # ─────────────────────────────────────────────
-# Step 1b: 스키마 탐색
-# ─────────────────────────────────────────────
-
-def discover_schema(apim_cluster: str | None = None) -> dict | None:
-    """
-    Power BI conceptualschema API로 데이터 모델 구조(엔티티/컬럼) 탐색.
-    반환: raw schema dict (실패 시 None)
-    """
-    if apim_cluster is None:
-        cluster_uri = get_cluster_uri()
-        apim_cluster = _apim_url(cluster_uri)
-
-    url = f"{apim_cluster}/public/reports/conceptualschema"
-    headers = {**_make_headers(), "Content-Type": "application/json"}
-    body = {"modelId": MODEL_ID}
-
-    logger.info(f"스키마 탐색: {url}")
-    try:
-        r = requests.post(url, headers=headers, json=body, timeout=20)
-        r.raise_for_status()
-        result = r.json()
-
-        # 파싱: schemas[].schema.Entities[]
-        for schema_item in result.get("schemas", []):
-            entities = schema_item.get("schema", {}).get("Entities", [])
-            print(f"\n{'='*60}")
-            print(f"스키마 탐색 결과 — 엔티티 {len(entities)}개")
-            print(f"{'='*60}")
-            for entity in entities:
-                name = entity.get("Name", "?")
-                props = entity.get("Properties", [])
-                hidden = entity.get("IsHidden", False)
-                marker = " (hidden)" if hidden else ""
-                print(f"\n  [{name}]{marker}")
-                for prop in props:
-                    p_name = prop.get("Name", "?")
-                    p_type = prop.get("DataType", "?")
-                    p_hidden = prop.get("IsHidden", False)
-                    h_mark = " (hidden)" if p_hidden else ""
-                    # DataType: 0=String, 2=Double, 4=Int32, 6=Boolean, 7=DateTime
-                    type_names = {0: "String", 2: "Double", 4: "Int32", 6: "Boolean", 7: "DateTime"}
-                    t_name = type_names.get(p_type, f"Type{p_type}")
-                    print(f"    - {p_name:<30} {t_name}{h_mark}")
-
-        return result
-    except Exception as e:
-        logger.error(f"스키마 탐색 실패: {e}")
-        return None
-
-
-# ─────────────────────────────────────────────
 # Step 2: querydata 호출
 # ─────────────────────────────────────────────
 
-def _build_query_body(stay_month: int | None = None) -> dict:
+# ─────────────────────────────────────────────
+# 스키마 / 페이지 탐색
+# ─────────────────────────────────────────────
+
+def discover_schema(apim_cluster: str) -> None:
+    """
+    Power BI Analysis Services conceptualschema API를 호출해서
+    data_raw 테이블의 엔티티와 컬럼 목록을 출력한다.
+
+    실행: python powerbi_collector.py --discover
+    """
+    # 1. conceptualschema — 테이블/컬럼 목록 (POST + modelId/datasetId)
+    schema_url = f"{apim_cluster}/public/reports/conceptualschema"
+    schema_body = {
+        "ModelIds":   [MODEL_ID],
+        "DatasetIds": [DATASET_ID],
+    }
+    logger.info(f"conceptualschema 호출: {schema_url}")
+    try:
+        headers = {**_make_headers(), "Content-Type": "application/json"}
+        r = requests.post(schema_url, headers=headers, json=schema_body, timeout=30)
+        if r.status_code != 200:
+            logger.warning(f"conceptualschema POST 응답 {r.status_code}, GET 재시도")
+            r = requests.get(schema_url, headers=_make_headers(), timeout=30)
+        r.raise_for_status()
+        schema = r.json()
+        # 응답 형식: { "schemas": [{ "modelId": ..., "schema": { "Entities": [...] } }] }
+        # 또는 구버전: { "schema": { "Entities": [...] } }
+        schemas_list = schema.get("schemas", [])
+        if schemas_list:
+            all_entities: list = []
+            for s in schemas_list:
+                ents = s.get("schema", {}).get("Entities", [])
+                all_entities.extend(ents)
+        else:
+            raw_schema = schema.get("schema", schema)
+            all_entities = raw_schema.get("Entities", raw_schema.get("entities", []))
+
+        print(f"\n{'='*60}")
+        print(f"[스키마 엔티티 목록]  (총 {len(all_entities)}개)")
+        print(f"{'='*60}")
+        if all_entities:
+            for ent in all_entities:
+                name = ent.get("Name", ent.get("name", ""))
+                props = ent.get("Properties", ent.get("properties", []))
+                print(f"\n  ▶ {name}  (컬럼 {len(props)}개)")
+                for p in props:
+                    pname = p.get("Name", p.get("name", ""))
+                    ptype = p.get("DataType", p.get("dataType", ""))
+                    print(f"      - {pname}  [{ptype}]")
+        else:
+            print("  (엔티티 없음 — 원본 응답 출력)")
+            print(json.dumps(schema, ensure_ascii=False, indent=2)[:2000])
+    except Exception as e:
+        logger.error(f"conceptualschema 호출 실패: {e}")
+
+    # 2. 리포트 페이지 목록
+    pages_url = f"{apim_cluster}/public/reports/{REPORT_ID}/pages"
+    logger.info(f"pages 목록 호출: {pages_url}")
+    try:
+        r = requests.get(pages_url, headers=_make_headers(), timeout=30)
+        if r.status_code == 200:
+            pages_data = r.json()
+            pages = pages_data if isinstance(pages_data, list) else pages_data.get("value", [])
+            print(f"\n{'='*60}")
+            print(f"[리포트 페이지 목록]  (총 {len(pages)}개)")
+            print(f"{'='*60}")
+            for pg in pages:
+                pg_name    = pg.get("displayName", pg.get("name", ""))
+                pg_order   = pg.get("order", "")
+                pg_id      = pg.get("name", "")
+                visuals    = pg.get("visuals", [])
+                print(f"  [{pg_order:>2}] {pg_name}  (id={pg_id}, visuals={len(visuals)})")
+                for v in visuals:
+                    v_id   = v.get("visualId", v.get("name", ""))
+                    v_type = v.get("visualType", "")
+                    v_title= v.get("title", "")
+                    print(f"        visual_id={v_id}  type={v_type}  title={v_title}")
+        else:
+            logger.warning(f"pages API 응답 {r.status_code}: {r.text[:200]}")
+    except Exception as e:
+        logger.error(f"pages 목록 호출 실패: {e}")
+
+
+def _build_query_body(stay_month: str | None = None, date_column: str = "월") -> dict:
     """
     26거래처 페이지 pivotTable 쿼리 구성.
     행: DimAgent.AGENT명 (채널)
@@ -196,114 +229,10 @@ def _build_query_body(stay_month: int | None = None) -> dict:
     값: RNS, REV, RNS_last(전년동기)
 
     Args:
-        stay_month: 투숙월 필터 (1~12). None이면 필터 없음(누적).
+        stay_month:  "YYYYMM" 형식의 투숙월 필터 (None이면 전체 누적)
+        date_column: data_raw 테이블에서 투숙월을 나타내는 컬럼명 (기본: "투숙월")
     """
-    query_inner = {
-        "Version": 2,
-        "From": [
-            {"Name": "d",  "Entity": "data_raw",      "Type": 0},
-            {"Name": "d1", "Entity": "data_lastraw",  "Type": 0},
-            {"Name": "d2", "Entity": "DimAgent",      "Type": 0},
-        ],
-        "Select": [
-            # G0: 채널명
-            {
-                "Column": {
-                    "Expression": {"SourceRef": {"Source": "d2"}},
-                    "Property": "AGENT명",
-                },
-                "Name": "DimAgent.AGENT명",
-            },
-            # G1: 사업장명
-            {
-                "Column": {
-                    "Expression": {"SourceRef": {"Source": "d"}},
-                    "Property": "영업장변경",
-                },
-                "Name": "data_raw.영업장변경",
-            },
-            # M0: RNS (판매객실수)
-            {
-                "Aggregation": {
-                    "Expression": {
-                        "Column": {
-                            "Expression": {"SourceRef": {"Source": "d"}},
-                            "Property": "RNS",
-                        }
-                    },
-                    "Function": 0,
-                },
-                "Name": "Sum(data_raw.RNS)",
-            },
-            # M1: REV (매출, 만원 단위)
-            {
-                "Aggregation": {
-                    "Expression": {
-                        "Column": {
-                            "Expression": {"SourceRef": {"Source": "d"}},
-                            "Property": "REV",
-                        }
-                    },
-                    "Function": 0,
-                },
-                "Name": "Sum(data_raw.REV)",
-            },
-            # M2: RNS_last (전년동기 RNS)
-            {
-                "Aggregation": {
-                    "Expression": {
-                        "Column": {
-                            "Expression": {"SourceRef": {"Source": "d1"}},
-                            "Property": "RNS_last",
-                        }
-                    },
-                    "Function": 0,
-                },
-                "Name": "Sum(data_lastraw.RNS_last)",
-            },
-        ],
-        "OrderBy": [
-            {
-                "Direction": 2,  # DESC
-                "Expression": {
-                    "Aggregation": {
-                        "Expression": {
-                            "Column": {
-                                "Expression": {"SourceRef": {"Source": "d"}},
-                                "Property": "RNS",
-                            }
-                        },
-                        "Function": 0,
-                    }
-                },
-            }
-        ],
-    }
-
-    # 월별 필터 추가 (data_raw.월 컬럼, Int32)
-    if stay_month is not None:
-        query_inner["Where"] = [
-            {
-                "Condition": {
-                    "In": {
-                        "Expressions": [
-                            {
-                                "Column": {
-                                    "Expression": {"SourceRef": {"Source": "d"}},
-                                    "Property": "월",
-                                }
-                            }
-                        ],
-                        "Values": [
-                            [{"Literal": {"Value": f"{int(stay_month)}L"}}]
-                        ],
-                    }
-                }
-            }
-        ]
-        logger.info(f"투숙월 필터 적용: {stay_month}월")
-
-    return {
+    query_body: dict = {
         "version": "1.0.0",
         "queries": [
             {
@@ -311,7 +240,87 @@ def _build_query_body(stay_month: int | None = None) -> dict:
                     "Commands": [
                         {
                             "SemanticQueryDataShapeCommand": {
-                                "Query": query_inner,
+                                "Query": {
+                                    "Version": 2,
+                                    "From": [
+                                        {"Name": "d",  "Entity": "data_raw",      "Type": 0},
+                                        {"Name": "d1", "Entity": "data_lastraw",  "Type": 0},
+                                        {"Name": "d2", "Entity": "DimAgent",      "Type": 0},
+                                    ],
+                                    "Select": [
+                                        # G0: 채널명
+                                        {
+                                            "Column": {
+                                                "Expression": {"SourceRef": {"Source": "d2"}},
+                                                "Property": "AGENT명",
+                                            },
+                                            "Name": "DimAgent.AGENT명",
+                                        },
+                                        # G1: 사업장명
+                                        {
+                                            "Column": {
+                                                "Expression": {"SourceRef": {"Source": "d"}},
+                                                "Property": "영업장변경",
+                                            },
+                                            "Name": "data_raw.영업장변경",
+                                        },
+                                        # M0: RNS (판매객실수)
+                                        {
+                                            "Aggregation": {
+                                                "Expression": {
+                                                    "Column": {
+                                                        "Expression": {"SourceRef": {"Source": "d"}},
+                                                        "Property": "RNS",
+                                                    }
+                                                },
+                                                "Function": 0,
+                                            },
+                                            "Name": "Sum(data_raw.RNS)",
+                                        },
+                                        # M1: REV (매출, 만원 단위)
+                                        {
+                                            "Aggregation": {
+                                                "Expression": {
+                                                    "Column": {
+                                                        "Expression": {"SourceRef": {"Source": "d"}},
+                                                        "Property": "REV",
+                                                    }
+                                                },
+                                                "Function": 0,
+                                            },
+                                            "Name": "Sum(data_raw.REV)",
+                                        },
+                                        # M2: RNS_last (전년동기 RNS)
+                                        {
+                                            "Aggregation": {
+                                                "Expression": {
+                                                    "Column": {
+                                                        "Expression": {"SourceRef": {"Source": "d1"}},
+                                                        "Property": "RNS_last",
+                                                    }
+                                                },
+                                                "Function": 0,
+                                            },
+                                            "Name": "Sum(data_lastraw.RNS_last)",
+                                        },
+                                    ],
+                                    "OrderBy": [
+                                        {
+                                            "Direction": 2,  # DESC
+                                            "Expression": {
+                                                "Aggregation": {
+                                                    "Expression": {
+                                                        "Column": {
+                                                            "Expression": {"SourceRef": {"Source": "d"}},
+                                                            "Property": "RNS",
+                                                        }
+                                                    },
+                                                    "Function": 0,
+                                                }
+                                            },
+                                        }
+                                    ],
+                                },
                                 "Binding": {
                                     "Primary": {
                                         "Groupings": [{"Projections": [0, 1, 2, 3, 4]}]
@@ -337,11 +346,53 @@ def _build_query_body(stay_month: int | None = None) -> dict:
         "modelId": MODEL_ID,
     }
 
+    # 투숙월 필터 삽입
+    if stay_month:
+        # YYYYMM(6자리) 형식이면 월 번호만 추출, 그 외는 그대로 사용
+        if len(stay_month) == 6 and stay_month.isdigit():
+            month_int = int(stay_month[4:6])
+            literal_value = f"{month_int}L"  # Int64 리터럴
+            log_val = f"{month_int} (정수)"
+        else:
+            literal_value = f"'{stay_month}'"
+            log_val = stay_month
 
-def fetch_raw_data(apim_cluster: str, stay_month: int | None = None) -> dict:
+        where_clause = [
+            {
+                "Condition": {
+                    "Comparison": {
+                        "ComparisonKind": 0,  # Equal
+                        "Left": {
+                            "Column": {
+                                "Expression": {"SourceRef": {"Source": "d"}},
+                                "Property": date_column,
+                            }
+                        },
+                        "Right": {
+                            "Literal": {"Value": literal_value}
+                        },
+                    }
+                }
+            }
+        ]
+        sem_cmd = (
+            query_body["queries"][0]["Query"]["Commands"][0]
+            ["SemanticQueryDataShapeCommand"]["Query"]
+        )
+        sem_cmd["Where"] = where_clause
+        logger.info(f"투숙월 필터 적용: {date_column} = {log_val}")
+
+    return query_body
+
+
+def fetch_raw_data(
+    apim_cluster: str,
+    stay_month: str | None = None,
+    date_column: str = "월",
+) -> dict:
     """querydata API 호출 후 raw JSON 반환"""
     url = f"{apim_cluster}/public/reports/querydata?synchronous=true"
-    body = _build_query_body(stay_month=stay_month)
+    body = _build_query_body(stay_month=stay_month, date_column=date_column)
     headers = {**_make_headers(), "Content-Type": "application/json"}
 
     logger.info(f"querydata API 호출: {url}")
@@ -349,6 +400,20 @@ def fetch_raw_data(apim_cluster: str, stay_month: int | None = None) -> dict:
     r.raise_for_status()
 
     result = r.json()
+
+    # 에러 응답 감지 — 컬럼명이 틀렸거나 필터 오류
+    if "error" in result or (
+        result.get("results") and
+        result["results"][0].get("result", {}).get("error")
+    ):
+        err_msg = (
+            result.get("error")
+            or result["results"][0]["result"].get("error", {})
+        )
+        raise ValueError(
+            f"Power BI 쿼리 오류 (컬럼명이나 필터 값을 확인하세요): {err_msg}"
+        )
+
     logger.info("데이터 수신 완료")
     return result
 
@@ -547,7 +612,7 @@ PROPERTY_NAME_MAP: dict[str, str] = {
 }
 
 
-def to_channel_sales_format(data: dict, stay_month: int | None = None) -> dict:
+def to_channel_sales_format(data: dict, stay_month: str | None = None) -> dict:
     """
     powerbi_rns_latest.json 형식 → channel_sales_data.json 호환 형식 변환.
 
@@ -567,12 +632,19 @@ def to_channel_sales_format(data: dict, stay_month: int | None = None) -> dict:
     }
 
     Args:
-        data: parse_channel_rns() 결과
-        stay_month: 투숙월 (1~12). None이면 누적 라벨 사용.
+        data:        parse_channel_rns() 반환값
+        stay_month:  "YYYYMM" (예: "202604") 또는 None (누적)
     """
     collected_at = data.get("collected_at", "")
     date_str = collected_at[:10] if collected_at else datetime.now().strftime("%Y-%m-%d")
     year = date_str[:4]
+
+    # 레이블 결정
+    if stay_month and len(stay_month) == 6:
+        month_num = int(stay_month[4:6])
+        label = f"{month_num}월 투숙기준 (Power BI)"
+    else:
+        label = f"{year}년 누적 (Power BI)"
 
     # 전체 채널 목록 (정규화된 이름)
     all_channels_set: set[str] = set()
@@ -610,7 +682,7 @@ def to_channel_sales_format(data: dict, stay_month: int | None = None) -> dict:
 
     return {
         "date":       date_str,
-        "label":      f"{stay_month}월 투숙기준 (Power BI)" if stay_month else f"{year}년 누적 (Power BI)",
+        "label":      label,
         "source":     "powerbi",
         "channels":   all_channels,
         "properties": properties_out,
@@ -652,37 +724,29 @@ def collect(
     output_dir: str = "./data",
     pretty: bool = True,
     update_channel_sales: bool = False,
-    stay_month: int | None = None,
+    stay_month: str | None = None,
+    date_column: str = "월",
 ) -> dict:
     """
     전체 수집 파이프라인 실행. 구조화된 데이터 반환.
 
     Args:
-        output_dir: 저장 디렉토리
-        pretty: JSON 들여쓰기 여부
+        output_dir:           저장 디렉토리
+        pretty:               JSON 들여쓰기 여부
         update_channel_sales: True이면 channel_sales_data.json도 갱신
-        stay_month: 투숙월 필터 (1~12). None이면 당월 자동 적용.
-                    0 또는 음수이면 누적(필터 없음).
+        stay_month:           "YYYYMM" 형식 투숙월 필터 (None이면 전체 누적)
+        date_column:          data_raw 테이블의 날짜 컬럼명 (기본: "투숙월")
     """
-    # 기본값: 당월
-    if stay_month is None:
-        stay_month = datetime.now().month
-        logger.info(f"투숙월 미지정 → 당월({stay_month}월) 자동 적용")
-    elif stay_month <= 0:
-        stay_month = None  # 누적 모드
-        logger.info("누적 모드 (월 필터 없음)")
-
     cluster_uri = get_cluster_uri()
     apim        = _apim_url(cluster_uri)
     logger.info(f"APIM 엔드포인트: {apim}")
 
-    raw    = fetch_raw_data(apim, stay_month=stay_month)
+    raw    = fetch_raw_data(apim, stay_month=stay_month, date_column=date_column)
     parsed = parse_channel_rns(raw)
 
     n_props    = len(parsed["properties"])
     n_channels = len(parsed["channels_summary"])
-    month_label = f"{stay_month}월 투숙기준" if stay_month else "연간 누적"
-    logger.info(f"파싱 완료 — {month_label}, 사업장 {n_props}개, 채널 {n_channels}개")
+    logger.info(f"파싱 완료 — 사업장 {n_props}개, 채널 {n_channels}개")
 
     save_result(parsed, output_dir=output_dir, pretty=pretty)
 
@@ -733,33 +797,26 @@ if __name__ == "__main__":
     parser.add_argument("--summary",              action="store_true", help="콘솔 요약 출력")
     parser.add_argument("--update-channel-sales", action="store_true",
                         help="channel_sales_data.json 도 함께 갱신 (대시보드 연동)")
-    parser.add_argument("--stay-month", type=int, default=None,
-                        help="투숙월 필터 (1~12). 미지정시 당월 자동 적용. 0이면 누적.")
-    parser.add_argument("--cumulative", action="store_true",
-                        help="연간 누적 데이터 수집 (월 필터 없음)")
-    parser.add_argument("--discover", action="store_true",
-                        help="데이터 모델 스키마 탐색 후 종료 (데이터 수집 안 함)")
+    parser.add_argument("--discover",             action="store_true",
+                        help="스키마/페이지 탐색 후 종료 (데이터 수집 없음)")
+    parser.add_argument("--stay-month",           default=None, metavar="YYYYMM",
+                        help="투숙월 필터 (예: 202604). 없으면 전체 누적")
+    parser.add_argument("--date-column",          default="월",
+                        help="data_raw 테이블의 월 컬럼명 (기본: 월, --discover로 확인 가능)")
     args = parser.parse_args()
 
-    if args.discover:
-        # 스키마 탐색 모드
-        cluster_uri = get_cluster_uri()
-        apim = _apim_url(cluster_uri)
-        discover_schema(apim)
-    else:
-        # stay_month 결정
-        if args.cumulative:
-            stay_month = 0  # 누적 모드 (collect에서 None으로 변환)
-        elif args.stay_month is not None:
-            stay_month = args.stay_month
-        else:
-            stay_month = None  # 당월 자동
+    cluster_uri = get_cluster_uri()
+    apim_base   = _apim_url(cluster_uri)
 
+    if args.discover:
+        discover_schema(apim_base)
+    else:
         result = collect(
             output_dir=args.output_dir,
             pretty=not args.no_pretty,
             update_channel_sales=args.update_channel_sales,
-            stay_month=stay_month,
+            stay_month=args.stay_month,
+            date_column=args.date_column,
         )
 
         if args.summary:
