@@ -380,8 +380,8 @@ def main():
         # 전체 phase 완료 후 Power BI RNS 수집
         try:
             from powerbi_collector import collect as collect_powerbi
-            logger.info("=== Power BI RNS 수집 시작 ===")
-            collect_powerbi(update_channel_sales=True)
+            logger.info("=== Power BI RNS 수집 시작 (당월 투숙기준) ===")
+            collect_powerbi(update_channel_sales=True)  # stay_month=None → 당월 자동
             logger.info("=== Power BI RNS 수집 완료 ===")
         except Exception as e:
             logger.error(f"Power BI 수집 실패 (크롤링 결과에는 영향 없음): {e}", exc_info=True)
