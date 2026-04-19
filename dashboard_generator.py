@@ -429,15 +429,32 @@ def _build_per_date_prices(df: pd.DataFrame) -> dict:
 # ── OTA 이름 정규화 / URL 헬퍼 ────────────────────────────────────────────────
 
 def _normalize_ota(ota) -> str:
-    """'네이버호텔/야놀자' 등 서브채널 → '네이버호텔'으로 통합"""
+    """'네이버호텔/야놀자' → '야놀자', '네이버호텔/Trip.com' → 'Trip.com' 등
+    서브채널이 있으면 서브채널 기준, 아니면 메인채널 유지"""
     # Handle NaN, None, float and other non-string types
     if not isinstance(ota, str):
         ota_str = str(ota) if ota is not None and not (isinstance(ota, float) and pd.isna(ota)) else ""
     else:
         ota_str = ota
 
-    if ota_str and ota_str.startswith("네이버호텔/"):
+    if not ota_str:
+        return ota_str
+
+    # 서브채널 매핑: "네이버호텔/야놀자" → "야놀자"
+    _SUB_MAP = {
+        "야놀자": "야놀자",
+        "여기어때": "여기어때",
+        "Trip.com": "Trip.com",
+        "Agoda": "Agoda",
+    }
+
+    if "/" in ota_str:
+        sub = ota_str.split("/", 1)[1]
+        if sub in _SUB_MAP:
+            return _SUB_MAP[sub]
+        # 알려진 OTA가 아닌 서브채널은 네이버호텔로 통합
         return "네이버호텔"
+
     return ota_str
 
 
@@ -632,9 +649,15 @@ def _render_channel_section(prop_name: str, channel_data: dict) -> str:
 
     meta       = channel_data.get("meta", {})
     label      = meta.get("label", "금월")
-    channels   = meta.get("channels", list(entry.get("channels", {}).keys()))
     ch_data    = entry.get("channels", {})
     total      = entry.get("total", {})
+
+    # 사업장에 실제 데이터가 있는 채널만, RNS 내림차순 정렬
+    channels = sorted(
+        [ch for ch, d in ch_data.items() if d.get("rns", 0) > 0],
+        key=lambda ch: ch_data[ch].get("rns", 0),
+        reverse=True,
+    )
 
     rows = []
     for ch in channels:

@@ -113,11 +113,15 @@ def _merge_and_save(new_df: pd.DataFrame, ota_filter: list) -> pd.DataFrame:
     기존 CSV에서 해당 OTA 데이터를 제거하고 새 데이터를 병합한 뒤 저장.
     같은 OTA를 재실행할 때 중복 없이 덮어쓴다.
     """
+    from dashboard_generator import _normalize_columns
+
     existing = _load_existing_df()
 
-    # 내부 컬럼명 → CSV 컬럼명 매핑 고려
-    # export_powerbi._prepare_df 가 컬럼명을 한글로 바꾸므로
-    # 여기서는 원본(영어) 컬럼이 섞일 수 있음. 'ota' 또는 'OTA' 컬럼 기준.
+    # 기존 CSV는 한글 컬럼명(_prepare_df 결과)이므로 영어로 정규화
+    # → new_df(영어 컬럼)와 컬럼셋을 통일해야 수직 concat이 올바르게 동작한다.
+    if not existing.empty:
+        existing = _normalize_columns(existing)
+
     ota_col = "ota" if "ota" in existing.columns else ("OTA" if "OTA" in existing.columns else None)
 
     if not existing.empty and ota_col and ota_filter:
@@ -125,7 +129,7 @@ def _merge_and_save(new_df: pd.DataFrame, ota_filter: list) -> pd.DataFrame:
         existing = existing[~existing[ota_col].isin(ota_filter)]
         logger.info(f"기존 CSV에서 {ota_filter} 행 제거 후 새 데이터 병합")
 
-    # new_df 컬럼이 영어(내부 포맷)인 경우 저장 전 변환
+    # 양쪽 모두 영어 컬럼으로 통일된 상태에서 수직 concat
     combined = pd.concat([existing, new_df], ignore_index=True)
 
     # 오늘 CSV에 저장 (export_powerbi.export_all 형식과 동일하게)
