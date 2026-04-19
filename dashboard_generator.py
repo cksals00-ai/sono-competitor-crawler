@@ -469,7 +469,7 @@ def _get_ota_url(entity: dict, ota: str) -> str:
         return entity.get("agoda_url", "")
     if ota == "네이버호텔":
         nid = entity.get("naver_id", "")
-        return f"https://hotels.naver.com/{nid}/hotel" if nid else ""
+        return f"https://hotels.naver.com/hotels/{nid}" if nid else ""
     if ota == "Trip.com":
         hotel_id = entity.get("tripcom_hotel_id", 0)
         city_id  = entity.get("tripcom_city_id", 0)
