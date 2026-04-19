@@ -452,7 +452,7 @@ def _get_ota_url(entity: dict, ota: str) -> str:
         return entity.get("agoda_url", "")
     if ota == "네이버호텔":
         nid = entity.get("naver_id", "")
-        return f"https://hotels.naver.com/{nid}/hotel" if nid else ""
+        return f"https://hotels.naver.com/hotels/{nid}" if nid else ""
     if ota == "Trip.com":
         hotel_id = entity.get("tripcom_hotel_id", 0)
         city_id  = entity.get("tripcom_city_id", 0)
@@ -635,6 +635,14 @@ def _render_channel_section(prop_name: str, channel_data: dict) -> str:
     channels   = meta.get("channels", list(entry.get("channels", {}).keys()))
     ch_data    = entry.get("channels", {})
     total      = entry.get("total", {})
+
+    # RNS 기준 내림차순 정렬 + RNS·매출 모두 0인 채널 제거
+    channels = sorted(
+        channels,
+        key=lambda c: ch_data.get(c, {}).get("rns", 0),
+        reverse=True,
+    )
+    channels = [c for c in channels if ch_data.get(c, {}).get("rns", 0) > 0]
 
     rows = []
     for ch in channels:
