@@ -229,23 +229,63 @@ def _month_literal(stay_month: str) -> tuple[str, str]:
     return f"'{stay_month}'", stay_month
 
 
-def _make_where_clause(source: str, date_column: str, literal_value: str) -> list[dict]:
-    return [
-        {
-            "Condition": {
-                "Comparison": {
-                    "ComparisonKind": 0,  # Equal
-                    "Left": {
-                        "Column": {
-                            "Expression": {"SourceRef": {"Source": source}},
-                            "Property": date_column,
-                        }
-                    },
-                    "Right": {"Literal": {"Value": literal_value}},
+def _eq_cond(source: str, prop: str, literal: str) -> dict:
+    """단일 Equal 조건"""
+    return {
+        "Condition": {
+            "Comparison": {
+                "ComparisonKind": 0,
+                "Left": {
+                    "Column": {
+                        "Expression": {"SourceRef": {"Source": source}},
+                        "Property": prop,
+                    }
+                },
+                "Right": {"Literal": {"Value": literal}},
+            }
+        }
+    }
+
+
+def _not_eq_cond(source: str, prop: str, literal: str) -> dict:
+    """Not(Equal) 조건 — null 행은 통과"""
+    return {
+        "Condition": {
+            "Not": {
+                "Expression": {
+                    "Comparison": {
+                        "ComparisonKind": 0,
+                        "Left": {
+                            "Column": {
+                                "Expression": {"SourceRef": {"Source": source}},
+                                "Property": prop,
+                            }
+                        },
+                        "Right": {"Literal": {"Value": literal}},
+                    }
                 }
             }
         }
-    ]
+    }
+
+
+def _in_cond(source: str, prop: str, string_values: list[str]) -> dict:
+    """IN 조건 (문자열 리스트, 따옴표 없이 전달)"""
+    return {
+        "Condition": {
+            "In": {
+                "Expressions": [
+                    {
+                        "Column": {
+                            "Expression": {"SourceRef": {"Source": source}},
+                            "Property": prop,
+                        }
+                    }
+                ],
+                "Values": [[{"Literal": {"Value": f"'{v}'"}}] for v in string_values],
+            }
+        }
+    }
 
 
 def _build_ty_query_body(stay_month: str | None = None, date_column: str = "월") -> dict:
@@ -351,15 +391,25 @@ def _build_ty_query_body(stay_month: str | None = None, date_column: str = "월"
         "modelId": MODEL_ID,
     }
 
-    if stay_month:
-        literal_value, log_val = _month_literal(stay_month)
-        sem_cmd = (
-            query_body["queries"][0]["Query"]["Commands"][0]
-            ["SemanticQueryDataShapeCommand"]["Query"]
-        )
-        sem_cmd["Where"] = _make_where_clause("d", date_column, literal_value)
-        logger.info(f"[TY] 투숙월 필터 적용: {date_column} = {log_val}")
+    sem_cmd = (
+        query_body["queries"][0]["Query"]["Commands"][0]
+        ["SemanticQueryDataShapeCommand"]["Query"]
+    )
+    where: list[dict] = []
 
+    if stay_month:
+        month_lit, log_val = _month_literal(stay_month)
+        year = int(stay_month[:4])
+        where.append(_eq_cond("d", date_column, month_lit))
+        where.append(_eq_cond("d", "투숙년도", f"{year}L"))
+        logger.info(f"[TY] 필터: {date_column}={log_val}, 투숙년도={year}")
+
+    # 세그구분: OTA/GOTA/Inbound만 (항상)
+    where.append(_in_cond("d", "세그구분", ["OTA", "GOTA", "Inbound"]))
+    # BL 제외 (항상)
+    where.append(_not_eq_cond("d", "제외", "'BL'"))
+
+    sem_cmd["Where"] = where
     return query_body
 
 
@@ -453,15 +503,25 @@ def _build_ly_query_body(stay_month: str | None = None, date_column: str = "월"
         "modelId": MODEL_ID,
     }
 
-    if stay_month:
-        literal_value, log_val = _month_literal(stay_month)
-        sem_cmd = (
-            query_body["queries"][0]["Query"]["Commands"][0]
-            ["SemanticQueryDataShapeCommand"]["Query"]
-        )
-        sem_cmd["Where"] = _make_where_clause("d1", date_column, literal_value)
-        logger.info(f"[LY] 투숙월 필터 적용: {date_column} = {log_val}")
+    sem_cmd = (
+        query_body["queries"][0]["Query"]["Commands"][0]
+        ["SemanticQueryDataShapeCommand"]["Query"]
+    )
+    where: list[dict] = []
 
+    if stay_month:
+        month_lit, log_val = _month_literal(stay_month)
+        ly_year = int(stay_month[:4]) - 1
+        where.append(_eq_cond("d1", date_column, month_lit))
+        where.append(_eq_cond("d1", "투숙년도_last", f"{ly_year}L"))
+        logger.info(f"[LY] 필터: {date_column}={log_val}, 투숙년도_last={ly_year}")
+
+    # 세그구분: OTA/GOTA/Inbound만 (항상)
+    where.append(_in_cond("d1", "세그구분", ["OTA", "GOTA", "Inbound"]))
+    # BL 제외 (항상)
+    where.append(_not_eq_cond("d1", "제외", "'BL'"))
+
+    sem_cmd["Where"] = where
     return query_body
 
 
