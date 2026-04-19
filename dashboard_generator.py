@@ -2175,6 +2175,42 @@ if __name__ == "__main__":
 
     logger.info(f"CSV 로드: {csv_path}")
     df_today = pd.read_csv(csv_path, encoding="utf-8-sig")
+
+    # 최신 CSV에 OTA_ORDER 중 누락된 OTA가 있으면 이전 CSV에서 보충
+    # (예: 특정 날 야놀자만 재실행해서 네이버호텔·Trip.com이 빠진 경우)
+    df_today_norm = _normalize_columns(df_today.copy())
+    ota_col = "ota" if "ota" in df_today_norm.columns else "OTA"
+    present_otas = set(df_today_norm[ota_col].dropna().unique()) if ota_col in df_today_norm.columns else set()
+
+    # 네이버호텔 서브채널 포함 여부도 체크 (예: "네이버호텔/야놀자")
+    def _ota_present(ota_name: str, present: set) -> bool:
+        return any(v == ota_name or v.startswith(ota_name + "/") for v in present)
+
+    missing_otas = [ota for ota in OTA_ORDER if not _ota_present(ota, present_otas)]
+    if missing_otas:
+        logger.warning(f"최신 CSV에 누락된 OTA: {missing_otas} — 이전 CSV에서 보충 시도")
+        for fallback_csv in reversed(csvs[:-1]):  # 최신→과거 순으로 탐색
+            fb_df = _normalize_columns(pd.read_csv(fallback_csv, encoding="utf-8-sig"))
+            fb_ota_col = "ota" if "ota" in fb_df.columns else "OTA"
+            still_missing = []
+            supplement_rows = []
+            for ota in missing_otas:
+                mask = fb_df[fb_ota_col].apply(
+                    lambda v: v == ota or (isinstance(v, str) and v.startswith(ota + "/"))
+                )
+                if mask.any():
+                    supplement_rows.append(fb_df[mask])
+                    logger.info(f"  {ota}: {mask.sum()}행을 {fallback_csv}에서 보충")
+                else:
+                    still_missing.append(ota)
+            if supplement_rows:
+                df_today = pd.concat([df_today, *supplement_rows], ignore_index=True)
+            missing_otas = still_missing
+            if not missing_otas:
+                break
+        if missing_otas:
+            logger.warning(f"보충 실패 (이전 데이터 없음): {missing_otas}")
+
     prev_df  = load_previous_df("./exports")
     golf_df  = load_golf_df("./exports")
 
