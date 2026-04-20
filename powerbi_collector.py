@@ -394,8 +394,8 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
 
         # YYYYMM 형식인 경우 data_raw에 투숙년도 필터 추가
         # (data_raw는 복수연도 포함 → 당해연도만 필터)
-        # data_lastraw는 LY 전용 테이블이므로 월 필터만으로 충분
         if year_int:
+            # data_raw 투숙년도 = 당해연도
             where_clause.append(
                 {
                     "Condition": {
@@ -412,6 +412,8 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
                     }
                 }
             )
+            # data_lastraw는 LY 전용 테이블이므로 추가 년도 필터 불필요
+            # (투숙년도_last 필터를 추가하면 data_raw가 cross-filter되어 TY 수치가 줄어듦)
             logger.info(f"투숙년도 필터 추가: data_raw={year_int}")
 
         sem_cmd = (
@@ -558,15 +560,9 @@ def parse_channel_rns(result: dict) -> dict:
         rev      = row["rev_만원"]
         rns_ly   = row["rns_ly"] or 0
 
-        # 빈 channel = 사업장 소계 행
+        # 빈 channel = DSR 사업장 소계 행 (data_lastraw implicit join으로 수치가 왜곡될 수 있어 스킵)
+        # total_rns/total_rns_ly는 채널 합산으로 재계산
         if not channel:
-            prop_entry = properties.setdefault(property_, {
-                "total_rns": 0,
-                "total_rns_ly": 0,
-                "channels": {},
-            })
-            prop_entry["total_rns"]    = rns
-            prop_entry["total_rns_ly"] = rns_ly
             continue
 
         # 채널별 사업장 데이터
@@ -580,6 +576,9 @@ def parse_channel_rns(result: dict) -> dict:
             "rev_만원": rev,
             "rns_ly":   rns_ly,
         }
+        # 채널 합산으로 사업장 소계 유지
+        prop_entry["total_rns"]    += rns
+        prop_entry["total_rns_ly"] += rns_ly
 
         # 채널 전체 합계
         ch_entry = channels_total.setdefault(channel, {"total_rns": 0, "total_rns_ly": 0})
@@ -672,6 +671,45 @@ def _build_actual_by_segment_query(stay_month_yyyymm: str) -> dict:
                                                         }
                                                     },
                                                     "Right": {"Literal": {"Value": f"{year_int}L"}},
+                                                }
+                                            }
+                                        },
+                                        # 세그구분 IN (OTA, GOTA, INBOUND)
+                                        {
+                                            "Condition": {
+                                                "In": {
+                                                    "Expressions": [
+                                                        {
+                                                            "Column": {
+                                                                "Expression": {"SourceRef": {"Source": "d"}},
+                                                                "Property": "세그구분",
+                                                            }
+                                                        }
+                                                    ],
+                                                    "Values": [
+                                                        [{"Literal": {"Value": "'OTA'"}}],
+                                                        [{"Literal": {"Value": "'GOTA'"}}],
+                                                        [{"Literal": {"Value": "'INBOUND'"}}],
+                                                    ],
+                                                }
+                                            }
+                                        },
+                                        # 제외 ≠ 'BL'
+                                        {
+                                            "Condition": {
+                                                "Not": {
+                                                    "Expression": {
+                                                        "Comparison": {
+                                                            "ComparisonKind": 0,
+                                                            "Left": {
+                                                                "Column": {
+                                                                    "Expression": {"SourceRef": {"Source": "d"}},
+                                                                    "Property": "제외",
+                                                                }
+                                                            },
+                                                            "Right": {"Literal": {"Value": "'BL'"}},
+                                                        }
+                                                    }
                                                 }
                                             }
                                         },
