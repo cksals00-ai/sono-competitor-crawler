@@ -11,6 +11,7 @@ Usage:
 
 import json
 import logging
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -117,7 +118,7 @@ def load_config(config_path: str = "config.yaml") -> dict:
 
 
 def _load_fit_rates(json_path: str = "fit_rates.json") -> dict:
-    """자사 FIT 요금 JSON 로드. 없으면 빈 dict 반환."""
+    """자사 브래드닷컴 객실요금 JSON 로드. 없으면 빈 dict 반환."""
     try:
         p = Path(json_path)
         if not p.exists():
@@ -341,7 +342,10 @@ def _clean_room_type(room_type: str) -> str:
     """객실명 정규화: 프로모션 접두어·옵션 접미사 제거 후 20자 이내로 반환.
 
     - Trip.com 최저가 레이블('최저가', '최저가(참고)')은 그대로 표시
-    - 네이버호텔/Trip.com 형식의 ' - 무료 Wi-Fi' 등 옵션 접미사 제거
+    - ' - 무료 Wi-Fi', ' - Room Only' 등 옵션 접미사 제거
+    - '(취사/스탠다드/침대)' 등 슬래시 포함 괄호 제거
+    - '(룸온리)', '(전망없음)' 등 조건 키워드 괄호 제거
+    - '[확정예약]', '[13평]' 등 대괄호 태그 제거
     - 3채널(야놀자·네이버호텔·Trip.com) 동일 형식으로 표시
     """
     if not room_type:
@@ -353,9 +357,20 @@ def _clean_room_type(room_type: str) -> str:
     rt = room_type
     for pfx in PROMO_PREFIXES:
         rt = rt.replace(pfx, "").strip()
-    # 네이버호텔/Trip.com 스타일: " - 무료 Wi-Fi", " - Room Only" 등 옵션 접미사 제거
+    # 옵션 접미사 제거: " - 무료 Wi-Fi", " - Room Only" 등
     if " - " in rt:
         rt = rt.split(" - ")[0].strip()
+    # 슬래시 포함 괄호 제거: "(취사/스탠다드/침대)", "(클린/파크뷰/침대)" 등
+    rt = re.sub(r'\s*\([^)]*\/[^)]*\)', '', rt).strip()
+    # 조건 키워드 괄호 제거: "(룸온리)", "(룸온니)", "(전망없음)", "(No View)" 등
+    rt = re.sub(
+        r'\s*\([^)]*(?:룸온리|룸온니|없음|Only|Kitchen|Standard|Bed|View|뷰|전망)\s*[^)]*\)',
+        '', rt, flags=re.IGNORECASE
+    ).strip()
+    # 대괄호 태그 제거: "[확정예약]", "[13평]", "[쉿크릿]" 등
+    rt = re.sub(r'\s*\[[^\]]*\]\s*', ' ', rt).strip()
+    # 연속 공백 정리
+    rt = re.sub(r'\s+', ' ', rt).strip()
     if len(rt) > 20:
         rt = rt[:19] + "…"
     return rt
@@ -465,9 +480,35 @@ def _normalize_ota(ota) -> str:
     return ota_str
 
 
+def _build_naver_url_map(df: pd.DataFrame) -> dict:
+    """CSV 데이터에서 경쟁사명 → 네이버호텔 공개 URL 매핑 반환.
+    config.yaml의 naver_id는 GraphQL 내부 ID로 공개 URL과 다르므로 크롤링 데이터를 사용."""
+    if df is None or df.empty:
+        return {}
+    url_col  = "url"             if "url"             in df.columns else None
+    comp_col = "competitor_name" if "competitor_name" in df.columns else None
+    ota_col  = "ota"             if "ota"             in df.columns else None
+    if not all([url_col, comp_col, ota_col]):
+        return {}
+    # 네이버호텔 관련 OTA 행만 (raw ota 값이 "네이버"로 시작)
+    naver_mask = df[ota_col].fillna("").astype(str).str.startswith("네이버")
+    naver_df = df[naver_mask]
+    result = {}
+    for comp_name, grp in naver_df.groupby(comp_col):
+        urls = grp[url_col].dropna().astype(str)
+        valid = urls[
+            urls.str.startswith("https://hotels.naver.com/") &
+            (urls.str.len() > len("https://hotels.naver.com/"))
+        ]
+        if not valid.empty:
+            # 쿼리스트링 제거 후 베이스 URL만 보존
+            result[comp_name] = valid.iloc[0].split("?")[0]
+    return result
+
+
 def _get_ota_url(entity: dict, ota: str) -> str:
     """competitor dict 또는 own_urls dict에서 OTA 기본 URL 조합.
-    entity에는 yanolja_url, agoda_url, naver_id, tripcom_hotel_id 등이 있다."""
+    entity에는 yanolja_url, agoda_url, naver_url, tripcom_hotel_id 등이 있다."""
     if ota == "야놀자":
         return entity.get("yanolja_url", "")
     if ota == "여기어때":
@@ -475,13 +516,13 @@ def _get_ota_url(entity: dict, ota: str) -> str:
     if ota == "Agoda":
         return entity.get("agoda_url", "")
     if ota == "네이버호텔":
-        nid = entity.get("naver_id", "")
-        return f"https://hotels.naver.com/hotels/{nid}" if nid else ""
+        # 크롤링 데이터에서 추출한 실제 공개 URL 우선 사용
+        return entity.get("naver_url", "")
     if ota == "Trip.com":
         hotel_id = entity.get("tripcom_hotel_id", 0)
         city_id  = entity.get("tripcom_city_id", 0)
         if hotel_id:
-            return f"https://www.trip.com/hotels/detail/?hotelId={hotel_id}&cityId={city_id}"
+            return f"https://kr.trip.com/hotels/detail/?hotelId={hotel_id}&cityId={city_id}"
         return ""
     return ""
 
@@ -914,7 +955,7 @@ def _render_homepage_section(
 
 
 def _render_fit_section(prop_name: str, fit_data: dict) -> str:
-    """자사 FIT 요금 토글 섹션 HTML 생성.
+    """자사 브래드닷컴 객실요금 토글 섹션 HTML 생성.
 
     fit_data 구조:
     {
@@ -984,7 +1025,7 @@ def _render_fit_section(prop_name: str, fit_data: dict) -> str:
             f'<table class="homepage-table">'
             f'<thead><tr>'
             f'<th class="hp-th-room">객실타입</th>'
-            f'<th class="hp-th-price">FIT 요금</th>'
+            f'<th class="hp-th-price">브래드닷컴 객실요금</th>'
             f'<th class="hp-th-meta">날짜 / 시즌</th>'
             f'</tr></thead>'
             f'<tbody>{inner}</tbody>'
@@ -996,7 +1037,7 @@ def _render_fit_section(prop_name: str, fit_data: dict) -> str:
     return f"""\
 <div class="fit-section">
   <button class="fit-toggle" type="button">
-    <span class="fit-toggle-label">FIT 요금 (자사 기준)</span>
+    <span class="fit-toggle-label">브래드닷컴 객실요금</span>
     <span class="fit-toggle-meta">{gen_label}</span>
     <span class="fit-arrow">&#9660;</span>
   </button>
@@ -1029,6 +1070,9 @@ def _render_property_card(
     ])
     review_summary = review_summary or {}
 
+    # 네이버호텔 실제 공개 URL 맵 (크롤링 데이터 기반, config naver_id와 공개 ID가 다름)
+    naver_url_map = _build_naver_url_map(df)
+
     if not df.empty and "property_name" in df.columns:
         prop_df  = df[df["property_name"] == prop_name]
         ok_count = int((prop_df["error"].fillna("") == "").sum()) if "error" in prop_df.columns else len(prop_df)
@@ -1044,11 +1088,12 @@ def _render_property_card(
 
     # ── 자사 가격 행 ──────────────────────────────────────────────────────────
     if has_own:
+        own_urls_with_naver = {**own_urls, "naver_url": naver_url_map.get(prop_name, "")}
         own_cells = "".join(
             _render_price_cell(
                 prop_name, prop_name, ota,
                 summaries, prev_per_date,
-                _get_ota_url(own_urls, ota),
+                _get_ota_url(own_urls_with_naver, ota),
                 is_own=True,
                 review_summary=review_summary,
             )
@@ -1066,11 +1111,12 @@ def _render_property_card(
     # ── 경쟁사 행 ─────────────────────────────────────────────────────────────
     for comp in competitors:
         comp_name = comp["name"]
+        comp_with_naver = {**comp, "naver_url": naver_url_map.get(comp_name, "")}
         cells = "".join(
             _render_price_cell(
                 prop_name, comp_name, ota,
                 summaries, prev_per_date,
-                _get_ota_url(comp, ota),
+                _get_ota_url(comp_with_naver, ota),
                 review_summary=review_summary,
             )
             for ota in OTA_ORDER
@@ -2150,7 +2196,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
 .hp-price { text-align: right; font-variant-numeric: tabular-nums; color: var(--c-homepage); font-weight: 700; }
 .hp-meta  { text-align: right; font-size: 10px; color: var(--muted); }
 
-/* ── FIT 요금 Section ── */
+/* ── 브래드닷컴 객실요금 Section ── */
 .fit-section {
   border-bottom: 1px solid var(--border);
 }
@@ -2286,7 +2332,7 @@ _JS = """
     });
   });
 
-  // ── FIT 요금 토글 ─────────────────────────────────────────────────────────
+  // ── 브래드닷컴 객실요금 토글 ─────────────────────────────────────────────────────────
   var fitToggles = toArr(document.querySelectorAll('.fit-toggle'));
   fitToggles.forEach(function (btn) {
     btn.addEventListener('click', function () {
