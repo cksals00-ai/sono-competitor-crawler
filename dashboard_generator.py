@@ -638,6 +638,69 @@ def _render_price_cell(
     return f'<td class="price-cell">{"".join(layers)}</td>'
 
 
+def _render_budget_bars(budget_info: dict | None) -> str:
+    """
+    OTA/GOTA/합계 목표 달성률 프로그레스바 HTML 생성.
+    달성률 < 80% → 빨강, 80-99% → 노랑, >= 100% → 초록
+    """
+    if not budget_info:
+        return ""
+
+    def _bar_row(label: str, actual: int, budget: int) -> str:
+        if budget <= 0:
+            return ""
+        pct = round(actual / budget * 100)
+        bar_w = min(pct, 100)
+        # 초과달성은 별도 오버플로우 표시
+        overflow_w = max(min(pct - 100, 50), 0)  # 최대 50%p 오버플로우 시각화
+
+        color_cls = (
+            "bgt-green" if pct >= 100
+            else "bgt-yellow" if pct >= 80
+            else "bgt-red"
+        )
+        overflow_html = (
+            f'<div class="bgt-bar-overflow {color_cls}" style="width:{overflow_w}%"></div>'
+            if overflow_w > 0 else ""
+        )
+        return f"""\
+<div class="bgt-row">
+  <span class="bgt-seg">{label}</span>
+  <div class="bgt-bar-wrap">
+    <div class="bgt-bar-bg">
+      <div class="bgt-bar-fill {color_cls}" style="width:{bar_w}%"></div>
+      {overflow_html}
+    </div>
+  </div>
+  <span class="bgt-pct {color_cls}">{pct}%</span>
+  <span class="bgt-nums">{actual:,} / {budget:,}</span>
+</div>"""
+
+    rows = []
+    ota  = budget_info.get("OTA",  {})
+    gota = budget_info.get("GOTA", {})
+    total_budget = budget_info.get("total_budget", 0)
+    total_actual = (ota.get("actual", 0) or 0) + (gota.get("actual", 0) or 0)
+
+    if ota and ota.get("budget", 0):
+        rows.append(_bar_row("OTA",  ota.get("actual", 0) or 0,  ota["budget"]))
+    if gota and gota.get("budget", 0):
+        rows.append(_bar_row("GOTA", gota.get("actual", 0) or 0, gota["budget"]))
+    if total_budget:
+        rows.append(_bar_row("합계", total_actual, total_budget))
+
+    rows = [r for r in rows if r]
+    if not rows:
+        return ""
+
+    return (
+        '<div class="bgt-section">'
+        '<div class="bgt-title">목표 달성률 (BU)</div>'
+        + "".join(rows)
+        + "</div>"
+    )
+
+
 def _render_channel_section(prop_name: str, channel_data: dict) -> str:
     """채널별 판매객실수 토글 섹션 HTML 생성."""
     if not channel_data:
@@ -651,6 +714,7 @@ def _render_channel_section(prop_name: str, channel_data: dict) -> str:
     label      = meta.get("label", "금월")
     ch_data    = entry.get("channels", {})
     total      = entry.get("total", {})
+    budget_info = entry.get("budget")
 
     # 사업장에 실제 데이터가 있는 채널만, RNS 내림차순 정렬
     channels = sorted(
@@ -691,7 +755,8 @@ def _render_channel_section(prop_name: str, channel_data: dict) -> str:
     else:
         t_growth = '<span class="ch-na">-</span>'
 
-    rows_html = "\n".join(rows)
+    rows_html    = "\n".join(rows)
+    budget_html  = _render_budget_bars(budget_info)
     return f"""\
 <div class="channel-section">
   <button class="channel-toggle" type="button">
@@ -700,6 +765,7 @@ def _render_channel_section(prop_name: str, channel_data: dict) -> str:
     <span class="channel-arrow">&#9660;</span>
   </button>
   <div class="channel-body">
+{budget_html}
     <table class="channel-table">
       <thead>
         <tr>
@@ -1942,6 +2008,70 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   border-bottom: none;
   color: var(--text);
   padding-top: 6px;
+}
+
+/* ── Budget 달성률 섹션 ── */
+.bgt-section {
+  padding: 10px 12px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.bgt-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.bgt-row {
+  display: grid;
+  grid-template-columns: 36px 1fr 44px 100px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.bgt-seg {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: right;
+}
+.bgt-bar-wrap { position: relative; height: 12px; }
+.bgt-bar-bg {
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,.08);
+  border-radius: 6px;
+  overflow: visible;
+  position: relative;
+}
+.bgt-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width .3s ease;
+}
+.bgt-bar-overflow {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  height: 100%;
+  border-radius: 0 6px 6px 0;
+  opacity: .55;
+}
+.bgt-green  { background: #4ade80; color: #4ade80; }
+.bgt-yellow { background: #fbbf24; color: #fbbf24; }
+.bgt-red    { background: #f87171; color: #f87171; }
+.bgt-pct {
+  font-size: 12px;
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.bgt-nums {
+  font-size: 10px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
 }
 
 /* ── Homepage section (자사몰 객실가격 토글) ── */
