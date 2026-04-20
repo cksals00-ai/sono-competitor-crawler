@@ -517,7 +517,11 @@ def _get_ota_url(entity: dict, ota: str) -> str:
         return entity.get("agoda_url", "")
     if ota == "네이버호텔":
         # 크롤링 데이터에서 추출한 실제 공개 URL 우선 사용
-        return entity.get("naver_url", "")
+        naver_url = entity.get("naver_url", "")
+        # ID 없는 URL (https://hotels.naver.com/ 만 있는 경우) 필터링
+        if naver_url and naver_url.rstrip("/") != "https://hotels.naver.com":
+            return naver_url
+        return ""
     if ota == "Trip.com":
         hotel_id = entity.get("tripcom_hotel_id", 0)
         city_id  = entity.get("tripcom_city_id", 0)
