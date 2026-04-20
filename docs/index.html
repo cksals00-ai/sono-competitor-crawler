@@ -566,6 +566,47 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   padding-top: 6px;
 }
 
+/* ── Budget 달성률 게이지 섹션 ── */
+.bgt-section {
+  padding: 10px 8px 6px;
+  border-bottom: 1px solid var(--border);
+}
+.bgt-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+  text-align: center;
+}
+.gauge-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 4px;
+}
+.gauge-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.gauge-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 2px;
+  text-align: center;
+}
+.gauge-svg {
+  width: 100%;
+  max-width: 110px;
+  height: auto;
+  overflow: visible;
+}
+
 /* ── Homepage section (자사몰 객실가격 토글) ── */
 .homepage-section {
   border-bottom: 1px solid var(--border);
@@ -684,7 +725,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         <span class="header-title">소노 경쟁사 모니터링</span>
         <span class="header-team-badge">GS Team</span>
       </div>
-      <div class="header-meta">수집: 2026-04-18 23:45&ensp;&middot;&ensp;생성: 2026-04-20 10:28&ensp;&middot;&ensp;대상기간: 4/24 ~ 5/16&ensp;&middot;&ensp;비교기준: 전일</div>
+      <div class="header-meta">수집: 2026-04-18 23:45&ensp;&middot;&ensp;생성: 2026-04-20 10:05&ensp;&middot;&ensp;대상기간: 4/24 ~ 5/16&ensp;&middot;&ensp;비교기준: 전일</div>
     </div>
     <div class="header-badge">LIVE</div>
   </div>
@@ -837,6 +878,85 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     <span class="channel-arrow">&#9660;</span>
   </button>
   <div class="channel-body">
+<div class="bgt-section"><div class="bgt-title">목표 달성률 (BU)</div><div class="gauge-row"><div class="gauge-wrap">
+  <div class="gauge-label">OTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="OTA 달성률 53.8%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#f87171" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="81.1 220.5"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#f87171">53.8%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">242</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">450</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">GOTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="GOTA 달성률 35.0%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#f87171" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="52.8 248.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#f87171">35.0%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">77</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">220</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">합계</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="합계 달성률 47.6%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#f87171" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="71.8 229.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#f87171">47.6%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">319</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">670</text>
+  </svg>
+</div></div></div>
     <table class="channel-table">
       <thead>
         <tr>
@@ -847,29 +967,29 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         </tr>
       </thead>
       <tbody>
-<tr><td class="ch-name">스마트인피니</td><td class="ch-num">76</td><td class="ch-num ch-prev">27</td><td class="ch-growth"><span class="ch-up">+181%</span></td></tr>
-<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">57</td><td class="ch-num ch-prev">25</td><td class="ch-growth"><span class="ch-up">+128%</span></td></tr>
-<tr><td class="ch-name">아고다</td><td class="ch-num">47</td><td class="ch-num ch-prev">117</td><td class="ch-growth"><span class="ch-dn">-60%</span></td></tr>
-<tr><td class="ch-name">야놀자</td><td class="ch-num">38</td><td class="ch-num ch-prev">101</td><td class="ch-growth"><span class="ch-dn">-62%</span></td></tr>
-<tr><td class="ch-name">여기어때</td><td class="ch-num">21</td><td class="ch-num ch-prev">90</td><td class="ch-growth"><span class="ch-dn">-77%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">76</td><td class="ch-num ch-prev">62</td><td class="ch-growth"><span class="ch-up">+23%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">57</td><td class="ch-num ch-prev">34</td><td class="ch-growth"><span class="ch-up">+68%</span></td></tr>
+<tr><td class="ch-name">아고다</td><td class="ch-num">47</td><td class="ch-num ch-prev">206</td><td class="ch-growth"><span class="ch-dn">-77%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">38</td><td class="ch-num ch-prev">217</td><td class="ch-growth"><span class="ch-dn">-82%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">21</td><td class="ch-num ch-prev">212</td><td class="ch-growth"><span class="ch-dn">-90%</span></td></tr>
 <tr><td class="ch-name">프리즘</td><td class="ch-num">17</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">익스피디아</td><td class="ch-num">14</td><td class="ch-num ch-prev">41</td><td class="ch-growth"><span class="ch-dn">-66%</span></td></tr>
-<tr><td class="ch-name">트립닷컴</td><td class="ch-num">8</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-up">+60%</span></td></tr>
-<tr><td class="ch-name">네이버</td><td class="ch-num">8</td><td class="ch-num ch-prev">32</td><td class="ch-growth"><span class="ch-dn">-75%</span></td></tr>
-<tr><td class="ch-name">웹투어</td><td class="ch-num">8</td><td class="ch-num ch-prev">8</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
-<tr><td class="ch-name">올마이투어</td><td class="ch-num">6</td><td class="ch-num ch-prev">9</td><td class="ch-growth"><span class="ch-dn">-33%</span></td></tr>
-<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">5</td><td class="ch-num ch-prev">4</td><td class="ch-growth"><span class="ch-up">+25%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">14</td><td class="ch-num ch-prev">118</td><td class="ch-growth"><span class="ch-dn">-88%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">8</td><td class="ch-num ch-prev">29</td><td class="ch-growth"><span class="ch-dn">-72%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">8</td><td class="ch-num ch-prev">362</td><td class="ch-growth"><span class="ch-dn">-98%</span></td></tr>
+<tr><td class="ch-name">웹투어</td><td class="ch-num">8</td><td class="ch-num ch-prev">19</td><td class="ch-growth"><span class="ch-dn">-58%</span></td></tr>
+<tr><td class="ch-name">올마이투어</td><td class="ch-num">6</td><td class="ch-num ch-prev">53</td><td class="ch-growth"><span class="ch-dn">-89%</span></td></tr>
+<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">5</td><td class="ch-num ch-prev">31</td><td class="ch-growth"><span class="ch-dn">-84%</span></td></tr>
 <tr><td class="ch-name">마이리얼트립</td><td class="ch-num">4</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
 <tr><td class="ch-name">쿠팡</td><td class="ch-num">4</td><td class="ch-num ch-prev">22</td><td class="ch-growth"><span class="ch-dn">-82%</span></td></tr>
 <tr><td class="ch-name">종이비행기</td><td class="ch-num">2</td><td class="ch-num ch-prev">34</td><td class="ch-growth"><span class="ch-dn">-94%</span></td></tr>
 <tr><td class="ch-name">코이스토리</td><td class="ch-num">2</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">트립비토즈</td><td class="ch-num">1</td><td class="ch-num ch-prev">30</td><td class="ch-growth"><span class="ch-dn">-97%</span></td></tr>
-<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">트립비토즈</td><td class="ch-num">1</td><td class="ch-num ch-prev">34</td><td class="ch-growth"><span class="ch-dn">-97%</span></td></tr>
+<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">1</td><td class="ch-num ch-prev">4</td><td class="ch-growth"><span class="ch-dn">-75%</span></td></tr>
         <tr class="ch-total-row">
           <td class="ch-name">합계</td>
           <td class="ch-num">319</td>
-          <td class="ch-num ch-prev">545</td>
-          <td class="ch-growth"><span class="ch-dn">-41%</span></td>
+          <td class="ch-num ch-prev">1,437</td>
+          <td class="ch-growth"><span class="ch-dn">-78%</span></td>
         </tr>
       </tbody>
     </table>
@@ -942,6 +1062,85 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     <span class="channel-arrow">&#9660;</span>
   </button>
   <div class="channel-body">
+<div class="bgt-section"><div class="bgt-title">목표 달성률 (BU)</div><div class="gauge-row"><div class="gauge-wrap">
+  <div class="gauge-label">OTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="OTA 달성률 114.3%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">114.3%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">5,145</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">4,500</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">GOTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="GOTA 달성률 109.7%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">109.7%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">658</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">600</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">합계</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="합계 달성률 109.5%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">109.5%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">5,803</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">5,300</text>
+  </svg>
+</div></div></div>
     <table class="channel-table">
       <thead>
         <tr>
@@ -952,40 +1151,40 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         </tr>
       </thead>
       <tbody>
-<tr><td class="ch-name">스마트인피니</td><td class="ch-num">1,247</td><td class="ch-num ch-prev">571</td><td class="ch-growth"><span class="ch-up">+118%</span></td></tr>
-<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">766</td><td class="ch-num ch-prev">470</td><td class="ch-growth"><span class="ch-up">+63%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">1,247</td><td class="ch-num ch-prev">1,709</td><td class="ch-growth"><span class="ch-dn">-27%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">766</td><td class="ch-num ch-prev">529</td><td class="ch-growth"><span class="ch-up">+45%</span></td></tr>
 <tr><td class="ch-name">쿠팡</td><td class="ch-num">684</td><td class="ch-num ch-prev">894</td><td class="ch-growth"><span class="ch-dn">-23%</span></td></tr>
-<tr><td class="ch-name">올마이투어</td><td class="ch-num">591</td><td class="ch-num ch-prev">887</td><td class="ch-growth"><span class="ch-dn">-33%</span></td></tr>
-<tr><td class="ch-name">웹투어</td><td class="ch-num">441</td><td class="ch-num ch-prev">15</td><td class="ch-growth"><span class="ch-up">+2840%</span></td></tr>
-<tr><td class="ch-name">야놀자</td><td class="ch-num">340</td><td class="ch-num ch-prev">421</td><td class="ch-growth"><span class="ch-dn">-19%</span></td></tr>
-<tr><td class="ch-name">여기어때</td><td class="ch-num">309</td><td class="ch-num ch-prev">326</td><td class="ch-growth"><span class="ch-dn">-5%</span></td></tr>
-<tr><td class="ch-name">종이비행기</td><td class="ch-num">292</td><td class="ch-num ch-prev">972</td><td class="ch-growth"><span class="ch-dn">-70%</span></td></tr>
-<tr><td class="ch-name">아고다</td><td class="ch-num">283</td><td class="ch-num ch-prev">131</td><td class="ch-growth"><span class="ch-up">+116%</span></td></tr>
-<tr><td class="ch-name">맥스모바일</td><td class="ch-num">181</td><td class="ch-num ch-prev">218</td><td class="ch-growth"><span class="ch-dn">-17%</span></td></tr>
+<tr><td class="ch-name">올마이투어</td><td class="ch-num">591</td><td class="ch-num ch-prev">938</td><td class="ch-growth"><span class="ch-dn">-37%</span></td></tr>
+<tr><td class="ch-name">웹투어</td><td class="ch-num">441</td><td class="ch-num ch-prev">116</td><td class="ch-growth"><span class="ch-up">+280%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">340</td><td class="ch-num ch-prev">2,398</td><td class="ch-growth"><span class="ch-dn">-86%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">309</td><td class="ch-num ch-prev">1,864</td><td class="ch-growth"><span class="ch-dn">-83%</span></td></tr>
+<tr><td class="ch-name">종이비행기</td><td class="ch-num">292</td><td class="ch-num ch-prev">882</td><td class="ch-growth"><span class="ch-dn">-67%</span></td></tr>
+<tr><td class="ch-name">아고다</td><td class="ch-num">283</td><td class="ch-num ch-prev">1,071</td><td class="ch-growth"><span class="ch-dn">-74%</span></td></tr>
+<tr><td class="ch-name">맥스모바일</td><td class="ch-num">181</td><td class="ch-num ch-prev">1,136</td><td class="ch-growth"><span class="ch-dn">-84%</span></td></tr>
 <tr><td class="ch-name">마이리얼트립</td><td class="ch-num">155</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
 <tr><td class="ch-name">코이스토리</td><td class="ch-num">152</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">트립비토즈</td><td class="ch-num">126</td><td class="ch-num ch-prev">68</td><td class="ch-growth"><span class="ch-up">+85%</span></td></tr>
-<tr><td class="ch-name">네이버</td><td class="ch-num">69</td><td class="ch-num ch-prev">90</td><td class="ch-growth"><span class="ch-dn">-23%</span></td></tr>
-<tr><td class="ch-name">트립닷컴</td><td class="ch-num">58</td><td class="ch-num ch-prev">62</td><td class="ch-growth"><span class="ch-dn">-6%</span></td></tr>
-<tr><td class="ch-name">OTA_웅진컴퍼스(놀이의발견)</td><td class="ch-num">25</td><td class="ch-num ch-prev">21</td><td class="ch-growth"><span class="ch-up">+19%</span></td></tr>
-<tr><td class="ch-name">익스피디아</td><td class="ch-num">24</td><td class="ch-num ch-prev">81</td><td class="ch-growth"><span class="ch-dn">-70%</span></td></tr>
-<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">16</td><td class="ch-num ch-prev">37</td><td class="ch-growth"><span class="ch-dn">-57%</span></td></tr>
+<tr><td class="ch-name">트립비토즈</td><td class="ch-num">126</td><td class="ch-num ch-prev">328</td><td class="ch-growth"><span class="ch-dn">-62%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">69</td><td class="ch-num ch-prev">1,426</td><td class="ch-growth"><span class="ch-dn">-95%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">58</td><td class="ch-num ch-prev">155</td><td class="ch-growth"><span class="ch-dn">-63%</span></td></tr>
+<tr><td class="ch-name">OTA_웅진컴퍼스(놀이의발견)</td><td class="ch-num">25</td><td class="ch-num ch-prev">42</td><td class="ch-growth"><span class="ch-dn">-40%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">24</td><td class="ch-num ch-prev">385</td><td class="ch-growth"><span class="ch-dn">-94%</span></td></tr>
+<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">16</td><td class="ch-num ch-prev">262</td><td class="ch-growth"><span class="ch-dn">-94%</span></td></tr>
 <tr><td class="ch-name">OTA_가자고투어</td><td class="ch-num">7</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_이참조은레저</td><td class="ch-num">6</td><td class="ch-num ch-prev">10</td><td class="ch-growth"><span class="ch-dn">-40%</span></td></tr>
-<tr><td class="ch-name">트립토파즈</td><td class="ch-num">6</td><td class="ch-num ch-prev">4</td><td class="ch-growth"><span class="ch-up">+50%</span></td></tr>
-<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">6</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_새서울여행사</td><td class="ch-num">2</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
-<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">2</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
-<tr><td class="ch-name">OTA_아이러브레저</td><td class="ch-num">2</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+100%</span></td></tr>
-<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">2</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+100%</span></td></tr>
-<tr><td class="ch-name">OTA_기븐존여행클럽</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">1</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
-<tr><td class="ch-name">OTA_스테이원</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">OTA_이참조은레저</td><td class="ch-num">6</td><td class="ch-num ch-prev">97</td><td class="ch-growth"><span class="ch-dn">-94%</span></td></tr>
+<tr><td class="ch-name">트립토파즈</td><td class="ch-num">6</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-up">+20%</span></td></tr>
+<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">6</td><td class="ch-num ch-prev">14</td><td class="ch-growth"><span class="ch-dn">-57%</span></td></tr>
+<tr><td class="ch-name">OTA_새서울여행사</td><td class="ch-num">2</td><td class="ch-num ch-prev">14</td><td class="ch-growth"><span class="ch-dn">-86%</span></td></tr>
+<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">2</td><td class="ch-num ch-prev">14</td><td class="ch-growth"><span class="ch-dn">-86%</span></td></tr>
+<tr><td class="ch-name">OTA_아이러브레저</td><td class="ch-num">2</td><td class="ch-num ch-prev">11</td><td class="ch-growth"><span class="ch-dn">-82%</span></td></tr>
+<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">2</td><td class="ch-num ch-prev">54</td><td class="ch-growth"><span class="ch-dn">-96%</span></td></tr>
+<tr><td class="ch-name">OTA_기븐존여행클럽</td><td class="ch-num">1</td><td class="ch-num ch-prev">16</td><td class="ch-growth"><span class="ch-dn">-94%</span></td></tr>
+<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">1</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-dn">-80%</span></td></tr>
+<tr><td class="ch-name">OTA_스테이원</td><td class="ch-num">1</td><td class="ch-num ch-prev">7</td><td class="ch-growth"><span class="ch-dn">-86%</span></td></tr>
         <tr class="ch-total-row">
           <td class="ch-name">합계</td>
           <td class="ch-num">5,795</td>
-          <td class="ch-num ch-prev">5,285</td>
-          <td class="ch-growth"><span class="ch-up">+10%</span></td>
+          <td class="ch-num ch-prev">14,372</td>
+          <td class="ch-growth"><span class="ch-dn">-60%</span></td>
         </tr>
       </tbody>
     </table>
@@ -1058,6 +1257,85 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     <span class="channel-arrow">&#9660;</span>
   </button>
   <div class="channel-body">
+<div class="bgt-section"><div class="bgt-title">목표 달성률 (BU)</div><div class="gauge-row"><div class="gauge-wrap">
+  <div class="gauge-label">OTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="OTA 달성률 68.3%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#f87171" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="103.0 198.6"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#f87171">68.3%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">594</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">870</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">GOTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="GOTA 달성률 86.7%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#fbbf24" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="130.7 170.9"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#fbbf24">86.7%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">312</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">360</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">합계</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="합계 달성률 73.7%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#f87171" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="111.1 190.5"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#f87171">73.7%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">906</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">1,230</text>
+  </svg>
+</div></div></div>
     <table class="channel-table">
       <thead>
         <tr>
@@ -1068,38 +1346,38 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         </tr>
       </thead>
       <tbody>
-<tr><td class="ch-name">아고다</td><td class="ch-num">198</td><td class="ch-num ch-prev">125</td><td class="ch-growth"><span class="ch-up">+58%</span></td></tr>
-<tr><td class="ch-name">야놀자</td><td class="ch-num">165</td><td class="ch-num ch-prev">161</td><td class="ch-growth"><span class="ch-up">+2%</span></td></tr>
-<tr><td class="ch-name">여기어때</td><td class="ch-num">92</td><td class="ch-num ch-prev">125</td><td class="ch-growth"><span class="ch-dn">-26%</span></td></tr>
-<tr><td class="ch-name">스마트인피니</td><td class="ch-num">83</td><td class="ch-num ch-prev">41</td><td class="ch-growth"><span class="ch-up">+102%</span></td></tr>
-<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">54</td><td class="ch-num ch-prev">81</td><td class="ch-growth"><span class="ch-dn">-33%</span></td></tr>
-<tr><td class="ch-name">웹투어</td><td class="ch-num">46</td><td class="ch-num ch-prev">7</td><td class="ch-growth"><span class="ch-up">+557%</span></td></tr>
-<tr><td class="ch-name">트립닷컴</td><td class="ch-num">45</td><td class="ch-num ch-prev">32</td><td class="ch-growth"><span class="ch-up">+41%</span></td></tr>
-<tr><td class="ch-name">익스피디아</td><td class="ch-num">35</td><td class="ch-num ch-prev">48</td><td class="ch-growth"><span class="ch-dn">-27%</span></td></tr>
+<tr><td class="ch-name">아고다</td><td class="ch-num">198</td><td class="ch-num ch-prev">673</td><td class="ch-growth"><span class="ch-dn">-71%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">165</td><td class="ch-num ch-prev">725</td><td class="ch-growth"><span class="ch-dn">-77%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">92</td><td class="ch-num ch-prev">572</td><td class="ch-growth"><span class="ch-dn">-84%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">83</td><td class="ch-num ch-prev">129</td><td class="ch-growth"><span class="ch-dn">-36%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">54</td><td class="ch-num ch-prev">132</td><td class="ch-growth"><span class="ch-dn">-59%</span></td></tr>
+<tr><td class="ch-name">웹투어</td><td class="ch-num">46</td><td class="ch-num ch-prev">81</td><td class="ch-growth"><span class="ch-dn">-43%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">45</td><td class="ch-num ch-prev">62</td><td class="ch-growth"><span class="ch-dn">-27%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">35</td><td class="ch-num ch-prev">271</td><td class="ch-growth"><span class="ch-dn">-87%</span></td></tr>
 <tr><td class="ch-name">쿠팡</td><td class="ch-num">33</td><td class="ch-num ch-prev">79</td><td class="ch-growth"><span class="ch-dn">-58%</span></td></tr>
-<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">28</td><td class="ch-num ch-prev">18</td><td class="ch-growth"><span class="ch-up">+56%</span></td></tr>
-<tr><td class="ch-name">올마이투어</td><td class="ch-num">27</td><td class="ch-num ch-prev">31</td><td class="ch-growth"><span class="ch-dn">-13%</span></td></tr>
-<tr><td class="ch-name">네이버</td><td class="ch-num">23</td><td class="ch-num ch-prev">39</td><td class="ch-growth"><span class="ch-dn">-41%</span></td></tr>
+<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">28</td><td class="ch-num ch-prev">147</td><td class="ch-growth"><span class="ch-dn">-81%</span></td></tr>
+<tr><td class="ch-name">올마이투어</td><td class="ch-num">27</td><td class="ch-num ch-prev">45</td><td class="ch-growth"><span class="ch-dn">-40%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">23</td><td class="ch-num ch-prev">495</td><td class="ch-growth"><span class="ch-dn">-95%</span></td></tr>
 <tr><td class="ch-name">종이비행기</td><td class="ch-num">19</td><td class="ch-num ch-prev">56</td><td class="ch-growth"><span class="ch-dn">-66%</span></td></tr>
 <tr><td class="ch-name">마이리얼트립</td><td class="ch-num">11</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
 <tr><td class="ch-name">트립토파즈</td><td class="ch-num">11</td><td class="ch-num ch-prev">9</td><td class="ch-growth"><span class="ch-up">+22%</span></td></tr>
-<tr><td class="ch-name">OTA_웅진컴퍼스(놀이의발견)</td><td class="ch-num">8</td><td class="ch-num ch-prev">3</td><td class="ch-growth"><span class="ch-up">+167%</span></td></tr>
-<tr><td class="ch-name">맥스모바일</td><td class="ch-num">7</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+250%</span></td></tr>
-<tr><td class="ch-name">트립비토즈</td><td class="ch-num">6</td><td class="ch-num ch-prev">20</td><td class="ch-growth"><span class="ch-dn">-70%</span></td></tr>
-<tr><td class="ch-name">OTA_다보</td><td class="ch-num">3</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">3</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_새서울여행사</td><td class="ch-num">2</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
+<tr><td class="ch-name">OTA_웅진컴퍼스(놀이의발견)</td><td class="ch-num">8</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-up">+60%</span></td></tr>
+<tr><td class="ch-name">맥스모바일</td><td class="ch-num">7</td><td class="ch-num ch-prev">23</td><td class="ch-growth"><span class="ch-dn">-70%</span></td></tr>
+<tr><td class="ch-name">트립비토즈</td><td class="ch-num">6</td><td class="ch-num ch-prev">72</td><td class="ch-growth"><span class="ch-dn">-92%</span></td></tr>
+<tr><td class="ch-name">OTA_다보</td><td class="ch-num">3</td><td class="ch-num ch-prev">6</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
+<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">3</td><td class="ch-num ch-prev">18</td><td class="ch-growth"><span class="ch-dn">-83%</span></td></tr>
+<tr><td class="ch-name">OTA_새서울여행사</td><td class="ch-num">2</td><td class="ch-num ch-prev">10</td><td class="ch-growth"><span class="ch-dn">-80%</span></td></tr>
 <tr><td class="ch-name">OTA_위더스컴즈</td><td class="ch-num">2</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">1</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
-<tr><td class="ch-name">OTA_스테이원</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_아이러브레저</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">1</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
+<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">1</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
+<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">1</td><td class="ch-num ch-prev">7</td><td class="ch-growth"><span class="ch-dn">-86%</span></td></tr>
+<tr><td class="ch-name">OTA_스테이원</td><td class="ch-num">1</td><td class="ch-num ch-prev">6</td><td class="ch-growth"><span class="ch-dn">-83%</span></td></tr>
+<tr><td class="ch-name">OTA_아이러브레저</td><td class="ch-num">1</td><td class="ch-num ch-prev">28</td><td class="ch-growth"><span class="ch-dn">-96%</span></td></tr>
+<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">1</td><td class="ch-num ch-prev">43</td><td class="ch-growth"><span class="ch-dn">-98%</span></td></tr>
         <tr class="ch-total-row">
           <td class="ch-name">합계</td>
           <td class="ch-num">906</td>
-          <td class="ch-num ch-prev">882</td>
-          <td class="ch-growth"><span class="ch-up">+3%</span></td>
+          <td class="ch-num ch-prev">3,695</td>
+          <td class="ch-growth"><span class="ch-dn">-75%</span></td>
         </tr>
       </tbody>
     </table>
@@ -1238,6 +1516,85 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     <span class="channel-arrow">&#9660;</span>
   </button>
   <div class="channel-body">
+<div class="bgt-section"><div class="bgt-title">목표 달성률 (BU)</div><div class="gauge-row"><div class="gauge-wrap">
+  <div class="gauge-label">OTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="OTA 달성률 79.6%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#f87171" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="120.0 181.6"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#f87171">79.6%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">358</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">450</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">GOTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="GOTA 달성률 146.8%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">146.8%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">367</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">250</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">합계</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="합계 달성률 103.6%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">103.6%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">725</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">700</text>
+  </svg>
+</div></div></div>
     <table class="channel-table">
       <thead>
         <tr>
@@ -1248,35 +1605,35 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         </tr>
       </thead>
       <tbody>
-<tr><td class="ch-name">아고다</td><td class="ch-num">173</td><td class="ch-num ch-prev">86</td><td class="ch-growth"><span class="ch-up">+101%</span></td></tr>
-<tr><td class="ch-name">야놀자</td><td class="ch-num">144</td><td class="ch-num ch-prev">163</td><td class="ch-growth"><span class="ch-dn">-12%</span></td></tr>
-<tr><td class="ch-name">여기어때</td><td class="ch-num">100</td><td class="ch-num ch-prev">144</td><td class="ch-growth"><span class="ch-dn">-31%</span></td></tr>
-<tr><td class="ch-name">익스피디아</td><td class="ch-num">82</td><td class="ch-num ch-prev">59</td><td class="ch-growth"><span class="ch-up">+39%</span></td></tr>
-<tr><td class="ch-name">트립닷컴</td><td class="ch-num">78</td><td class="ch-num ch-prev">31</td><td class="ch-growth"><span class="ch-up">+152%</span></td></tr>
-<tr><td class="ch-name">네이버</td><td class="ch-num">35</td><td class="ch-num ch-prev">34</td><td class="ch-growth"><span class="ch-up">+3%</span></td></tr>
-<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">31</td><td class="ch-num ch-prev">47</td><td class="ch-growth"><span class="ch-dn">-34%</span></td></tr>
-<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">20</td><td class="ch-num ch-prev">3</td><td class="ch-growth"><span class="ch-up">+567%</span></td></tr>
+<tr><td class="ch-name">아고다</td><td class="ch-num">173</td><td class="ch-num ch-prev">309</td><td class="ch-growth"><span class="ch-dn">-44%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">144</td><td class="ch-num ch-prev">501</td><td class="ch-growth"><span class="ch-dn">-71%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">100</td><td class="ch-num ch-prev">437</td><td class="ch-growth"><span class="ch-dn">-77%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">82</td><td class="ch-num ch-prev">172</td><td class="ch-growth"><span class="ch-dn">-52%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">78</td><td class="ch-num ch-prev">68</td><td class="ch-growth"><span class="ch-up">+15%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">35</td><td class="ch-num ch-prev">185</td><td class="ch-growth"><span class="ch-dn">-81%</span></td></tr>
+<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">31</td><td class="ch-num ch-prev">78</td><td class="ch-growth"><span class="ch-dn">-60%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">20</td><td class="ch-num ch-prev">11</td><td class="ch-growth"><span class="ch-up">+82%</span></td></tr>
 <tr><td class="ch-name">쿠팡</td><td class="ch-num">17</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+1600%</span></td></tr>
-<tr><td class="ch-name">웹투어</td><td class="ch-num">13</td><td class="ch-num ch-prev">9</td><td class="ch-growth"><span class="ch-up">+44%</span></td></tr>
-<tr><td class="ch-name">OTA_가고파여행</td><td class="ch-num">4</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">4</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+300%</span></td></tr>
+<tr><td class="ch-name">웹투어</td><td class="ch-num">13</td><td class="ch-num ch-prev">41</td><td class="ch-growth"><span class="ch-dn">-68%</span></td></tr>
+<tr><td class="ch-name">OTA_가고파여행</td><td class="ch-num">4</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+100%</span></td></tr>
+<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">4</td><td class="ch-num ch-prev">12</td><td class="ch-growth"><span class="ch-dn">-67%</span></td></tr>
 <tr><td class="ch-name">트립토파즈</td><td class="ch-num">4</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">3</td><td class="ch-num ch-prev">3</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
-<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">3</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">트립비토즈</td><td class="ch-num">2</td><td class="ch-num ch-prev">4</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
-<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">2</td><td class="ch-num ch-prev">3</td><td class="ch-growth"><span class="ch-dn">-33%</span></td></tr>
+<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">3</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-dn">-40%</span></td></tr>
+<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">3</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-dn">-40%</span></td></tr>
+<tr><td class="ch-name">트립비토즈</td><td class="ch-num">2</td><td class="ch-num ch-prev">28</td><td class="ch-growth"><span class="ch-dn">-93%</span></td></tr>
+<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">2</td><td class="ch-num ch-prev">7</td><td class="ch-growth"><span class="ch-dn">-71%</span></td></tr>
 <tr><td class="ch-name">맥스모바일</td><td class="ch-num">2</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
 <tr><td class="ch-name">OTA_웅진컴퍼스(놀이의발견)</td><td class="ch-num">2</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
 <tr><td class="ch-name">OTA_호텔패키지</td><td class="ch-num">2</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
 <tr><td class="ch-name">디다트래블</td><td class="ch-num">1</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-dn">-80%</span></td></tr>
 <tr><td class="ch-name">OTA_다보</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_대원관광</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_이제너두</td><td class="ch-num">1</td><td class="ch-num ch-prev">3</td><td class="ch-growth"><span class="ch-dn">-67%</span></td></tr>
+<tr><td class="ch-name">OTA_대원관광</td><td class="ch-num">1</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
+<tr><td class="ch-name">OTA_이제너두</td><td class="ch-num">1</td><td class="ch-num ch-prev">20</td><td class="ch-growth"><span class="ch-dn">-95%</span></td></tr>
         <tr class="ch-total-row">
           <td class="ch-name">합계</td>
           <td class="ch-num">725</td>
-          <td class="ch-num ch-prev">596</td>
-          <td class="ch-growth"><span class="ch-up">+22%</span></td>
+          <td class="ch-num ch-prev">1,889</td>
+          <td class="ch-growth"><span class="ch-dn">-62%</span></td>
         </tr>
       </tbody>
     </table>
@@ -1488,6 +1845,85 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     <span class="channel-arrow">&#9660;</span>
   </button>
   <div class="channel-body">
+<div class="bgt-section"><div class="bgt-title">목표 달성률 (BU)</div><div class="gauge-row"><div class="gauge-wrap">
+  <div class="gauge-label">OTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="OTA 달성률 119.6%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">119.6%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">2,786</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">2,330</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">GOTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="GOTA 달성률 125.5%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">125.5%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">2,498</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">1,990</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">합계</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="합계 달성률 119.5%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">119.5%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">5,284</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">4,420</text>
+  </svg>
+</div></div></div>
     <table class="channel-table">
       <thead>
         <tr>
@@ -1498,44 +1934,44 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         </tr>
       </thead>
       <tbody>
-<tr><td class="ch-name">아고다</td><td class="ch-num">1,575</td><td class="ch-num ch-prev">974</td><td class="ch-growth"><span class="ch-up">+62%</span></td></tr>
-<tr><td class="ch-name">야놀자</td><td class="ch-num">828</td><td class="ch-num ch-prev">921</td><td class="ch-growth"><span class="ch-dn">-10%</span></td></tr>
-<tr><td class="ch-name">여기어때</td><td class="ch-num">562</td><td class="ch-num ch-prev">573</td><td class="ch-growth"><span class="ch-dn">-2%</span></td></tr>
-<tr><td class="ch-name">트립비토즈</td><td class="ch-num">333</td><td class="ch-num ch-prev">154</td><td class="ch-growth"><span class="ch-up">+116%</span></td></tr>
-<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">268</td><td class="ch-num ch-prev">61</td><td class="ch-growth"><span class="ch-up">+339%</span></td></tr>
-<tr><td class="ch-name">트립닷컴</td><td class="ch-num">258</td><td class="ch-num ch-prev">187</td><td class="ch-growth"><span class="ch-up">+38%</span></td></tr>
-<tr><td class="ch-name">네이버</td><td class="ch-num">250</td><td class="ch-num ch-prev">205</td><td class="ch-growth"><span class="ch-up">+22%</span></td></tr>
-<tr><td class="ch-name">스마트인피니</td><td class="ch-num">188</td><td class="ch-num ch-prev">89</td><td class="ch-growth"><span class="ch-up">+111%</span></td></tr>
-<tr><td class="ch-name">익스피디아</td><td class="ch-num">174</td><td class="ch-num ch-prev">282</td><td class="ch-growth"><span class="ch-dn">-38%</span></td></tr>
-<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">154</td><td class="ch-num ch-prev">287</td><td class="ch-growth"><span class="ch-dn">-46%</span></td></tr>
+<tr><td class="ch-name">아고다</td><td class="ch-num">1,575</td><td class="ch-num ch-prev">2,800</td><td class="ch-growth"><span class="ch-dn">-44%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">828</td><td class="ch-num ch-prev">2,601</td><td class="ch-growth"><span class="ch-dn">-68%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">562</td><td class="ch-num ch-prev">1,918</td><td class="ch-growth"><span class="ch-dn">-71%</span></td></tr>
+<tr><td class="ch-name">트립비토즈</td><td class="ch-num">333</td><td class="ch-num ch-prev">468</td><td class="ch-growth"><span class="ch-dn">-29%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">268</td><td class="ch-num ch-prev">144</td><td class="ch-growth"><span class="ch-up">+86%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">258</td><td class="ch-num ch-prev">271</td><td class="ch-growth"><span class="ch-dn">-5%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">250</td><td class="ch-num ch-prev">1,351</td><td class="ch-growth"><span class="ch-dn">-81%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">188</td><td class="ch-num ch-prev">353</td><td class="ch-growth"><span class="ch-dn">-47%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">174</td><td class="ch-num ch-prev">1,134</td><td class="ch-growth"><span class="ch-dn">-85%</span></td></tr>
+<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">154</td><td class="ch-num ch-prev">1,085</td><td class="ch-growth"><span class="ch-dn">-86%</span></td></tr>
 <tr><td class="ch-name">마이리얼트립</td><td class="ch-num">141</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">웹투어</td><td class="ch-num">106</td><td class="ch-num ch-prev">52</td><td class="ch-growth"><span class="ch-up">+104%</span></td></tr>
+<tr><td class="ch-name">웹투어</td><td class="ch-num">106</td><td class="ch-num ch-prev">199</td><td class="ch-growth"><span class="ch-dn">-47%</span></td></tr>
 <tr><td class="ch-name">프리즘</td><td class="ch-num">101</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
 <tr><td class="ch-name">쿠팡</td><td class="ch-num">98</td><td class="ch-num ch-prev">24</td><td class="ch-growth"><span class="ch-up">+308%</span></td></tr>
 <tr><td class="ch-name">올마이투어</td><td class="ch-num">41</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_스테이원</td><td class="ch-num">35</td><td class="ch-num ch-prev">3</td><td class="ch-growth"><span class="ch-up">+1067%</span></td></tr>
-<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">32</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">OTA_스테이원</td><td class="ch-num">35</td><td class="ch-num ch-prev">53</td><td class="ch-growth"><span class="ch-dn">-34%</span></td></tr>
+<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">32</td><td class="ch-num ch-prev">44</td><td class="ch-growth"><span class="ch-dn">-27%</span></td></tr>
 <tr><td class="ch-name">트립토파즈</td><td class="ch-num">28</td><td class="ch-num ch-prev">24</td><td class="ch-growth"><span class="ch-up">+17%</span></td></tr>
-<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">22</td><td class="ch-num ch-prev">12</td><td class="ch-growth"><span class="ch-up">+83%</span></td></tr>
-<tr><td class="ch-name">OTA_이참조은레저</td><td class="ch-num">19</td><td class="ch-num ch-prev">11</td><td class="ch-growth"><span class="ch-up">+73%</span></td></tr>
-<tr><td class="ch-name">OTA_아이러브레저</td><td class="ch-num">14</td><td class="ch-num ch-prev">14</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
+<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">22</td><td class="ch-num ch-prev">158</td><td class="ch-growth"><span class="ch-dn">-86%</span></td></tr>
+<tr><td class="ch-name">OTA_이참조은레저</td><td class="ch-num">19</td><td class="ch-num ch-prev">22</td><td class="ch-growth"><span class="ch-dn">-14%</span></td></tr>
+<tr><td class="ch-name">OTA_아이러브레저</td><td class="ch-num">14</td><td class="ch-num ch-prev">19</td><td class="ch-growth"><span class="ch-dn">-26%</span></td></tr>
 <tr><td class="ch-name">OTA_대원관광</td><td class="ch-num">11</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_웅진컴퍼스(놀이의발견)</td><td class="ch-num">8</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_새서울여행사</td><td class="ch-num">7</td><td class="ch-num ch-prev">8</td><td class="ch-growth"><span class="ch-dn">-12%</span></td></tr>
-<tr><td class="ch-name">OTA_기븐존여행클럽</td><td class="ch-num">6</td><td class="ch-num ch-prev">3</td><td class="ch-growth"><span class="ch-up">+100%</span></td></tr>
-<tr><td class="ch-name">디다트래블</td><td class="ch-num">4</td><td class="ch-num ch-prev">3</td><td class="ch-growth"><span class="ch-up">+33%</span></td></tr>
-<tr><td class="ch-name">OTA_호텔패키지</td><td class="ch-num">4</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+100%</span></td></tr>
+<tr><td class="ch-name">OTA_웅진컴퍼스(놀이의발견)</td><td class="ch-num">8</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+300%</span></td></tr>
+<tr><td class="ch-name">OTA_새서울여행사</td><td class="ch-num">7</td><td class="ch-num ch-prev">55</td><td class="ch-growth"><span class="ch-dn">-87%</span></td></tr>
+<tr><td class="ch-name">OTA_기븐존여행클럽</td><td class="ch-num">6</td><td class="ch-num ch-prev">16</td><td class="ch-growth"><span class="ch-dn">-62%</span></td></tr>
+<tr><td class="ch-name">디다트래블</td><td class="ch-num">4</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+300%</span></td></tr>
+<tr><td class="ch-name">OTA_호텔패키지</td><td class="ch-num">4</td><td class="ch-num ch-prev">4</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
 <tr><td class="ch-name">OTA_다보</td><td class="ch-num">3</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">3</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+50%</span></td></tr>
-<tr><td class="ch-name">맥스모바일</td><td class="ch-num">3</td><td class="ch-num ch-prev">22</td><td class="ch-growth"><span class="ch-dn">-86%</span></td></tr>
-<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">3</td><td class="ch-num ch-prev">3</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
-<tr><td class="ch-name">종이비행기</td><td class="ch-num">3</td><td class="ch-num ch-prev">8</td><td class="ch-growth"><span class="ch-dn">-62%</span></td></tr>
-<tr><td class="ch-name">OTA_가고파여행</td><td class="ch-num">2</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+100%</span></td></tr>
+<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">3</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">맥스모바일</td><td class="ch-num">3</td><td class="ch-num ch-prev">28</td><td class="ch-growth"><span class="ch-dn">-89%</span></td></tr>
+<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">3</td><td class="ch-num ch-prev">8</td><td class="ch-growth"><span class="ch-dn">-62%</span></td></tr>
+<tr><td class="ch-name">종이비행기</td><td class="ch-num">3</td><td class="ch-num ch-prev">11</td><td class="ch-growth"><span class="ch-dn">-73%</span></td></tr>
+<tr><td class="ch-name">OTA_가고파여행</td><td class="ch-num">2</td><td class="ch-num ch-prev">7</td><td class="ch-growth"><span class="ch-dn">-71%</span></td></tr>
         <tr class="ch-total-row">
           <td class="ch-name">합계</td>
           <td class="ch-num">5,284</td>
-          <td class="ch-num ch-prev">3,925</td>
-          <td class="ch-growth"><span class="ch-up">+35%</span></td>
+          <td class="ch-num ch-prev">12,800</td>
+          <td class="ch-growth"><span class="ch-dn">-59%</span></td>
         </tr>
       </tbody>
     </table>
@@ -1643,6 +2079,85 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     <span class="channel-arrow">&#9660;</span>
   </button>
   <div class="channel-body">
+<div class="bgt-section"><div class="bgt-title">목표 달성률 (BU)</div><div class="gauge-row"><div class="gauge-wrap">
+  <div class="gauge-label">OTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="OTA 달성률 72.4%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#f87171" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="109.1 192.5"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#f87171">72.4%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">1,194</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">1,650</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">GOTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="GOTA 달성률 127.8%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">127.8%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">575</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">450</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">합계</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="합계 달성률 84.2%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#fbbf24" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="127.0 174.6"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#fbbf24">84.2%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">1,769</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">2,100</text>
+  </svg>
+</div></div></div>
     <table class="channel-table">
       <thead>
         <tr>
@@ -1653,40 +2168,40 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         </tr>
       </thead>
       <tbody>
-<tr><td class="ch-name">아고다</td><td class="ch-num">293</td><td class="ch-num ch-prev">174</td><td class="ch-growth"><span class="ch-up">+68%</span></td></tr>
-<tr><td class="ch-name">여기어때</td><td class="ch-num">224</td><td class="ch-num ch-prev">307</td><td class="ch-growth"><span class="ch-dn">-27%</span></td></tr>
+<tr><td class="ch-name">아고다</td><td class="ch-num">293</td><td class="ch-num ch-prev">821</td><td class="ch-growth"><span class="ch-dn">-64%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">224</td><td class="ch-num ch-prev">1,048</td><td class="ch-growth"><span class="ch-dn">-79%</span></td></tr>
 <tr><td class="ch-name">쿠팡</td><td class="ch-num">207</td><td class="ch-num ch-prev">18</td><td class="ch-growth"><span class="ch-up">+1050%</span></td></tr>
 <tr><td class="ch-name">코이스토리</td><td class="ch-num">206</td><td class="ch-num ch-prev">206</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
-<tr><td class="ch-name">야놀자</td><td class="ch-num">197</td><td class="ch-num ch-prev">394</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
-<tr><td class="ch-name">트립닷컴</td><td class="ch-num">170</td><td class="ch-num ch-prev">55</td><td class="ch-growth"><span class="ch-up">+209%</span></td></tr>
-<tr><td class="ch-name">네이버</td><td class="ch-num">112</td><td class="ch-num ch-prev">150</td><td class="ch-growth"><span class="ch-dn">-25%</span></td></tr>
-<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">45</td><td class="ch-num ch-prev">27</td><td class="ch-growth"><span class="ch-up">+67%</span></td></tr>
-<tr><td class="ch-name">익스피디아</td><td class="ch-num">41</td><td class="ch-num ch-prev">153</td><td class="ch-growth"><span class="ch-dn">-73%</span></td></tr>
-<tr><td class="ch-name">트립비토즈</td><td class="ch-num">38</td><td class="ch-num ch-prev">108</td><td class="ch-growth"><span class="ch-dn">-65%</span></td></tr>
-<tr><td class="ch-name">웹투어</td><td class="ch-num">35</td><td class="ch-num ch-prev">22</td><td class="ch-growth"><span class="ch-up">+59%</span></td></tr>
-<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">31</td><td class="ch-num ch-prev">27</td><td class="ch-growth"><span class="ch-up">+15%</span></td></tr>
-<tr><td class="ch-name">스마트인피니</td><td class="ch-num">31</td><td class="ch-num ch-prev">204</td><td class="ch-growth"><span class="ch-dn">-85%</span></td></tr>
-<tr><td class="ch-name">맥스모바일</td><td class="ch-num">28</td><td class="ch-num ch-prev">61</td><td class="ch-growth"><span class="ch-dn">-54%</span></td></tr>
-<tr><td class="ch-name">OTA_가자고투어</td><td class="ch-num">23</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_이참조은레저</td><td class="ch-num">18</td><td class="ch-num ch-prev">35</td><td class="ch-growth"><span class="ch-dn">-49%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">197</td><td class="ch-num ch-prev">1,311</td><td class="ch-growth"><span class="ch-dn">-85%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">170</td><td class="ch-num ch-prev">115</td><td class="ch-growth"><span class="ch-up">+48%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">112</td><td class="ch-num ch-prev">802</td><td class="ch-growth"><span class="ch-dn">-86%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">45</td><td class="ch-num ch-prev">61</td><td class="ch-growth"><span class="ch-dn">-26%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">41</td><td class="ch-num ch-prev">564</td><td class="ch-growth"><span class="ch-dn">-93%</span></td></tr>
+<tr><td class="ch-name">트립비토즈</td><td class="ch-num">38</td><td class="ch-num ch-prev">336</td><td class="ch-growth"><span class="ch-dn">-89%</span></td></tr>
+<tr><td class="ch-name">웹투어</td><td class="ch-num">35</td><td class="ch-num ch-prev">82</td><td class="ch-growth"><span class="ch-dn">-57%</span></td></tr>
+<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">31</td><td class="ch-num ch-prev">288</td><td class="ch-growth"><span class="ch-dn">-89%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">31</td><td class="ch-num ch-prev">603</td><td class="ch-growth"><span class="ch-dn">-95%</span></td></tr>
+<tr><td class="ch-name">맥스모바일</td><td class="ch-num">28</td><td class="ch-num ch-prev">271</td><td class="ch-growth"><span class="ch-dn">-90%</span></td></tr>
+<tr><td class="ch-name">OTA_가자고투어</td><td class="ch-num">23</td><td class="ch-num ch-prev">22</td><td class="ch-growth"><span class="ch-up">+5%</span></td></tr>
+<tr><td class="ch-name">OTA_이참조은레저</td><td class="ch-num">18</td><td class="ch-num ch-prev">59</td><td class="ch-growth"><span class="ch-dn">-69%</span></td></tr>
 <tr><td class="ch-name">마이리얼트립</td><td class="ch-num">14</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_웅진컴퍼스(놀이의발견)</td><td class="ch-num">13</td><td class="ch-num ch-prev">7</td><td class="ch-growth"><span class="ch-up">+86%</span></td></tr>
-<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">10</td><td class="ch-num ch-prev">4</td><td class="ch-growth"><span class="ch-up">+150%</span></td></tr>
-<tr><td class="ch-name">OTA_아이러브레저</td><td class="ch-num">6</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-up">+20%</span></td></tr>
-<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">5</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+400%</span></td></tr>
-<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">5</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">종이비행기</td><td class="ch-num">4</td><td class="ch-num ch-prev">57</td><td class="ch-growth"><span class="ch-dn">-93%</span></td></tr>
+<tr><td class="ch-name">OTA_웅진컴퍼스(놀이의발견)</td><td class="ch-num">13</td><td class="ch-num ch-prev">28</td><td class="ch-growth"><span class="ch-dn">-54%</span></td></tr>
+<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">10</td><td class="ch-num ch-prev">16</td><td class="ch-growth"><span class="ch-dn">-38%</span></td></tr>
+<tr><td class="ch-name">OTA_아이러브레저</td><td class="ch-num">6</td><td class="ch-num ch-prev">25</td><td class="ch-growth"><span class="ch-dn">-76%</span></td></tr>
+<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">5</td><td class="ch-num ch-prev">50</td><td class="ch-growth"><span class="ch-dn">-90%</span></td></tr>
+<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">5</td><td class="ch-num ch-prev">47</td><td class="ch-growth"><span class="ch-dn">-89%</span></td></tr>
+<tr><td class="ch-name">종이비행기</td><td class="ch-num">4</td><td class="ch-num ch-prev">69</td><td class="ch-growth"><span class="ch-dn">-94%</span></td></tr>
 <tr><td class="ch-name">OTA_대원관광</td><td class="ch-num">3</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">디다트래블</td><td class="ch-num">2</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+100%</span></td></tr>
-<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">2</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
-<tr><td class="ch-name">OTA_새서울여행사</td><td class="ch-num">2</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
+<tr><td class="ch-name">디다트래블</td><td class="ch-num">2</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">2</td><td class="ch-num ch-prev">4</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
+<tr><td class="ch-name">OTA_새서울여행사</td><td class="ch-num">2</td><td class="ch-num ch-prev">15</td><td class="ch-growth"><span class="ch-dn">-87%</span></td></tr>
 <tr><td class="ch-name">OTA_콘도닷컴</td><td class="ch-num">2</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">트립토파즈</td><td class="ch-num">2</td><td class="ch-num ch-prev">4</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
+<tr><td class="ch-name">트립토파즈</td><td class="ch-num">2</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-dn">-60%</span></td></tr>
         <tr class="ch-total-row">
           <td class="ch-name">합계</td>
           <td class="ch-num">1,769</td>
-          <td class="ch-num ch-prev">2,024</td>
-          <td class="ch-growth"><span class="ch-dn">-13%</span></td>
+          <td class="ch-num ch-prev">6,866</td>
+          <td class="ch-growth"><span class="ch-dn">-74%</span></td>
         </tr>
       </tbody>
     </table>
@@ -1783,6 +2298,85 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     <span class="channel-arrow">&#9660;</span>
   </button>
   <div class="channel-body">
+<div class="bgt-section"><div class="bgt-title">목표 달성률 (BU)</div><div class="gauge-row"><div class="gauge-wrap">
+  <div class="gauge-label">OTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="OTA 달성률 96.2%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#fbbf24" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="145.1 156.5"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#fbbf24">96.2%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">1,203</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">1,250</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">GOTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="GOTA 달성률 87.8%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#fbbf24" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="132.4 169.1"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#fbbf24">87.8%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">1,054</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">1,200</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">합계</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="합계 달성률 90.3%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#fbbf24" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="136.1 165.5"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#fbbf24">90.3%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">2,257</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">2,500</text>
+  </svg>
+</div></div></div>
     <table class="channel-table">
       <thead>
         <tr>
@@ -1793,39 +2387,39 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         </tr>
       </thead>
       <tbody>
-<tr><td class="ch-name">아고다</td><td class="ch-num">476</td><td class="ch-num ch-prev">362</td><td class="ch-growth"><span class="ch-up">+31%</span></td></tr>
-<tr><td class="ch-name">야놀자</td><td class="ch-num">366</td><td class="ch-num ch-prev">400</td><td class="ch-growth"><span class="ch-dn">-8%</span></td></tr>
-<tr><td class="ch-name">여기어때</td><td class="ch-num">333</td><td class="ch-num ch-prev">455</td><td class="ch-growth"><span class="ch-dn">-27%</span></td></tr>
-<tr><td class="ch-name">트립비토즈</td><td class="ch-num">196</td><td class="ch-num ch-prev">272</td><td class="ch-growth"><span class="ch-dn">-28%</span></td></tr>
-<tr><td class="ch-name">네이버</td><td class="ch-num">123</td><td class="ch-num ch-prev">148</td><td class="ch-growth"><span class="ch-dn">-17%</span></td></tr>
-<tr><td class="ch-name">익스피디아</td><td class="ch-num">104</td><td class="ch-num ch-prev">287</td><td class="ch-growth"><span class="ch-dn">-64%</span></td></tr>
+<tr><td class="ch-name">아고다</td><td class="ch-num">476</td><td class="ch-num ch-prev">1,126</td><td class="ch-growth"><span class="ch-dn">-58%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">366</td><td class="ch-num ch-prev">1,485</td><td class="ch-growth"><span class="ch-dn">-75%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">333</td><td class="ch-num ch-prev">1,357</td><td class="ch-growth"><span class="ch-dn">-75%</span></td></tr>
+<tr><td class="ch-name">트립비토즈</td><td class="ch-num">196</td><td class="ch-num ch-prev">458</td><td class="ch-growth"><span class="ch-dn">-57%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">123</td><td class="ch-num ch-prev">769</td><td class="ch-growth"><span class="ch-dn">-84%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">104</td><td class="ch-num ch-prev">607</td><td class="ch-growth"><span class="ch-dn">-83%</span></td></tr>
 <tr><td class="ch-name">코이스토리</td><td class="ch-num">95</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">트립닷컴</td><td class="ch-num">88</td><td class="ch-num ch-prev">70</td><td class="ch-growth"><span class="ch-up">+26%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">88</td><td class="ch-num ch-prev">111</td><td class="ch-growth"><span class="ch-dn">-21%</span></td></tr>
 <tr><td class="ch-name">쿠팡</td><td class="ch-num">88</td><td class="ch-num ch-prev">31</td><td class="ch-growth"><span class="ch-up">+184%</span></td></tr>
-<tr><td class="ch-name">스마트인피니</td><td class="ch-num">87</td><td class="ch-num ch-prev">44</td><td class="ch-growth"><span class="ch-up">+98%</span></td></tr>
-<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">70</td><td class="ch-num ch-prev">37</td><td class="ch-growth"><span class="ch-up">+89%</span></td></tr>
-<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">51</td><td class="ch-num ch-prev">118</td><td class="ch-growth"><span class="ch-dn">-57%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">87</td><td class="ch-num ch-prev">376</td><td class="ch-growth"><span class="ch-dn">-77%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">70</td><td class="ch-num ch-prev">70</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
+<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">51</td><td class="ch-num ch-prev">379</td><td class="ch-growth"><span class="ch-dn">-87%</span></td></tr>
 <tr><td class="ch-name">마이리얼트립</td><td class="ch-num">46</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">웹투어</td><td class="ch-num">31</td><td class="ch-num ch-prev">31</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
+<tr><td class="ch-name">웹투어</td><td class="ch-num">31</td><td class="ch-num ch-prev">83</td><td class="ch-growth"><span class="ch-dn">-63%</span></td></tr>
 <tr><td class="ch-name">올마이투어</td><td class="ch-num">20</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">트립토파즈</td><td class="ch-num">18</td><td class="ch-num ch-prev">16</td><td class="ch-growth"><span class="ch-up">+12%</span></td></tr>
-<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">17</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+1600%</span></td></tr>
-<tr><td class="ch-name">OTA_가고파여행</td><td class="ch-num">10</td><td class="ch-num ch-prev">3</td><td class="ch-growth"><span class="ch-up">+233%</span></td></tr>
-<tr><td class="ch-name">맥스모바일</td><td class="ch-num">10</td><td class="ch-num ch-prev">15</td><td class="ch-growth"><span class="ch-dn">-33%</span></td></tr>
-<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">7</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+250%</span></td></tr>
-<tr><td class="ch-name">OTA_이참조은레저</td><td class="ch-num">6</td><td class="ch-num ch-prev">10</td><td class="ch-growth"><span class="ch-dn">-40%</span></td></tr>
-<tr><td class="ch-name">OTA_호텔패키지</td><td class="ch-num">5</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+150%</span></td></tr>
-<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">4</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">2</td><td class="ch-num ch-prev">3</td><td class="ch-growth"><span class="ch-dn">-33%</span></td></tr>
-<tr><td class="ch-name">종이비행기</td><td class="ch-num">2</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
-<tr><td class="ch-name">OTA_새서울여행사</td><td class="ch-num">1</td><td class="ch-num ch-prev">11</td><td class="ch-growth"><span class="ch-dn">-91%</span></td></tr>
-<tr><td class="ch-name">OTA_스테이원</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">트립토파즈</td><td class="ch-num">18</td><td class="ch-num ch-prev">17</td><td class="ch-growth"><span class="ch-up">+6%</span></td></tr>
+<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">17</td><td class="ch-num ch-prev">58</td><td class="ch-growth"><span class="ch-dn">-71%</span></td></tr>
+<tr><td class="ch-name">OTA_가고파여행</td><td class="ch-num">10</td><td class="ch-num ch-prev">10</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
+<tr><td class="ch-name">맥스모바일</td><td class="ch-num">10</td><td class="ch-num ch-prev">26</td><td class="ch-growth"><span class="ch-dn">-62%</span></td></tr>
+<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">7</td><td class="ch-num ch-prev">6</td><td class="ch-growth"><span class="ch-up">+17%</span></td></tr>
+<tr><td class="ch-name">OTA_이참조은레저</td><td class="ch-num">6</td><td class="ch-num ch-prev">12</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
+<tr><td class="ch-name">OTA_호텔패키지</td><td class="ch-num">5</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">4</td><td class="ch-num ch-prev">29</td><td class="ch-growth"><span class="ch-dn">-86%</span></td></tr>
+<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">2</td><td class="ch-num ch-prev">7</td><td class="ch-growth"><span class="ch-dn">-71%</span></td></tr>
+<tr><td class="ch-name">종이비행기</td><td class="ch-num">2</td><td class="ch-num ch-prev">8</td><td class="ch-growth"><span class="ch-dn">-75%</span></td></tr>
+<tr><td class="ch-name">OTA_새서울여행사</td><td class="ch-num">1</td><td class="ch-num ch-prev">33</td><td class="ch-growth"><span class="ch-dn">-97%</span></td></tr>
+<tr><td class="ch-name">OTA_스테이원</td><td class="ch-num">1</td><td class="ch-num ch-prev">6</td><td class="ch-growth"><span class="ch-dn">-83%</span></td></tr>
 <tr><td class="ch-name">OTA_웅진컴퍼스(놀이의발견)</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
         <tr class="ch-total-row">
           <td class="ch-name">합계</td>
           <td class="ch-num">2,258</td>
-          <td class="ch-num ch-prev">2,320</td>
-          <td class="ch-growth"><span class="ch-dn">-3%</span></td>
+          <td class="ch-num ch-prev">7,064</td>
+          <td class="ch-growth"><span class="ch-dn">-68%</span></td>
         </tr>
       </tbody>
     </table>
@@ -1930,6 +2524,85 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     <span class="channel-arrow">&#9660;</span>
   </button>
   <div class="channel-body">
+<div class="bgt-section"><div class="bgt-title">목표 달성률 (BU)</div><div class="gauge-row"><div class="gauge-wrap">
+  <div class="gauge-label">OTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="OTA 달성률 131.1%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">131.1%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">793</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">605</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">GOTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="GOTA 달성률 112.9%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">112.9%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">508</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">450</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">합계</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="합계 달성률 123.3%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">123.3%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">1,301</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">1,055</text>
+  </svg>
+</div></div></div>
     <table class="channel-table">
       <thead>
         <tr>
@@ -1940,34 +2613,34 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         </tr>
       </thead>
       <tbody>
-<tr><td class="ch-name">아고다</td><td class="ch-num">351</td><td class="ch-num ch-prev">127</td><td class="ch-growth"><span class="ch-up">+176%</span></td></tr>
-<tr><td class="ch-name">여기어때</td><td class="ch-num">246</td><td class="ch-num ch-prev">129</td><td class="ch-growth"><span class="ch-up">+91%</span></td></tr>
-<tr><td class="ch-name">야놀자</td><td class="ch-num">180</td><td class="ch-num ch-prev">125</td><td class="ch-growth"><span class="ch-up">+44%</span></td></tr>
-<tr><td class="ch-name">네이버</td><td class="ch-num">133</td><td class="ch-num ch-prev">70</td><td class="ch-growth"><span class="ch-up">+90%</span></td></tr>
+<tr><td class="ch-name">아고다</td><td class="ch-num">351</td><td class="ch-num ch-prev">685</td><td class="ch-growth"><span class="ch-dn">-49%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">246</td><td class="ch-num ch-prev">555</td><td class="ch-growth"><span class="ch-dn">-56%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">180</td><td class="ch-num ch-prev">545</td><td class="ch-growth"><span class="ch-dn">-67%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">133</td><td class="ch-num ch-prev">511</td><td class="ch-growth"><span class="ch-dn">-74%</span></td></tr>
 <tr><td class="ch-name">쿠팡</td><td class="ch-num">78</td><td class="ch-num ch-prev">7</td><td class="ch-growth"><span class="ch-up">+1014%</span></td></tr>
-<tr><td class="ch-name">트립닷컴</td><td class="ch-num">55</td><td class="ch-num ch-prev">29</td><td class="ch-growth"><span class="ch-up">+90%</span></td></tr>
-<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">50</td><td class="ch-num ch-prev">9</td><td class="ch-growth"><span class="ch-up">+456%</span></td></tr>
-<tr><td class="ch-name">익스피디아</td><td class="ch-num">42</td><td class="ch-num ch-prev">64</td><td class="ch-growth"><span class="ch-dn">-34%</span></td></tr>
-<tr><td class="ch-name">트립비토즈</td><td class="ch-num">35</td><td class="ch-num ch-prev">12</td><td class="ch-growth"><span class="ch-up">+192%</span></td></tr>
-<tr><td class="ch-name">트립토파즈</td><td class="ch-num">31</td><td class="ch-num ch-prev">11</td><td class="ch-growth"><span class="ch-up">+182%</span></td></tr>
-<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">27</td><td class="ch-num ch-prev">23</td><td class="ch-growth"><span class="ch-up">+17%</span></td></tr>
-<tr><td class="ch-name">스마트인피니</td><td class="ch-num">21</td><td class="ch-num ch-prev">11</td><td class="ch-growth"><span class="ch-up">+91%</span></td></tr>
-<tr><td class="ch-name">웹투어</td><td class="ch-num">16</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-up">+220%</span></td></tr>
-<tr><td class="ch-name">OTA_이참조은레저</td><td class="ch-num">9</td><td class="ch-num ch-prev">4</td><td class="ch-growth"><span class="ch-up">+125%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">55</td><td class="ch-num ch-prev">49</td><td class="ch-growth"><span class="ch-up">+12%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">50</td><td class="ch-num ch-prev">30</td><td class="ch-growth"><span class="ch-up">+67%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">42</td><td class="ch-num ch-prev">296</td><td class="ch-growth"><span class="ch-dn">-86%</span></td></tr>
+<tr><td class="ch-name">트립비토즈</td><td class="ch-num">35</td><td class="ch-num ch-prev">73</td><td class="ch-growth"><span class="ch-dn">-52%</span></td></tr>
+<tr><td class="ch-name">트립토파즈</td><td class="ch-num">31</td><td class="ch-num ch-prev">25</td><td class="ch-growth"><span class="ch-up">+24%</span></td></tr>
+<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">27</td><td class="ch-num ch-prev">175</td><td class="ch-growth"><span class="ch-dn">-85%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">21</td><td class="ch-num ch-prev">49</td><td class="ch-growth"><span class="ch-dn">-57%</span></td></tr>
+<tr><td class="ch-name">웹투어</td><td class="ch-num">16</td><td class="ch-num ch-prev">47</td><td class="ch-growth"><span class="ch-dn">-66%</span></td></tr>
+<tr><td class="ch-name">OTA_이참조은레저</td><td class="ch-num">9</td><td class="ch-num ch-prev">15</td><td class="ch-growth"><span class="ch-dn">-40%</span></td></tr>
 <tr><td class="ch-name">마이리얼트립</td><td class="ch-num">8</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">6</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">맥스모바일</td><td class="ch-num">5</td><td class="ch-num ch-prev">6</td><td class="ch-growth"><span class="ch-dn">-17%</span></td></tr>
-<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">3</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">6</td><td class="ch-num ch-prev">17</td><td class="ch-growth"><span class="ch-dn">-65%</span></td></tr>
+<tr><td class="ch-name">맥스모바일</td><td class="ch-num">5</td><td class="ch-num ch-prev">22</td><td class="ch-growth"><span class="ch-dn">-77%</span></td></tr>
+<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">3</td><td class="ch-num ch-prev">10</td><td class="ch-growth"><span class="ch-dn">-70%</span></td></tr>
 <tr><td class="ch-name">OTA_보군여행사</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_스테이원</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">1</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-dn">-80%</span></td></tr>
+<tr><td class="ch-name">OTA_스테이원</td><td class="ch-num">1</td><td class="ch-num ch-prev">10</td><td class="ch-growth"><span class="ch-dn">-90%</span></td></tr>
 <tr><td class="ch-name">종이비행기</td><td class="ch-num">1</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
-<tr><td class="ch-name">OTA_호텔패키지</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">OTA_호텔패키지</td><td class="ch-num">1</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
         <tr class="ch-total-row">
           <td class="ch-name">합계</td>
           <td class="ch-num">1,301</td>
-          <td class="ch-num ch-prev">634</td>
-          <td class="ch-growth"><span class="ch-up">+105%</span></td>
+          <td class="ch-num ch-prev">3,130</td>
+          <td class="ch-growth"><span class="ch-dn">-58%</span></td>
         </tr>
       </tbody>
     </table>
@@ -2436,6 +3109,85 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     <span class="channel-arrow">&#9660;</span>
   </button>
   <div class="channel-body">
+<div class="bgt-section"><div class="bgt-title">목표 달성률 (BU)</div><div class="gauge-row"><div class="gauge-wrap">
+  <div class="gauge-label">OTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="OTA 달성률 86.3%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#fbbf24" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="130.2 171.4"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#fbbf24">86.3%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">518</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">600</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">GOTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="GOTA 달성률 107.9%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">107.9%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">831</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">770</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">합계</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="합계 달성률 98.5%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#fbbf24" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="148.5 153.1"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#fbbf24">98.5%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">1,349</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">1,370</text>
+  </svg>
+</div></div></div>
     <table class="channel-table">
       <thead>
         <tr>
@@ -2446,35 +3198,35 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         </tr>
       </thead>
       <tbody>
-<tr><td class="ch-name">아고다</td><td class="ch-num">369</td><td class="ch-num ch-prev">222</td><td class="ch-growth"><span class="ch-up">+66%</span></td></tr>
-<tr><td class="ch-name">트립닷컴</td><td class="ch-num">210</td><td class="ch-num ch-prev">142</td><td class="ch-growth"><span class="ch-up">+48%</span></td></tr>
-<tr><td class="ch-name">야놀자</td><td class="ch-num">172</td><td class="ch-num ch-prev">127</td><td class="ch-growth"><span class="ch-up">+35%</span></td></tr>
-<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">104</td><td class="ch-num ch-prev">19</td><td class="ch-growth"><span class="ch-up">+447%</span></td></tr>
-<tr><td class="ch-name">여기어때</td><td class="ch-num">100</td><td class="ch-num ch-prev">127</td><td class="ch-growth"><span class="ch-dn">-21%</span></td></tr>
-<tr><td class="ch-name">익스피디아</td><td class="ch-num">97</td><td class="ch-num ch-prev">119</td><td class="ch-growth"><span class="ch-dn">-18%</span></td></tr>
-<tr><td class="ch-name">네이버</td><td class="ch-num">54</td><td class="ch-num ch-prev">64</td><td class="ch-growth"><span class="ch-dn">-16%</span></td></tr>
-<tr><td class="ch-name">트립비토즈</td><td class="ch-num">51</td><td class="ch-num ch-prev">84</td><td class="ch-growth"><span class="ch-dn">-39%</span></td></tr>
+<tr><td class="ch-name">아고다</td><td class="ch-num">369</td><td class="ch-num ch-prev">695</td><td class="ch-growth"><span class="ch-dn">-47%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">210</td><td class="ch-num ch-prev">159</td><td class="ch-growth"><span class="ch-up">+32%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">172</td><td class="ch-num ch-prev">368</td><td class="ch-growth"><span class="ch-dn">-53%</span></td></tr>
+<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">104</td><td class="ch-num ch-prev">107</td><td class="ch-growth"><span class="ch-dn">-3%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">100</td><td class="ch-num ch-prev">247</td><td class="ch-growth"><span class="ch-dn">-60%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">97</td><td class="ch-num ch-prev">284</td><td class="ch-growth"><span class="ch-dn">-66%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">54</td><td class="ch-num ch-prev">223</td><td class="ch-growth"><span class="ch-dn">-76%</span></td></tr>
+<tr><td class="ch-name">트립비토즈</td><td class="ch-num">51</td><td class="ch-num ch-prev">150</td><td class="ch-growth"><span class="ch-dn">-66%</span></td></tr>
 <tr><td class="ch-name">프리즘</td><td class="ch-num">41</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
 <tr><td class="ch-name">쿠팡</td><td class="ch-num">34</td><td class="ch-num ch-prev">6</td><td class="ch-growth"><span class="ch-up">+467%</span></td></tr>
-<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">34</td><td class="ch-num ch-prev">21</td><td class="ch-growth"><span class="ch-up">+62%</span></td></tr>
-<tr><td class="ch-name">웹투어</td><td class="ch-num">27</td><td class="ch-num ch-prev">11</td><td class="ch-growth"><span class="ch-up">+145%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">34</td><td class="ch-num ch-prev">29</td><td class="ch-growth"><span class="ch-up">+17%</span></td></tr>
+<tr><td class="ch-name">웹투어</td><td class="ch-num">27</td><td class="ch-num ch-prev">51</td><td class="ch-growth"><span class="ch-dn">-47%</span></td></tr>
 <tr><td class="ch-name">트립토파즈</td><td class="ch-num">15</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+650%</span></td></tr>
-<tr><td class="ch-name">OTA_스테이원</td><td class="ch-num">7</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">OTA_스테이원</td><td class="ch-num">7</td><td class="ch-num ch-prev">6</td><td class="ch-growth"><span class="ch-up">+17%</span></td></tr>
 <tr><td class="ch-name">마이리얼트립</td><td class="ch-num">5</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_다보</td><td class="ch-num">4</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">4</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">맥스모바일</td><td class="ch-num">3</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">2</td><td class="ch-num ch-prev">3</td><td class="ch-growth"><span class="ch-dn">-33%</span></td></tr>
+<tr><td class="ch-name">OTA_다보</td><td class="ch-num">4</td><td class="ch-num ch-prev">4</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
+<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">4</td><td class="ch-num ch-prev">4</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
+<tr><td class="ch-name">맥스모바일</td><td class="ch-num">3</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+200%</span></td></tr>
+<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">2</td><td class="ch-num ch-prev">13</td><td class="ch-growth"><span class="ch-dn">-85%</span></td></tr>
 <tr><td class="ch-name">OTA_참좋은여행</td><td class="ch-num">2</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_기븐존여행클럽</td><td class="ch-num">1</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
+<tr><td class="ch-name">OTA_기븐존여행클럽</td><td class="ch-num">1</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
 <tr><td class="ch-name">OTA_아이러브레저</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">1</td><td class="ch-num ch-prev">9</td><td class="ch-growth"><span class="ch-dn">-89%</span></td></tr>
 <tr><td class="ch-name">OTA_호텔패키지</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
         <tr class="ch-total-row">
           <td class="ch-name">합계</td>
           <td class="ch-num">1,343</td>
-          <td class="ch-num ch-prev">948</td>
-          <td class="ch-growth"><span class="ch-up">+42%</span></td>
+          <td class="ch-num ch-prev">2,360</td>
+          <td class="ch-growth"><span class="ch-dn">-43%</span></td>
         </tr>
       </tbody>
     </table>
@@ -2552,6 +3304,85 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     <span class="channel-arrow">&#9660;</span>
   </button>
   <div class="channel-body">
+<div class="bgt-section"><div class="bgt-title">목표 달성률 (BU)</div><div class="gauge-row"><div class="gauge-wrap">
+  <div class="gauge-label">OTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="OTA 달성률 108.9%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">108.9%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">708</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">650</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">GOTA</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="GOTA 달성률 132.4%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">132.4%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">1,125</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">850</text>
+  </svg>
+</div><div class="gauge-wrap">
+  <div class="gauge-label">합계</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="합계 달성률 114.6%">
+    <!-- 배경 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M 12,60 A 48,48 0 0,1 108,60"
+          fill="none" stroke="#4ade80" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="150.8 150.8"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="60" y="52" text-anchor="middle"
+          font-size="18" font-weight="700" fill="#4ade80">114.6%</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="60" y="68" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">1,833</text>
+    <!-- 0 레이블 -->
+    <text x="10" y="74" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="110" y="74" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">1,600</text>
+  </svg>
+</div></div></div>
     <table class="channel-table">
       <thead>
         <tr>
@@ -2562,34 +3393,34 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         </tr>
       </thead>
       <tbody>
-<tr><td class="ch-name">아고다</td><td class="ch-num">508</td><td class="ch-num ch-prev">420</td><td class="ch-growth"><span class="ch-up">+21%</span></td></tr>
-<tr><td class="ch-name">트립닷컴</td><td class="ch-num">430</td><td class="ch-num ch-prev">174</td><td class="ch-growth"><span class="ch-up">+147%</span></td></tr>
-<tr><td class="ch-name">야놀자</td><td class="ch-num">275</td><td class="ch-num ch-prev">230</td><td class="ch-growth"><span class="ch-up">+20%</span></td></tr>
-<tr><td class="ch-name">여기어때</td><td class="ch-num">152</td><td class="ch-num ch-prev">205</td><td class="ch-growth"><span class="ch-dn">-26%</span></td></tr>
-<tr><td class="ch-name">익스피디아</td><td class="ch-num">117</td><td class="ch-num ch-prev">92</td><td class="ch-growth"><span class="ch-up">+27%</span></td></tr>
-<tr><td class="ch-name">네이버</td><td class="ch-num">103</td><td class="ch-num ch-prev">81</td><td class="ch-growth"><span class="ch-up">+27%</span></td></tr>
-<tr><td class="ch-name">웹투어</td><td class="ch-num">47</td><td class="ch-num ch-prev">14</td><td class="ch-growth"><span class="ch-up">+236%</span></td></tr>
-<tr><td class="ch-name">트립비토즈</td><td class="ch-num">39</td><td class="ch-num ch-prev">74</td><td class="ch-growth"><span class="ch-dn">-47%</span></td></tr>
-<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">39</td><td class="ch-num ch-prev">17</td><td class="ch-growth"><span class="ch-up">+129%</span></td></tr>
+<tr><td class="ch-name">아고다</td><td class="ch-num">508</td><td class="ch-num ch-prev">999</td><td class="ch-growth"><span class="ch-dn">-49%</span></td></tr>
+<tr><td class="ch-name">트립닷컴</td><td class="ch-num">430</td><td class="ch-num ch-prev">287</td><td class="ch-growth"><span class="ch-up">+50%</span></td></tr>
+<tr><td class="ch-name">야놀자</td><td class="ch-num">275</td><td class="ch-num ch-prev">552</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
+<tr><td class="ch-name">여기어때</td><td class="ch-num">152</td><td class="ch-num ch-prev">407</td><td class="ch-growth"><span class="ch-dn">-63%</span></td></tr>
+<tr><td class="ch-name">익스피디아</td><td class="ch-num">117</td><td class="ch-num ch-prev">253</td><td class="ch-growth"><span class="ch-dn">-54%</span></td></tr>
+<tr><td class="ch-name">네이버</td><td class="ch-num">103</td><td class="ch-num ch-prev">233</td><td class="ch-growth"><span class="ch-dn">-56%</span></td></tr>
+<tr><td class="ch-name">웹투어</td><td class="ch-num">47</td><td class="ch-num ch-prev">50</td><td class="ch-growth"><span class="ch-dn">-6%</span></td></tr>
+<tr><td class="ch-name">트립비토즈</td><td class="ch-num">39</td><td class="ch-num ch-prev">104</td><td class="ch-growth"><span class="ch-dn">-62%</span></td></tr>
+<tr><td class="ch-name">타이드스퀘어</td><td class="ch-num">39</td><td class="ch-num ch-prev">32</td><td class="ch-growth"><span class="ch-up">+22%</span></td></tr>
 <tr><td class="ch-name">쿠팡</td><td class="ch-num">38</td><td class="ch-num ch-prev">5</td><td class="ch-growth"><span class="ch-up">+660%</span></td></tr>
-<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">29</td><td class="ch-num ch-prev">70</td><td class="ch-growth"><span class="ch-dn">-59%</span></td></tr>
-<tr><td class="ch-name">트립토파즈</td><td class="ch-num">17</td><td class="ch-num ch-prev">6</td><td class="ch-growth"><span class="ch-up">+183%</span></td></tr>
+<tr><td class="ch-name">부킹닷컴</td><td class="ch-num">29</td><td class="ch-num ch-prev">224</td><td class="ch-growth"><span class="ch-dn">-87%</span></td></tr>
+<tr><td class="ch-name">트립토파즈</td><td class="ch-num">17</td><td class="ch-num ch-prev">8</td><td class="ch-growth"><span class="ch-up">+112%</span></td></tr>
 <tr><td class="ch-name">마이리얼트립</td><td class="ch-num">13</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">8</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+300%</span></td></tr>
-<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">4</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+300%</span></td></tr>
-<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">3</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
+<tr><td class="ch-name">OTA_온라인콘도</td><td class="ch-num">8</td><td class="ch-num ch-prev">19</td><td class="ch-growth"><span class="ch-dn">-58%</span></td></tr>
+<tr><td class="ch-name">OTA_샬레코리아</td><td class="ch-num">4</td><td class="ch-num ch-prev">14</td><td class="ch-growth"><span class="ch-dn">-71%</span></td></tr>
+<tr><td class="ch-name">OTA_플러스앤</td><td class="ch-num">3</td><td class="ch-num ch-prev">15</td><td class="ch-growth"><span class="ch-dn">-80%</span></td></tr>
 <tr><td class="ch-name">디다트래블</td><td class="ch-num">2</td><td class="ch-num ch-prev">7</td><td class="ch-growth"><span class="ch-dn">-71%</span></td></tr>
 <tr><td class="ch-name">OTA_스테이원</td><td class="ch-num">2</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-up">+0%</span></td></tr>
 <tr><td class="ch-name">OTA_웅진컴퍼스(놀이의발견)</td><td class="ch-num">2</td><td class="ch-num ch-prev">1</td><td class="ch-growth"><span class="ch-up">+100%</span></td></tr>
-<tr><td class="ch-name">OTA_이참조은레저</td><td class="ch-num">2</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">스마트인피니</td><td class="ch-num">1</td><td class="ch-num ch-prev">0</td><td class="ch-growth"><span class="ch-na">-</span></td></tr>
-<tr><td class="ch-name">OTA_아이러브레저</td><td class="ch-num">1</td><td class="ch-num ch-prev">2</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
+<tr><td class="ch-name">OTA_이참조은레저</td><td class="ch-num">2</td><td class="ch-num ch-prev">4</td><td class="ch-growth"><span class="ch-dn">-50%</span></td></tr>
+<tr><td class="ch-name">OTA_레저프라자</td><td class="ch-num">1</td><td class="ch-num ch-prev">4</td><td class="ch-growth"><span class="ch-dn">-75%</span></td></tr>
+<tr><td class="ch-name">스마트인피니</td><td class="ch-num">1</td><td class="ch-num ch-prev">40</td><td class="ch-growth"><span class="ch-dn">-98%</span></td></tr>
+<tr><td class="ch-name">OTA_아이러브레저</td><td class="ch-num">1</td><td class="ch-num ch-prev">6</td><td class="ch-growth"><span class="ch-dn">-83%</span></td></tr>
         <tr class="ch-total-row">
           <td class="ch-name">합계</td>
           <td class="ch-num">1,833</td>
-          <td class="ch-num ch-prev">1,403</td>
-          <td class="ch-growth"><span class="ch-up">+31%</span></td>
+          <td class="ch-num ch-prev">3,266</td>
+          <td class="ch-growth"><span class="ch-dn">-44%</span></td>
         </tr>
       </tbody>
     </table>
