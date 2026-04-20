@@ -638,66 +638,103 @@ def _render_price_cell(
     return f'<td class="price-cell">{"".join(layers)}</td>'
 
 
-def _render_budget_bars(budget_info: dict | None) -> str:
+def _render_gauge(label: str, actual: int, budget: int) -> str:
     """
-    OTA/GOTA/합계 목표 달성률 프로그레스바 HTML 생성.
-    달성률 < 80% → 빨강, 80-99% → 노랑, >= 100% → 초록
+    SVG 반원 게이지 차트 1개 생성.
+    달성률 < 80% → 빨강, 80-99% → 노랑, >= 100% → 초록.
+    초과달성 시 게이지는 100% 채우고 색상으로 구분.
+    """
+    if budget <= 0:
+        return ""
+    pct_raw = actual / budget * 100
+    pct     = round(pct_raw, 1)
+
+    color = (
+        "#4ade80" if pct_raw >= 100
+        else "#fbbf24" if pct_raw >= 80
+        else "#f87171"
+    )
+
+    # SVG 반원 파라미터
+    # viewBox: 0 0 120 70  (반원 + 아래 여백)
+    # r=50, cx=60, cy=60 → 반원이 상단에 위치
+    cx, cy, r = 60, 60, 48
+    stroke_w = 10
+    # strokeDasharray for semicircle: 반원 둘레 = π*r ≈ 150.8
+    # dasharray = [arc_length, rest]
+    # 반원 전체 dash = π*r, 나머지 = 전체 원 - 반원 = π*r
+    import math
+    circumference = math.pi * r          # 반원 둘레 ≈ 150.8
+    fill_ratio    = min(pct_raw / 100.0, 1.0)
+    arc_fill      = circumference * fill_ratio
+    arc_gap       = circumference - arc_fill
+    # 나머지 절반(아래쪽)은 무조건 비워야 하므로 extra gap 추가
+    dash_array    = f"{arc_fill:.1f} {arc_gap + circumference:.1f}"
+
+    pct_display = f"{pct}%"
+    actual_str  = f"{actual:,}"
+    budget_str  = f"{budget:,}"
+
+    return f"""\
+<div class="gauge-wrap">
+  <div class="gauge-label">{label}</div>
+  <svg viewBox="0 0 120 70" class="gauge-svg" aria-label="{label} 달성률 {pct_display}">
+    <!-- 배경 반원 -->
+    <path d="M {cx-r},{cy} A {r},{r} 0 0,1 {cx+r},{cy}"
+          fill="none" stroke="rgba(255,255,255,.12)" stroke-width="{stroke_w}"
+          stroke-linecap="round"/>
+    <!-- 달성 반원 -->
+    <path d="M {cx-r},{cy} A {r},{r} 0 0,1 {cx+r},{cy}"
+          fill="none" stroke="{color}" stroke-width="{stroke_w}"
+          stroke-linecap="round"
+          stroke-dasharray="{dash_array}"
+          stroke-dashoffset="0"/>
+    <!-- 달성률 % (중앙 상단) -->
+    <text x="{cx}" y="{cy - 8}" text-anchor="middle"
+          font-size="18" font-weight="700" fill="{color}">{pct_display}</text>
+    <!-- 실적 숫자 (달성률 아래) -->
+    <text x="{cx}" y="{cy + 8}" text-anchor="middle"
+          font-size="9" fill="rgba(255,255,255,.7)">{actual_str}</text>
+    <!-- 0 레이블 -->
+    <text x="{cx - r - 2}" y="{cy + 14}" text-anchor="end"
+          font-size="7" fill="rgba(255,255,255,.4)">0</text>
+    <!-- 목표 숫자 -->
+    <text x="{cx + r + 2}" y="{cy + 14}" text-anchor="start"
+          font-size="7" fill="rgba(255,255,255,.4)">{budget_str}</text>
+  </svg>
+</div>"""
+
+
+def _render_budget_gauges(budget_info: dict | None) -> str:
+    """
+    OTA/GOTA/합계 3개의 반원 게이지 차트 섹션 HTML 생성.
     """
     if not budget_info:
         return ""
 
-    def _bar_row(label: str, actual: int, budget: int) -> str:
-        if budget <= 0:
-            return ""
-        pct = round(actual / budget * 100)
-        bar_w = min(pct, 100)
-        # 초과달성은 별도 오버플로우 표시
-        overflow_w = max(min(pct - 100, 50), 0)  # 최대 50%p 오버플로우 시각화
-
-        color_cls = (
-            "bgt-green" if pct >= 100
-            else "bgt-yellow" if pct >= 80
-            else "bgt-red"
-        )
-        overflow_html = (
-            f'<div class="bgt-bar-overflow {color_cls}" style="width:{overflow_w}%"></div>'
-            if overflow_w > 0 else ""
-        )
-        return f"""\
-<div class="bgt-row">
-  <span class="bgt-seg">{label}</span>
-  <div class="bgt-bar-wrap">
-    <div class="bgt-bar-bg">
-      <div class="bgt-bar-fill {color_cls}" style="width:{bar_w}%"></div>
-      {overflow_html}
-    </div>
-  </div>
-  <span class="bgt-pct {color_cls}">{pct}%</span>
-  <span class="bgt-nums">{actual:,} / {budget:,}</span>
-</div>"""
-
-    rows = []
-    ota  = budget_info.get("OTA",  {})
-    gota = budget_info.get("GOTA", {})
+    ota          = budget_info.get("OTA",  {})
+    gota         = budget_info.get("GOTA", {})
     total_budget = budget_info.get("total_budget", 0)
     total_actual = (ota.get("actual", 0) or 0) + (gota.get("actual", 0) or 0)
 
+    gauges = []
     if ota and ota.get("budget", 0):
-        rows.append(_bar_row("OTA",  ota.get("actual", 0) or 0,  ota["budget"]))
+        gauges.append(_render_gauge("OTA",  ota.get("actual", 0) or 0,  ota["budget"]))
     if gota and gota.get("budget", 0):
-        rows.append(_bar_row("GOTA", gota.get("actual", 0) or 0, gota["budget"]))
+        gauges.append(_render_gauge("GOTA", gota.get("actual", 0) or 0, gota["budget"]))
     if total_budget:
-        rows.append(_bar_row("합계", total_actual, total_budget))
+        gauges.append(_render_gauge("합계", total_actual, total_budget))
 
-    rows = [r for r in rows if r]
-    if not rows:
+    gauges = [g for g in gauges if g]
+    if not gauges:
         return ""
 
     return (
         '<div class="bgt-section">'
         '<div class="bgt-title">목표 달성률 (BU)</div>'
-        + "".join(rows)
-        + "</div>"
+        '<div class="gauge-row">'
+        + "".join(gauges)
+        + "</div></div>"
     )
 
 
@@ -756,7 +793,7 @@ def _render_channel_section(prop_name: str, channel_data: dict) -> str:
         t_growth = '<span class="ch-na">-</span>'
 
     rows_html    = "\n".join(rows)
-    budget_html  = _render_budget_bars(budget_info)
+    budget_html  = _render_budget_gauges(budget_info)
     return f"""\
 <div class="channel-section">
   <button class="channel-toggle" type="button">
@@ -2010,9 +2047,9 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   padding-top: 6px;
 }
 
-/* ── Budget 달성률 섹션 ── */
+/* ── Budget 달성률 게이지 섹션 ── */
 .bgt-section {
-  padding: 10px 12px 8px;
+  padding: 10px 8px 6px;
   border-bottom: 1px solid var(--border);
 }
 .bgt-title {
@@ -2021,57 +2058,34 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 8px;
+  margin-bottom: 4px;
+  text-align: center;
 }
-.bgt-row {
-  display: grid;
-  grid-template-columns: 36px 1fr 44px 100px;
+.gauge-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 4px;
+}
+.gauge-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
+  min-width: 0;
 }
-.bgt-seg {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text);
-  text-align: right;
-}
-.bgt-bar-wrap { position: relative; height: 12px; }
-.bgt-bar-bg {
-  width: 100%;
-  height: 100%;
-  background: rgba(255,255,255,.08);
-  border-radius: 6px;
-  overflow: visible;
-  position: relative;
-}
-.bgt-bar-fill {
-  height: 100%;
-  border-radius: 6px;
-  transition: width .3s ease;
-}
-.bgt-bar-overflow {
-  position: absolute;
-  top: 0;
-  left: 100%;
-  height: 100%;
-  border-radius: 0 6px 6px 0;
-  opacity: .55;
-}
-.bgt-green  { background: #4ade80; color: #4ade80; }
-.bgt-yellow { background: #fbbf24; color: #fbbf24; }
-.bgt-red    { background: #f87171; color: #f87171; }
-.bgt-pct {
-  font-size: 12px;
-  font-weight: 700;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-.bgt-nums {
+.gauge-label {
   font-size: 10px;
+  font-weight: 700;
   color: var(--muted);
-  font-variant-numeric: tabular-nums;
-  text-align: right;
+  margin-bottom: 2px;
+  text-align: center;
+}
+.gauge-svg {
+  width: 100%;
+  max-width: 110px;
+  height: auto;
+  overflow: visible;
 }
 
 /* ── Homepage section (자사몰 객실가격 토글) ── */

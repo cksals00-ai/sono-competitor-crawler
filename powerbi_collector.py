@@ -346,18 +346,21 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
         "modelId": MODEL_ID,
     }
 
-    # 투숙월 필터 삽입
+    # 투숙월/투숙년도 필터 삽입
     if stay_month:
-        # YYYYMM(6자리) 형식이면 월 번호만 추출, 그 외는 그대로 사용
+        # YYYYMM(6자리) 형식이면 월/연도 추출, 그 외는 그대로 사용
         if len(stay_month) == 6 and stay_month.isdigit():
+            year_int  = int(stay_month[:4])
             month_int = int(stay_month[4:6])
             literal_value = f"{month_int}L"  # Int64 리터럴
             log_val = f"{month_int} (정수)"
         else:
+            year_int = None
             literal_value = f"'{stay_month}'"
             log_val = stay_month
 
         where_clause = [
+            # data_raw: 월 필터
             {
                 "Condition": {
                     "Comparison": {
@@ -368,12 +371,11 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
                                 "Property": date_column,
                             }
                         },
-                        "Right": {
-                            "Literal": {"Value": literal_value}
-                        },
+                        "Right": {"Literal": {"Value": literal_value}},
                     }
                 }
             },
+            # data_lastraw: 월 필터
             {
                 "Condition": {
                     "Comparison": {
@@ -384,13 +386,34 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
                                 "Property": date_column,
                             }
                         },
-                        "Right": {
-                            "Literal": {"Value": literal_value}
-                        },
+                        "Right": {"Literal": {"Value": literal_value}},
                     }
                 }
             },
         ]
+
+        # YYYYMM 형식인 경우 data_raw에 투숙년도 필터 추가
+        # (data_raw는 복수연도 포함 → 당해연도만 필터)
+        # data_lastraw는 LY 전용 테이블이므로 월 필터만으로 충분
+        if year_int:
+            where_clause.append(
+                {
+                    "Condition": {
+                        "Comparison": {
+                            "ComparisonKind": 0,
+                            "Left": {
+                                "Column": {
+                                    "Expression": {"SourceRef": {"Source": "d"}},
+                                    "Property": "투숙년도",
+                                }
+                            },
+                            "Right": {"Literal": {"Value": f"{year_int}L"}},
+                        }
+                    }
+                }
+            )
+            logger.info(f"투숙년도 필터 추가: data_raw={year_int}")
+
         sem_cmd = (
             query_body["queries"][0]["Query"]["Commands"][0]
             ["SemanticQueryDataShapeCommand"]["Query"]
@@ -573,6 +596,186 @@ def parse_channel_rns(result: dict) -> dict:
 # ─────────────────────────────────────────────
 # Step 3b: budget_RNS 쿼리 / 파싱
 # ─────────────────────────────────────────────
+
+def _build_actual_by_segment_query(stay_month_yyyymm: str) -> dict:
+    """
+    data_raw에서 세그구분별·영업장변경별 RNS 집계.
+    budget 달성률 계산에 사용 (채널 prefix 기반보다 정확).
+    월/투숙년도 필터 적용.
+    """
+    year_int  = int(stay_month_yyyymm[:4])
+    month_int = int(stay_month_yyyymm[4:6])
+    return {
+        "version": "1.0.0",
+        "queries": [
+            {
+                "Query": {
+                    "Commands": [
+                        {
+                            "SemanticQueryDataShapeCommand": {
+                                "Query": {
+                                    "Version": 2,
+                                    "From": [
+                                        {"Name": "d", "Entity": "data_raw", "Type": 0},
+                                    ],
+                                    "Select": [
+                                        {
+                                            "Column": {
+                                                "Expression": {"SourceRef": {"Source": "d"}},
+                                                "Property": "영업장변경",
+                                            },
+                                            "Name": "d.영업장변경",
+                                        },
+                                        {
+                                            "Column": {
+                                                "Expression": {"SourceRef": {"Source": "d"}},
+                                                "Property": "세그구분",
+                                            },
+                                            "Name": "d.세그구분",
+                                        },
+                                        {
+                                            "Aggregation": {
+                                                "Expression": {
+                                                    "Column": {
+                                                        "Expression": {"SourceRef": {"Source": "d"}},
+                                                        "Property": "RNS",
+                                                    }
+                                                },
+                                                "Function": 0,
+                                            },
+                                            "Name": "Sum(RNS)",
+                                        },
+                                    ],
+                                    "Where": [
+                                        {
+                                            "Condition": {
+                                                "Comparison": {
+                                                    "ComparisonKind": 0,
+                                                    "Left": {
+                                                        "Column": {
+                                                            "Expression": {"SourceRef": {"Source": "d"}},
+                                                            "Property": "월",
+                                                        }
+                                                    },
+                                                    "Right": {"Literal": {"Value": f"{month_int}L"}},
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "Condition": {
+                                                "Comparison": {
+                                                    "ComparisonKind": 0,
+                                                    "Left": {
+                                                        "Column": {
+                                                            "Expression": {"SourceRef": {"Source": "d"}},
+                                                            "Property": "투숙년도",
+                                                        }
+                                                    },
+                                                    "Right": {"Literal": {"Value": f"{year_int}L"}},
+                                                }
+                                            }
+                                        },
+                                    ],
+                                    "OrderBy": [
+                                        {
+                                            "Direction": 1,
+                                            "Expression": {
+                                                "Column": {
+                                                    "Expression": {"SourceRef": {"Source": "d"}},
+                                                    "Property": "영업장변경",
+                                                }
+                                            },
+                                        }
+                                    ],
+                                },
+                                "Binding": {
+                                    "Primary": {
+                                        "Groupings": [{"Projections": [0, 1, 2]}]
+                                    },
+                                    "DataReduction": {
+                                        "DataVolume": 4,
+                                        "Primary": {"Window": {"Count": 1000}},
+                                    },
+                                    "Version": 1,
+                                },
+                            }
+                        }
+                    ]
+                },
+                "QueryId": "",
+                "ApplicationContext": {
+                    "DatasetId": DATASET_ID,
+                    "Sources": [{"ReportId": REPORT_ID, "VisualId": ""}],
+                },
+            }
+        ],
+        "cancelQueries": [],
+        "modelId": MODEL_ID,
+    }
+
+
+def fetch_actual_by_segment(apim_cluster: str, stay_month_yyyymm: str) -> dict:
+    """
+    data_raw에서 세그구분별·영업장변경별 실적 RNS 수집.
+
+    반환:
+    {
+      "01.벨비발디": {"OTA": 5146, "GOTA": 658, "INBOUND": 69, "기타": 3059},
+      ...
+    }
+    """
+    url = f"{apim_cluster}/public/reports/querydata?synchronous=true"
+    body = _build_actual_by_segment_query(stay_month_yyyymm)
+    headers = {**_make_headers(), "Content-Type": "application/json"}
+
+    logger.info(f"세그구분별 실적 쿼리 호출 (month={stay_month_yyyymm})")
+    r = requests.post(url, headers=headers, json=body, timeout=30)
+    r.raise_for_status()
+
+    result = r.json()
+    if result.get("results") and result["results"][0].get("result", {}).get("error"):
+        raise ValueError(f"세그구분별 실적 쿼리 오류: {result['results'][0]['result']['error']}")
+
+    data_section = result["results"][0]["result"]["data"]
+    dsr = data_section["dsr"]
+    ds  = dsr["DS"][0]
+
+    value_dicts = ds.get("ValueDicts", {})
+    d0 = value_dicts.get("D0", [])  # 영업장변경
+    d1 = value_dicts.get("D1", [])  # 세그구분
+
+    dm0    = ds["PH"][0]["DM0"]
+    n_cols = 3
+
+    rows      = []
+    prev_vals = [None] * n_cols
+    for entry in dm0:
+        r_flag = entry.get("R", 0)
+        c_vals = entry.get("C", [])
+        new_vals = list(prev_vals)
+        c_idx = 0
+        for i in range(n_cols):
+            if not ((r_flag >> i) & 1):
+                new_vals[i] = c_vals[c_idx] if c_idx < len(c_vals) else None
+                c_idx += 1
+        g0_idx, g1_idx = new_vals[0], new_vals[1]
+        prop = d0[g0_idx] if (g0_idx is not None and 0 <= g0_idx < len(d0)) else ""
+        seg  = d1[g1_idx] if (g1_idx is not None and 0 <= g1_idx < len(d1)) else ""
+        rns  = new_vals[2] or 0
+        rows.append((prop, seg, rns))
+        prev_vals = new_vals
+
+    actual_dict: dict[str, dict] = {}
+    for prop, seg, rns in rows:
+        if not prop:
+            continue
+        entry = actual_dict.setdefault(prop, {})
+        if seg:
+            entry[seg] = entry.get(seg, 0) + rns
+
+    logger.info(f"세그구분별 실적 파싱 완료 — 사업장 {len(actual_dict)}개")
+    return actual_dict
+
 
 def _build_budget_query_body(stay_month_yyyymm: str, budget_type: str = "BU") -> dict:
     """
@@ -869,6 +1072,7 @@ def to_channel_sales_format(
     data: dict,
     stay_month: str | None = None,
     budget_data: dict | None = None,
+    actual_by_seg: dict | None = None,
 ) -> dict:
     """
     powerbi_rns_latest.json 형식 → channel_sales_data.json 호환 형식 변환.
@@ -955,17 +1159,22 @@ def to_channel_sales_format(
         if budget_data:
             bd = budget_data.get(raw_prop)
             if bd:
-                # 실적: 채널명 접두어로 OTA/GOTA 구분
-                ota_actual = sum(
-                    ch_data.get("rns") or 0
-                    for raw_ch, ch_data in prop_data["channels"].items()
-                    if raw_ch.startswith("OTA_")
-                )
-                gota_actual = sum(
-                    ch_data.get("rns") or 0
-                    for raw_ch, ch_data in prop_data["channels"].items()
-                    if raw_ch.startswith("GOTA_")
-                )
+                # 실적: actual_by_seg(data_raw.세그구분 기준)가 있으면 사용, 없으면 채널 prefix 폴백
+                seg_actuals = actual_by_seg.get(raw_prop, {}) if actual_by_seg else {}
+                if seg_actuals:
+                    ota_actual  = seg_actuals.get("OTA", 0)
+                    gota_actual = seg_actuals.get("GOTA", 0)
+                else:
+                    ota_actual = sum(
+                        ch_data.get("rns") or 0
+                        for raw_ch, ch_data in prop_data["channels"].items()
+                        if raw_ch.startswith("OTA_")
+                    )
+                    gota_actual = sum(
+                        ch_data.get("rns") or 0
+                        for raw_ch, ch_data in prop_data["channels"].items()
+                        if raw_ch.startswith("GOTA_")
+                    )
                 budget_info = {
                     "OTA":  {"budget": bd.get("OTA", 0),  "actual": ota_actual},
                     "GOTA": {"budget": bd.get("GOTA", 0), "actual": gota_actual},
@@ -1066,8 +1275,9 @@ def collect(
     n_channels = len(parsed["channels_summary"])
     logger.info(f"파싱 완료 — 사업장 {n_props}개, 채널 {n_channels}개")
 
-    # budget 수집 (투숙월이 있을 때만 — YYYYMM 형식 필요)
+    # budget + 세그구분별 실적 수집 (투숙월이 있을 때만 — YYYYMM 형식 필요)
     budget_data: dict | None = None
+    actual_by_seg: dict | None = None
     if stay_month and len(stay_month) == 6 and stay_month.isdigit():
         try:
             budget_raw  = fetch_budget_data(apim, stay_month, budget_type)
@@ -1075,11 +1285,21 @@ def collect(
             logger.info(f"budget 수집 완료 — {len(budget_data)}개 사업장")
         except Exception as e:
             logger.warning(f"budget 수집 실패 (무시하고 계속): {e}")
+        try:
+            actual_by_seg = fetch_actual_by_segment(apim, stay_month)
+            logger.info(f"세그구분별 실적 수집 완료 — {len(actual_by_seg)}개 사업장")
+        except Exception as e:
+            logger.warning(f"세그구분별 실적 수집 실패 (무시하고 계속): {e}")
 
     save_result(parsed, output_dir=output_dir, pretty=pretty)
 
     if update_channel_sales:
-        compat = to_channel_sales_format(parsed, stay_month=stay_month, budget_data=budget_data)
+        compat = to_channel_sales_format(
+            parsed,
+            stay_month=stay_month,
+            budget_data=budget_data,
+            actual_by_seg=actual_by_seg,
+        )
         compat_path = Path("channel_sales_data.json")
         compat_path.write_text(
             json.dumps(compat, ensure_ascii=False, indent=2 if pretty else None),
