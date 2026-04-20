@@ -338,8 +338,12 @@ def _is_promo(room_type: str) -> bool:
 
 
 def _clean_room_type(room_type: str) -> str:
-    """프로모션 접두어 제거 후 16자 이내로 반환.
-    Trip.com 최저가 레이블('최저가', '최저가(참고)')은 실제 객실명 대신 최저가 기준임을 표시."""
+    """객실명 정규화: 프로모션 접두어·옵션 접미사 제거 후 20자 이내로 반환.
+
+    - Trip.com 최저가 레이블('최저가', '최저가(참고)')은 그대로 표시
+    - 네이버호텔/Trip.com 형식의 ' - 무료 Wi-Fi' 등 옵션 접미사 제거
+    - 3채널(야놀자·네이버호텔·Trip.com) 동일 형식으로 표시
+    """
     if not room_type:
         return ""
     if room_type.strip() == "최저가":
@@ -349,8 +353,11 @@ def _clean_room_type(room_type: str) -> str:
     rt = room_type
     for pfx in PROMO_PREFIXES:
         rt = rt.replace(pfx, "").strip()
-    if len(rt) > 16:
-        rt = rt[:15] + "…"
+    # 네이버호텔/Trip.com 스타일: " - 무료 Wi-Fi", " - Room Only" 등 옵션 접미사 제거
+    if " - " in rt:
+        rt = rt.split(" - ")[0].strip()
+    if len(rt) > 20:
+        rt = rt[:19] + "…"
     return rt
 
 
