@@ -153,12 +153,13 @@ def _merge_and_save(new_df: pd.DataFrame, ota_filter: list) -> pd.DataFrame:
 
 def _generate_dashboard(combined_df: pd.DataFrame):
     """대시보드 HTML 생성 → dashboard/index.html"""
-    from dashboard_generator import generate_dashboard, load_previous_df
+    from dashboard_generator import generate_dashboard, load_previous_df, load_golf_df
     with open("config.yaml", encoding="utf-8") as f:
         cfg = yaml.safe_load(f)
     export_dir = cfg.get("output", {}).get("export_dir", "./exports")
     prev_df = load_previous_df(export_dir)
-    out = generate_dashboard(combined_df, "dashboard/index.html", prev_df=prev_df)
+    golf_df = load_golf_df(export_dir)
+    out = generate_dashboard(combined_df, "dashboard/index.html", prev_df=prev_df, golf_df=golf_df)
     logger.info(f"대시보드 생성: {out}")
     return out
 
@@ -378,6 +379,25 @@ def main():
             if not golf_df.empty:
                 export_golf_df(golf_df)
             logger.info("=== 골프 그린피 크롤링 완료 ===")
+
+            # 골프 크롤링 완료 후 대시보드 재생성 (골프 섹션 포함)
+            try:
+                from export_powerbi import load_output_config
+                out_cfg = load_output_config()
+                export_dir = Path(out_cfg["export_dir"])
+                today = datetime.today().strftime("%Y%m%d")
+                csv_name = out_cfg["csv_filename"].format(date=today)
+                csv_path = export_dir / csv_name
+                if csv_path.exists():
+                    from dashboard_generator import _normalize_columns
+                    combined_df = _normalize_columns(pd.read_csv(csv_path, encoding="utf-8-sig"))
+                    dashboard_path = _generate_dashboard(combined_df)
+                    _copy_to_docs(dashboard_path)
+                    _copy_to_icloud(dashboard_path)
+                    _git_push("골프 크롤링")
+                    logger.info("=== 골프 포함 대시보드 재생성 완료 ===")
+            except Exception as e:
+                logger.error(f"골프 대시보드 재생성 실패: {e}", exc_info=True)
         except Exception as e:
             logger.error(f"골프 크롤링 실패 (Power BI 수집에는 영향 없음): {e}", exc_info=True)
 

@@ -41,9 +41,9 @@
     "디다트래블",
     "OTA_위더스컴즈",
     "OTA_이제너두",
-    "OTA_보군여행사",
-    "OTA_참좋은여행",
     "OTA_콘도닷컴",
+    "OTA_참좋은여행",
+    "OTA_보군여행사",
     "OTA_하이월드투어"
   ],
   "properties": [
@@ -177,11 +177,11 @@
       "budget": {
         "OTA": {
           "budget": 4500,
-          "actual": 5288
+          "actual": 5145
         },
         "GOTA": {
           "budget": 600,
-          "actual": 507
+          "actual": 658
         },
         "total_budget": 5300
       }
@@ -344,7 +344,8 @@
     {
       "key": "09.삼척",
       "property_names": [
-        "소노벨 삼척"
+        "소노벨 삼척",
+        "쏠비치 삼척"
       ],
       "channels": {
         "아고다": {
@@ -479,7 +480,8 @@
     {
       "key": "17.진도",
       "property_names": [
-        "소노벨 진도"
+        "소노벨 진도",
+        "쏠비치 진도"
       ],
       "channels": {
         "아고다": {
@@ -610,11 +612,11 @@
       "budget": {
         "OTA": {
           "budget": 2200,
-          "actual": 2887
+          "actual": 2841
         },
         "GOTA": {
           "budget": 1400,
-          "actual": 1652
+          "actual": 1698
         },
         "total_budget": 3600
       }
@@ -765,7 +767,7 @@
         },
         "GOTA": {
           "budget": 1150,
-          "actual": 1552
+          "actual": 1551
         },
         "total_budget": 3750
       }
@@ -773,7 +775,8 @@
     {
       "key": "20.고양",
       "property_names": [
-        "소노호텔 고양"
+        "소노호텔 고양",
+        "소노캄 고양"
       ],
       "channels": {
         "트립닷컴": {
@@ -955,11 +958,11 @@
       "budget": {
         "OTA": {
           "budget": 1950,
-          "actual": 1383
+          "actual": 1380
         },
         "GOTA": {
           "budget": 960,
-          "actual": 1095
+          "actual": 1098
         },
         "total_budget": 2910
       }
@@ -967,7 +970,8 @@
     {
       "key": "16.거제",
       "property_names": [
-        "소노벨 거제"
+        "소노벨 거제",
+        "소노캄 거제"
       ],
       "channels": {
         "아고다": {
@@ -1233,11 +1237,11 @@
       "budget": {
         "OTA": {
           "budget": 1250,
-          "actual": 1343
+          "actual": 1203
         },
         "GOTA": {
           "budget": 1200,
-          "actual": 915
+          "actual": 1054
         },
         "total_budget": 2500
       }
@@ -1245,7 +1249,8 @@
     {
       "key": "08.양양",
       "property_names": [
-        "소노벨 양양"
+        "소노벨 양양",
+        "쏠비치 양양"
       ],
       "channels": {
         "아고다": {
@@ -1372,7 +1377,8 @@
     {
       "key": "11.경주",
       "property_names": [
-        "소노벨 경주"
+        "소노벨 경주",
+        "소노캄 경주"
       ],
       "channels": {
         "아고다": {
@@ -1491,7 +1497,7 @@
       "budget": {
         "OTA": {
           "budget": 1490,
-          "actual": 1178
+          "actual": 1177
         },
         "GOTA": {
           "budget": 1080,
@@ -1757,7 +1763,8 @@
     {
       "key": "15.여수",
       "property_names": [
-        "소노벨 여수"
+        "소노벨 여수",
+        "소노캄 여수"
       ],
       "channels": {
         "아고다": {
@@ -1860,7 +1867,8 @@
     {
       "key": "21.해운대",
       "property_names": [
-        "소노호텔 해운대"
+        "소노호텔 해운대",
+        "소노문 해운대"
       ],
       "channels": {
         "아고다": {
@@ -2050,7 +2058,7 @@
       "budget": {
         "OTA": {
           "budget": 600,
-          "actual": 508
+          "actual": 518
         },
         "GOTA": {
           "budget": 770,
@@ -2165,11 +2173,11 @@
       "budget": {
         "OTA": {
           "budget": 605,
-          "actual": 791
+          "actual": 793
         },
         "GOTA": {
           "budget": 450,
-          "actual": 510
+          "actual": 508
         },
         "total_budget": 1055
       }
@@ -2177,7 +2185,8 @@
     {
       "key": "23.르네블루",
       "property_names": [
-        "르네블루"
+        "르네블루",
+        "르네블루 바이 쏠비치"
       ],
       "channels": {
         "여기어때": {
@@ -2248,7 +2257,7 @@
       "budget": {
         "OTA": {
           "budget": 500,
-          "actual": 717
+          "actual": 716
         },
         "GOTA": {
           "budget": 350,
@@ -2494,7 +2503,7 @@
       "budget": {
         "OTA": {
           "budget": 400,
-          "actual": 616
+          "actual": 619
         },
         "GOTA": {
           "budget": 350,
@@ -2625,7 +2634,8 @@
     {
       "key": "05.빌리지 비발디",
       "property_names": [
-        "소노빌리지 비발디파크"
+        "소노빌리지 비발디파크",
+        "소노펠리체 빌리지 비발디파크"
       ],
       "channels": {
         "아고다": {
@@ -2827,11 +2837,11 @@
       "budget": {
         "OTA": {
           "budget": 450,
-          "actual": 244
+          "actual": 242
         },
         "GOTA": {
           "budget": 220,
-          "actual": 75
+          "actual": 77
         },
         "total_budget": 670
       }

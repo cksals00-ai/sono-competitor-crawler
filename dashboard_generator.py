@@ -1029,7 +1029,7 @@ def _render_fit_section(prop_name: str, fit_data: dict) -> str:
             f'<table class="homepage-table">'
             f'<thead><tr>'
             f'<th class="hp-th-room">객실타입</th>'
-            f'<th class="hp-th-price">브래드닷컴 객실요금</th>'
+            f'<th class="hp-th-price">객실요금</th>'
             f'<th class="hp-th-meta">날짜 / 시즌</th>'
             f'</tr></thead>'
             f'<tbody>{inner}</tbody>'
@@ -1041,7 +1041,7 @@ def _render_fit_section(prop_name: str, fit_data: dict) -> str:
     return f"""\
 <div class="fit-section">
   <button class="fit-toggle" type="button">
-    <span class="fit-toggle-label">브래드닷컴 객실요금</span>
+    <span class="fit-toggle-label">객실요금</span>
     <span class="fit-toggle-meta">{gen_label}</span>
     <span class="fit-arrow">&#9660;</span>
   </button>
@@ -1457,8 +1457,8 @@ def _render_html(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>소노 경쟁사 모니터링 | GS Team</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <title>GS Monitor | SONO Hotels &amp; Resorts</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <style>{_CSS}</style>
 </head>
 <body>
@@ -1467,8 +1467,8 @@ def _render_html(
   <div class="header-inner">
     <div class="header-left">
       <div class="header-title-wrap">
-        <span class="header-title">소노 경쟁사 모니터링</span>
-        <span class="header-team-badge">GS Team</span>
+        <span class="header-title"><span class="header-gs">GS</span> Monitor</span>
+        <span class="header-team-badge">SONO Hotels &amp; Resorts</span>
       </div>
       <div class="header-meta">수집: {crawled_disp}&ensp;&middot;&ensp;생성: {gen_time}&ensp;&middot;&ensp;대상기간: {date_range}&ensp;&middot;&ensp;비교기준: {prev_date_disp}</div>
     </div>
@@ -1594,25 +1594,35 @@ body {
 .header-left { display: flex; flex-direction: column; gap: 3px; }
 .header-title-wrap { display: flex; align-items: center; gap: 10px; }
 .header-title {
-  font-size: 20px;
-  font-weight: 800;
+  font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
   color: #ffffff;
-  letter-spacing: -.5px;
+  letter-spacing: -.3px;
   line-height: 1;
+}
+.header-gs {
+  background: linear-gradient(135deg, #e3b341 0%, #f0d060 50%, #e3b341 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 2px;
 }
 .header-team-badge {
   display: inline-flex;
   align-items: center;
-  background: linear-gradient(135deg, #238636 0%, #1a7f37 100%);
-  color: #ffffff;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .8px;
+  background: rgba(227,179,65,.12);
+  color: rgba(227,179,65,.7);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  padding: 3px 9px;
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,.15);
-  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(227,179,65,.2);
   flex-shrink: 0;
 }
 .header-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
@@ -2003,6 +2013,8 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   .main { padding: 10px; }
   .header { padding: 12px 14px; }
   .header-title { font-size: 16px; }
+  .header-gs { font-size: 18px; }
+  .header-team-badge { display: none; }
   .header-meta  { font-size: 10px; }
   .stat-item { padding: 8px 14px; min-width: 72px; }
   .stat-value { font-size: 18px; }
@@ -2016,6 +2028,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   .filter-btn { padding: 4px 10px; font-size: 11px; }
   .property-title { font-size: 13px; }
   .header-title { font-size: 14px; }
+  .header-gs { font-size: 16px; }
   .legend-bar { font-size: 10px; }
 }
 @media (min-width: 768px) {

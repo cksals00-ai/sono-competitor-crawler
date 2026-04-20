@@ -1585,24 +1585,36 @@ def _parse_tripcom_ibu_hotel(html: str) -> dict:
 
 def _parse_tripcom_detail_rooms(html: str) -> list:
     """
-    Trip.com 호텔 상세 SSR (window.IBU_HOTEL)에서 객실 목록 파싱.
+    Trip.com 호텔 상세 HTML에서 객실 목록 파싱.
+
+    Trip.com v2 페이지는 Next.js(NFES) 앱으로, window.IBU_HOTEL SSR JSON이 없음.
+    방 이름은 spiderRoomList CSS 클래스로 SSR 렌더되지만, 가격은 JS 동적 로딩 → price=0 반환.
+    crawl_tripcom()에서 price=0인 경우 2차/3차 폴백으로 가격을 보완한다.
+
     반환: [{"name": str, "price": int}, ...]  — 빈 리스트면 파싱 실패
     """
+    # 방법 1: spiderRoomList CSS 클래스 (현재 v2 페이지 포맷)
+    soup = BeautifulSoup(html, "html.parser")
+    room_name_elems = soup.select("[class*='spiderRoomList_roomNameA']")
+    if room_name_elems:
+        rooms = []
+        for elem in room_name_elems:
+            name = elem.get_text(strip=True)
+            if name:
+                rooms.append({"name": name, "price": 0})
+        if rooms:
+            return rooms
+
+    # 방법 2 (구형 폴백): window.IBU_HOTEL JSON에서 파싱
     data = _parse_tripcom_ibu_hotel(html)
     if not data:
         return []
 
-    # Trip.com SSR 상세 페이지의 가능한 객실 데이터 경로를 순서대로 시도
     candidate_paths = [
-        # 경로 1: initData.hotelDetailInfo.roomInfo.roomTypeList
         lambda d: d["initData"]["hotelDetailInfo"]["roomInfo"]["roomTypeList"],
-        # 경로 2: initData.roomInfo.roomTypeList
         lambda d: d["initData"]["roomInfo"]["roomTypeList"],
-        # 경로 3: initData.hotelRoomInfo.roomList
         lambda d: d["initData"]["hotelRoomInfo"]["roomList"],
-        # 경로 4: initData.hotelInfo.roomTypeList
         lambda d: d["initData"]["hotelInfo"]["roomTypeList"],
-        # 경로 5: initData.roomTypeList
         lambda d: d["initData"]["roomTypeList"],
     ]
 
@@ -1625,7 +1637,7 @@ def _parse_tripcom_detail_rooms(html: str) -> list:
                     price = int(price)
                 except (TypeError, ValueError):
                     price = 0
-                if name and price > 0:
+                if name:
                     rooms.append({"name": name, "price": price})
             if rooms:
                 return rooms
@@ -1780,8 +1792,10 @@ def _fetch_tripcom_detail_rooms(hotel_id: int, checkin: str, checkout: str) -> l
         f"&checkin={checkin}&checkout={checkout}"
         f"&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
     )
+    # Googlebot UA: Trip.com v2 페이지는 Googlebot에게만 SSR(spiderRoomList) 렌더
+    # 일반 브라우저 UA는 빈 shell(CSR)만 반환하므로 방 이름을 파싱할 수 없음
     hdrs = {
-        "User-Agent": HEADERS["User-Agent"],
+        "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
         "Accept-Language": "ko-KR,ko;q=0.9",
         "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
         "Referer": "https://kr.trip.com/",
@@ -1805,7 +1819,9 @@ def _fetch_tripcom_detail_rooms(hotel_id: int, checkin: str, checkout: str) -> l
 def crawl_tripcom(competitor: dict, checkin: str, checkout: str, cfg: dict) -> list:
     """
     Trip.com 가격 크롤러
-    1차: 호텔 상세 SSR (window.IBU_HOTEL) → 실제 객실 목록 + 날짜별 가격
+    1차: 호텔 상세 SSR (Googlebot UA) → spiderRoomList에서 방 이름 파싱
+         - 가격 포함 시: 직접 반환 (구형 window.IBU_HOTEL 포맷)
+         - 이름만 있을 시: 2차/3차 가격과 결합
     2차: IBU_HOTEL 도시 목록 SSR → 날짜별 최저가 (top-10~12 호텔, 캐시)
     3차 폴백: 호텔 상세 schema.org priceRange → 참고 최저가
     """
@@ -1820,9 +1836,11 @@ def crawl_tripcom(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
         f"&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
     )
 
-    # 1차: 호텔 상세 SSR → 실제 객실 목록
+    # 1차: 호텔 상세 HTML → 객실 목록 파싱 (가격 있으면 직접 반환, 없으면 이름만 추출)
     detail_rooms = _fetch_tripcom_detail_rooms(hotel_id, checkin, checkout)
-    if detail_rooms:
+    priced_rooms = [r for r in detail_rooms if r.get("price", 0) > 0]
+    if priced_rooms:
+        # 가격 포함 방 데이터가 있으면 직접 사용 (구형 SSR 포맷)
         return [
             PriceRecord(
                 crawled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -1837,8 +1855,13 @@ def crawl_tripcom(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
                 availability="available",
                 url=detail_url,
             )
-            for room in detail_rooms
+            for room in priced_rooms
         ]
+
+    # 방 이름만 있는 경우 (현재 v2 SSR 포맷): 2차/3차 가격과 결합
+    first_room_name = detail_rooms[0]["name"] if detail_rooms else None
+    if first_room_name:
+        logger.debug(f"[Trip.com] hotel {hotel_id}: 방 이름 파싱 성공 ({len(detail_rooms)}개), 2차 가격과 결합 시도")
 
     # 2차: 도시 목록 SSR (날짜별 최저가, 캐시)
     if city_id:
@@ -1862,7 +1885,7 @@ def crawl_tripcom(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
                 ota="Trip.com",
                 checkin_date=checkin,
                 checkout_date=checkout,
-                room_type="최저가",
+                room_type=first_room_name or "최저가",
                 price=price_val,
                 availability="available",
                 url=detail_url,
@@ -1881,7 +1904,7 @@ def crawl_tripcom(competitor: dict, checkin: str, checkout: str, cfg: dict) -> l
             ota="Trip.com",
             checkin_date=checkin,
             checkout_date=checkout,
-            room_type="최저가(참고)",
+            room_type=first_room_name or "최저가(참고)",
             price=price,
             availability="available",
             url=detail_url,
