@@ -42,8 +42,8 @@
     "OTA_위더스컴즈",
     "OTA_이제너두",
     "OTA_보군여행사",
-    "OTA_콘도닷컴",
     "OTA_참좋은여행",
+    "OTA_콘도닷컴",
     "OTA_하이월드투어"
   ],
   "properties": [
@@ -173,6 +173,17 @@
       "total": {
         "rns": 5795,
         "prev": 5285
+      },
+      "budget": {
+        "OTA": {
+          "budget": 4500,
+          "actual": 5288
+        },
+        "GOTA": {
+          "budget": 600,
+          "actual": 507
+        },
+        "total_budget": 5300
       }
     },
     {
@@ -317,6 +328,17 @@
       "total": {
         "rns": 5284,
         "prev": 3925
+      },
+      "budget": {
+        "OTA": {
+          "budget": 2330,
+          "actual": 2786
+        },
+        "GOTA": {
+          "budget": 1990,
+          "actual": 2498
+        },
+        "total_budget": 4420
       }
     },
     {
@@ -441,6 +463,17 @@
       "total": {
         "rns": 4544,
         "prev": 3944
+      },
+      "budget": {
+        "OTA": {
+          "budget": 2800,
+          "actual": 2707
+        },
+        "GOTA": {
+          "budget": 1600,
+          "actual": 1837
+        },
+        "total_budget": 4400
       }
     },
     {
@@ -573,6 +606,17 @@
       "total": {
         "rns": 4539,
         "prev": 3222
+      },
+      "budget": {
+        "OTA": {
+          "budget": 2200,
+          "actual": 2887
+        },
+        "GOTA": {
+          "budget": 1400,
+          "actual": 1652
+        },
+        "total_budget": 3600
       }
     },
     {
@@ -713,6 +757,17 @@
       "total": {
         "rns": 4287,
         "prev": 2948
+      },
+      "budget": {
+        "OTA": {
+          "budget": 2350,
+          "actual": 2735
+        },
+        "GOTA": {
+          "budget": 1150,
+          "actual": 1552
+        },
+        "total_budget": 3750
       }
     },
     {
@@ -777,6 +832,17 @@
       "total": {
         "rns": 3957,
         "prev": 4690
+      },
+      "budget": {
+        "OTA": {
+          "budget": 1800,
+          "actual": 515
+        },
+        "GOTA": {
+          "budget": 3100,
+          "actual": 3442
+        },
+        "total_budget": 8400
       }
     },
     {
@@ -885,6 +951,17 @@
       "total": {
         "rns": 2478,
         "prev": 0
+      },
+      "budget": {
+        "OTA": {
+          "budget": 1950,
+          "actual": 1383
+        },
+        "GOTA": {
+          "budget": 960,
+          "actual": 1095
+        },
+        "total_budget": 2910
       }
     },
     {
@@ -1017,6 +1094,17 @@
       "total": {
         "rns": 2468,
         "prev": 1822
+      },
+      "budget": {
+        "OTA": {
+          "budget": 1500,
+          "actual": 1380
+        },
+        "GOTA": {
+          "budget": 1000,
+          "actual": 1088
+        },
+        "total_budget": 2500
       }
     },
     {
@@ -1141,6 +1229,17 @@
       "total": {
         "rns": 2258,
         "prev": 2320
+      },
+      "budget": {
+        "OTA": {
+          "budget": 1250,
+          "actual": 1343
+        },
+        "GOTA": {
+          "budget": 1200,
+          "actual": 915
+        },
+        "total_budget": 2500
       }
     },
     {
@@ -1257,6 +1356,17 @@
       "total": {
         "rns": 2190,
         "prev": 2255
+      },
+      "budget": {
+        "OTA": {
+          "budget": 1300,
+          "actual": 1442
+        },
+        "GOTA": {
+          "budget": 1000,
+          "actual": 748
+        },
+        "total_budget": 2300
       }
     },
     {
@@ -1377,6 +1487,17 @@
       "total": {
         "rns": 2185,
         "prev": 0
+      },
+      "budget": {
+        "OTA": {
+          "budget": 1490,
+          "actual": 1178
+        },
+        "GOTA": {
+          "budget": 1080,
+          "actual": 1007
+        },
+        "total_budget": 2570
       }
     },
     {
@@ -1481,6 +1602,17 @@
       "total": {
         "rns": 1833,
         "prev": 1403
+      },
+      "budget": {
+        "OTA": {
+          "budget": 650,
+          "actual": 708
+        },
+        "GOTA": {
+          "budget": 850,
+          "actual": 1125
+        },
+        "total_budget": 1600
       }
     },
     {
@@ -1609,6 +1741,17 @@
       "total": {
         "rns": 1769,
         "prev": 2024
+      },
+      "budget": {
+        "OTA": {
+          "budget": 1650,
+          "actual": 1194
+        },
+        "GOTA": {
+          "budget": 450,
+          "actual": 575
+        },
+        "total_budget": 2100
       }
     },
     {
@@ -1701,6 +1844,17 @@
       "total": {
         "rns": 1585,
         "prev": 1498
+      },
+      "budget": {
+        "OTA": {
+          "budget": 650,
+          "actual": 513
+        },
+        "GOTA": {
+          "budget": 900,
+          "actual": 1072
+        },
+        "total_budget": 1750
       }
     },
     {
@@ -1773,6 +1927,17 @@
       "total": {
         "rns": 1471,
         "prev": 1040
+      },
+      "budget": {
+        "OTA": {
+          "budget": 500,
+          "actual": 586
+        },
+        "GOTA": {
+          "budget": 1000,
+          "actual": 885
+        },
+        "total_budget": 2500
       }
     },
     {
@@ -1881,6 +2046,17 @@
       "total": {
         "rns": 1343,
         "prev": 948
+      },
+      "budget": {
+        "OTA": {
+          "budget": 600,
+          "actual": 508
+        },
+        "GOTA": {
+          "budget": 770,
+          "actual": 831
+        },
+        "total_budget": 1370
       }
     },
     {
@@ -1985,6 +2161,17 @@
       "total": {
         "rns": 1301,
         "prev": 634
+      },
+      "budget": {
+        "OTA": {
+          "budget": 605,
+          "actual": 791
+        },
+        "GOTA": {
+          "budget": 450,
+          "actual": 510
+        },
+        "total_budget": 1055
       }
     },
     {
@@ -2057,6 +2244,17 @@
       "total": {
         "rns": 1050,
         "prev": 0
+      },
+      "budget": {
+        "OTA": {
+          "budget": 500,
+          "actual": 717
+        },
+        "GOTA": {
+          "budget": 350,
+          "actual": 333
+        },
+        "total_budget": 850
       }
     },
     {
@@ -2177,6 +2375,17 @@
       "total": {
         "rns": 906,
         "prev": 882
+      },
+      "budget": {
+        "OTA": {
+          "budget": 870,
+          "actual": 594
+        },
+        "GOTA": {
+          "budget": 360,
+          "actual": 312
+        },
+        "total_budget": 1230
       }
     },
     {
@@ -2281,6 +2490,17 @@
       "total": {
         "rns": 864,
         "prev": 732
+      },
+      "budget": {
+        "OTA": {
+          "budget": 400,
+          "actual": 616
+        },
+        "GOTA": {
+          "budget": 350,
+          "actual": 248
+        },
+        "total_budget": 750
       }
     },
     {
@@ -2389,6 +2609,17 @@
       "total": {
         "rns": 725,
         "prev": 596
+      },
+      "budget": {
+        "OTA": {
+          "budget": 450,
+          "actual": 358
+        },
+        "GOTA": {
+          "budget": 250,
+          "actual": 367
+        },
+        "total_budget": 700
       }
     },
     {
@@ -2497,6 +2728,17 @@
       "total": {
         "rns": 528,
         "prev": 710
+      },
+      "budget": {
+        "OTA": {
+          "budget": 520,
+          "actual": 320
+        },
+        "GOTA": {
+          "budget": 380,
+          "actual": 208
+        },
+        "total_budget": 900
       }
     },
     {
@@ -2581,6 +2823,17 @@
       "total": {
         "rns": 319,
         "prev": 545
+      },
+      "budget": {
+        "OTA": {
+          "budget": 450,
+          "actual": 244
+        },
+        "GOTA": {
+          "budget": 220,
+          "actual": 75
+        },
+        "total_budget": 670
       }
     }
   ]
