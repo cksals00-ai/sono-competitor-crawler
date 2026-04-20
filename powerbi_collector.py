@@ -593,7 +593,129 @@ def parse_channel_rns(result: dict) -> dict:
 
 
 # ─────────────────────────────────────────────
-# Step 3b: budget_RNS 쿼리 / 파싱
+# Step 3b: Excel budget 로드 (API 대체)
+# ─────────────────────────────────────────────
+
+# 예산 Excel 영업장코드 → 대시보드 영업장변경 매핑
+EXCEL_BUDGET_CODE_MAP: dict[str, str] = {
+    "01": "07.델피노",          # 소노벨 델피노 West
+    "02": "01.벨비발디",         # 소노벨 비발디파크 B·C
+    "03": "06.양평",             # 소노벨 양평
+    "05": "11.경주",             # 경주
+    "06": "10.단양",             # 소노벨 단양 West
+    "07": "04.캄비발디",         # 소노캄 비발디파크
+    "08": "03.펫비발디",         # 소노펫 비발디파크
+    "09": "01.벨비발디",         # 소노벨 비발디파크 A
+    "10": "08.양양",             # 쏠비치 양양 리조트
+    "13": "08.양양",             # 쏠비치 양양 호텔
+    "15": "18.벨제주",           # 소노벨 제주
+    "16": "14.변산",             # 소노벨 변산 리조트
+    "17": "14.변산",             # 소노벨 변산 호텔
+    "18": "14.변산",             # 소노벨 변산 노블리안
+    "19": "04.펠리체 비발디",    # 소노펠리체 비발디파크
+    "22": "15.여수",             # 소노캄 여수
+    "24": "16.거제",             # 소노캄 거제
+    "25": "07.델피노",           # 소노캄 델피노 A·B
+    "26": "07.델피노",           # 소노캄 델피노 C
+    "27": "07.델피노",           # 소노펠리체 빌리지 델피노
+    "29": "20.고양",             # 소노캄 고양
+    "46": "07.델피노",           # 소노펠리체 델피노
+    "50": "05.빌리지 비발디",    # 소노펠리체 빌리지 비발디파크
+    "54": "01.벨비발디",         # 소노벨 비발디파크 D (호텔)
+    "58": "21.해운대",           # 소노문 해운대
+    "61": "09.삼척",             # 쏠비치 삼척 리조트
+    "62": "09.삼척",             # 쏠비치 삼척 D
+    "63": "09.삼척",             # 쏠비치 삼척 C (호텔)
+    "66": "12.청송",             # 소노벨 청송
+    "67": "12.청송",             # 한바이소노
+    "70": "07.델피노",           # 소노벨 델피노 East
+    "73": "13.천안",             # 소노벨 천안 West
+    "74": "13.천안",             # 소노벨 천안 East
+    "77": "17.진도",             # 쏠비치 진도 리조트
+    "78": "17.진도",             # 쏠비치 진도 호텔
+    "85": "22.남해",             # 쏠비치 남해 호텔
+    "86": "10.단양",             # 소노벨 단양 East
+    "87": "19.캄제주",           # 소노캄 제주
+    "94": "23.르네블루",         # 르네블루
+}
+
+# 세그먼트 정규화 (INBOUND → IB 허용)
+_SEG_NORMALIZE = {"INBOUND": "INBOUND", "IB": "INBOUND", "OTA": "OTA", "GOTA": "GOTA"}
+
+
+def load_budget_from_excel(
+    excel_path: str,
+    stay_month_yyyymm: str,
+    budget_type: str = "BU",
+    sheet_name: str = "샘플",
+) -> dict:
+    """
+    2026_budget.xlsx 파일에서 월별 RNS 목표를 로드.
+
+    반환:
+    {
+      "01.벨비발디": {"OTA": 4500, "GOTA": 600, "INBOUND": 200, "total": 5300},
+      "07.델피노":   {"OTA": 2300, "GOTA": 2210, "total": 4510},
+      ...
+    }
+    """
+    try:
+        import openpyxl
+    except ImportError:
+        raise ImportError("openpyxl이 필요합니다: pip install openpyxl")
+
+    month_int = int(stay_month_yyyymm[4:6]) if len(stay_month_yyyymm) == 6 else int(stay_month_yyyymm)
+
+    wb = openpyxl.load_workbook(excel_path, read_only=True, data_only=True)
+    ws = wb[sheet_name]
+    rows = list(ws.iter_rows(values_only=True))
+    wb.close()
+
+    budget_dict: dict[str, dict] = {}
+
+    for row in rows[1:]:  # 헤더 스킵
+        if not row or row[0] is None:
+            continue
+        try:
+            row_month   = int(row[0])
+            row_type    = str(row[1]).strip() if row[1] else ""
+            row_metric  = str(row[2]).strip() if row[2] else ""
+            row_seg     = str(row[3]).strip() if row[3] else ""
+            row_code    = str(row[5]).strip() if row[5] is not None else ""
+            row_value   = row[6]
+        except (TypeError, ValueError, IndexError):
+            continue
+
+        if row_month != month_int:
+            continue
+        if row_type != budget_type:
+            continue
+        if row_metric != "RNS":
+            continue
+
+        seg = _SEG_NORMALIZE.get(row_seg.upper(), row_seg)
+        prop = EXCEL_BUDGET_CODE_MAP.get(row_code)
+        if not prop:
+            logger.debug(f"영업장코드 '{row_code}' 매핑 없음 — 스킵")
+            continue
+
+        value = int(row_value) if row_value is not None else 0
+        entry = budget_dict.setdefault(prop, {})
+        entry[seg] = entry.get(seg, 0) + value
+
+    # total 계산
+    for prop, entry in budget_dict.items():
+        entry["total"] = sum(v for k, v in entry.items() if k != "total")
+
+    logger.info(
+        f"Excel budget 로드 완료 ({excel_path}, 월={month_int}, {budget_type}): "
+        f"{len(budget_dict)}개 사업장"
+    )
+    return budget_dict
+
+
+# ─────────────────────────────────────────────
+# Step 3b-api: budget_RNS API 쿼리 / 파싱 (fallback)
 # ─────────────────────────────────────────────
 
 def _build_actual_by_segment_query(stay_month_yyyymm: str) -> dict:
@@ -1317,12 +1439,30 @@ def collect(
     budget_data: dict | None = None
     actual_by_seg: dict | None = None
     if stay_month and len(stay_month) == 6 and stay_month.isdigit():
-        try:
-            budget_raw  = fetch_budget_data(apim, stay_month, budget_type)
-            budget_data = parse_budget_data(budget_raw)
-            logger.info(f"budget 수집 완료 — {len(budget_data)}개 사업장")
-        except Exception as e:
-            logger.warning(f"budget 수집 실패 (무시하고 계속): {e}")
+        # Excel budget 우선 사용 (API보다 정확)
+        excel_paths = [
+            Path(output_dir) / "2026_budget.xlsx",
+            Path("data/2026_budget.xlsx"),
+            Path("2026_budget.xlsx"),
+        ]
+        for excel_path in excel_paths:
+            if excel_path.exists():
+                try:
+                    budget_data = load_budget_from_excel(
+                        str(excel_path), stay_month, budget_type
+                    )
+                    logger.info(f"Excel budget 사용: {excel_path}")
+                    break
+                except Exception as e:
+                    logger.warning(f"Excel budget 로드 실패 ({excel_path}): {e}")
+        if budget_data is None:
+            # fallback: API budget
+            try:
+                budget_raw  = fetch_budget_data(apim, stay_month, budget_type)
+                budget_data = parse_budget_data(budget_raw)
+                logger.info(f"API budget 사용 (fallback) — {len(budget_data)}개 사업장")
+            except Exception as e:
+                logger.warning(f"budget 수집 실패 (무시하고 계속): {e}")
         try:
             actual_by_seg = fetch_actual_by_segment(apim, stay_month)
             logger.info(f"세그구분별 실적 수집 완료 — {len(actual_by_seg)}개 사업장")
