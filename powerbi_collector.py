@@ -221,18 +221,9 @@ def discover_schema(apim_cluster: str) -> None:
         logger.error(f"pages 목록 호출 실패: {e}")
 
 
-def _build_query_body(stay_month: str | None = None, date_column: str = "월") -> dict:
-    """
-    26거래처 페이지 pivotTable 쿼리 구성.
-    행: DimAgent.AGENT명 (채널)
-    열: data_raw.영업장변경 (사업장)
-    값: RNS, REV, RNS_last(전년동기)
-
-    Args:
-        stay_month:  "YYYYMM" 형식의 투숙월 필터 (None이면 전체 누적)
-        date_column: data_raw 테이블에서 투숙월을 나타내는 컬럼명 (기본: "투숙월")
-    """
-    query_body: dict = {
+def _wrap_query(sem_query: dict, n_projections: int) -> dict:
+    """SemanticQuery를 querydata API 요청 바디로 감싼다."""
+    return {
         "version": "1.0.0",
         "queries": [
             {
@@ -240,90 +231,12 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
                     "Commands": [
                         {
                             "SemanticQueryDataShapeCommand": {
-                                "Query": {
-                                    "Version": 2,
-                                    "From": [
-                                        {"Name": "d",  "Entity": "data_raw",      "Type": 0},
-                                        {"Name": "d1", "Entity": "data_lastraw",  "Type": 0},
-                                        {"Name": "d2", "Entity": "DimAgent",      "Type": 0},
-                                    ],
-                                    "Select": [
-                                        # G0: 채널명
-                                        {
-                                            "Column": {
-                                                "Expression": {"SourceRef": {"Source": "d2"}},
-                                                "Property": "AGENT명",
-                                            },
-                                            "Name": "DimAgent.AGENT명",
-                                        },
-                                        # G1: 사업장명
-                                        {
-                                            "Column": {
-                                                "Expression": {"SourceRef": {"Source": "d"}},
-                                                "Property": "영업장변경",
-                                            },
-                                            "Name": "data_raw.영업장변경",
-                                        },
-                                        # M0: RNS (판매객실수)
-                                        {
-                                            "Aggregation": {
-                                                "Expression": {
-                                                    "Column": {
-                                                        "Expression": {"SourceRef": {"Source": "d"}},
-                                                        "Property": "RNS",
-                                                    }
-                                                },
-                                                "Function": 0,
-                                            },
-                                            "Name": "Sum(data_raw.RNS)",
-                                        },
-                                        # M1: REV (매출, 만원 단위)
-                                        {
-                                            "Aggregation": {
-                                                "Expression": {
-                                                    "Column": {
-                                                        "Expression": {"SourceRef": {"Source": "d"}},
-                                                        "Property": "REV",
-                                                    }
-                                                },
-                                                "Function": 0,
-                                            },
-                                            "Name": "Sum(data_raw.REV)",
-                                        },
-                                        # M2: RNS_last (전년동기 RNS)
-                                        {
-                                            "Aggregation": {
-                                                "Expression": {
-                                                    "Column": {
-                                                        "Expression": {"SourceRef": {"Source": "d1"}},
-                                                        "Property": "RNS_last",
-                                                    }
-                                                },
-                                                "Function": 0,
-                                            },
-                                            "Name": "Sum(data_lastraw.RNS_last)",
-                                        },
-                                    ],
-                                    "OrderBy": [
-                                        {
-                                            "Direction": 2,  # DESC
-                                            "Expression": {
-                                                "Aggregation": {
-                                                    "Expression": {
-                                                        "Column": {
-                                                            "Expression": {"SourceRef": {"Source": "d"}},
-                                                            "Property": "RNS",
-                                                        }
-                                                    },
-                                                    "Function": 0,
-                                                }
-                                            },
-                                        }
-                                    ],
-                                },
+                                "Query": sem_query,
                                 "Binding": {
                                     "Primary": {
-                                        "Groupings": [{"Projections": [0, 1, 2, 3, 4]}]
+                                        "Groupings": [
+                                            {"Projections": list(range(n_projections))}
+                                        ]
                                     },
                                     "DataReduction": {
                                         "DataVolume": 4,
@@ -346,78 +259,220 @@ def _build_query_body(stay_month: str | None = None, date_column: str = "월") -
         "modelId": MODEL_ID,
     }
 
-    # 투숙월 필터 삽입
-    if stay_month:
-        # YYYYMM(6자리) 형식이면 월 번호만 추출, 그 외는 그대로 사용
-        if len(stay_month) == 6 and stay_month.isdigit():
-            month_int = int(stay_month[4:6])
-            literal_value = f"{month_int}L"  # Int64 리터럴
-            log_val = f"{month_int} (정수)"
-        else:
-            literal_value = f"'{stay_month}'"
-            log_val = stay_month
 
-        where_clause = [
+def _build_ty_channel_query(stay_month: str | None = None) -> dict:
+    """
+    TY 전용 쿼리: data_raw + DimAgent만 사용.
+    data_lastraw를 포함하지 않으므로 cross-filter 간섭 없음.
+
+    Where: d.월=M AND d.투숙년도=YYYY
+    Select: G0(AGENT명), G1(영업장변경), M0(RNS), M1(REV)
+    """
+    sem_query: dict = {
+        "Version": 2,
+        "From": [
+            {"Name": "d",  "Entity": "data_raw", "Type": 0},
+            {"Name": "d2", "Entity": "DimAgent",  "Type": 0},
+        ],
+        "Select": [
+            {
+                "Column": {
+                    "Expression": {"SourceRef": {"Source": "d2"}},
+                    "Property": "AGENT명",
+                },
+                "Name": "DimAgent.AGENT명",
+            },
+            {
+                "Column": {
+                    "Expression": {"SourceRef": {"Source": "d"}},
+                    "Property": "영업장변경",
+                },
+                "Name": "data_raw.영업장변경",
+            },
+            {
+                "Aggregation": {
+                    "Expression": {
+                        "Column": {
+                            "Expression": {"SourceRef": {"Source": "d"}},
+                            "Property": "RNS",
+                        }
+                    },
+                    "Function": 0,
+                },
+                "Name": "Sum(data_raw.RNS)",
+            },
+            {
+                "Aggregation": {
+                    "Expression": {
+                        "Column": {
+                            "Expression": {"SourceRef": {"Source": "d"}},
+                            "Property": "REV",
+                        }
+                    },
+                    "Function": 0,
+                },
+                "Name": "Sum(data_raw.REV)",
+            },
+        ],
+        "OrderBy": [
+            {
+                "Direction": 2,
+                "Expression": {
+                    "Aggregation": {
+                        "Expression": {
+                            "Column": {
+                                "Expression": {"SourceRef": {"Source": "d"}},
+                                "Property": "RNS",
+                            }
+                        },
+                        "Function": 0,
+                    }
+                },
+            }
+        ],
+    }
+
+    if stay_month and len(stay_month) == 6 and stay_month.isdigit():
+        month_int = int(stay_month[4:6])
+        year_int  = int(stay_month[:4])
+        sem_query["Where"] = [
             {
                 "Condition": {
                     "Comparison": {
-                        "ComparisonKind": 0,  # Equal
+                        "ComparisonKind": 0,
                         "Left": {
                             "Column": {
                                 "Expression": {"SourceRef": {"Source": "d"}},
-                                "Property": date_column,
+                                "Property": "월",
                             }
                         },
-                        "Right": {
-                            "Literal": {"Value": literal_value}
-                        },
+                        "Right": {"Literal": {"Value": f"{month_int}L"}},
                     }
                 }
             },
             {
                 "Condition": {
                     "Comparison": {
-                        "ComparisonKind": 0,  # Equal
+                        "ComparisonKind": 0,
                         "Left": {
                             "Column": {
-                                "Expression": {"SourceRef": {"Source": "d1"}},
-                                "Property": date_column,
+                                "Expression": {"SourceRef": {"Source": "d"}},
+                                "Property": "투숙년도",
                             }
                         },
-                        "Right": {
-                            "Literal": {"Value": literal_value}
-                        },
+                        "Right": {"Literal": {"Value": f"{year_int}L"}},
                     }
                 }
             },
         ]
-        sem_cmd = (
-            query_body["queries"][0]["Query"]["Commands"][0]
-            ["SemanticQueryDataShapeCommand"]["Query"]
-        )
-        sem_cmd["Where"] = where_clause
-        logger.info(f"투숙월 필터 적용: {date_column} = {log_val}")
+        logger.info(f"TY 필터: 월={month_int}, 투숙년도={year_int}")
 
-    return query_body
+    return _wrap_query(sem_query, n_projections=4)
 
 
-def fetch_raw_data(
-    apim_cluster: str,
-    stay_month: str | None = None,
-    date_column: str = "월",
-) -> dict:
-    """querydata API 호출 후 raw JSON 반환"""
-    url = f"{apim_cluster}/public/reports/querydata?synchronous=true"
-    body = _build_query_body(stay_month=stay_month, date_column=date_column)
-    headers = {**_make_headers(), "Content-Type": "application/json"}
+def _build_ly_channel_query(stay_month: str | None = None) -> dict:
+    """
+    LY 전용 쿼리: data_lastraw + DimAgent만 사용.
+    data_raw를 포함하지 않으므로 cross-filter 간섭 없음.
 
-    logger.info(f"querydata API 호출: {url}")
-    r = requests.post(url, headers=headers, json=body, timeout=30)
-    r.raise_for_status()
+    Where: d1.월=M AND d1.투숙년도_last=YYYY-1
+    Select: G0(AGENT명), G1(영업장변경), M0(RNS_last)
 
-    result = r.json()
+    주의: data_lastraw에 '영업장변경' 컬럼이 없으면 ValueError 발생 →
+          --discover로 컬럼명 확인 후 수정 필요.
+    """
+    sem_query: dict = {
+        "Version": 2,
+        "From": [
+            {"Name": "d1", "Entity": "data_lastraw", "Type": 0},
+            {"Name": "d2", "Entity": "DimAgent",      "Type": 0},
+        ],
+        "Select": [
+            {
+                "Column": {
+                    "Expression": {"SourceRef": {"Source": "d2"}},
+                    "Property": "AGENT명",
+                },
+                "Name": "DimAgent.AGENT명",
+            },
+            {
+                "Column": {
+                    "Expression": {"SourceRef": {"Source": "d1"}},
+                    "Property": "영업장변경",
+                },
+                "Name": "data_lastraw.영업장변경",
+            },
+            {
+                "Aggregation": {
+                    "Expression": {
+                        "Column": {
+                            "Expression": {"SourceRef": {"Source": "d1"}},
+                            "Property": "RNS_last",
+                        }
+                    },
+                    "Function": 0,
+                },
+                "Name": "Sum(data_lastraw.RNS_last)",
+            },
+        ],
+        "OrderBy": [
+            {
+                "Direction": 2,
+                "Expression": {
+                    "Aggregation": {
+                        "Expression": {
+                            "Column": {
+                                "Expression": {"SourceRef": {"Source": "d1"}},
+                                "Property": "RNS_last",
+                            }
+                        },
+                        "Function": 0,
+                    }
+                },
+            }
+        ],
+    }
 
-    # 에러 응답 감지 — 컬럼명이 틀렸거나 필터 오류
+    if stay_month and len(stay_month) == 6 and stay_month.isdigit():
+        month_int = int(stay_month[4:6])
+        ly_year   = int(stay_month[:4]) - 1
+        sem_query["Where"] = [
+            {
+                "Condition": {
+                    "Comparison": {
+                        "ComparisonKind": 0,
+                        "Left": {
+                            "Column": {
+                                "Expression": {"SourceRef": {"Source": "d1"}},
+                                "Property": "월",
+                            }
+                        },
+                        "Right": {"Literal": {"Value": f"{month_int}L"}},
+                    }
+                }
+            },
+            {
+                "Condition": {
+                    "Comparison": {
+                        "ComparisonKind": 0,
+                        "Left": {
+                            "Column": {
+                                "Expression": {"SourceRef": {"Source": "d1"}},
+                                "Property": "투숙년도_last",
+                            }
+                        },
+                        "Right": {"Literal": {"Value": f"{ly_year}L"}},
+                    }
+                }
+            },
+        ]
+        logger.info(f"LY 필터: 월={month_int}, 투숙년도_last={ly_year}")
+
+    return _wrap_query(sem_query, n_projections=3)
+
+
+def _check_powerbi_error(result: dict) -> None:
+    """Power BI 쿼리 오류 응답 감지 후 ValueError 발생."""
     if "error" in result or (
         result.get("results") and
         result["results"][0].get("result", {}).get("error")
@@ -430,8 +485,40 @@ def fetch_raw_data(
             f"Power BI 쿼리 오류 (컬럼명이나 필터 값을 확인하세요): {err_msg}"
         )
 
-    logger.info("데이터 수신 완료")
-    return result
+
+def fetch_raw_data(
+    apim_cluster: str,
+    stay_month: str | None = None,
+    date_column: str = "월",  # 하위 호환 유지 (현재 미사용)
+) -> dict:
+    """
+    TY/LY 쿼리를 각각 별도 API로 호출한 뒤 {"ty": ..., "ly": ...} 반환.
+
+    분리 이유: 단일 쿼리에서 data_raw+data_lastraw를 From에 함께 넣으면
+    Power BI cross-filter로 LY에 연도 필터가 걸리지 않아 모든 연도 합산됨.
+    """
+    url = f"{apim_cluster}/public/reports/querydata?synchronous=true"
+    headers = {**_make_headers(), "Content-Type": "application/json"}
+
+    # ── TY 쿼리 ──
+    ty_body = _build_ty_channel_query(stay_month=stay_month)
+    logger.info(f"TY querydata API 호출: {url}")
+    r = requests.post(url, headers=headers, json=ty_body, timeout=30)
+    r.raise_for_status()
+    ty_result = r.json()
+    _check_powerbi_error(ty_result)
+    logger.info("TY 데이터 수신 완료")
+
+    # ── LY 쿼리 ──
+    ly_body = _build_ly_channel_query(stay_month=stay_month)
+    logger.info(f"LY querydata API 호출: {url}")
+    r = requests.post(url, headers=headers, json=ly_body, timeout=30)
+    r.raise_for_status()
+    ly_result = r.json()
+    _check_powerbi_error(ly_result)
+    logger.info("LY 데이터 수신 완료")
+
+    return {"ty": ty_result, "ly": ly_result}
 
 
 # ─────────────────────────────────────────────
@@ -499,6 +586,99 @@ def _parse_dsr(result: dict) -> list[dict]:
     return rows
 
 
+def _parse_ty_dsr(result: dict) -> list[dict]:
+    """
+    TY 쿼리 DSR 파싱 (4 컬럼: G0=채널, G1=사업장, M0=RNS, M1=REV).
+    반환: [{"channel", "property", "rns", "rev_만원"}, ...]
+    """
+    data_section = result["results"][0]["result"]["data"]
+    ds = data_section["dsr"]["DS"][0]
+
+    value_dicts = ds.get("ValueDicts", {})
+    d0 = value_dicts.get("D0", [])
+    d1 = value_dicts.get("D1", [])
+
+    dm0    = ds["PH"][0]["DM0"]
+    n_cols = 4
+    rows      = []
+    prev_vals = [None] * n_cols
+
+    for entry in dm0:
+        r_flag = entry.get("R", 0)
+        c_vals = entry.get("C", [])
+        new_vals = list(prev_vals)
+        c_idx = 0
+        for i in range(n_cols):
+            if not ((r_flag >> i) & 1):
+                new_vals[i] = c_vals[c_idx] if c_idx < len(c_vals) else None
+                c_idx += 1
+
+        g0_idx, g1_idx = new_vals[0], new_vals[1]
+        channel   = d0[g0_idx] if (g0_idx is not None and 0 <= g0_idx < len(d0)) else ""
+        property_ = d1[g1_idx] if (g1_idx is not None and 0 <= g1_idx < len(d1)) else ""
+        rns       = new_vals[2]
+        rev_raw   = new_vals[3]
+
+        rev_만원 = None
+        if rev_raw is not None:
+            try:
+                rev_만원 = round(float(rev_raw))
+            except (ValueError, TypeError):
+                rev_만원 = None
+
+        rows.append({
+            "channel":  channel,
+            "property": property_,
+            "rns":      rns,
+            "rev_만원": rev_만원,
+        })
+        prev_vals = new_vals
+
+    return rows
+
+
+def _parse_ly_dsr(result: dict) -> list[dict]:
+    """
+    LY 쿼리 DSR 파싱 (3 컬럼: G0=채널, G1=사업장, M0=RNS_last).
+    반환: [{"channel", "property", "rns_ly"}, ...]
+    """
+    data_section = result["results"][0]["result"]["data"]
+    ds = data_section["dsr"]["DS"][0]
+
+    value_dicts = ds.get("ValueDicts", {})
+    d0 = value_dicts.get("D0", [])
+    d1 = value_dicts.get("D1", [])
+
+    dm0    = ds["PH"][0]["DM0"]
+    n_cols = 3
+    rows      = []
+    prev_vals = [None] * n_cols
+
+    for entry in dm0:
+        r_flag = entry.get("R", 0)
+        c_vals = entry.get("C", [])
+        new_vals = list(prev_vals)
+        c_idx = 0
+        for i in range(n_cols):
+            if not ((r_flag >> i) & 1):
+                new_vals[i] = c_vals[c_idx] if c_idx < len(c_vals) else None
+                c_idx += 1
+
+        g0_idx, g1_idx = new_vals[0], new_vals[1]
+        channel   = d0[g0_idx] if (g0_idx is not None and 0 <= g0_idx < len(d0)) else ""
+        property_ = d1[g1_idx] if (g1_idx is not None and 0 <= g1_idx < len(d1)) else ""
+        rns_ly    = new_vals[2]
+
+        rows.append({
+            "channel":  channel,
+            "property": property_,
+            "rns_ly":   rns_ly,
+        })
+        prev_vals = new_vals
+
+    return rows
+
+
 def parse_channel_rns(result: dict) -> dict:
     """
     DSR 파싱 후 사업장 × 채널 구조로 변환.
@@ -523,30 +703,35 @@ def parse_channel_rns(result: dict) -> dict:
       }
     }
     """
-    rows = _parse_dsr(result)
+    # 새 형식: {"ty": ..., "ly": ...}
+    if isinstance(result, dict) and "ty" in result and "ly" in result:
+        ty_rows = _parse_ty_dsr(result["ty"])
+        ly_rows = _parse_ly_dsr(result["ly"])
+    else:
+        # 레거시: 단일 쿼리 결과 (discover 등에서 직접 호출 시)
+        ty_rows = _parse_dsr(result)
+        ly_rows = []
+
+    # (channel, property) 키로 LY 맵 구성
+    ly_map: dict[tuple[str, str], int] = {}
+    for row in ly_rows:
+        key = (row["channel"], row["property"])
+        ly_map[key] = (ly_map.get(key) or 0) + (row.get("rns_ly") or 0)
 
     properties: dict[str, dict] = {}
     channels_total: dict[str, dict] = {}
 
-    for row in rows:
+    for row in ty_rows:
         channel  = row["channel"]
         property_= row["property"]
-        rns      = row["rns"] or 0
-        rev      = row["rev_만원"]
-        rns_ly   = row["rns_ly"] or 0
-
-        # 빈 channel = 사업장 소계 행
+        rns      = row.get("rns") or 0
+        rev      = row.get("rev_만원")
+        # 빈 channel = 사업장 소계 행 → 스킵 (totals는 직접 계산)
         if not channel:
-            prop_entry = properties.setdefault(property_, {
-                "total_rns": 0,
-                "total_rns_ly": 0,
-                "channels": {},
-            })
-            prop_entry["total_rns"]    = rns
-            prop_entry["total_rns_ly"] = rns_ly
             continue
 
-        # 채널별 사업장 데이터
+        rns_ly = ly_map.get((channel, property_), 0)
+
         prop_entry = properties.setdefault(property_, {
             "total_rns": 0,
             "total_rns_ly": 0,
@@ -557,15 +742,16 @@ def parse_channel_rns(result: dict) -> dict:
             "rev_만원": rev,
             "rns_ly":   rns_ly,
         }
+        prop_entry["total_rns"]    += rns
+        prop_entry["total_rns_ly"] += rns_ly
 
-        # 채널 전체 합계
         ch_entry = channels_total.setdefault(channel, {"total_rns": 0, "total_rns_ly": 0})
         ch_entry["total_rns"]    += rns
         ch_entry["total_rns_ly"] += rns_ly
 
     return {
-        "collected_at":    datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-        "properties":      properties,
+        "collected_at":     datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        "properties":       properties,
         "channels_summary": channels_total,
     }
 
