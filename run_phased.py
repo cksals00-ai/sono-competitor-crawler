@@ -28,7 +28,7 @@ import os
 import shutil
 import subprocess
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -96,15 +96,34 @@ def _today_csv_path() -> Path:
 
 
 def _load_existing_df() -> pd.DataFrame:
-    """오늘 기존 CSV가 있으면 로드, 없으면 빈 DataFrame 반환."""
+    """오늘 기존 CSV가 있으면 로드, 없으면 어제 CSV에서 fallback.
+
+    단일 phase만 실행할 때 다른 OTA 데이터가 누락되지 않도록
+    어제 CSV를 기본 데이터로 사용한다.
+    """
     path = _today_csv_path()
     if path.exists():
         try:
-            df = pd.read_csv(path, encoding="utf-8-sig")
+            df = pd.read_csv(path, encoding="utf-8-sig", low_memory=False)
             logger.info(f"기존 CSV 로드: {path} ({len(df)} 행)")
             return df
         except Exception as e:
             logger.warning(f"기존 CSV 로드 실패 (무시): {e}")
+
+    # 오늘 CSV가 없으면 어제 CSV에서 fallback
+    with open("config.yaml", encoding="utf-8") as f:
+        cfg = yaml.safe_load(f)
+    export_dir = Path(cfg["output"]["export_dir"])
+    yesterday = (datetime.today() - timedelta(days=1)).strftime("%Y%m%d")
+    yesterday_csv = export_dir / cfg["output"]["csv_filename"].format(date=yesterday)
+    if yesterday_csv.exists():
+        try:
+            df = pd.read_csv(yesterday_csv, encoding="utf-8-sig", low_memory=False)
+            logger.info(f"어제 CSV fallback 로드: {yesterday_csv} ({len(df)} 행)")
+            return df
+        except Exception as e:
+            logger.warning(f"어제 CSV 로드 실패 (무시): {e}")
+
     return pd.DataFrame()
 
 
