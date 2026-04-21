@@ -1653,6 +1653,116 @@ def collect(
     return parsed
 
 
+def collect_multi_months(
+    output_dir: str = "./data",
+    pretty: bool = True,
+    budget_type: str = "BU",
+) -> None:
+    """
+    당월 + 다음달 + 그 다음달, 총 3개월 데이터를 수집하여
+    channel_sales_data.json을 멀티월 구조로 갱신.
+
+    JSON 구조:
+    {
+      "months": {
+        "202604": {"label": "4월", "date": ..., "channels": [...], "properties": [...]},
+        "202605": {...},
+        "202606": {...},
+      },
+      "current_month": "202604"
+    }
+    """
+    now = datetime.now()
+    months: list[str] = []
+    for delta in range(3):
+        month = now.month + delta
+        year  = now.year
+        if month > 12:
+            month -= 12
+            year  += 1
+        months.append(f"{year}{month:02d}")
+
+    current_month = months[0]
+
+    cluster_uri = get_cluster_uri()
+    apim        = _apim_url(cluster_uri)
+    logger.info(f"APIM 엔드포인트: {apim} | 3개월 수집: {', '.join(months)}")
+
+    months_data: dict[str, dict] = {}
+
+    for stay_month in months:
+        month_int = int(stay_month[4:6])
+        label     = f"{month_int}월"
+        logger.info(f"=== {label} 투숙기준 수집 시작 (stay_month={stay_month}) ===")
+
+        try:
+            raw    = fetch_raw_data(apim, stay_month=stay_month)
+            parsed = parse_channel_rns(raw)
+        except Exception as e:
+            logger.warning(f"{label} 데이터 수집 실패: {e}")
+            months_data[stay_month] = {
+                "label":      label,
+                "date":       now.strftime("%Y-%m-%d"),
+                "source":     "powerbi",
+                "channels":   [],
+                "properties": [],
+            }
+            continue
+
+        # budget + 세그구분별 실적은 당월만 수집 (미래 월은 데이터 없음)
+        budget_data:   dict | None = None
+        actual_by_seg: dict | None = None
+        if stay_month == current_month:
+            excel_paths = [
+                Path(output_dir) / "2026_budget.xlsx",
+                Path("data/2026_budget.xlsx"),
+                Path("2026_budget.xlsx"),
+            ]
+            for excel_path in excel_paths:
+                if excel_path.exists():
+                    try:
+                        budget_data = load_budget_from_excel(
+                            str(excel_path), stay_month, budget_type
+                        )
+                        logger.info(f"Excel budget 사용: {excel_path}")
+                        break
+                    except Exception as exc:
+                        logger.warning(f"Excel budget 로드 실패 ({excel_path}): {exc}")
+            if budget_data is None:
+                try:
+                    budget_raw  = fetch_budget_data(apim, stay_month, budget_type)
+                    budget_data = parse_budget_data(budget_raw)
+                    logger.info(f"API budget 사용 (fallback) — {len(budget_data)}개 사업장")
+                except Exception as exc:
+                    logger.warning(f"budget 수집 실패 (무시): {exc}")
+            try:
+                actual_by_seg = fetch_actual_by_segment(apim, stay_month)
+                logger.info(f"세그구분별 실적 수집 완료 — {len(actual_by_seg)}개 사업장")
+            except Exception as exc:
+                logger.warning(f"세그구분별 실적 수집 실패 (무시): {exc}")
+
+        compat = to_channel_sales_format(
+            parsed,
+            stay_month=stay_month,
+            budget_data=budget_data,
+            actual_by_seg=actual_by_seg,
+        )
+        compat["label"] = label   # "N월 투숙기준 (Power BI)" → "N월"
+        months_data[stay_month] = compat
+        logger.info(f"{label} 수집·변환 완료")
+
+    multi = {
+        "months":        months_data,
+        "current_month": current_month,
+    }
+    compat_path = Path("channel_sales_data.json")
+    compat_path.write_text(
+        json.dumps(multi, ensure_ascii=False, indent=2 if pretty else None),
+        encoding="utf-8",
+    )
+    logger.info(f"channel_sales_data.json 갱신 완료 (3개월): {compat_path.resolve()}")
+
+
 def print_summary(data: dict) -> None:
     """수집 결과 콘솔 요약 출력"""
     print(f"\n{'='*60}")

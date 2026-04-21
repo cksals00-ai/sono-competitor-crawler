@@ -401,11 +401,11 @@ def main():
         except Exception as e:
             logger.error(f"골프 크롤링 실패 (Power BI 수집에는 영향 없음): {e}", exc_info=True)
 
-        # 전체 phase 완료 후 Power BI RNS 수집
+        # 전체 phase 완료 후 Power BI RNS 수집 (당월 + 다음달 + 그 다음달 3개월)
         try:
-            from powerbi_collector import collect as collect_powerbi
-            logger.info("=== Power BI RNS 수집 시작 (당월 투숙기준) ===")
-            collect_powerbi(update_channel_sales=True)  # stay_month=None → 당월 자동
+            from powerbi_collector import collect_multi_months
+            logger.info("=== Power BI RNS 수집 시작 (3개월 투숙기준) ===")
+            collect_multi_months()
             logger.info("=== Power BI RNS 수집 완료 ===")
         except Exception as e:
             logger.error(f"Power BI 수집 실패 (크롤링 결과에는 영향 없음): {e}", exc_info=True)

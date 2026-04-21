@@ -131,19 +131,62 @@ def _load_fit_rates(json_path: str = "fit_rates.json") -> dict:
 
 
 def _load_channel_data(json_path: str = "channel_sales_data.json") -> dict:
-    """채널별 판매객실수 JSON 로드. 없으면 빈 dict 반환."""
+    """채널별 판매객실수 JSON 로드. 없으면 빈 dict 반환.
+
+    반환 구조 (항상 멀티월 형식으로 정규화):
+    {
+      "months": {
+        "202604": {"label": "4월", "entries": {prop_name: entry}, "meta": {...}},
+        ...
+      },
+      "current_month": "202604",
+      "is_multi": True/False,
+    }
+    """
+    def _build_entries(month_data: dict) -> dict:
+        mapping: dict = {}
+        for entry in month_data.get("properties", []):
+            for pname in entry.get("property_names", []):
+                mapping[pname] = entry
+        return mapping
+
     try:
         p = Path(json_path)
         if not p.exists():
             return {}
         with open(p, encoding="utf-8") as f:
             data = json.load(f)
-        # property_name → 데이터 매핑으로 변환 (여러 property_names 지원)
-        mapping: dict = {}
-        for entry in data.get("properties", []):
-            for pname in entry.get("property_names", []):
-                mapping[pname] = entry
-        return {"entries": mapping, "meta": data}
+
+        # 새 멀티월 형식: {"months": {...}, "current_month": "YYYYMM"}
+        if "months" in data:
+            current_month = data.get("current_month", "")
+            months_out: dict = {}
+            for ym, month_data in data["months"].items():
+                months_out[ym] = {
+                    "label":   month_data.get("label", ym),
+                    "entries": _build_entries(month_data),
+                    "meta":    month_data,
+                }
+            return {
+                "months":        months_out,
+                "current_month": current_month,
+                "is_multi":      len(months_out) > 1,
+            }
+
+        # 구 단일월 형식 → 멀티월 형식으로 래핑
+        entries = _build_entries(data)
+        label   = data.get("label", "금월")
+        return {
+            "months": {
+                "single": {
+                    "label":   label,
+                    "entries": entries,
+                    "meta":    data,
+                }
+            },
+            "current_month": "single",
+            "is_multi":      False,
+        }
     except Exception as e:
         logger.warning(f"channel_sales_data.json 로드 실패: {e}")
         return {}
@@ -845,75 +888,72 @@ def _render_budget_gauges(budget_info: dict | None) -> str:
 
 
 def _render_channel_section(prop_name: str, channel_data: dict) -> str:
-    """채널별 판매객실수 토글 섹션 HTML 생성."""
+    """채널별 판매객실수 토글 섹션 HTML 생성 (멀티월 탭 지원)."""
     if not channel_data:
         return ""
-    entries = channel_data.get("entries", {})
-    entry = entries.get(prop_name)
-    if not entry:
+    months = channel_data.get("months", {})
+    if not months:
         return ""
 
-    meta       = channel_data.get("meta", {})
-    label      = meta.get("label", "금월")
-    ch_data    = entry.get("channels", {})
-    total      = entry.get("total", {})
-    budget_info = entry.get("budget")
+    current_month = channel_data.get("current_month", next(iter(months)))
+    is_multi      = channel_data.get("is_multi", False)
 
-    # 사업장에 실제 데이터가 있는 채널만, RNS 내림차순 정렬
-    channels = sorted(
-        [ch for ch, d in ch_data.items() if d.get("rns", 0) > 0],
-        key=lambda ch: ch_data[ch].get("rns", 0),
-        reverse=True,
-    )
+    # 이 사업장의 데이터가 하나라도 있는지 확인
+    if not any(m.get("entries", {}).get(prop_name) for m in months.values()):
+        return ""
 
-    rows = []
-    for ch in channels:
-        d = ch_data.get(ch, {})
-        rns  = d.get("rns", 0)
-        prev = d.get("prev", 0)
-        if prev > 0:
-            pct    = round((rns - prev) / prev * 100)
-            sign   = "+" if pct >= 0 else ""
-            cls    = "ch-up" if pct >= 0 else "ch-dn"
-            growth = f'<span class="{cls}">{sign}{pct}%</span>'
-        else:
-            growth = '<span class="ch-na">-</span>'
-        rows.append(
-            f'<tr>'
-            f'<td class="ch-name">{ch}</td>'
-            f'<td class="ch-num">{rns:,}</td>'
-            f'<td class="ch-num ch-prev">{prev:,}</td>'
-            f'<td class="ch-growth">{growth}</td>'
-            f'</tr>'
+    def _build_table(entry: dict, show_budget: bool) -> str:
+        """단일 월의 채널 테이블 HTML."""
+        ch_data     = entry.get("channels", {})
+        total       = entry.get("total", {})
+        budget_info = entry.get("budget") if show_budget else None
+
+        channels = sorted(
+            [ch for ch, d in ch_data.items() if d.get("rns", 0) > 0],
+            key=lambda ch: ch_data[ch].get("rns", 0),
+            reverse=True,
         )
 
-    # 합계 행
-    t_rns  = total.get("rns", 0)
-    t_prev = total.get("prev", 0)
-    if t_prev > 0:
-        t_pct   = round((t_rns - t_prev) / t_prev * 100)
-        t_sign  = "+" if t_pct >= 0 else ""
-        t_cls   = "ch-up" if t_pct >= 0 else "ch-dn"
-        t_growth = f'<span class="{t_cls}">{t_sign}{t_pct}%</span>'
-    else:
-        t_growth = '<span class="ch-na">-</span>'
+        rows = []
+        for ch in channels:
+            d    = ch_data.get(ch, {})
+            rns  = d.get("rns", 0)
+            prev = d.get("prev", 0)
+            if prev > 0:
+                pct    = round((rns - prev) / prev * 100)
+                sign   = "+" if pct >= 0 else ""
+                cls    = "ch-up" if pct >= 0 else "ch-dn"
+                growth = f'<span class="{cls}">{sign}{pct}%</span>'
+            else:
+                growth = '<span class="ch-na">-</span>'
+            rows.append(
+                f'<tr>'
+                f'<td class="ch-name">{ch}</td>'
+                f'<td class="ch-num">{rns:,}</td>'
+                f'<td class="ch-num ch-prev">{prev:,}</td>'
+                f'<td class="ch-growth">{growth}</td>'
+                f'</tr>'
+            )
 
-    rows_html    = "\n".join(rows)
-    budget_html  = _render_budget_gauges(budget_info)
-    return f"""\
-<div class="channel-section">
-  <button class="channel-toggle" type="button">
-    <span class="channel-toggle-label">채널별 판매객실수</span>
-    <span class="channel-toggle-meta">{label}</span>
-    <span class="channel-arrow">&#9660;</span>
-  </button>
-  <div class="channel-body">
+        t_rns  = total.get("rns", 0)
+        t_prev = total.get("prev", 0)
+        if t_prev > 0:
+            t_pct    = round((t_rns - t_prev) / t_prev * 100)
+            t_sign   = "+" if t_pct >= 0 else ""
+            t_cls    = "ch-up" if t_pct >= 0 else "ch-dn"
+            t_growth = f'<span class="{t_cls}">{t_sign}{t_pct}%</span>'
+        else:
+            t_growth = '<span class="ch-na">-</span>'
+
+        rows_html   = "\n".join(rows)
+        budget_html = _render_budget_gauges(budget_info)
+        return f"""\
 {budget_html}
     <table class="channel-table">
       <thead>
         <tr>
           <th class="ch-th-name">채널</th>
-          <th class="ch-th-num">금월 RNS</th>
+          <th class="ch-th-num">RNS</th>
           <th class="ch-th-num">전년동월</th>
           <th class="ch-th-growth">증감</th>
         </tr>
@@ -927,7 +967,51 @@ def _render_channel_section(prop_name: str, channel_data: dict) -> str:
           <td class="ch-growth">{t_growth}</td>
         </tr>
       </tbody>
-    </table>
+    </table>"""
+
+    if is_multi:
+        # 멀티월: 탭 버튼 + 패널
+        tab_btns    = []
+        tab_panels  = []
+        meta_labels = []
+        for ym, month_info in months.items():
+            label   = month_info.get("label", ym)
+            entry   = month_info.get("entries", {}).get(prop_name)
+            active  = ym == current_month
+            active_cls = " ch-tab-active" if active else ""
+            tab_btns.append(
+                f'<button class="ch-tab-btn{active_cls}" data-month="{ym}">{label}</button>'
+            )
+            display = "" if active else ' style="display:none"'
+            if entry:
+                table_html = _build_table(entry, show_budget=active)
+            else:
+                table_html = '<p class="ch-empty">데이터 없음</p>'
+            tab_panels.append(
+                f'<div class="ch-tab-panel" data-month="{ym}"{display}>{table_html}</div>'
+            )
+            meta_labels.append(label)
+
+        tabs_html  = f'<div class="ch-tabs">{"".join(tab_btns)}</div>'
+        body_html  = tabs_html + "\n" + "\n".join(tab_panels)
+        meta_label = " | ".join(meta_labels)
+    else:
+        # 단일월 (구 형식 호환)
+        ym, month_info = next(iter(months.items()))
+        label  = month_info.get("label", "금월")
+        entry  = month_info.get("entries", {}).get(prop_name)
+        body_html  = _build_table(entry, show_budget=True) if entry else ""
+        meta_label = label
+
+    return f"""\
+<div class="channel-section">
+  <button class="channel-toggle" type="button">
+    <span class="channel-toggle-label">채널별 판매객실수</span>
+    <span class="channel-toggle-meta">{meta_label}</span>
+    <span class="channel-arrow">&#9660;</span>
+  </button>
+  <div class="channel-body">
+{body_html}
   </div>
 </div>"""
 
@@ -2188,6 +2272,39 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   padding-top: 6px;
 }
 
+/* ── 채널별 판매객실수 — 월별 탭 ── */
+.ch-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.ch-tab-btn {
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  transition: background .15s, color .15s;
+  touch-action: manipulation;
+}
+.ch-tab-btn:hover { background: rgba(255,255,255,.12); color: var(--text); }
+.ch-tab-btn.ch-tab-active {
+  background: rgba(88,166,255,.18);
+  color: var(--accent);
+  border-color: rgba(88,166,255,.4);
+}
+.ch-empty {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  padding: 12px 0;
+}
+
 /* ── Budget 달성률 게이지 섹션 ── */
 .bgt-section {
   padding: 10px 8px 6px;
@@ -2408,6 +2525,21 @@ _JS = """
     btn.addEventListener('click', function () {
       var section = btn.parentElement;
       section.classList.toggle('open');
+    });
+  });
+
+  // ── 채널별 판매객실수 — 월별 탭 전환 ─────────────────────────────────────
+  toArr(document.querySelectorAll('.ch-tab-btn')).forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();   // 토글 닫힘 방지
+      var section = btn.closest('.channel-section');
+      var month   = btn.getAttribute('data-month');
+      toArr(section.querySelectorAll('.ch-tab-btn')).forEach(function (b) {
+        b.classList.toggle('ch-tab-active', b === btn);
+      });
+      toArr(section.querySelectorAll('.ch-tab-panel')).forEach(function (panel) {
+        panel.style.display = panel.getAttribute('data-month') === month ? '' : 'none';
+      });
     });
   });
 
