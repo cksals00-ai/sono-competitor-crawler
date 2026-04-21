@@ -379,7 +379,8 @@ def _clean_room_type(room_type: str) -> str:
 def _build_price_summary(df: pd.DataFrame, day_type: str = "전체") -> dict:
     """
     DataFrame → {(property_name, competitor_name, ota): info_dict}
-    info_dict keys: min_price, min_date, sold_out, room_type, is_promo
+    info_dict keys: min_price, min_date, sold_out, room_type, is_promo, room_category,
+                    category_mismatch (자사 행에서 카테고리 불일치 시 True)
     """
     if df is None or df.empty:
         return {}
@@ -401,7 +402,8 @@ def _build_price_summary(df: pd.DataFrame, day_type: str = "전체") -> dict:
         if avail.empty:
             result[(prop, comp, ota)] = {
                 "min_price": 0, "min_date": "", "sold_out": True,
-                "room_type": "", "is_promo": False,
+                "room_type": "", "is_promo": False, "room_category": "",
+                "category_mismatch": False,
             }
         else:
             row  = avail.loc[avail["price"].idxmin()]
@@ -411,13 +413,61 @@ def _build_price_summary(df: pd.DataFrame, day_type: str = "전체") -> dict:
             rc   = "" if pd.isna(rc_val) else str(rc_val)
             is_p = bool(row.get("is_promo", False)) or _is_promo(rt)
             result[(prop, comp, ota)] = {
-                "min_price":     int(row["price"]),
-                "min_date":      str(row["checkin_date"])[:10],
-                "sold_out":      False,
-                "room_type":     rt,
-                "room_category": rc,
-                "is_promo":      is_p,
+                "min_price":        int(row["price"]),
+                "min_date":         str(row["checkin_date"])[:10],
+                "sold_out":         False,
+                "room_type":        rt,
+                "room_category":    rc,
+                "is_promo":         is_p,
+                "category_mismatch": False,
             }
+
+    # ── 자사 행 카테고리 매칭 (property_name == competitor_name) ─────────────
+    # 야놀자 최저가의 room_category를 기준으로, 네이버호텔·Trip.com도 같은
+    # 카테고리 내 최저가로 재계산. 해당 카테고리 데이터 없으면 category_mismatch=True.
+    own_props = {prop for (prop, comp, _ota) in result if prop == comp}
+    for prop_name in own_props:
+        yanolja_key = (prop_name, prop_name, "야놀자")
+        if yanolja_key not in result or result[yanolja_key]["sold_out"]:
+            continue
+        base_category = result[yanolja_key].get("room_category", "")
+        if not base_category:
+            continue
+
+        for ota in ["네이버호텔", "Trip.com"]:
+            key = (prop_name, prop_name, ota)
+            if key not in result or result[key]["sold_out"]:
+                continue
+
+            mask = (
+                (df_ok["property_name"] == prop_name) &
+                (df_ok["competitor_name"] == prop_name) &
+                (df_ok["ota"] == ota) &
+                (df_ok["price"].fillna(0) > 0)
+            )
+            cat_avail = df_ok[mask & (df_ok.get("room_category", pd.Series(dtype=str)) == base_category)] \
+                if "room_category" in df_ok.columns \
+                else df_ok[mask].iloc[0:0]
+
+            if cat_avail.empty:
+                result[key]["category_mismatch"] = True
+            else:
+                row  = cat_avail.loc[cat_avail["price"].idxmin()]
+                rt_val = row.get("room_type", "")
+                rc_val = row.get("room_category", "")
+                rt   = "" if pd.isna(rt_val) else str(rt_val)
+                rc   = "" if pd.isna(rc_val) else str(rc_val)
+                is_p = bool(row.get("is_promo", False)) or _is_promo(rt)
+                result[key] = {
+                    "min_price":        int(row["price"]),
+                    "min_date":         str(row["checkin_date"])[:10],
+                    "sold_out":         False,
+                    "room_type":        rt,
+                    "room_category":    rc,
+                    "is_promo":         is_p,
+                    "category_mismatch": False,
+                }
+
     return result
 
 
@@ -651,10 +701,14 @@ def _render_price_cell(
             price_cls  = "own-price" if is_own else ""
             promo_html = ' <span class="badge-promo">특가</span>' if is_promo else ""
 
-            clean_rt      = _clean_room_type(room_type)
-            room_category = info.get("room_category", "")
-            cat_badge     = f' <span class="badge-category">{room_category}</span>' if room_category else ""
-            room_html     = f'<div class="room-type">{clean_rt}{cat_badge}</div>' if clean_rt else ""
+            clean_rt         = _clean_room_type(room_type)
+            room_category    = info.get("room_category", "")
+            cat_mismatch     = info.get("category_mismatch", False)
+            cat_badge        = f' <span class="badge-category">{room_category}</span>' if room_category else ""
+            mismatch_badge   = ' <span class="badge-cat-mismatch" title="기준 카테고리 없음 — 전체 최저가 표시">!</span>' if cat_mismatch else ""
+            room_html        = f'<div class="room-type">{clean_rt}{cat_badge}{mismatch_badge}</div>' if clean_rt else (
+                f'<div class="room-type">{mismatch_badge}</div>' if mismatch_badge else ""
+            )
 
             # 별점 인라인 표시: ₩92,000 ⭐4.8
             rating_html = (
@@ -1431,7 +1485,8 @@ def _render_html(
   <span class="change-same">&#8212; 변동없음</span>
   <span class="badge-new">신규</span><span class="legend-note">&thinsp;전일 없음</span>
   &emsp;&middot;&emsp;<span class="badge-promo">특가</span><span class="legend-note">&thinsp;프로모션 진행중</span>
-  &emsp;&middot;&emsp;<span class="legend-note">※ 객실타입·가격은 해당 OTA 최저가 기준</span>
+  &emsp;&middot;&emsp;<span class="badge-cat-mismatch">!</span><span class="legend-note">&thinsp;카테고리 불일치(전체 최저가)</span>
+  &emsp;&middot;&emsp;<span class="legend-note">※ 자사 행은 야놀자 기준 카테고리로 동일 비교</span>
 </div>"""
 
     crawled_disp = crawled_at[:16] if crawled_at else "&#8212;"
@@ -1975,6 +2030,22 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   letter-spacing: .1px;
   vertical-align: middle;
   border: 1px solid #3a5068;
+}
+
+/* ── Category mismatch badge ── */
+.badge-cat-mismatch {
+  display: inline-block;
+  background: #3d2a00;
+  color: #e3a008;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 3px;
+  letter-spacing: .1px;
+  vertical-align: middle;
+  border: 1px solid #6b4a00;
+  cursor: help;
 }
 
 /* ── 별점 인라인 표시 (가격 바로 옆) ── */
