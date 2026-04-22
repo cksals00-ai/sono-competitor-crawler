@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>팔라티움 해운대 리포트 | SONO GS팀</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --bg:          #0d1117;
+  --card-bg:     #161b22;
+  --card-header: #21262d;
+  --border:      #30363d;
+  --text:        #e6edf3;
+  --muted:       #7d8590;
+  --accent:      #58a6ff;
+  --green:       #3fb950;
+  --red:         #f85149;
+  --yellow:      #e3b341;
+  --orange:      #f0883e;
+  --purple:      #bc8cff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans KR', -apple-system, "Apple SD Gothic Neo", "Malgun Gothic",
+               BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── GS Suite Navigation ── */
+.gsn{background:#0b0f14;border-bottom:1px solid #1e2530;font-family:'Noto Sans KR',-apple-system,sans-serif;font-size:13px;position:relative;z-index:200}
+.gsn-wrap{max-width:1400px;margin:0 auto;padding:0 20px;height:42px;display:flex;align-items:center}
+.gsn-brand{color:#7a8794;text-decoration:none;font-weight:600;font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;margin-right:24px;padding-right:24px;border-right:1px solid #1e2530}
+.gsn-brand:hover{color:#c9d1d9}
+.gsn-brand-dot{color:#58a6ff}
+.gsn-links{display:flex;align-items:center;gap:2px;flex:1}
+.gsn-item{color:#7d8590;text-decoration:none;padding:4px 12px;border-radius:6px;white-space:nowrap;font-size:13px;transition:background .15s,color .15s;display:flex;align-items:center;gap:6px}
+.gsn-item:hover{background:#1a2232;color:#c9d1d9}
+.gsn-item.active{background:#1c2d3f;color:#58a6ff;font-weight:600}
+.gsn-soon{pointer-events:none;opacity:.4}
+.gsn-badge{background:#2d3a48;color:#7d8590;font-size:10px;padding:1px 5px;border-radius:3px;font-weight:600;letter-spacing:.3px}
+.gsn-toggle{display:none;background:none;border:none;color:#7d8590;cursor:pointer;padding:5px;border-radius:4px;margin-left:auto}
+.gsn-toggle:hover{color:#c9d1d9;background:#1e2530}
+@media(max-width:640px){
+  .gsn-links{display:none;flex-direction:column;position:absolute;top:42px;left:0;right:0;background:#0b0f14;border-bottom:1px solid #1e2530;padding:8px 12px;gap:3px;z-index:300}
+  .gsn-links.open{display:flex}
+  .gsn-item{padding:8px 12px}
+  .gsn-toggle{display:flex;align-items:center;justify-content:center}
+}
+
+/* ── Header ── */
+.header {
+  background: rgba(22,27,34,.97);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.header-left { display: flex; flex-direction: column; gap: 3px; }
+.header-title-wrap { display: flex; align-items: center; gap: 10px; }
+.header-title {
+  font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -.3px;
+  line-height: 1;
+}
+.header-gs {
+  background: linear-gradient(135deg, #e3b341 0%, #f0d060 50%, #e3b341 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 2px;
+}
+.header-team-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(227,179,65,.12);
+  color: rgba(227,179,65,.7);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(227,179,65,.2);
+  flex-shrink: 0;
+}
+.header-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+/* ── Layout ── */
+.main { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+/* ── Attainment Banner ── */
+.attainment-bar {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.attainment-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Space Grotesk', sans-serif;
+  white-space: nowrap;
+}
+.attainment-items { display: flex; gap: 20px; flex-wrap: wrap; flex: 1; }
+.att-item { display: flex; flex-direction: column; gap: 4px; min-width: 120px; }
+.att-item-label { font-size: 11px; color: var(--muted); }
+.att-item-bar { height: 6px; border-radius: 3px; background: #21262d; overflow: hidden; }
+.att-item-fill { height: 100%; border-radius: 3px; transition: width .5s; }
+.att-item-pct { font-size: 12px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+
+/* ── KPI Grid ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:680px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+
+.kpi-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--kpi-color, var(--accent));
+}
+.kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; }
+.kpi-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+.kpi-unit { font-size: 13px; font-weight: 400; color: var(--muted); }
+.kpi-target { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.kpi-pct { font-weight: 600; }
+.kpi-pct.on-track { color: var(--green); }
+.kpi-pct.behind   { color: var(--yellow); }
+.kpi-pct.far      { color: var(--muted); }
+
+/* ── 2-col section ── */
+.section-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+@media(max-width:900px){.section-row{grid-template-columns:1fr;}}
+.section-row.thirds {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+@media(max-width:1100px){.section-row.thirds{grid-template-columns:1fr 1fr;}}
+@media(max-width:680px){.section-row.thirds{grid-template-columns:1fr;}}
+
+/* ── Card ── */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.card-header {
+  background: var(--card-header);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+.card-meta { font-size: 11px; color: var(--muted); }
+.card-body { padding: 16px; }
+
+/* ── Donut Chart ── */
+.donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.donut-svg-wrap { position: relative; width: 160px; height: 160px; flex-shrink: 0; }
+.donut-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  text-align: center;
+  pointer-events: none;
+}
+.donut-center-val {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+.donut-center-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.donut-legend { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 160px; }
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legend-name { font-size: 12px; color: var(--text); flex: 1; }
+.legend-pct { font-size: 12px; font-weight: 600; font-family: 'Space Grotesk', sans-serif; }
+.legend-rev { font-size: 11px; color: var(--muted); }
+
+/* ── Bar Chart (canvas-free) ── */
+.bar-chart { display: flex; flex-direction: column; gap: 10px; }
+.bar-row { display: flex; flex-direction: column; gap: 4px; }
+.bar-label { font-size: 12px; color: var(--text); display: flex; justify-content: space-between; }
+.bar-label-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px; }
+.bar-label-val { font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.bar-track { height: 8px; border-radius: 4px; background: #21262d; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width .5s; }
+
+/* ── Monthly Chart ── */
+.monthly-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 160px;
+  padding-bottom: 24px;
+  position: relative;
+}
+.monthly-chart::after {
+  content: '';
+  position: absolute;
+  bottom: 24px;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--border);
+}
+.month-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  justify-content: flex-end;
+  cursor: default;
+}
+.month-bar-wrap { flex: 1; display: flex; align-items: flex-end; width: 100%; }
+.month-bar {
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  min-height: 2px;
+  transition: opacity .2s;
+  position: relative;
+}
+.month-bar:hover { opacity: .85; }
+.month-bar .tooltip {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2530;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+  margin-bottom: 4px;
+}
+.month-bar:hover .tooltip { display: block; }
+.month-label { font-size: 10px; color: var(--muted); }
+.month-occ { font-size: 9px; color: var(--muted); }
+
+/* ── Table ── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.data-table th {
+  background: var(--card-header);
+  color: var(--muted);
+  font-weight: 500;
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.data-table th.r { text-align: right; }
+.data-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(48,54,61,.5);
+  vertical-align: middle;
+}
+.data-table td.r { text-align: right; font-family: 'Space Grotesk', sans-serif; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(255,255,255,.02); }
+.cancel-high { color: var(--red); }
+.cancel-med  { color: var(--yellow); }
+.cancel-low  { color: var(--green); }
+
+/* ── Stat pair ── */
+.stat-pair { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+.stat-box {
+  flex: 1;
+  min-width: 100px;
+  background: #1e2530;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-box-label { font-size: 11px; color: var(--muted); }
+.stat-box-val {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+.stat-box-sub { font-size: 11px; color: var(--muted); }
+
+/* ── Guest ratio ── */
+.ratio-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.ratio-bar-wrap { flex: 1; height: 20px; border-radius: 10px; overflow: hidden; display: flex; }
+.ratio-seg { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: rgba(0,0,0,.7); }
+.ratio-legend { display: flex; gap: 16px; flex-wrap: wrap; }
+.ratio-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.ratio-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* ── Lead time ── */
+.lead-bars { display: flex; flex-direction: column; gap: 8px; }
+.lead-row { display: flex; align-items: center; gap: 8px; }
+.lead-label { font-size: 11px; color: var(--muted); width: 70px; flex-shrink: 0; text-align: right; }
+.lead-track { flex: 1; height: 16px; border-radius: 3px; background: #21262d; overflow: hidden; }
+.lead-fill { height: 100%; border-radius: 3px; background: var(--accent); }
+.lead-count { font-size: 11px; font-family: 'Space Grotesk', sans-serif; color: var(--text); width: 36px; text-align: right; }
+
+/* ── Footer ── */
+.footer { text-align: center; padding: 24px; color: var(--muted); font-size: 11px; border-top: 1px solid var(--border); margin-top: 8px; }
+
+/* ── OCC Gauge ── */
+.occ-gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.occ-gauge-labels {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+  padding: 0 4px;
+}
+</style>
+</head>
+<body>
+
+<!-- GS Suite Navigation -->
+<nav class="gsn">
+  <div class="gsn-wrap">
+    <a class="gsn-brand" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/"><span class="gsn-brand-dot">◈</span> SONO GS팀</a>
+    <div class="gsn-links" id="gsn-links">
+      <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/" data-gsn="trend">트렌드 리포트</a>
+      <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/" data-gsn="monitor">경쟁사 모니터링</a>
+      <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/palatium.html" data-gsn="palatium">팔라티움 리포트</a>
+    </div>
+    <button class="gsn-toggle" onclick="document.getElementById('gsn-links').classList.toggle('open')" aria-label="메뉴">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+<script>(function(){var h=location.href,m={trend:'gs_daily_trend_news_public_temp',monitor:'sono-competitor-crawler',palatium:'palatium'};document.querySelectorAll('.gsn-item[data-gsn]').forEach(function(a){var k=a.getAttribute('data-gsn');if(m[k]&&h.indexOf(m[k])!==-1)a.classList.add('active');});}());</script>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-title-wrap">
+        <span class="header-title"><span class="header-gs">GS</span> 팔라티움 해운대</span>
+        <span class="header-team-badge">SONO Hotels &amp; Resorts</span>
+      </div>
+      <div class="header-meta" id="header-meta">로딩 중...</div>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- 목표 달성률 배너 -->
+  <div class="attainment-bar" id="att-bar">
+    <div class="attainment-label">2026 목표달성률</div>
+    <div class="attainment-items" id="att-items"></div>
+  </div>
+
+  <!-- KPI 카드 -->
+  <div class="kpi-grid" id="kpi-grid"></div>
+
+  <!-- 세그먼트 + 월별 트렌드 -->
+  <div class="section-row">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">세그먼트별 매출 비중</span>
+        <span class="card-meta" id="seg-total-meta"></span>
+      </div>
+      <div class="card-body">
+        <div class="donut-wrap">
+          <div class="donut-svg-wrap">
+            <svg id="donut-svg" width="160" height="160" viewBox="0 0 160 160"></svg>
+            <div class="donut-center">
+              <div class="donut-center-val" id="donut-center-val">-</div>
+              <div class="donut-center-label">총 매출</div>
+            </div>
+          </div>
+          <div class="donut-legend" id="donut-legend"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">월별 매출 트렌드</span>
+        <span class="card-meta">도착일 기준</span>
+      </div>
+      <div class="card-body">
+        <div class="monthly-chart" id="monthly-chart"></div>
+        <div id="monthly-legend" style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--muted);"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 세그먼트별 ADR + OCC -->
+  <div class="section-row">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">세그먼트별 RN</span>
+        <span class="card-meta">유효예약 기준</span>
+      </div>
+      <div class="card-body">
+        <div class="bar-chart" id="seg-rn-chart"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">세그먼트별 ADR</span>
+        <span class="card-meta">원 단위</span>
+      </div>
+      <div class="card-body">
+        <div class="bar-chart" id="seg-adr-chart"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 채널별 실적 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-header">
+      <span class="card-title">채널별 실적 &amp; 취소율</span>
+      <span class="card-meta">유효예약 매출 기준 정렬</span>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <div style="overflow-x:auto;">
+        <table class="data-table" id="channel-table">
+          <thead>
+            <tr>
+              <th>채널</th>
+              <th class="r">매출</th>
+              <th class="r">RN</th>
+              <th class="r">ADR</th>
+              <th class="r">예약건</th>
+              <th class="r">취소율</th>
+            </tr>
+          </thead>
+          <tbody id="channel-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 객실타입 + 신규/재방문 + 리드타임 -->
+  <div class="section-row thirds">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">객실타입별 매출</span>
+      </div>
+      <div class="card-body">
+        <div class="bar-chart" id="rt-chart"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">신규 vs 재방문</span>
+        <span class="card-meta">투숙객명 기준 추정</span>
+      </div>
+      <div class="card-body">
+        <div class="stat-pair" id="guest-stats"></div>
+        <div class="ratio-row">
+          <div class="ratio-bar-wrap" id="ratio-bar"></div>
+        </div>
+        <div class="ratio-legend" id="ratio-legend"></div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">취소 현황</div>
+          <div class="stat-pair" id="cancel-stats"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">예약 리드타임</span>
+        <span class="card-meta" id="avg-lead-meta"></span>
+      </div>
+      <div class="card-body">
+        <div class="lead-bars" id="lead-bars"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="footer" id="footer"></div>
+
+<script>
+// ── 내장 데이터 (빌드 시 교체) ───────────────────────────────
+const DATA = {"generated_at": "2026-04-23 02:15", "source_file": "26_p_data2.xlsx", "date_range": {"min": "2026-01-14", "max": "2026-07-12"}, "targets": {"revenue": 4000000000, "rn": 13200, "adr": 300000, "occ": 0.8, "revpar": 222000}, "kpi": {"revenue": 1195538115, "rn": 3881, "adr": 308049, "occ": 37.8, "revpar": 116524, "avail_rn": 10260, "days_range": 180, "cancel_rate": 28.1, "avg_lead_time": 26.2, "cancelled_count": 1178, "total_bookings": 4194, "new_guests": 2034, "repeat_guests": 200}, "segments": [{"name": "소노투웜", "color": "#58a6ff", "revenue": 533019018, "rn": 1721, "bookings": 1219, "adr": 309714, "share": 44.6}, {"name": "FIT(해외OTA)", "color": "#e3b341", "revenue": 549382815, "rn": 1649, "bookings": 951, "adr": 333161, "share": 46.0}, {"name": "FIT(국내OTA)", "color": "#3fb950", "revenue": 87784546, "rn": 272, "bookings": 217, "adr": 322737, "share": 7.3}, {"name": "FIT(기타)", "color": "#79c0ff", "revenue": 154545, "rn": 1, "bookings": 1, "adr": 154545, "share": 0.0}, {"name": "다이렉트", "color": "#f0883e", "revenue": 25197191, "rn": 238, "bookings": 113, "adr": 105870, "share": 2.1}], "monthly": [{"month": 1, "label": "1월", "revenue": 136364, "rn": 0, "occ": 0.0, "adr": 0, "avail_rn": 1767}, {"month": 2, "label": "2월", "revenue": 70675434, "rn": 215, "occ": 13.5, "adr": 328722, "avail_rn": 1596}, {"month": 3, "label": "3월", "revenue": 109205367, "rn": 433, "occ": 24.5, "adr": 252206, "avail_rn": 1767}, {"month": 4, "label": "4월", "revenue": 362344230, "rn": 1381, "occ": 80.8, "adr": 262378, "avail_rn": 1710}, {"month": 5, "label": "5월", "revenue": 478112642, "rn": 1344, "occ": 76.1, "adr": 355738, "avail_rn": 1767}, {"month": 6, "label": "6월", "revenue": 172611353, "rn": 500, "occ": 29.2, "adr": 345222, "avail_rn": 1710}, {"month": 7, "label": "7월", "revenue": 2452725, "rn": 8, "occ": 0.5, "adr": 306590, "avail_rn": 1767}], "channels": [{"name": "팔라티움 해운대 바이 소노펠리체", "revenue": 558370754, "rn": 1960, "bookings": 1333, "adr": 284883, "cancel_rate": 26.6}, {"name": "아고다", "revenue": 303007207, "rn": 901, "bookings": 568, "adr": 336301, "cancel_rate": 32.9}, {"name": "트립닷컴", "revenue": 137616884, "rn": 403, "bookings": 216, "adr": 341481, "cancel_rate": 31.6}, {"name": "익스피디아", "revenue": 60920545, "rn": 194, "bookings": 116, "adr": 314023, "cancel_rate": 26.1}, {"name": "놀유니버스", "revenue": 58134543, "rn": 180, "bookings": 130, "adr": 322969, "cancel_rate": 26.1}, {"name": "부킹닷컴", "revenue": 47838179, "rn": 151, "bookings": 51, "adr": 316809, "cancel_rate": 25.0}, {"name": "여기어때", "revenue": 20285455, "rn": 58, "bookings": 58, "adr": 349749, "cancel_rate": 22.7}, {"name": "타이드스퀘어투어비스", "revenue": 5476366, "rn": 20, "bookings": 15, "adr": 273818, "cancel_rate": 31.8}, {"name": "트립비토즈", "revenue": 1928182, "rn": 7, "bookings": 7, "adr": 275454, "cancel_rate": 0.0}, {"name": "웹투어", "revenue": 1489091, "rn": 5, "bookings": 5, "adr": 297818, "cancel_rate": 0.0}, {"name": "호텔패스", "revenue": 470909, "rn": 2, "bookings": 2, "adr": 235454, "cancel_rate": 33.3}], "room_types": [{"name": "Premier Double VF(A1,A4,A5)", "revenue": 237808956, "rn": 631, "adr": 376876, "share": 19.9}, {"name": "Premier Double Ocean(A1,A4,A5)", "revenue": 180670539, "rn": 462, "adr": 391061, "share": 15.1}, {"name": "Premier Twin Ocean(A2)", "revenue": 157687965, "rn": 432, "adr": 365018, "share": 13.2}, {"name": "Premier Twin VF(A2)", "revenue": 128383869, "rn": 377, "adr": 340540, "share": 10.7}, {"name": "Deluxe Twin Ocean(A3)", "revenue": 102515077, "rn": 353, "adr": 290410, "share": 8.6}, {"name": "Superior(B1~B2)", "revenue": 98871773, "rn": 541, "adr": 182757, "share": 8.3}, {"name": "Deluxe Double Ocean(A3)", "revenue": 91907771, "rn": 325, "adr": 282793, "share": 7.7}, {"name": "Deluxe Twin VF(A3)", "revenue": 62162514, "rn": 248, "adr": 250655, "share": 5.2}, {"name": "Deluxe Double VF(A3)", "revenue": 60126696, "rn": 238, "adr": 252633, "share": 5.0}, {"name": "Deluxe High VF(D1~D2)", "revenue": 41242629, "rn": 129, "adr": 319710, "share": 3.4}, {"name": "Presidential(P2~P3)", "revenue": 14602727, "rn": 19, "adr": 768564, "share": 1.2}, {"name": "Deluxe Corner VF(B3)", "revenue": 13927367, "rn": 39, "adr": 357111, "share": 1.2}, {"name": "Prestige VF(P1,P4)", "revenue": 3489595, "rn": 7, "adr": 498513, "share": 0.3}, {"name": "Prestige Ocean(P1,P4)", "revenue": 2140637, "rn": 4, "adr": 535159, "share": 0.2}], "lead_time": [{"label": "당일~7일", "count": 514}, {"label": "8~14일", "count": 291}, {"label": "15~30일", "count": 568}, {"label": "31~60일", "count": 683}, {"label": "61~90일", "count": 243}, {"label": "91일+", "count": 7}]};
+
+// ── 유틸 ─────────────────────────────────────────────────────
+function fmtW(v) {
+  if (v >= 1e8) return (v/1e8).toFixed(1).replace(/\.0$/,'') + '억';
+  if (v >= 1e4) return Math.round(v/1e4).toLocaleString() + '만';
+  return v.toLocaleString();
+}
+function fmtK(v) {
+  return v >= 1000 ? (v/1000).toFixed(0)+'K' : v.toLocaleString();
+}
+function fmtPct(v) { return v.toFixed(1) + '%'; }
+
+// ── Header ────────────────────────────────────────────────────
+document.getElementById('header-meta').textContent =
+  `생성: ${DATA.generated_at}  ·  데이터 범위: ${DATA.date_range.min} ~ ${DATA.date_range.max}  ·  소스: ${DATA.source_file}`;
+
+// ── 목표달성률 배너 ────────────────────────────────────────────
+(function() {
+  const kpi = DATA.kpi, tgt = DATA.targets;
+  const items = [
+    { label:'매출',  val: kpi.revenue / tgt.revenue * 100,  color:'#58a6ff' },
+    { label:'RN',    val: kpi.rn      / tgt.rn      * 100,  color:'#3fb950' },
+    { label:'ADR',   val: kpi.adr     / tgt.adr     * 100,  color:'#e3b341' },
+    { label:'OCC',   val: kpi.occ     / (tgt.occ*100) * 100,color:'#f0883e' },
+    { label:'RevPAR',val: kpi.revpar  / tgt.revpar   * 100, color:'#bc8cff' },
+  ];
+  const wrap = document.getElementById('att-items');
+  items.forEach(it => {
+    const pct = Math.min(it.val, 100);
+    const cl  = it.val >= 80 ? 'on-track' : it.val >= 50 ? 'behind' : 'far';
+    wrap.innerHTML += `
+      <div class="att-item">
+        <div class="att-item-label">${it.label}</div>
+        <div class="att-item-bar"><div class="att-item-fill" style="width:${pct}%;background:${it.color};"></div></div>
+        <div class="att-item-pct ${cl}">${it.val.toFixed(1)}%</div>
+      </div>`;
+  });
+})();
+
+// ── KPI 카드 ──────────────────────────────────────────────────
+(function() {
+  const kpi = DATA.kpi, tgt = DATA.targets;
+  const cards = [
+    { label:'총 매출', value: fmtW(kpi.revenue), unit:'원', color:'#58a6ff',
+      target: `목표 ${fmtW(tgt.revenue)}원`, pct: kpi.revenue/tgt.revenue*100 },
+    { label:'Room Nights', value: kpi.rn.toLocaleString(), unit:'박', color:'#3fb950',
+      target: `목표 ${tgt.rn.toLocaleString()}`, pct: kpi.rn/tgt.rn*100 },
+    { label:'ADR', value: Math.round(kpi.adr/1000).toLocaleString()+'K', unit:'원', color:'#e3b341',
+      target: `목표 ${(tgt.adr/1000).toFixed(0)}K`, pct: kpi.adr/tgt.adr*100 },
+    { label:'OCC', value: kpi.occ.toFixed(1), unit:'%', color:'#f0883e',
+      target: `목표 ${(tgt.occ*100).toFixed(0)}%`, pct: kpi.occ/(tgt.occ*100)*100 },
+    { label:'RevPAR', value: Math.round(kpi.revpar/1000).toLocaleString()+'K', unit:'원', color:'#bc8cff',
+      target: `목표 ${Math.round(tgt.revpar/1000)}K`, pct: kpi.revpar/tgt.revpar*100 },
+  ];
+  const grid = document.getElementById('kpi-grid');
+  cards.forEach(c => {
+    const cl = c.pct >= 80 ? 'on-track' : c.pct >= 50 ? 'behind' : 'far';
+    grid.innerHTML += `
+      <div class="kpi-card" style="--kpi-color:${c.color}">
+        <div class="kpi-label">${c.label}</div>
+        <div class="kpi-value">${c.value}<span class="kpi-unit"> ${c.unit}</span></div>
+        <div class="kpi-target">${c.target} <span class="kpi-pct ${cl}">${c.pct.toFixed(1)}%</span></div>
+      </div>`;
+  });
+})();
+
+// ── 도넛 차트 ─────────────────────────────────────────────────
+(function() {
+  const segs = DATA.segments.filter(s => s.revenue > 0);
+  const total = segs.reduce((a,s)=>a+s.revenue,0);
+  const cx=80, cy=80, r=62, sw=28;
+  const gap=0.015; // radians
+  let svg = '';
+  let angle = -Math.PI/2;
+  segs.forEach(s => {
+    const frac = s.revenue / total;
+    const sweep = frac * 2 * Math.PI - gap;
+    if (sweep <= 0) return;
+    const x1=cx+r*Math.cos(angle), y1=cy+r*Math.sin(angle);
+    const x2=cx+r*Math.cos(angle+sweep), y2=cy+r*Math.sin(angle+sweep);
+    const large=sweep>Math.PI?1:0;
+    svg += `<path d="M${cx} ${cy} L${x1} ${y1} A${r} ${r} 0 ${large} 1 ${x2} ${y2} Z"
+      fill="${s.color}" opacity=".85"/>`;
+    // donut hole mask
+    angle += sweep + gap;
+  });
+  // center circle
+  svg += `<circle cx="${cx}" cy="${cy}" r="${r-sw}" fill="#161b22"/>`;
+  document.getElementById('donut-svg').innerHTML = svg;
+  document.getElementById('donut-center-val').textContent = fmtW(total);
+
+  const legend = document.getElementById('donut-legend');
+  segs.forEach(s => {
+    legend.innerHTML += `
+      <div class="legend-item">
+        <div class="legend-dot" style="background:${s.color}"></div>
+        <div class="legend-name">${s.name}</div>
+        <div>
+          <span class="legend-pct" style="color:${s.color}">${s.share}%</span>
+          <div class="legend-rev">${fmtW(s.revenue)}원</div>
+        </div>
+      </div>`;
+  });
+  document.getElementById('seg-total-meta').textContent = `총 ${fmtW(total)}원`;
+})();
+
+// ── 세그먼트 RN 바 ────────────────────────────────────────────
+(function() {
+  const segs = DATA.segments.filter(s=>s.rn>0);
+  const maxRN = Math.max(...segs.map(s=>s.rn));
+  const wrap = document.getElementById('seg-rn-chart');
+  segs.forEach(s => {
+    const w = (s.rn/maxRN*100).toFixed(1);
+    wrap.innerHTML += `
+      <div class="bar-row">
+        <div class="bar-label">
+          <span class="bar-label-name">${s.name}</span>
+          <span class="bar-label-val">${s.rn.toLocaleString()} 박</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${s.color};"></div></div>
+      </div>`;
+  });
+})();
+
+// ── 세그먼트 ADR 바 ───────────────────────────────────────────
+(function() {
+  const segs = DATA.segments.filter(s=>s.adr>0);
+  const maxADR = Math.max(...segs.map(s=>s.adr));
+  const wrap = document.getElementById('seg-adr-chart');
+  segs.forEach(s => {
+    const w = (s.adr/maxADR*100).toFixed(1);
+    wrap.innerHTML += `
+      <div class="bar-row">
+        <div class="bar-label">
+          <span class="bar-label-name">${s.name}</span>
+          <span class="bar-label-val">${Math.round(s.adr/1000).toLocaleString()}K</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${s.color};"></div></div>
+      </div>`;
+  });
+})();
+
+// ── 월별 트렌드 ────────────────────────────────────────────────
+(function() {
+  const months = DATA.monthly.filter(m=>m.revenue>0||m.rn>0);
+  const maxRev = Math.max(...months.map(m=>m.revenue), 1);
+  const wrap = document.getElementById('monthly-chart');
+  const monthColors = {1:'#7d8590',2:'#58a6ff',3:'#3fb950',4:'#e3b341',5:'#f0883e',6:'#bc8cff',7:'#f85149',8:'#f85149',9:'#e3b341',10:'#3fb950',11:'#58a6ff',12:'#7d8590'};
+  months.forEach(m => {
+    const pct = (m.revenue/maxRev*100).toFixed(1);
+    const color = monthColors[m.month] || '#58a6ff';
+    wrap.innerHTML += `
+      <div class="month-col">
+        <div class="month-bar-wrap">
+          <div class="month-bar" style="height:${pct}%;background:${color};border-radius:3px 3px 0 0;min-height:2px;position:relative;">
+            <div class="tooltip">
+              <div style="font-weight:600;color:#fff;margin-bottom:2px;">${m.label}</div>
+              <div>매출: ${fmtW(m.revenue)}원</div>
+              <div>RN: ${m.rn.toLocaleString()}</div>
+              <div>OCC: ${m.occ}%</div>
+              <div>ADR: ${Math.round(m.adr/1000)}K</div>
+            </div>
+          </div>
+        </div>
+        <div class="month-label">${m.label}</div>
+        <div class="month-occ">${m.occ}%</div>
+      </div>`;
+  });
+})();
+
+// ── 채널 테이블 ────────────────────────────────────────────────
+(function() {
+  const tbody = document.getElementById('channel-tbody');
+  DATA.channels.slice(0, 12).forEach(ch => {
+    const cr = ch.cancel_rate;
+    const crClass = cr >= 40 ? 'cancel-high' : cr >= 20 ? 'cancel-med' : 'cancel-low';
+    tbody.innerHTML += `
+      <tr>
+        <td>${ch.name}</td>
+        <td class="r">${fmtW(ch.revenue)}원</td>
+        <td class="r">${ch.rn.toLocaleString()}</td>
+        <td class="r">${Math.round(ch.adr/1000).toLocaleString()}K</td>
+        <td class="r">${ch.bookings.toLocaleString()}</td>
+        <td class="r ${crClass}">${cr}%</td>
+      </tr>`;
+  });
+})();
+
+// ── 객실타입 바 ───────────────────────────────────────────────
+(function() {
+  const rts = DATA.room_types.slice(0, 10);
+  const maxRev = Math.max(...rts.map(r=>r.revenue),1);
+  const wrap = document.getElementById('rt-chart');
+  rts.forEach(rt => {
+    const w = (rt.revenue/maxRev*100).toFixed(1);
+    // shorten name
+    const name = rt.name.replace(/\(.*?\)/g,'').trim().slice(0,22);
+    wrap.innerHTML += `
+      <div class="bar-row">
+        <div class="bar-label">
+          <span class="bar-label-name" title="${rt.name}">${name}</span>
+          <span class="bar-label-val">${fmtW(rt.revenue)}</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${w}%;background:#58a6ff;opacity:${0.5+rt.share/200};"></div></div>
+      </div>`;
+  });
+})();
+
+// ── 신규/재방문 ────────────────────────────────────────────────
+(function() {
+  const kpi = DATA.kpi;
+  const total = kpi.new_guests + kpi.repeat_guests;
+  const newPct = total ? kpi.new_guests/total*100 : 0;
+  const repPct = 100 - newPct;
+  document.getElementById('guest-stats').innerHTML = `
+    <div class="stat-box">
+      <div class="stat-box-label">신규 고객</div>
+      <div class="stat-box-val" style="color:#3fb950">${kpi.new_guests.toLocaleString()}</div>
+      <div class="stat-box-sub">${newPct.toFixed(1)}%</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-box-label">재방문 고객</div>
+      <div class="stat-box-val" style="color:#e3b341">${kpi.repeat_guests.toLocaleString()}</div>
+      <div class="stat-box-sub">${repPct.toFixed(1)}%</div>
+    </div>`;
+  document.getElementById('ratio-bar').innerHTML = `
+    <div class="ratio-seg" style="width:${newPct}%;background:#3fb950;">${newPct.toFixed(0)}%</div>
+    <div class="ratio-seg" style="width:${repPct}%;background:#e3b341;">${repPct.toFixed(0)}%</div>`;
+  document.getElementById('ratio-legend').innerHTML = `
+    <div class="ratio-legend-item"><div class="ratio-dot" style="background:#3fb950"></div>신규</div>
+    <div class="ratio-legend-item"><div class="ratio-dot" style="background:#e3b341"></div>재방문</div>`;
+
+  document.getElementById('cancel-stats').innerHTML = `
+    <div class="stat-box">
+      <div class="stat-box-label">취소 건수</div>
+      <div class="stat-box-val" style="color:#f85149">${kpi.cancelled_count.toLocaleString()}</div>
+      <div class="stat-box-sub">/ 전체 ${kpi.total_bookings.toLocaleString()}건</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-box-label">취소율</div>
+      <div class="stat-box-val" style="color:#f85149">${kpi.cancel_rate}%</div>
+      <div class="stat-box-sub">&nbsp;</div>
+    </div>`;
+})();
+
+// ── 리드타임 ──────────────────────────────────────────────────
+(function() {
+  const lt = DATA.lead_time;
+  const maxCount = Math.max(...lt.map(l=>l.count),1);
+  document.getElementById('avg-lead-meta').textContent = `평균 ${DATA.kpi.avg_lead_time}일`;
+  const wrap = document.getElementById('lead-bars');
+  lt.forEach(l => {
+    const w = (l.count/maxCount*100).toFixed(1);
+    wrap.innerHTML += `
+      <div class="lead-row">
+        <div class="lead-label">${l.label}</div>
+        <div class="lead-track"><div class="lead-fill" style="width:${w}%"></div></div>
+        <div class="lead-count">${l.count}</div>
+      </div>`;
+  });
+})();
+
+// ── Footer ────────────────────────────────────────────────────
+document.getElementById('footer').textContent =
+  `팔라티움 해운대 바이 소노펠리체 · 57실 · VAT 제외 기준 · 생성: ${DATA.generated_at}`;
+</script>
+</body>
+</html>

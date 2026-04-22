@@ -32,8 +32,32 @@ logger = logging.getLogger(__name__)
 from scheduler import daily_job  # noqa: E402 (import after chdir/logging setup)
 
 
+def _build_palatium():
+    """팔라티움 Excel → JSON 파싱 → docs/palatium.html 빌드."""
+    palatium_xlsx = PROJECT_DIR / "data" / "26_p_data2.xlsx"
+    build_script  = PROJECT_DIR / "scripts" / "build_palatium.py"
+
+    if not palatium_xlsx.exists():
+        logger.info("팔라티움 Excel 없음 — palatium.html 빌드 건너뜀")
+        return
+    if not build_script.exists():
+        logger.warning(f"빌드 스크립트 없음: {build_script}")
+        return
+
+    result = subprocess.run(
+        ["python3", str(build_script)],
+        cwd=PROJECT_DIR,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        logger.error(f"팔라티움 빌드 실패:\n{result.stderr.strip()}")
+    else:
+        logger.info(f"팔라티움 대시보드 빌드 완료\n{result.stdout.strip()}")
+
+
 def _git_push_dashboard():
-    """dashboard/index.html → docs/index.html 복사 후 git add/commit/push."""
+    """dashboard/index.html → docs/index.html 복사 + palatium.html 포함 후 git push."""
     src = PROJECT_DIR / "dashboard" / "index.html"
     dst = PROJECT_DIR / "docs" / "index.html"
 
@@ -49,8 +73,9 @@ def _git_push_dashboard():
         return
 
     today = datetime.now().strftime("%Y-%m-%d %H:%M")
+    files_to_add = ["docs/index.html", "docs/palatium.html", "data/palatium_data.json"]
     cmds = [
-        ["git", "add", "docs/index.html"],
+        ["git", "add"] + files_to_add,
         ["git", "commit", "-m", f"dashboard: auto-update {today}"],
         ["git", "push"],
     ]
@@ -75,4 +100,5 @@ def _git_push_dashboard():
 
 if __name__ == "__main__":
     daily_job()
+    _build_palatium()
     _git_push_dashboard()
