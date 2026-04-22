@@ -27,23 +27,26 @@ def build():
     print("→ Excel 파싱 중...")
     data = parse(DATA_DIR)
 
-    # JSON 캐시 저장
+    # JSON 캐시 저장 (rows 배열이 크므로 compact 형태로)
     with open(JSON_OUT, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+        json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
     print(f"  ✓ JSON 저장: {JSON_OUT}")
 
-    kpi = data["kpi"]
-    tgt = data["targets"]
-    print(f"  매출: {kpi['revenue']:,}원  ({kpi['revenue']/tgt['revenue']*100:.1f}%)")
-    print(f"  RN:   {kpi['rn']:,}박      ({kpi['rn']/tgt['rn']*100:.1f}%)")
-    print(f"  ADR:  {kpi['adr']:,}원  OCC: {kpi['occ']}%  RevPAR: {kpi['revpar']:,}원")
+    rows = data["rows"]
+    tgt  = data["targets"]
+    valid = [r for r in rows if r["v"] and r["seg"] != "기타"]
+    rev  = sum(r["r"] for r in valid)
+    rn   = sum(r["n"] for r in valid)
+    print(f"  매출: {rev:,}원  ({rev/tgt['revenue']*100:.1f}%)")
+    print(f"  RN:   {rn:,}박      ({rn/tgt['rn']*100:.1f}%)")
+    print(f"  ADR:  {rev//rn if rn else 0:,}원")
 
     # 2. HTML 템플릿 로드
     with open(TEMPLATE, "r", encoding="utf-8") as f:
         html = f.read()
 
     # 3. 플레이스홀더 교체
-    json_str = json.dumps(data, ensure_ascii=False)
+    json_str = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     if "__PALATIUM_DATA__" not in html:
         print("  ⚠ 플레이스홀더 __PALATIUM_DATA__ 없음 — 이미 빌드된 파일에 재삽입")
         # 기존 DATA = {...} 라인을 교체
