@@ -1,0 +1,358 @@
+{
+  "generated_at": "2026-04-23 02:15",
+  "source_file": "26_p_data2.xlsx",
+  "date_range": {
+    "min": "2026-01-14",
+    "max": "2026-07-12"
+  },
+  "targets": {
+    "revenue": 4000000000,
+    "rn": 13200,
+    "adr": 300000,
+    "occ": 0.8,
+    "revpar": 222000
+  },
+  "kpi": {
+    "revenue": 1195538115,
+    "rn": 3881,
+    "adr": 308049,
+    "occ": 37.8,
+    "revpar": 116524,
+    "avail_rn": 10260,
+    "days_range": 180,
+    "cancel_rate": 28.1,
+    "avg_lead_time": 26.2,
+    "cancelled_count": 1178,
+    "total_bookings": 4194,
+    "new_guests": 2034,
+    "repeat_guests": 200
+  },
+  "segments": [
+    {
+      "name": "소노투웜",
+      "color": "#58a6ff",
+      "revenue": 533019018,
+      "rn": 1721,
+      "bookings": 1219,
+      "adr": 309714,
+      "share": 44.6
+    },
+    {
+      "name": "FIT(해외OTA)",
+      "color": "#e3b341",
+      "revenue": 549382815,
+      "rn": 1649,
+      "bookings": 951,
+      "adr": 333161,
+      "share": 46.0
+    },
+    {
+      "name": "FIT(국내OTA)",
+      "color": "#3fb950",
+      "revenue": 87784546,
+      "rn": 272,
+      "bookings": 217,
+      "adr": 322737,
+      "share": 7.3
+    },
+    {
+      "name": "FIT(기타)",
+      "color": "#79c0ff",
+      "revenue": 154545,
+      "rn": 1,
+      "bookings": 1,
+      "adr": 154545,
+      "share": 0.0
+    },
+    {
+      "name": "다이렉트",
+      "color": "#f0883e",
+      "revenue": 25197191,
+      "rn": 238,
+      "bookings": 113,
+      "adr": 105870,
+      "share": 2.1
+    }
+  ],
+  "monthly": [
+    {
+      "month": 1,
+      "label": "1월",
+      "revenue": 136364,
+      "rn": 0,
+      "occ": 0.0,
+      "adr": 0,
+      "avail_rn": 1767
+    },
+    {
+      "month": 2,
+      "label": "2월",
+      "revenue": 70675434,
+      "rn": 215,
+      "occ": 13.5,
+      "adr": 328722,
+      "avail_rn": 1596
+    },
+    {
+      "month": 3,
+      "label": "3월",
+      "revenue": 109205367,
+      "rn": 433,
+      "occ": 24.5,
+      "adr": 252206,
+      "avail_rn": 1767
+    },
+    {
+      "month": 4,
+      "label": "4월",
+      "revenue": 362344230,
+      "rn": 1381,
+      "occ": 80.8,
+      "adr": 262378,
+      "avail_rn": 1710
+    },
+    {
+      "month": 5,
+      "label": "5월",
+      "revenue": 478112642,
+      "rn": 1344,
+      "occ": 76.1,
+      "adr": 355738,
+      "avail_rn": 1767
+    },
+    {
+      "month": 6,
+      "label": "6월",
+      "revenue": 172611353,
+      "rn": 500,
+      "occ": 29.2,
+      "adr": 345222,
+      "avail_rn": 1710
+    },
+    {
+      "month": 7,
+      "label": "7월",
+      "revenue": 2452725,
+      "rn": 8,
+      "occ": 0.5,
+      "adr": 306590,
+      "avail_rn": 1767
+    }
+  ],
+  "channels": [
+    {
+      "name": "팔라티움 해운대 바이 소노펠리체",
+      "revenue": 558370754,
+      "rn": 1960,
+      "bookings": 1333,
+      "adr": 284883,
+      "cancel_rate": 26.6
+    },
+    {
+      "name": "아고다",
+      "revenue": 303007207,
+      "rn": 901,
+      "bookings": 568,
+      "adr": 336301,
+      "cancel_rate": 32.9
+    },
+    {
+      "name": "트립닷컴",
+      "revenue": 137616884,
+      "rn": 403,
+      "bookings": 216,
+      "adr": 341481,
+      "cancel_rate": 31.6
+    },
+    {
+      "name": "익스피디아",
+      "revenue": 60920545,
+      "rn": 194,
+      "bookings": 116,
+      "adr": 314023,
+      "cancel_rate": 26.1
+    },
+    {
+      "name": "놀유니버스",
+      "revenue": 58134543,
+      "rn": 180,
+      "bookings": 130,
+      "adr": 322969,
+      "cancel_rate": 26.1
+    },
+    {
+      "name": "부킹닷컴",
+      "revenue": 47838179,
+      "rn": 151,
+      "bookings": 51,
+      "adr": 316809,
+      "cancel_rate": 25.0
+    },
+    {
+      "name": "여기어때",
+      "revenue": 20285455,
+      "rn": 58,
+      "bookings": 58,
+      "adr": 349749,
+      "cancel_rate": 22.7
+    },
+    {
+      "name": "타이드스퀘어투어비스",
+      "revenue": 5476366,
+      "rn": 20,
+      "bookings": 15,
+      "adr": 273818,
+      "cancel_rate": 31.8
+    },
+    {
+      "name": "트립비토즈",
+      "revenue": 1928182,
+      "rn": 7,
+      "bookings": 7,
+      "adr": 275454,
+      "cancel_rate": 0.0
+    },
+    {
+      "name": "웹투어",
+      "revenue": 1489091,
+      "rn": 5,
+      "bookings": 5,
+      "adr": 297818,
+      "cancel_rate": 0.0
+    },
+    {
+      "name": "호텔패스",
+      "revenue": 470909,
+      "rn": 2,
+      "bookings": 2,
+      "adr": 235454,
+      "cancel_rate": 33.3
+    }
+  ],
+  "room_types": [
+    {
+      "name": "Premier Double VF(A1,A4,A5)",
+      "revenue": 237808956,
+      "rn": 631,
+      "adr": 376876,
+      "share": 19.9
+    },
+    {
+      "name": "Premier Double Ocean(A1,A4,A5)",
+      "revenue": 180670539,
+      "rn": 462,
+      "adr": 391061,
+      "share": 15.1
+    },
+    {
+      "name": "Premier Twin Ocean(A2)",
+      "revenue": 157687965,
+      "rn": 432,
+      "adr": 365018,
+      "share": 13.2
+    },
+    {
+      "name": "Premier Twin VF(A2)",
+      "revenue": 128383869,
+      "rn": 377,
+      "adr": 340540,
+      "share": 10.7
+    },
+    {
+      "name": "Deluxe Twin Ocean(A3)",
+      "revenue": 102515077,
+      "rn": 353,
+      "adr": 290410,
+      "share": 8.6
+    },
+    {
+      "name": "Superior(B1~B2)",
+      "revenue": 98871773,
+      "rn": 541,
+      "adr": 182757,
+      "share": 8.3
+    },
+    {
+      "name": "Deluxe Double Ocean(A3)",
+      "revenue": 91907771,
+      "rn": 325,
+      "adr": 282793,
+      "share": 7.7
+    },
+    {
+      "name": "Deluxe Twin VF(A3)",
+      "revenue": 62162514,
+      "rn": 248,
+      "adr": 250655,
+      "share": 5.2
+    },
+    {
+      "name": "Deluxe Double VF(A3)",
+      "revenue": 60126696,
+      "rn": 238,
+      "adr": 252633,
+      "share": 5.0
+    },
+    {
+      "name": "Deluxe High VF(D1~D2)",
+      "revenue": 41242629,
+      "rn": 129,
+      "adr": 319710,
+      "share": 3.4
+    },
+    {
+      "name": "Presidential(P2~P3)",
+      "revenue": 14602727,
+      "rn": 19,
+      "adr": 768564,
+      "share": 1.2
+    },
+    {
+      "name": "Deluxe Corner VF(B3)",
+      "revenue": 13927367,
+      "rn": 39,
+      "adr": 357111,
+      "share": 1.2
+    },
+    {
+      "name": "Prestige VF(P1,P4)",
+      "revenue": 3489595,
+      "rn": 7,
+      "adr": 498513,
+      "share": 0.3
+    },
+    {
+      "name": "Prestige Ocean(P1,P4)",
+      "revenue": 2140637,
+      "rn": 4,
+      "adr": 535159,
+      "share": 0.2
+    }
+  ],
+  "lead_time": [
+    {
+      "label": "당일~7일",
+      "count": 514
+    },
+    {
+      "label": "8~14일",
+      "count": 291
+    },
+    {
+      "label": "15~30일",
+      "count": 568
+    },
+    {
+      "label": "31~60일",
+      "count": 683
+    },
+    {
+      "label": "61~90일",
+      "count": 243
+    },
+    {
+      "label": "91일+",
+      "count": 7
+    }
+  ]
+}
