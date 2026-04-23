@@ -429,6 +429,19 @@ def main():
         except Exception as e:
             logger.error(f"Power BI 수집 실패 (크롤링 결과에는 영향 없음): {e}", exc_info=True)
 
+        # 전체 완료 후 추이 데이터 전처리
+        try:
+            from preprocess_trends import run as preprocess_run
+            from export_powerbi import load_output_config
+            out_cfg = load_output_config()
+            export_dir = Path(out_cfg["export_dir"])
+            analytics_dir = PROJECT_DIR / "analytics"
+            logger.info("=== 추이 전처리 시작 ===")
+            preprocess_run(export_dir, analytics_dir, parquet=True)
+            logger.info(f"=== 추이 전처리 완료 → {analytics_dir} ===")
+        except Exception as e:
+            logger.error(f"추이 전처리 실패 (크롤링 결과에는 영향 없음): {e}", exc_info=True)
+
 
 if __name__ == "__main__":
     main()

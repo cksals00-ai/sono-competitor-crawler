@@ -1,0 +1,50 @@
+ID,업무명,카테고리,상태,우선순위,담당자,완료일,비고,리포지토리
+A-1,야놀자 크롤링 구현,A. 경쟁사 OTA 가격 크롤링,완료,중간,alfred,2026-04,22개 사업장,sono-competitor-crawler
+A-2,트립닷컴 크롤링 구현,A. 경쟁사 OTA 가격 크롤링,완료,중간,alfred,2026-04,API 기반,sono-competitor-crawler
+A-3,네이버호텔 크롤링 구현,A. 경쟁사 OTA 가격 크롤링,완료,중간,alfred,2026-04,ID 매핑 필요,sono-competitor-crawler
+A-4,부킹닷컴 크롤링 분석,A. 경쟁사 OTA 가격 크롤링,완료,낮음,alfred,2026-04,"난이도 높음, 보류",sono-competitor-crawler
+A-5,자사몰(브랜드몰) 크롤링,A. 경쟁사 OTA 가격 크롤링,완료,높음,alfred,2026-04,"2단계 API(list→detail), userIndCd 버그 수정",sono-competitor-crawler
+A-6,브랜드몰 탭 UI 추가,A. 경쟁사 OTA 가격 크롤링,완료,중간,alfred,2026-04,"야놀자 왼쪽 배치, 네이버 트립닷컴 오른쪽 이동",sono-competitor-crawler
+A-7,크롤링 투숙일 기준 설정,A. 경쟁사 OTA 가격 크롤링,완료,높음,alfred,2026-04,"평일 금토, 연휴 전날~마지막날전날, 공휴일 API",sono-competitor-crawler
+A-8,경쟁사 모니터링 페이지 네비게이션,A. 경쟁사 OTA 가격 크롤링,완료,중간,alfred,2026-04,공통 네비바 추가,sono-competitor-crawler
+A-9,모바일 UI 최적화,A. 경쟁사 OTA 가격 크롤링,완료,중간,alfred,2026-04,스크롤 최소화,sono-competitor-crawler
+B-1,parse_raw_db.py 작성,B. Power BI → 로컬 DB 교체,완료,높음,alfred,2026-04,"온북 txt(27/28/43/44) 파싱, 이중집계 버그 수정",gs_daily_trend_news
+B-2,db_to_notes.py 작성 (collect_powerbi.py 대체),B. Power BI → 로컬 DB 교체,완료,높음,alfred,2026-04,"23개 사업장 권역별 집계, OTA TOP10, YoY",gs_daily_trend_news
+B-3,otb_data.json 생성,B. Power BI → 로컬 DB 교체,완료,중간,alfred,2026-04,"byYear[2022~2026], 12개월×23사업장",gs_daily_trend_news
+B-4,OTB 대시보드 연도 필터 (2022~2026),B. Power BI → 로컬 DB 교체,완료,중간,alfred,2026-04,탭 UI + 마우스 오버 툴팁,gs_daily_trend_news
+B-5,deploy.yml 수정 (GitHub Actions),B. Power BI → 로컬 DB 교체,완료,중간,alfred,2026-04,collect_powerbi.py → db_to_notes.py,gs_daily_trend_news
+B-6,온북 대시보드 전체 페이지 툴팁 적용,B. Power BI → 로컬 DB 교체,진행중,높음,alfred,,index.html 모든 차트에 마우스 오버 숫자,gs_daily_trend_news
+B-7,온북 대시보드 연도 선택 필터 전체 적용,B. Power BI → 로컬 DB 교체,진행중,높음,alfred,,2022~2026 전체,gs_daily_trend_news
+B-8,사업계획 budget 비교 + 오차 범위,B. Power BI → 로컬 DB 교체,대기,중간,alfred,,2026_budget.xlsx 연동,gs_daily_trend_news
+C-1,parse_palatium.py 작성,C. 팔라티움 해운대 대시보드,완료,높음,alfred,2026-04,"Excel 파서, classify_segment(), get_channel_name()",sono-competitor-crawler
+C-2,build_palatium.py 작성,C. 팔라티움 해운대 대시보드,완료,높음,alfred,2026-04,JSON→HTML 인라인 삽입,sono-competitor-crawler
+C-3,palatium.html 대시보드 제작,C. 팔라티움 해운대 대시보드,완료,높음,alfred,2026-04,"9+2개 차트, SVG 반원 게이지, KPI 카드",sono-competitor-crawler
+C-4,월별 선택 필터,C. 팔라티움 해운대 대시보드,완료,중간,alfred,2026-04,,sono-competitor-crawler
+C-5,세그먼트별 필터,C. 팔라티움 해운대 대시보드,완료,중간,alfred,2026-04,스노투웜/FIT/다이렉스,sono-competitor-crawler
+C-6,예약일자 슬라이서,C. 팔라티움 해운대 대시보드,완료,중간,alfred,2026-04,,sono-competitor-crawler
+C-7,거래처별 리포트,C. 팔라티움 해운대 대시보드,완료,중간,alfred,2026-04,"소노회원→""소노회원""/""D-멤버스"" 노출",sono-competitor-crawler
+C-8,투숙월 날짜별 실적 차트,C. 팔라티움 해운대 대시보드,완료,중간,alfred,2026-04,,sono-competitor-crawler
+C-9,예약일자별 누계추이 차트,C. 팔라티움 해운대 대시보드,완료,중간,alfred,2026-04,,sono-competitor-crawler
+C-10,목표달성률 반원 게이지,C. 팔라티움 해운대 대시보드,완료,중간,alfred,2026-04,"Rev 40억, RN 13200, ADR 30만, OCC 80%",sono-competitor-crawler
+C-11,Daily OTB 배너,C. 팔라티움 해운대 대시보드,완료,낮음,alfred,2026-04,어제 추가 예약건 수,sono-competitor-crawler
+C-12,다올 PMS DB 연동,C. 팔라티움 해운대 대시보드,진행중,🔴 긴급,alfred,,data/palatium_db/ 엑셀 파일 3개 확인,sono-competitor-crawler
+C-13,팔라티움 네비게이션 추가,C. 팔라티움 해운대 대시보드,완료,낮음,alfred,2026-04,트렌드 리포트에 링크,sono-competitor-crawler
+C-14,GitHub Pages 배포,C. 팔라티움 해운대 대시보드,완료,중간,alfred,2026-04,cksals00-ai.github.io/sono-competitor-crawler/palatium.html,sono-competitor-crawler
+D-1,86 패키지번호 자동 그룹핑 알고리즘,D. 패키지 자동 분류,완료,높음,alfred,2026-04,"22,902개→7,014 상품계열, Recall 100%",gs_daily_trend_news
+D-2,연도별 유사 상품 묶기,D. 패키지 자동 분류,완료,중간,alfred,2026-04,크로스-연도 계열 205개,gs_daily_trend_news
+D-3,분류 결과 엑셀 내보내기,D. 패키지 자동 분류,완료,중간,alfred,2026-04,86_package_groups_with_series.xlsx,gs_daily_trend_news
+D-4,온북 대시보드 패키지 차트 추가,D. 패키지 자동 분류,완료,중간,alfred,2026-04-23,"RN/ADR/REV, 연도 토글 5개, 랭킹 20행, 툴팁",gs_daily_trend_news
+E-1,거래처-국적 매핑 테이블 생성,E. 인바운드 거래처→국적 매핑,완료,중간,alfred,2026-04,"44,374행",gs_daily_trend_news
+E-2,인바운드 엑셀 내보내기,E. 인바운드 거래처→국적 매핑,완료,중간,alfred,2026-04,3시트: 전체/매핑/국적별 집계,gs_daily_trend_news
+F-1,공통 네비게이션 바,F. UI/UX 개선,완료,중간,alfred,2026-04,모든 페이지 간 이동,공통
+F-2,모바일 최적화,F. UI/UX 개선,완료,중간,alfred,2026-04,스크롤 최소화,공통
+F-3,마우스 오버 툴팁 (OTB),F. UI/UX 개선,완료,중간,alfred,2026-04,RN/ADR/REV/YoY,gs_daily_trend_news
+F-4,반원 게이지 목표달성률,F. UI/UX 개선,완료,중간,alfred,2026-04,SVG stroke-dasharray,sono-competitor-crawler
+F-5,메인기사 호텔/꽃 이미지 제거,F. UI/UX 개선,진행중,중간,alfred,,이모지 아닌 실제 이미지/SVG 아이콘,gs_daily_trend_news
+F-6,연도 선택 필터 (2022~2026),F. UI/UX 개선,부분완료,높음,alfred,,"OTB 적용 완료, index.html 전체 미적용",gs_daily_trend_news
+G-1,refresh_dashboards.py 통합 갱신 스크립트,G. 자동화 & 인프라,완료,높음,alfred,2026-04,온북+팔라티움,sono-competitor-crawler
+G-2,LaunchAgent 매일 06:00 자동 실행,G. 자동화 & 인프라,완료,높음,alfred,2026-04,com.sono.dashboard-refresh.plist,sono-competitor-crawler
+G-3,자동화 스크립트 main 머지,G. 자동화 & 인프라,대기,🔴 긴급,alfred,,"워크트리에만 존재, main 머지 필요",sono-competitor-crawler
+H-1,다올 PMS 시스템 분석,H. 다올 PMS 연동 조사,완료,중간,alfred,2026-04,"JSP 웹 기반, 로컬 에이전트 필요",sono-competitor-crawler
+H-2,맥 연동 방법 조사,H. 다올 PMS 연동 조사,완료,중간,alfred,2026-04,"윈도우 전용, Python 보안정책 제한",sono-competitor-crawler
+H-3,수기 전달 프로세스,H. 다올 PMS 연동 조사,진행중,낮음,alfred,,엑셀 export → data/palatium_db/,sono-competitor-crawler
