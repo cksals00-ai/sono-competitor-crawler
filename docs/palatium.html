@@ -185,6 +185,13 @@ body{font-family:'Noto Sans KR',-apple-system,'Apple SD Gothic Neo','Malgun Goth
   <div class="att-items" id="att-items"></div>
 </div>
 
+<!-- Daily OTB -->
+<div class="att-bar" id="otb-strip">
+  <span class="att-lbl">Daily OTB</span>
+  <div id="otb-items" style="display:flex;gap:20px;flex-wrap:wrap;flex:1;align-items:center"></div>
+  <span id="otb-date" style="font-size:11px;color:var(--mu)"></span>
+</div>
+
 <!-- KPI Grid (반원 게이지) -->
 <div class="kpi-grid">
   <div class="kpi-card" id="kpi-rev" style="--kc:#58a6ff">
@@ -391,6 +398,7 @@ const TTip = {
   titleColor:'#fff',bodyColor:'#c9d1d9',padding:10,
 };
 const GRID_OPTS = {color:GR,drawBorder:false};
+const _TIPDATA = {}; // tooltip metadata cache (RN/REV for charts that need it)
 
 // ── Filter state ──────────────────────────────────────────
 const F = {
@@ -487,6 +495,8 @@ function renderKPI(kpi){
     const vEl=document.getElementById(k.vi); if(vEl) vEl.textContent=k.val;
     const tEl=document.getElementById(k.ti); if(tEl) tEl.textContent=k.tgt;
     updateGauge(k.id,k.pct,k.color);
+    const card=document.getElementById(k.id);
+    if(card) card.title=`실적: ${k.val}\n목표: ${k.tgt}\n달성률: ${k.pct.toFixed(1)}%`;
   });
 }
 
@@ -598,7 +608,10 @@ function initMonthly(valid){
     type:'bar',data:{labels,datasets},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'bottom',labels:{color:TX,boxWidth:10,padding:10}},tooltip:{...TTip,mode:'index',
-        callbacks:{label:c=>`${c.dataset.label}: ${fW(c.raw)}원`}}},
+        callbacks:{
+          label:c=>c.dataset.type==='line'?`월 목표: ${fW(c.raw)}원`:(c.raw>0?`${c.dataset.label}: ${fW(c.raw)}원`:null),
+          footer:items=>{const t=items.filter(c=>c.dataset.type!=='line').reduce((s,c)=>s+c.raw,0);return t>0?['합계: '+fW(t)+'원']:[];}
+        }}},
       scales:{x:{stacked:true,grid:{color:GR},ticks:{color:TX}},
               y:{stacked:true,grid:{color:GR},ticks:{color:TX,callback:v=>fW(v)}}},
     }
@@ -616,6 +629,7 @@ function initSegADR(valid){
   const labels=SEG_DETAIL.filter(s=>agg[s].rn>0);
   const adrs=labels.map(s=>agg[s].rn?Math.round(agg[s].rev/agg[s].rn):0);
   const colors=labels.map(s=>SEG_COLORS[s]+'cc');
+  _TIPDATA.segAdr={rns:labels.map(s=>agg[s].rn), revs:labels.map(s=>agg[s].rev)};
 
   if(CH.segAdr){
     CH.segAdr.data.labels=labels;
@@ -634,7 +648,12 @@ function initSegADR(valid){
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'bottom',labels:{color:TX,boxWidth:10}},tooltip:{...TTip,
-        callbacks:{label:c=>c.dataset.type==='line'?`목표: ${fK(c.raw)}원`:`ADR: ${fK(c.raw)}원`}}},
+        callbacks:{label:c=>{
+          if(c.dataset.type==='line') return `목표 ADR: ${fK(c.raw)}원`;
+          const i=c.dataIndex, m=_TIPDATA.segAdr||{};
+          const rn=m.rns?m.rns[i]:0, rev=m.revs?m.revs[i]:0;
+          return [`ADR: ${fK(c.raw)}원`, `RN: ${rn.toLocaleString()}박`, `매출: ${fW(rev)}원`];
+        }}}},
       scales:{x:{grid:{color:GR},ticks:{color:TX}},
               y:{grid:{color:GR},ticks:{color:TX,callback:v=>fK(v)}}},
     }
@@ -731,7 +750,10 @@ function initDaily(rows, month){
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'bottom',labels:{color:TX,boxWidth:10}},tooltip:{...TTip,mode:'index',
-        callbacks:{label:c=>c.datasetIndex===0?`RN: ${c.raw}`:(`매출: ${fW(c.raw)}원`)}}},
+        callbacks:{
+          label:c=>c.datasetIndex===0?`RN: ${c.raw}박`:`매출: ${fW(c.raw)}원`,
+          footer:items=>{const rn=items.find(c=>c.datasetIndex===0)?.raw||0,rev=items.find(c=>c.datasetIndex===1)?.raw||0;return rn>0?['ADR: '+fK(Math.round(rev/rn))+'원']:[];}
+        }}},
       scales:{
         x:{grid:{color:GR},ticks:{color:TX}},
         y:{grid:{color:GR},ticks:{color:TX},position:'left',title:{display:true,text:'RN',color:TX}},
@@ -815,7 +837,10 @@ function initRoom(valid){
     type:'bar',data:{labels,datasets},
     options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
       plugins:{legend:{position:'bottom',labels:{color:TX,boxWidth:10,padding:8,font:{size:10}}},tooltip:{...TTip,mode:'index',
-        callbacks:{label:c=>`${c.dataset.label}: ${fW(c.raw)}원`}}},
+        callbacks:{
+          label:c=>c.raw>0?`${c.dataset.label}: ${fW(c.raw)}원`:null,
+          footer:items=>{const t=items.reduce((s,c)=>s+c.raw,0);return t>0?['합계: '+fW(t)+'원']:[];}
+        }}},
       scales:{
         x:{stacked:true,grid:{color:GR},ticks:{color:TX,callback:v=>fW(v)}},
         y:{stacked:true,grid:{color:GR},ticks:{color:TX}},
@@ -927,6 +952,36 @@ function renderInsights(valid, all){
     :'데이터 부족';
 }
 
+// ── Daily OTB ────────────────────────────────────────────
+function renderDailyOTB(){
+  const today=new Date();
+  const yday=new Date(today); yday.setDate(today.getDate()-1);
+  const yiso=yday.toISOString().slice(0,10);
+  const yrows=DATA.rows.filter(r=>r.bd===yiso);
+  const newRows=yrows.filter(r=>r.v===1&&r.k===0);
+  const cancelRows=yrows.filter(r=>r.k===1);
+  const newRN=newRows.reduce((s,r)=>s+r.n,0);
+  const newREV=newRows.reduce((s,r)=>s+r.r,0);
+  const cancelRN=cancelRows.reduce((s,r)=>s+r.n,0);
+  const netRN=newRN-cancelRN;
+  document.getElementById('otb-date').textContent=yiso+' 기준';
+  document.getElementById('otb-items').innerHTML=`
+    <div style="display:flex;gap:6px;align-items:baseline">
+      <span style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px">신규</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#58a6ff">+${newRows.length}건</span>
+      <span style="font-size:11px;color:var(--mu)">${newRN}박 · ${fW(newREV)}원</span>
+    </div>
+    <div style="display:flex;gap:6px;align-items:baseline">
+      <span style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px">취소</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--rd)">-${cancelRows.length}건</span>
+      <span style="font-size:11px;color:var(--mu)">${cancelRN}박</span>
+    </div>
+    <div style="display:flex;gap:6px;align-items:baseline;padding-left:16px;border-left:1px solid var(--bd)">
+      <span style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px">순증</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${netRN>=0?'var(--gr)':'var(--rd)'}">${netRN>=0?'+':''}${netRN}박</span>
+    </div>`;
+}
+
 // ── Master render ─────────────────────────────────────────
 function renderAll(){
   const all=getFiltered();
@@ -1033,6 +1088,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     `생성: ${DATA.generated_at}  ·  데이터: ${DATA.date_range.min} ~ ${DATA.date_range.max}  ·  소스: ${DATA.source_file}`;
   document.getElementById('footer').textContent=
     `팔라티움 해운대 바이 소노펠리체 · 57실 · VAT 제외 기준 · 생성: ${DATA.generated_at}`;
+  renderDailyOTB();
   setupFilters();
   renderAll();
 });
