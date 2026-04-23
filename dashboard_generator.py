@@ -1953,7 +1953,7 @@ td.golf-na-cell   { text-align: center; color: var(--muted); vertical-align: mid
 .legend-note  { color: var(--muted); font-size: 11px; }
 
 /* ── Main / Grid ── */
-.main { padding: 16px; max-width: 1800px; margin: 0 auto; }
+.main { padding: 16px; max-width: 1400px; margin: 0 auto; }
 .property-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -2190,12 +2190,12 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   .property-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 1200px) {
-  .property-grid { grid-template-columns: repeat(3, 1fr); }
+  .property-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 1920px) {
-  .main { max-width: 1900px; padding: 16px 40px; }
-  .header-inner { max-width: 1900px; }
-  .property-grid { grid-template-columns: repeat(3, 1fr); }
+  .main { max-width: 1400px; padding: 16px 40px; }
+  .header-inner { max-width: 1400px; }
+  .property-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ── Channel Sales Section ── */
