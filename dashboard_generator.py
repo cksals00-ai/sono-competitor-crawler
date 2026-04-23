@@ -21,12 +21,12 @@ import yaml
 logger = logging.getLogger(__name__)
 
 # ── 기능 플래그 ───────────────────────────────────────────────────────────────
-# 자사몰 API 수정 완료 전까지 자사몰 섹션 숨김
-_SHOW_HOMEPAGE_SECTION = False
+_SHOW_HOMEPAGE_SECTION = True
 
 # ── OTA 설정 ─────────────────────────────────────────────────────────────────
-OTA_ORDER   = ["야놀자", "네이버호텔", "Trip.com"]
+OTA_ORDER   = ["브랜드몰", "야놀자", "Trip.com", "네이버호텔"]
 OTA_SHORT   = {
+    "브랜드몰":  "브랜드몰",
     "야놀자":   "야놀자",
     "네이버호텔": "네이버호텔",
     "Trip.com": "Trip.com",
@@ -35,6 +35,7 @@ OTA_SHORT   = {
     "자사홈":   "자사홈",
 }
 OTA_CLASS   = {
+    "브랜드몰":  "brandmall",
     "야놀자":   "yanolja",
     "네이버호텔": "naver",
     "Trip.com": "tripcom",
@@ -555,6 +556,10 @@ def _normalize_ota(ota) -> str:
     if not ota_str:
         return ota_str
 
+    # 자사홈 → 브랜드몰
+    if ota_str == "자사홈":
+        return "브랜드몰"
+
     # 서브채널 매핑: "네이버호텔/야놀자" → "야놀자"
     _SUB_MAP = {
         "야놀자": "야놀자",
@@ -602,6 +607,8 @@ def _build_naver_url_map(df: pd.DataFrame) -> dict:
 def _get_ota_url(entity: dict, ota: str) -> str:
     """competitor dict 또는 own_urls dict에서 OTA 기본 URL 조합.
     entity에는 yanolja_url, agoda_url, naver_url, tripcom_hotel_id 등이 있다."""
+    if ota == "브랜드몰":
+        return ""
     if ota == "야놀자":
         return entity.get("yanolja_url", "")
     if ota == "여기어때":
@@ -1050,7 +1057,7 @@ def _render_homepage_section(
             is_p     = bool(row_min.get("is_promo", False)) or _is_promo(str(rt))
             clean_rt = _clean_room_type(str(rt))
             date_disp = _fmt_date(checkin)
-            prev_price = prev_per_date.get((prop_name, prop_name, "자사홈", checkin), 0)
+            prev_price = prev_per_date.get((prop_name, prop_name, "브랜드몰", checkin), 0)
             change     = _change_html(price, prev_price) if prev_price > 0 \
                          else ('<span class="badge-new">신규</span>' if prev_per_date else "")
             promo_html = ' <span class="badge-promo">특가</span>' if is_p else ""
@@ -1695,6 +1702,7 @@ _CSS = """
   --red:         #f85149;
   --yellow:      #e3b341;
   --orange:      #f0883e;
+  --c-brandmall: #9b59b6;
   --c-yanolja:   #ff4081;
   --c-naver:     #03c75a;
   --c-tripcom:   #0066cc;
@@ -2005,6 +2013,7 @@ th {
   white-space: nowrap;
 }
 th.competitor-col { text-align: left; min-width: 120px; }
+th.ota-brandmall { color: var(--c-brandmall); }
 th.ota-yanolja  { color: var(--c-yanolja);  }
 th.ota-naver    { color: var(--c-naver);    }
 th.ota-tripcom  { color: var(--c-tripcom);  }
