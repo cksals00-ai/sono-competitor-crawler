@@ -23,14 +23,24 @@ JSON_OUT = os.path.join(DATA_DIR, "palatium_data.json")
 
 
 def build():
-    # 1. Excel 파싱
-    print("→ Excel 파싱 중...")
-    data = parse(DATA_DIR)
-
-    # JSON 캐시 저장 (rows 배열이 크므로 compact 형태로)
-    with open(JSON_OUT, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
-    print(f"  ✓ JSON 저장: {JSON_OUT}")
+    # 1. 데이터 로딩: argv[1]로 DB 경로 지정 가능, 없으면 기존 JSON 캐시 사용
+    db_dir = sys.argv[1] if len(sys.argv) > 1 else None
+    if db_dir:
+        print(f"→ Excel 파싱 중... ({db_dir})")
+        data = parse(db_dir)
+        with open(JSON_OUT, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
+        print(f"  ✓ JSON 저장: {JSON_OUT}")
+    elif os.path.exists(JSON_OUT):
+        print(f"→ JSON 캐시 로드: {JSON_OUT}")
+        with open(JSON_OUT, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    else:
+        print("→ Excel 파싱 중... (data/)")
+        data = parse(DATA_DIR)
+        with open(JSON_OUT, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
+        print(f"  ✓ JSON 저장: {JSON_OUT}")
 
     rows = data["rows"]
     tgt  = data["targets"]

@@ -41,8 +41,14 @@ def load_df(path):
             break
     rows = list(ws.iter_rows(values_only=True))
     wb.close()
-    headers = [str(h).strip() if h else f"col_{i}" for i, h in enumerate(rows[0])]
-    return pd.DataFrame(rows[1:], columns=headers)
+    # 타이틀/날짜 행이 앞에 붙은 경우 실제 헤더 행 탐지
+    header_idx = 0
+    for i, row in enumerate(rows[:5]):
+        if "도착일자" in row:
+            header_idx = i
+            break
+    headers = [str(h).strip() if h else f"col_{i}" for i, h in enumerate(rows[header_idx])]
+    return pd.DataFrame(rows[header_idx + 1:], columns=headers)
 
 
 # ── BI 로직 (01_PowerBI_데이터가져오기.py와 동일) ─────────────────────────
