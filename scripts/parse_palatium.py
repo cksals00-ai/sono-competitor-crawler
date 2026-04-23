@@ -24,12 +24,11 @@ OVERSEAS_OTA = {"아고다","익스피디아","트립닷컴","부킹닷컴"}
 DOMESTIC_OTA = {"놀유니버스","여기어때","타이드스퀘어투어비스","웹투어"}
 
 
-def find_excel(data_dir):
-    for pat in [f"{data_dir}/*p_data*.xlsx", f"{data_dir}/*palatium*.xlsx", f"{data_dir}/*.xlsx"]:
-        hits = sorted(glob.glob(pat), key=os.path.getmtime, reverse=True)
-        if hits:
-            return hits[0]
-    raise FileNotFoundError(f"{data_dir}/ 에서 팔라티움 Excel 없음")
+def find_excels(data_dir):
+    hits = sorted(glob.glob(f"{data_dir}/*.xlsx"), key=os.path.getmtime)
+    if not hits:
+        raise FileNotFoundError(f"{data_dir}/ 에서 팔라티움 Excel 없음")
+    return hits
 
 
 def load_df(path):
@@ -41,8 +40,18 @@ def load_df(path):
             break
     rows = list(ws.iter_rows(values_only=True))
     wb.close()
-    headers = [str(h).strip() if h else f"col_{i}" for i, h in enumerate(rows[0])]
-    return pd.DataFrame(rows[1:], columns=headers)
+    # 다올 PMS 형식: 행0=제목, 행1=조회일, 행2=컬럼명, 행3~=데이터
+    header_idx = 0
+    for i, row in enumerate(rows[:5]):
+        if row[0] == "상태":
+            header_idx = i
+            break
+    headers = [str(h).strip() if h else f"col_{i}" for i, h in enumerate(rows[header_idx])]
+    data_rows = rows[header_idx + 1:]
+    # 마지막 푸터 행 제거 (총합계, Created by... 등)
+    data_rows = [r for r in data_rows
+                 if r[0] and str(r[0]) not in ("총합계",) and not str(r[0]).startswith("Created by")]
+    return pd.DataFrame(data_rows, columns=headers)
 
 
 # ── BI 로직 (01_PowerBI_데이터가져오기.py와 동일) ─────────────────────────
@@ -98,8 +107,14 @@ def classify_view(rt: str) -> str:
 
 # ─────────────────────────────────────────────────────────────────────────────
 def parse(data_dir: str = "data") -> dict:
-    path = find_excel(data_dir)
-    df = load_df(path)
+    paths = find_excels(data_dir)
+    frames = [load_df(p) for p in paths]
+    df = pd.concat(frames, ignore_index=True)
+    # 예약번호 기준 중복 제거 — 변경일시 최신 우선
+    if "예약번호" in df.columns and "변경일시" in df.columns:
+        df["변경일시_sort"] = pd.to_datetime(df["변경일시"], errors="coerce")
+        df = df.sort_values("변경일시_sort", ascending=False).drop_duplicates("예약번호").drop(columns=["변경일시_sort"])
+    path = paths[-1]  # source_file 표시용
 
     # 타입 변환
     for col in ["도착일자","출발일자","등록일시","취소일자"]:
@@ -161,7 +176,7 @@ def parse(data_dir: str = "data") -> dict:
     bd_series = df["등록일시"].dropna()
     return {
         "generated_at":    datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "source_file":     os.path.basename(path),
+        "source_file":     ", ".join(os.path.basename(p) for p in paths),
         "date_range": {
             "min": df["도착일자"].min().strftime("%Y-%m-%d") if pd.notna(df["도착일자"].min()) else "",
             "max": df["도착일자"].max().strftime("%Y-%m-%d") if pd.notna(df["도착일자"].max()) else "",

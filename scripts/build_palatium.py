@@ -18,14 +18,26 @@ from parse_palatium import parse
 
 TEMPLATE = os.path.join(PROJECT_DIR, "docs", "palatium.html")
 OUTPUT   = os.path.join(PROJECT_DIR, "docs", "palatium.html")
-DATA_DIR = os.path.join(PROJECT_DIR, "data")
-JSON_OUT = os.path.join(DATA_DIR, "palatium_data.json")
+DATA_DIR     = os.path.join(PROJECT_DIR, "data")
+JSON_OUT     = os.path.join(DATA_DIR, "palatium_data.json")
+PALATIUM_DB  = os.environ.get(
+    "PALATIUM_DB",
+    "/Users/chanminpark/Desktop/gs_daily_trend_news_public_temp/data/palatium_db"
+)
 
 
 def build():
-    # 1. Excel 파싱
-    print("→ Excel 파싱 중...")
-    data = parse(DATA_DIR)
+    # 1. Excel 파싱 (JSON 캐시 없거나 DB 디렉터리 지정 시 재파싱)
+    if os.path.exists(PALATIUM_DB) and os.path.isdir(PALATIUM_DB):
+        print(f"→ Excel 파싱 중... ({PALATIUM_DB})")
+        data = parse(PALATIUM_DB)
+    elif os.path.exists(JSON_OUT):
+        print(f"→ JSON 캐시 로드: {JSON_OUT}")
+        with open(JSON_OUT, encoding="utf-8") as f:
+            data = json.load(f)
+    else:
+        print("→ Excel 파싱 중...")
+        data = parse(DATA_DIR)
 
     # JSON 캐시 저장 (rows 배열이 크므로 compact 형태로)
     with open(JSON_OUT, "w", encoding="utf-8") as f:
