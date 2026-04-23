@@ -1300,7 +1300,7 @@ def _sono_login(cfg: dict) -> bool:
 
     if not user_id or not password:
         logger.warning(
-            "[자사홈] 로그인 정보 없음 — "
+            "[브랜드몰] 로그인 정보 없음 — "
             "환경변수 SONO_USER_ID / SONO_PASSWORD 또는 config.yaml sono_homepage 설정 필요"
         )
         return False
@@ -1340,17 +1340,17 @@ def _sono_login(cfg: dict) -> bool:
             _sono_mem_no      = str(user_info.get("memNo", "") or "")
             _sono_user_ind_cd = str(user_info.get("memInd", "") or "")
             logger.info(
-                f"[자사홈] 로그인 성공 "
+                f"[브랜드몰] 로그인 성공 "
                 f"(memNo={_sono_mem_no}, memInd={_sono_user_ind_cd})"
             )
             _sono_session = sess
             return True
         else:
-            logger.error(f"[자사홈] 로그인 실패: {fail_type or resp.status_code}")
+            logger.error(f"[브랜드몰] 로그인 실패: {fail_type or resp.status_code}")
             return False
 
     except Exception as e:
-        logger.error(f"[자사홈] 로그인 오류: {e}")
+        logger.error(f"[브랜드몰] 로그인 오류: {e}")
         return False
 
 
@@ -1447,7 +1447,7 @@ def crawl_sono_homepage(competitor: dict, checkin: str, checkout: str, cfg: dict
     if _sono_session is None:
         if not _sono_login(cfg):
             records.append(
-                _make_record(competitor, "자사홈", checkin, checkout, reservation_url, error="login_failed")
+                _make_record(competitor, "브랜드몰", checkin, checkout, reservation_url, error="login_failed")
             )
             return records
 
@@ -1486,21 +1486,21 @@ def crawl_sono_homepage(competitor: dict, checkin: str, checkout: str, cfg: dict
 
         # 세션 만료 → 재로그인 후 재시도
         if resp.status_code == 401:
-            logger.info("[자사홈] 세션 만료 — 재로그인 시도")
+            logger.info("[브랜드몰] 세션 만료 — 재로그인 시도")
             _sono_session = None
             _sono_mem_no = ""
             _sono_user_ind_cd = ""
             if not _sono_login(cfg):
                 records.append(
-                    _make_record(competitor, "자사홈", checkin, checkout, reservation_url, error="login_failed")
+                    _make_record(competitor, "브랜드몰", checkin, checkout, reservation_url, error="login_failed")
                 )
                 return records
             resp = _post_room_list()
 
         if resp.status_code != 200:
-            logger.error(f"[자사홈] {competitor['name']} {checkin}: HTTP {resp.status_code}")
+            logger.error(f"[브랜드몰] {competitor['name']} {checkin}: HTTP {resp.status_code}")
             records.append(
-                _make_record(competitor, "자사홈", checkin, checkout, reservation_url,
+                _make_record(competitor, "브랜드몰", checkin, checkout, reservation_url,
                              error=f"http_{resp.status_code}")
             )
             return records
@@ -1509,9 +1509,9 @@ def crawl_sono_homepage(competitor: dict, checkin: str, checkout: str, cfg: dict
         rooms = _parse_sono_rooms(data)
 
         if not rooms:
-            logger.warning(f"[자사홈] {competitor['name']} ({checkin}): 객실 데이터 없음")
+            logger.warning(f"[브랜드몰] {competitor['name']} ({checkin}): 객실 데이터 없음")
             records.append(
-                _make_record(competitor, "자사홈", checkin, checkout, reservation_url, error="no_room_data")
+                _make_record(competitor, "브랜드몰", checkin, checkout, reservation_url, error="no_room_data")
             )
             return records
 
@@ -1521,7 +1521,7 @@ def crawl_sono_homepage(competitor: dict, checkin: str, checkout: str, cfg: dict
                 property_name="",
                 property_id="",
                 competitor_name=competitor["name"],
-                ota="자사홈",
+                ota="브랜드몰",
                 checkin_date=checkin,
                 checkout_date=checkout,
                 room_type=room["name"],
@@ -1530,12 +1530,12 @@ def crawl_sono_homepage(competitor: dict, checkin: str, checkout: str, cfg: dict
                 url=reservation_url,
                 is_own=True,
             ))
-        logger.info(f"[자사홈] {competitor['name']} ({checkin}): {len(rooms)}개 객실")
+        logger.info(f"[브랜드몰] {competitor['name']} ({checkin}): {len(rooms)}개 객실")
 
     except Exception as e:
-        logger.error(f"[자사홈] {competitor['name']} {checkin} 오류: {e}")
+        logger.error(f"[브랜드몰] {competitor['name']} {checkin} 오류: {e}")
         records.append(
-            _make_record(competitor, "자사홈", checkin, checkout, reservation_url, error=str(e)[:100])
+            _make_record(competitor, "브랜드몰", checkin, checkout, reservation_url, error=str(e)[:100])
         )
 
     return records
@@ -2188,7 +2188,7 @@ def run_crawl(
         (crawl_agoda,          "Agoda"),
         (crawl_naver,          "네이버호텔"),
         (crawl_tripcom,        "Trip.com"),
-        (crawl_sono_homepage,  "자사홈"),
+        (crawl_sono_homepage,  "브랜드몰"),
     ]
     if ota_filter:
         crawlers = [(fn, name) for fn, name in all_crawlers if name in ota_filter]

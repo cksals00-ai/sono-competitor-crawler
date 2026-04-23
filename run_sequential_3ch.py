@@ -62,6 +62,10 @@ if __name__ == "__main__":
     df_naver = run_channel("네이버호텔", "/tmp/df_naver.pkl")
     dfs.append(df_naver)
 
+    # 4. 브랜드몰 (자사몰 — homepage_store_cd 있는 사업장만 수집)
+    df_brand = run_channel("브랜드몰", "/tmp/df_brandmall.pkl")
+    dfs.append(df_brand)
+
     # 합치기 + 내보내기
     df_all = pd.concat(dfs, ignore_index=True)
     logger.info(f"전체 합계: {len(df_all)}행")
@@ -94,7 +98,7 @@ if __name__ == "__main__":
     today = datetime.now().strftime("%Y-%m-%d %H:%M")
     for cmd in [
         ["git", "add", "exports/", "dashboard/", "docs/"],
-        ["git", "commit", "-m", f"crawl: 3채널 자동수집 {today} (야놀자+Trip.com+네이버)"],
+        ["git", "commit", "-m", f"crawl: 4채널 자동수집 {today} (브랜드몰+야놀자+Trip.com+네이버)"],
         ["git", "push"],
     ]:
         result = subprocess.run(cmd, cwd=PROJECT_DIR, capture_output=True, text=True)

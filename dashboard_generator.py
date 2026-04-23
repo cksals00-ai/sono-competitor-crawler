@@ -25,16 +25,18 @@ logger = logging.getLogger(__name__)
 _SHOW_HOMEPAGE_SECTION = False
 
 # ── OTA 설정 ─────────────────────────────────────────────────────────────────
-OTA_ORDER   = ["야놀자", "네이버호텔", "Trip.com"]
+OTA_ORDER   = ["브랜드몰", "야놀자", "Trip.com", "네이버호텔"]
 OTA_SHORT   = {
+    "브랜드몰":  "브랜드몰",
     "야놀자":   "야놀자",
     "네이버호텔": "네이버호텔",
     "Trip.com": "Trip.com",
     "여기어때":  "여기어때",
     "Agoda":   "Agoda",
-    "자사홈":   "자사홈",
+    "자사홈":   "브랜드몰",
 }
 OTA_CLASS   = {
+    "브랜드몰":  "homepage",
     "야놀자":   "yanolja",
     "네이버호텔": "naver",
     "Trip.com": "tripcom",
@@ -555,6 +557,10 @@ def _normalize_ota(ota) -> str:
     if not ota_str:
         return ota_str
 
+    # 구 OTA명 → 신 OTA명 (하위 호환)
+    if ota_str == "자사홈":
+        return "브랜드몰"
+
     # 서브채널 매핑: "네이버호텔/야놀자" → "야놀자"
     _SUB_MAP = {
         "야놀자": "야놀자",
@@ -1032,7 +1038,7 @@ def _render_homepage_section(
     mask = (
         (df_ok["property_name"] == prop_name) &
         (df_ok["competitor_name"] == prop_name) &
-        (df_ok["ota"] == "자사홈")
+        (df_ok["ota"] == "브랜드몰")
     )
     hp_df = df_ok[mask]
     avail = hp_df[hp_df["price"].fillna(0) > 0].copy()
@@ -1050,7 +1056,7 @@ def _render_homepage_section(
             is_p     = bool(row_min.get("is_promo", False)) or _is_promo(str(rt))
             clean_rt = _clean_room_type(str(rt))
             date_disp = _fmt_date(checkin)
-            prev_price = prev_per_date.get((prop_name, prop_name, "자사홈", checkin), 0)
+            prev_price = prev_per_date.get((prop_name, prop_name, "브랜드몰", checkin), 0)
             change     = _change_html(price, prev_price) if prev_price > 0 \
                          else ('<span class="badge-new">신규</span>' if prev_per_date else "")
             promo_html = ' <span class="badge-promo">특가</span>' if is_p else ""
