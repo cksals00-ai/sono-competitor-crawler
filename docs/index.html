@@ -776,9 +776,36 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   border-radius: 3px;
   border: 1px solid rgba(227,179,65,.2);
 }
+/* ── GSN ── */
+.gsn{background:#0b0f14;border-bottom:1px solid #1e2530;font-family:'Noto Sans KR',-apple-system,sans-serif;font-size:13px;position:relative;z-index:200}
+.gsn-wrap{max-width:1400px;margin:0 auto;padding:0 20px;height:42px;display:flex;align-items:center}
+.gsn-brand{color:#7a8794;text-decoration:none;font-weight:600;font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;margin-right:24px;padding-right:24px;border-right:1px solid #1e2530}
+.gsn-brand:hover{color:#c9d1d9}
+.gsn-brand-dot{color:#58a6ff}
+.gsn-links{display:flex;align-items:center;gap:2px;flex:1}
+.gsn-item{color:#7d8590;text-decoration:none;padding:4px 12px;border-radius:6px;white-space:nowrap;font-size:13px;transition:background .15s,color .15s;display:flex;align-items:center;gap:6px}
+.gsn-item:hover{background:#1a2232;color:#c9d1d9}
+.gsn-item.active{background:#1c2d3f;color:#58a6ff;font-weight:600}
+.gsn-toggle{display:none;background:none;border:none;color:#7d8590;cursor:pointer;padding:4px}
+@media(max-width:700px){.gsn-links{display:none;position:absolute;top:42px;left:0;right:0;background:#0b0f14;flex-direction:column;padding:8px 20px;border-bottom:1px solid #1e2530}.gsn-links.open{display:flex}.gsn-toggle{display:block}}
 </style>
 </head>
 <body>
+
+<nav class="gsn">
+  <div class="gsn-wrap">
+    <a class="gsn-brand" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/"><span class="gsn-brand-dot">◈</span> SONO GS팀</a>
+    <div class="gsn-links" id="gsn-links">
+      <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/" data-gsn="trend">트렌드 리포트</a>
+      <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/" data-gsn="monitor">경쟁사 모니터링</a>
+      <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/palatium.html" data-gsn="palatium">팔라티움 현황 리포트</a>
+    </div>
+    <button class="gsn-toggle" onclick="document.getElementById('gsn-links').classList.toggle('open')" aria-label="메뉴">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+<script>(function(){var h=location.href,m={trend:'gs_daily_trend_news_public_temp',monitor:'sono-competitor-crawler',palatium:'palatium'};document.querySelectorAll('.gsn-item[data-gsn]').forEach(function(a){var k=a.getAttribute('data-gsn');if(m[k]&&h.indexOf(m[k])!==-1)a.classList.add('active');});}());</script>
 
 <header class="header">
   <div class="header-inner">
