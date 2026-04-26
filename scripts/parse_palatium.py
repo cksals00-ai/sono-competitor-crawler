@@ -53,8 +53,10 @@ def load_df(path):
 
 # ── BI 로직 (01_PowerBI_데이터가져오기.py와 동일) ─────────────────────────
 def classify_segment(rt: str) -> str:
-    if "소노회원" in rt or "D-멤버스" in rt:
-        return "스노투웜"
+    if "소노회원" in rt:
+        return "소노회원"
+    if "D-멤버스" in rt:
+        return "D-멤버스"
     if rt == "FIT":
         return "FIT(OTA)"
     if any(k in rt for k in ["팔라티움", "Direct Call", "Walk-In", "Rack Rate"]):
@@ -73,8 +75,8 @@ def classify_fit_channel(seg: str, vendor: str) -> str | None:
 
 
 def get_channel_name(seg: str, rt: str, vendor: str) -> str:
-    if seg == "스노투웜":
-        return "소노회원" if "소노회원" in rt else "D-멤버스"
+    if seg in ("소노회원", "D-멤버스"):
+        return seg
     if seg == "FIT(OTA)":
         return vendor if vendor else "기타"
     if seg == "다이렉스":
