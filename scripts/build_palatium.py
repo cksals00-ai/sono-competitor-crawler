@@ -44,7 +44,7 @@ def build():
 
     rows = data["rows"]
     tgt  = data["targets"]
-    valid = [r for r in rows if r["v"] and r["seg"] != "기타"]
+    valid = [r for r in rows if r["v"]]
     rev  = sum(r["r"] for r in valid)
     rn   = sum(r["n"] for r in valid)
     print(f"  매출: {rev:,}원  ({rev/tgt['revenue']*100:.1f}%)")

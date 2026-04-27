@@ -60,7 +60,7 @@ def classify_segment(rt: str) -> str:
     if rt == "FIT":
         return "FIT(OTA)"
     if any(k in rt for k in ["팔라티움", "Direct Call", "Walk-In", "Rack Rate"]):
-        return "다이렉스"
+        return "홈페이지(다이렉트)"
     return "기타"
 
 
@@ -79,7 +79,7 @@ def get_channel_name(seg: str, rt: str, vendor: str) -> str:
         return seg
     if seg == "FIT(OTA)":
         return vendor if vendor else "기타"
-    if seg == "다이렉스":
+    if seg == "홈페이지(다이렉트)":
         if "Direct Call" in rt:
             return "전화예약"
         if "Walk-In" in rt:
@@ -192,7 +192,7 @@ if __name__ == "__main__":
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, separators=(",", ":"))
     rows  = result["rows"]
-    valid = [r for r in rows if r["v"] and r["seg"] != "기타"]
+    valid = [r for r in rows if r["v"]]
     rev   = sum(r["r"] for r in valid)
     rn    = sum(r["n"] for r in valid)
     print(f"✓ {out_path}  ({len(rows)}행)")
