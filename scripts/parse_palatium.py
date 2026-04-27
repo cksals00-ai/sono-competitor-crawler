@@ -25,14 +25,17 @@ DOMESTIC_OTA = {"놀유니버스","여기어때","타이드스퀘어투어비스
 
 
 def find_excel(data_dir):
-    for pat in [f"{data_dir}/*p_data*.xlsx", f"{data_dir}/*palatium*.xlsx", f"{data_dir}/*.xlsx"]:
+    """Excel 파일 탐색 — 여러 파일이면 전부 반환 (리스트)"""
+    for pat in [f"{data_dir}/*p_data*.xlsx", f"{data_dir}/*palatium*.xlsx",
+                f"{data_dir}/*예약정보조회*.xlsx", f"{data_dir}/*.xlsx"]:
         hits = sorted(glob.glob(pat), key=os.path.getmtime, reverse=True)
         if hits:
-            return hits[0]
+            return hits  # 리스트 반환
     raise FileNotFoundError(f"{data_dir}/ 에서 팔라티움 Excel 없음")
 
 
-def load_df(path):
+def _load_single(path):
+    """단일 xlsx → DataFrame"""
     wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
     ws = wb.active
     for s in wb.worksheets:
@@ -49,6 +52,24 @@ def load_df(path):
             break
     headers = [str(h).strip() if h else f"col_{i}" for i, h in enumerate(rows[header_idx])]
     return pd.DataFrame(rows[header_idx + 1:], columns=headers)
+
+
+def load_df(path):
+    """단일 파일 또는 여러 파일 합산 로드"""
+    if isinstance(path, list):
+        dfs = []
+        for p in path:
+            df = _load_single(p)
+            dfs.append(df)
+            print(f"  로드: {os.path.basename(p)} ({len(df)}행)")
+        combined = pd.concat(dfs, ignore_index=True)
+        # 예약번호 기준 중복 제거
+        before = len(combined)
+        if "예약번호" in combined.columns:
+            combined = combined.drop_duplicates(subset=["예약번호"], keep="last")
+        print(f"  합산: {before}행 → {len(combined)}행 (중복 {before - len(combined)}건 제거)")
+        return combined
+    return _load_single(path)
 
 
 # ── BI 로직 (01_PowerBI_데이터가져오기.py와 동일) ─────────────────────────
@@ -106,8 +127,9 @@ def classify_view(rt: str) -> str:
 
 # ─────────────────────────────────────────────────────────────────────────────
 def parse(data_dir: str = "data") -> dict:
-    path = find_excel(data_dir)
-    df = load_df(path)
+    paths = find_excel(data_dir)
+    df = load_df(paths)
+    path = paths[0] if isinstance(paths, list) else paths
 
     # 타입 변환
     for col in ["도착일자","출발일자","등록일시","취소일자"]:
