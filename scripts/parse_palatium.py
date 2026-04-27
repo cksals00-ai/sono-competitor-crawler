@@ -159,7 +159,7 @@ def parse(data_dir: str = "data") -> dict:
             "ch":  r["채널명"],
             "v":   int(r["is_valid"]),
             "k":   int(r["is_cancel"]),
-            "bd":  r["예약일자"],
+            "bd":  r["예약일자"] if pd.notna(r["예약일자"]) else None,
             "lead":int(r["리드타임"]) if pd.notna(r["리드타임"]) else None,
             "rt":  r["객실대분류"],
             "vw":  r["뷰타입"],
