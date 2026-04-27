@@ -402,9 +402,12 @@ const GRID_OPTS = {color:GR,drawBorder:false};
 const _TIPDATA = {}; // tooltip metadata cache (RN/REV for charts that need it)
 
 // ── Filter state ──────────────────────────────────────────
-const INIT_MONTH = new Date().getMonth()+1; // 현재 월 자동 선택
+// 데이터에 실제 존재하는 월 자동 감지 → 현재월 우선, 없으면 가장 최근월
+const _dataMonths = [...new Set(DATA.rows.map(r=>r.m).filter(m=>m!==null))].sort((a,b)=>a-b);
+const _curMonth = new Date().getMonth()+1;
+const INIT_MONTH = _dataMonths.includes(_curMonth) ? _curMonth : (_dataMonths.length ? _dataMonths[_dataMonths.length-1] : _curMonth);
 const F = {
-  months: new Set([INIT_MONTH]),
+  months: new Set(_dataMonths.length <= 3 ? _dataMonths : [INIT_MONTH]),
   segs:   new Set(SEG_MAIN),
   df: '', dt: '',
   basis: 'arrival',
@@ -1093,7 +1096,7 @@ function setupFilters(){
 
   // Reset
   document.getElementById('freset').onclick=()=>{
-    F.months=new Set([INIT_MONTH]);
+    F.months=new Set(_dataMonths.length <= 3 ? _dataMonths : [INIT_MONTH]);
     F.segs=new Set(SEG_MAIN);
     F.basis='arrival';
     F.df=DATA.date_range.min||''; F.dt=DATA.date_range.max||'';
