@@ -501,11 +501,11 @@ function renderAtt(kpi){
 // ── KPI cards ─────────────────────────────────────────────
 function renderKPI(kpi){
   const kd=[
-    {id:'kpi-rev', vi:'rv-val', ti:'rv-tgt', val:fW(kpi.rev)+'원', tgt:'목표 '+fW(TGT.revenue)+'원', pct:kpi.rev/TGT.revenue*100, color:'#58a6ff'},
-    {id:'kpi-rn',  vi:'rn-val', ti:'rn-tgt', val:kpi.rn.toLocaleString()+'박', tgt:'목표 '+TGT.rn.toLocaleString(), pct:kpi.rn/TGT.rn*100, color:'#3fb950'},
-    {id:'kpi-adr', vi:'adr-val',ti:'adr-tgt',val:fK(Math.round(kpi.adr))+'원', tgt:'목표 300K원', pct:kpi.adr/TGT.adr*100, color:'#e3b341'},
-    {id:'kpi-occ', vi:'occ-val',ti:'occ-tgt',val:(kpi.occ*100).toFixed(1)+'%', tgt:'목표 80%', pct:kpi.occ/TGT.occ*100, color:'#f0883e'},
-    {id:'kpi-rvp', vi:'rvp-val',ti:'rvp-tgt',val:fK(Math.round(kpi.revpar))+'원', tgt:'목표 222K원', pct:kpi.revpar/TGT.revpar*100, color:'#bc8cff'},
+    {id:'kpi-rev', vi:'rv-val', ti:'rv-tgt', val:fW(kpi.rev), tgt:'목표 '+fW(TGT.revenue)+'원', pct:kpi.rev/TGT.revenue*100, color:'#58a6ff'},
+    {id:'kpi-rn',  vi:'rn-val', ti:'rn-tgt', val:kpi.rn.toLocaleString(), tgt:'목표 '+TGT.rn.toLocaleString(), pct:kpi.rn/TGT.rn*100, color:'#3fb950'},
+    {id:'kpi-adr', vi:'adr-val',ti:'adr-tgt',val:fK(Math.round(kpi.adr)), tgt:'목표 300K원', pct:kpi.adr/TGT.adr*100, color:'#e3b341'},
+    {id:'kpi-occ', vi:'occ-val',ti:'occ-tgt',val:(kpi.occ*100).toFixed(1), tgt:'목표 80%', pct:kpi.occ/TGT.occ*100, color:'#f0883e'},
+    {id:'kpi-rvp', vi:'rvp-val',ti:'rvp-tgt',val:fK(Math.round(kpi.revpar)), tgt:'목표 222K원', pct:kpi.revpar/TGT.revpar*100, color:'#bc8cff'},
   ];
   kd.forEach(k=>{
     const vEl=document.getElementById(k.vi); if(vEl) vEl.textContent=k.val;
