@@ -1051,7 +1051,7 @@ def crawl_naver(competitor: dict, checkin: str, checkout: str, cfg: dict) -> lis
         result   = (data.get("data") or {}).get("domesticHotelRates") or {}
         rates    = result.get("rates") or []
         n_hotel_id = result.get("nHotelId") or hotel_id
-        naver_url  = f"https://hotels.naver.com/{n_hotel_id}/hotel"
+        naver_url  = f"https://hotels.naver.com/{n_hotel_id}/booking"
 
         # 호텔 별점 (GraphQL이 지원하는 경우; 미지원 시 0)
         try:
@@ -2130,10 +2130,10 @@ def generate_crawl_dates(days_ahead: int, cfg: dict) -> list:
                 crawl_dates.add(ci)
             ci += timedelta(days=1)
 
-    # 매주 금요일·토요일 체크인 추가
+    # 매주 수요일·금요일·토요일 체크인 추가 (수=주중 대표, 금=금요일, 토=토요일)
     d = start_d
     while d <= end_d:
-        if d.weekday() in (4, 5):  # 4=금요일, 5=토요일
+        if d.weekday() in (2, 4, 5):  # 2=수요일(주중), 4=금요일, 5=토요일
             crawl_dates.add(d)
         d += timedelta(days=1)
 

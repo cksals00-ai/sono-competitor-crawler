@@ -594,8 +594,11 @@ def _build_naver_url_map(df: pd.DataFrame) -> dict:
             (urls.str.len() > len("https://hotels.naver.com/"))
         ]
         if not valid.empty:
-            # 쿼리스트링 제거 후 베이스 URL만 보존
-            result[comp_name] = valid.iloc[0].split("?")[0]
+            # 쿼리스트링 제거 후 베이스 URL만 보존, /hotel → /booking 정규화
+            base = valid.iloc[0].split("?")[0]
+            if base.endswith("/hotel"):
+                base = base[:-len("/hotel")] + "/booking"
+            result[comp_name] = base
     return result
 
 
