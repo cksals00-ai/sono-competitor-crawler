@@ -776,9 +776,44 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   border-radius: 3px;
   border: 1px solid rgba(227,179,65,.2);
 }
+
+/* ── GSN (GS Suite Navigation) ── */
+.gsn{background:#0b0f14;border-bottom:1px solid #1e2530;font-size:13px;position:relative;z-index:200}
+.gsn-wrap{max-width:1400px;margin:0 auto;padding:0 20px;height:42px;display:flex;align-items:center}
+.gsn-brand{color:#7a8794;text-decoration:none;font-weight:600;font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;margin-right:24px;padding-right:24px;border-right:1px solid #1e2530}
+.gsn-brand:hover{color:#c9d1d9}
+.gsn-brand-dot{color:#58a6ff}
+.gsn-links{display:flex;align-items:center;gap:2px;flex:1}
+.gsn-item{color:var(--muted);text-decoration:none;padding:4px 12px;border-radius:6px;white-space:nowrap;font-size:13px;transition:background .15s,color .15s;display:flex;align-items:center;gap:6px}
+.gsn-item:hover{background:#1a2232;color:#c9d1d9}
+.gsn-item.active{background:#1c2d3f;color:#58a6ff;font-weight:600}
+.gsn-item[style*="display:none"]{display:none!important}
+.gsn-toggle{display:none;background:none;border:none;color:var(--muted);cursor:pointer;padding:5px;border-radius:4px;margin-left:auto}
+@media(max-width:900px){
+  .gsn-links{display:none;flex-direction:column;position:absolute;top:42px;left:0;right:0;background:#0b0f14;border-bottom:1px solid #1e2530;padding:8px 12px;gap:3px;z-index:300}
+  .gsn-links.open{display:flex}
+  .gsn-item{padding:8px 12px}
+  .gsn-toggle{display:flex;align-items:center;justify-content:center}
+}
 </style>
 </head>
 <body>
+
+<!-- GS Suite Navigation -->
+<nav class="gsn"><div class="gsn-wrap">
+  <a class="gsn-brand" href="https://chanmin-park.github.io/gs_daily_trend_news_public_temp/"><span class="gsn-brand-dot">◈</span> SONO GS팀</a>
+  <div class="gsn-links" id="gsn-links">
+    <a class="gsn-item" href="https://chanmin-park.github.io/gs_daily_trend_news_public_temp/" data-gsn="trend">트렌드 리포트</a>
+    <a class="gsn-item" href="https://chanmin-park.github.io/gs_daily_trend_news_public_temp/booking-status.html" data-gsn="booking">Booking Status</a>
+    <a class="gsn-item" href="https://chanmin-park.github.io/gs_daily_trend_news_public_temp/stay-date.html" data-gsn="stay-date">투숙일기준</a>
+    <a class="gsn-item" href="https://chanmin-park.github.io/gs_daily_trend_news_public_temp/otb.html" data-gsn="otb">OTB 분석</a>
+    <a class="gsn-item" href="https://chanmin-park.github.io/gs_daily_trend_news_public_temp/fcst-trend.html" data-gsn="fcst-trend">FCST 추이</a>
+    <a class="gsn-item" href="https://chanmin-park.github.io/gs_daily_trend_news_public_temp/action_plan_dashboard.html" data-gsn="action">Action Plan</a>
+    <a class="gsn-item active" href="./" data-gsn="monitor">경쟁사 모니터링</a>
+    <a class="gsn-item" href="https://chanmin-park.github.io/gs_daily_trend_news_public_temp/overseas.html" data-gsn="overseas" style="display:none">해외사업장</a>
+  </div>
+  <button class="gsn-toggle" onclick="document.getElementById('gsn-links').classList.toggle('open')" aria-label="메뉴"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+</div></nav>
 
 <header class="header">
   <div class="header-inner">
