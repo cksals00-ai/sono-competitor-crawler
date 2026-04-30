@@ -73,7 +73,7 @@ def _git_push_dashboard():
         return
 
     today = datetime.now().strftime("%Y-%m-%d %H:%M")
-    files_to_add = ["docs/index.html", "docs/palatium.html", "data/palatium_data.json"]
+    files_to_add = ["docs/index.html", "docs/palatium.html", "docs/palatium-client.html", "data/palatium_data.json"]
     cmds = [
         ["git", "add"] + files_to_add,
         ["git", "commit", "-m", f"dashboard: auto-update {today}"],
