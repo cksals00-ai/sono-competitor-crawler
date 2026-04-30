@@ -457,8 +457,31 @@ function computeKPI(valid){
   const rev=valid.reduce((s,r)=>s+r.r,0);
   const rn=valid.reduce((s,r)=>s+r.n,0);
   const avail=availRN();
-  const occ=avail?rn/avail:0;
+  const occ=avail?Math.min(rn/avail,1):0;
   return {rev,rn,avail,occ,adr:rn?rev/rn:0,revpar:avail?rev/avail:0};
+}
+// 세그별 목표 비율 계산 (전체 대비 선택 세그 비중)
+function getAdjustedTGT(){
+  const allSegs=new Set(SEG_MAIN);
+  if(F.segs.size===allSegs.size && [...allSegs].every(s=>F.segs.has(s))){
+    return TGT; // 전체 선택 → 원래 목표
+  }
+  // 선택 월 기준, 전체 세그 vs 선택 세그 비교
+  const monthRows=DATA.rows.filter(r=>{
+    const m=F.basis==='arrival'?r.m:r.bm;
+    return r.v===1 && (F.months.size>=12 || F.months.has(m));
+  });
+  const totalRev=monthRows.reduce((s,r)=>s+r.r,0);
+  const totalRn=monthRows.reduce((s,r)=>s+r.n,0);
+  const selRev=monthRows.filter(r=>F.segs.has(r.seg)).reduce((s,r)=>s+r.r,0);
+  const selRn=monthRows.filter(r=>F.segs.has(r.seg)).reduce((s,r)=>s+r.n,0);
+  const revRatio=totalRev?selRev/totalRev:0;
+  const rnRatio=totalRn?selRn/totalRn:0;
+  return {
+    revenue:Math.round(TGT.revenue*revRatio),
+    rn:Math.round(TGT.rn*rnRatio),
+    adr:TGT.adr, occ:TGT.occ, revpar:TGT.revpar
+  };
 }
 
 // ── Gauge ─────────────────────────────────────────────────
@@ -479,12 +502,13 @@ function updateGauge(cardId, pct, color){
 
 // ── Attainment bar ────────────────────────────────────────
 function renderAtt(kpi){
+  const T=getAdjustedTGT();
   const items=[
-    {lbl:'매출',pct:kpi.rev/TGT.revenue*100,color:'#58a6ff'},
-    {lbl:'RN',  pct:kpi.rn/TGT.rn*100,     color:'#3fb950'},
-    {lbl:'ADR', pct:kpi.adr/TGT.adr*100,   color:'#e3b341'},
-    {lbl:'OCC', pct:kpi.occ/TGT.occ*100,   color:'#f0883e'},
-    {lbl:'RevPAR',pct:kpi.revpar/TGT.revpar*100,color:'#bc8cff'},
+    {lbl:'매출',pct:T.revenue?kpi.rev/T.revenue*100:0,color:'#58a6ff'},
+    {lbl:'RN',  pct:T.rn?kpi.rn/T.rn*100:0,     color:'#3fb950'},
+    {lbl:'ADR', pct:T.adr?kpi.adr/T.adr*100:0,   color:'#e3b341'},
+    {lbl:'OCC', pct:T.occ?kpi.occ/T.occ*100:0,   color:'#f0883e'},
+    {lbl:'RevPAR',pct:T.revpar?kpi.revpar/T.revpar*100:0,color:'#bc8cff'},
   ];
   const w=document.getElementById('att-items');
   w.innerHTML='';
@@ -501,12 +525,13 @@ function renderAtt(kpi){
 
 // ── KPI cards ─────────────────────────────────────────────
 function renderKPI(kpi){
+  const T=getAdjustedTGT();
   const kd=[
-    {id:'kpi-rev', vi:'rv-val', ti:'rv-tgt', val:fW(kpi.rev), tgt:'목표 '+fW(TGT.revenue)+'원', pct:kpi.rev/TGT.revenue*100, color:'#58a6ff'},
-    {id:'kpi-rn',  vi:'rn-val', ti:'rn-tgt', val:kpi.rn.toLocaleString(), tgt:'목표 '+TGT.rn.toLocaleString(), pct:kpi.rn/TGT.rn*100, color:'#3fb950'},
-    {id:'kpi-adr', vi:'adr-val',ti:'adr-tgt',val:fK(Math.round(kpi.adr)), tgt:'목표 300K원', pct:kpi.adr/TGT.adr*100, color:'#e3b341'},
-    {id:'kpi-occ', vi:'occ-val',ti:'occ-tgt',val:(kpi.occ*100).toFixed(1), tgt:'목표 80%', pct:kpi.occ/TGT.occ*100, color:'#f0883e'},
-    {id:'kpi-rvp', vi:'rvp-val',ti:'rvp-tgt',val:fK(Math.round(kpi.revpar)), tgt:'목표 222K원', pct:kpi.revpar/TGT.revpar*100, color:'#bc8cff'},
+    {id:'kpi-rev', vi:'rv-val', ti:'rv-tgt', val:fW(kpi.rev), tgt:'목표 '+fW(T.revenue)+'원', pct:T.revenue?kpi.rev/T.revenue*100:0, color:'#58a6ff'},
+    {id:'kpi-rn',  vi:'rn-val', ti:'rn-tgt', val:kpi.rn.toLocaleString(), tgt:'목표 '+T.rn.toLocaleString(), pct:T.rn?kpi.rn/T.rn*100:0, color:'#3fb950'},
+    {id:'kpi-adr', vi:'adr-val',ti:'adr-tgt',val:fK(Math.round(kpi.adr)), tgt:'목표 '+fK(T.adr)+'원', pct:T.adr?kpi.adr/T.adr*100:0, color:'#e3b341'},
+    {id:'kpi-occ', vi:'occ-val',ti:'occ-tgt',val:(kpi.occ*100).toFixed(1), tgt:'목표 '+(T.occ*100).toFixed(0)+'%', pct:T.occ?kpi.occ/T.occ*100:0, color:'#f0883e'},
+    {id:'kpi-rvp', vi:'rvp-val',ti:'rvp-tgt',val:fK(Math.round(kpi.revpar)), tgt:'목표 '+fK(T.revpar)+'원', pct:T.revpar?kpi.revpar/T.revpar*100:0, color:'#bc8cff'},
   ];
   kd.forEach(k=>{
     const vEl=document.getElementById(k.vi); if(vEl) vEl.textContent=k.val;
