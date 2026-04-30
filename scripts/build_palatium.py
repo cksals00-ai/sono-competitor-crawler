@@ -73,6 +73,21 @@ def build():
         f.write(html)
     print(f"  ✓ HTML 빌드 완료: {OUTPUT}")
 
+    # 5. 고객사 전달용 (네비게이터 제거) — palatium-client.html
+    client_html = html
+    # GSN 네비게이터 제거
+    client_html = re.sub(r'<nav class="gsn">.*?</nav>', '', client_html, count=1, flags=re.DOTALL)
+    # GSN CSS 제거
+    client_html = re.sub(r'/\* ── GSN ── \*/.*?(?=\n/\*)', '', client_html, count=1, flags=re.DOTALL)
+    # header sticky top 조정 (42px → 0)
+    client_html = client_html.replace('top:42px', 'top:0', 1) if 'top:42px' in client_html else client_html
+    # 제목 변경
+    client_html = client_html.replace('팔라티움 해운대 리포트 | SONO GS팀', '팔라티움 해운대 리포트')
+    client_out = os.path.join(PROJECT_DIR, "docs", "palatium-client.html")
+    with open(client_out, "w", encoding="utf-8") as f:
+        f.write(client_html)
+    print(f"  ✓ 고객사용 빌드 완료: {client_out}")
+
 
 if __name__ == "__main__":
     build()
