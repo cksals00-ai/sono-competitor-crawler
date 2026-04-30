@@ -463,23 +463,29 @@ function computeKPI(valid){
 // 세그별 목표 비율 계산 (전체 대비 선택 세그 비중)
 function getAdjustedTGT(){
   const allSegs=new Set(SEG_MAIN);
-  if(F.segs.size===allSegs.size && [...allSegs].every(s=>F.segs.has(s))){
-    return TGT; // 전체 선택 → 원래 목표
+  const allSegSelected=F.segs.size===allSegs.size && [...allSegs].every(s=>F.segs.has(s));
+  const allMonthSelected=F.months.size>=12;
+  // 전체 선택 → 원래 목표
+  if(allSegSelected && allMonthSelected) return TGT;
+  // 월별 비율: 선택 월 수 / 12
+  const monthRatio=allMonthSelected ? 1 : F.months.size/12;
+  // 세그 비율: 선택 월 범위 내에서 세그 비중 계산
+  let segRevRatio=1, segRnRatio=1;
+  if(!allSegSelected){
+    const monthRows=DATA.rows.filter(r=>{
+      const m=F.basis==='arrival'?r.m:r.bm;
+      return r.v===1 && (allMonthSelected || F.months.has(m));
+    });
+    const totalRev=monthRows.reduce((s,r)=>s+r.r,0);
+    const totalRn=monthRows.reduce((s,r)=>s+r.n,0);
+    const selRev=monthRows.filter(r=>F.segs.has(r.seg)).reduce((s,r)=>s+r.r,0);
+    const selRn=monthRows.filter(r=>F.segs.has(r.seg)).reduce((s,r)=>s+r.n,0);
+    segRevRatio=totalRev?selRev/totalRev:0;
+    segRnRatio=totalRn?selRn/totalRn:0;
   }
-  // 선택 월 기준, 전체 세그 vs 선택 세그 비교
-  const monthRows=DATA.rows.filter(r=>{
-    const m=F.basis==='arrival'?r.m:r.bm;
-    return r.v===1 && (F.months.size>=12 || F.months.has(m));
-  });
-  const totalRev=monthRows.reduce((s,r)=>s+r.r,0);
-  const totalRn=monthRows.reduce((s,r)=>s+r.n,0);
-  const selRev=monthRows.filter(r=>F.segs.has(r.seg)).reduce((s,r)=>s+r.r,0);
-  const selRn=monthRows.filter(r=>F.segs.has(r.seg)).reduce((s,r)=>s+r.n,0);
-  const revRatio=totalRev?selRev/totalRev:0;
-  const rnRatio=totalRn?selRn/totalRn:0;
   return {
-    revenue:Math.round(TGT.revenue*revRatio),
-    rn:Math.round(TGT.rn*rnRatio),
+    revenue:Math.round(TGT.revenue*monthRatio*segRevRatio),
+    rn:Math.round(TGT.rn*monthRatio*segRnRatio),
     adr:TGT.adr, occ:TGT.occ, revpar:TGT.revpar
   };
 }
