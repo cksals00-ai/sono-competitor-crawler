@@ -177,7 +177,7 @@ def parse(data_dir: str = "data") -> dict:
             "r":   int(r["총합계"]),
             "n":   int(r["RN"]),
             "seg": r["세그먼트"],
-            "fit": r["FIT채널구분"],
+            "fit": r["FIT채널구분"] if pd.notna(r["FIT채널구분"]) else None,
             "ch":  r["채널명"],
             "v":   int(r["is_valid"]),
             "k":   int(r["is_cancel"]),
@@ -202,6 +202,12 @@ def parse(data_dir: str = "data") -> dict:
         },
         "targets":        TARGETS,
         "monthly_rev_target": round(TARGETS["revenue"] / 12),
+        "monthly_targets": {
+            str(m): {
+                "rev": round(TARGETS["revenue"] / 12),
+                "rn":  round(TARGETS["rn"] / 12),
+            } for m in range(1, 13)
+        },
         "avail_by_month": avail_by_month,
         "rows":           rows_out,
     }
