@@ -14,7 +14,7 @@ SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 
 sys.path.insert(0, SCRIPT_DIR)
-from parse_palatium import parse
+from parse_palatium import parse, _find_business_plan, _load_business_plan, _build_targets, REV_UPLIFT
 
 TEMPLATE = os.path.join(PROJECT_DIR, "docs", "palatium.html")
 OUTPUT   = os.path.join(PROJECT_DIR, "docs", "palatium.html")
@@ -41,6 +41,19 @@ def build():
         with open(JSON_OUT, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
         print(f"  ✓ JSON 저장: {JSON_OUT}")
+
+    # 사업계획 Excel이 있으면 캐시된 targets/monthly_targets를 갱신 (매출 +1%)
+    plan_path = _find_business_plan(DATA_DIR)
+    if plan_path:
+        plan = _load_business_plan(plan_path)
+        targets, monthly_targets, plan_src = _build_targets(plan)
+        data["targets"]             = targets
+        data["monthly_targets"]     = monthly_targets
+        data["monthly_rev_target"]  = round(targets["revenue"] / 12)
+        data["business_plan_source"] = plan_src
+        with open(JSON_OUT, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
+        print(f"  ✓ 사업계획 목표 반영: {plan_src} (매출 +{(REV_UPLIFT-1)*100:.0f}%)")
 
     rows = data["rows"]
     tgt  = data["targets"]

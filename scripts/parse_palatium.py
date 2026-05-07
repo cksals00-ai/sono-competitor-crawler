@@ -12,26 +12,104 @@ import pandas as pd
 
 TOTAL_ROOMS = 57
 YEAR = 2026
-TARGETS = {
+REV_UPLIFT = 1.01  # 사업계획 매출 × 1.01 = 최종 목표 (수수료 1% 가산)
+DEFAULT_TARGETS = {  # 사업계획 Excel 부재 시 fallback
     "revenue": 4_000_000_000,
     "rn":      13_200,
     "adr":     300_000,
     "occ":     0.80,
     "revpar":  222_000,
 }
+BUSINESS_PLAN_PATTERNS = ["*사업계획*.xlsx", "*business_plan*.xlsx", "*BusinessPlan*.xlsx"]
 VALID_STATUSES = {"Checked Out","Reservation","In House","Assigned Room","Holding Check Out"}
 OVERSEAS_OTA = {"아고다","익스피디아","트립닷컴","부킹닷컴"}
 DOMESTIC_OTA = {"놀유니버스","여기어때","타이드스퀘어투어비스","웹투어"}
 
 
 def find_excel(data_dir):
-    """Excel 파일 탐색 — 여러 파일이면 전부 반환 (리스트)"""
+    """Excel 파일 탐색 — 사업계획 Excel은 제외하고 예약정보조회만 반환 (리스트)"""
     for pat in [f"{data_dir}/*p_data*.xlsx", f"{data_dir}/*palatium*.xlsx",
-                f"{data_dir}/*예약정보조회*.xlsx", f"{data_dir}/*.xlsx"]:
-        hits = sorted(glob.glob(pat), key=os.path.getmtime, reverse=True)
+                f"{data_dir}/**/*예약정보조회*.xlsx", f"{data_dir}/*예약정보조회*.xlsx"]:
+        hits = sorted(glob.glob(pat, recursive=True), key=os.path.getmtime, reverse=True)
+        hits = [h for h in hits if "사업계획" not in os.path.basename(h)]
         if hits:
-            return hits  # 리스트 반환
-    raise FileNotFoundError(f"{data_dir}/ 에서 팔라티움 Excel 없음")
+            return hits
+    raise FileNotFoundError(f"{data_dir}/ 에서 팔라티움 예약정보조회 Excel 없음")
+
+
+def _find_business_plan(data_dir: str):
+    """사업계획 Excel 탐색 (재귀)"""
+    for pat in BUSINESS_PLAN_PATTERNS:
+        hits = sorted(
+            glob.glob(f"{data_dir}/**/{pat}", recursive=True) +
+            glob.glob(f"{data_dir}/{pat}"),
+            key=os.path.getmtime, reverse=True,
+        )
+        if hits:
+            return hits[0]
+    return None
+
+
+def _load_business_plan(path: str) -> dict:
+    """요약 시트 R7~R10 → 월별/연간 사업계획 목표 (천원/실 단위는 시트 그대로)"""
+    wb = openpyxl.load_workbook(path, data_only=True, read_only=True)
+    if "요약" not in wb.sheetnames:
+        wb.close()
+        raise ValueError(f"{path}: '요약' 시트 없음")
+    ws = wb["요약"]
+    annual = {
+        "rn":  ws.cell(7, 4).value,    # D7: 판매객실수(실) 합계
+        "occ": ws.cell(8, 4).value,    # D8: 투숙률
+        "adr": ws.cell(9, 4).value,    # D9: ADR(천원)
+        "rev": ws.cell(10, 4).value,   # D10: 매출액(천원)
+    }
+    monthly = {}
+    for m in range(1, 13):
+        col = 4 + m  # E=5 → 1월
+        monthly[m] = {
+            "rn":  ws.cell(7, col).value,
+            "occ": ws.cell(8, col).value,
+            "adr": ws.cell(9, col).value,
+            "rev": ws.cell(10, col).value,
+        }
+    wb.close()
+    return {"annual": annual, "monthly": monthly, "source": os.path.basename(path)}
+
+
+def _build_targets(plan: dict | None) -> tuple[dict, dict, str | None]:
+    """사업계획 → targets / monthly_targets. 매출에만 REV_UPLIFT(1.01) 적용."""
+    if plan is None:
+        default_monthly = {
+            str(m): {
+                "rev": round(DEFAULT_TARGETS["revenue"] / 12),
+                "rn":  round(DEFAULT_TARGETS["rn"] / 12),
+            } for m in range(1, 13)
+        }
+        return DEFAULT_TARGETS, default_monthly, None
+
+    a = plan["annual"]
+    m = plan["monthly"]
+    annual_rev = round(float(a["rev"]) * 1000 * REV_UPLIFT)  # 천원→원, 수수료 1% 가산
+    annual_rn  = int(round(float(a["rn"])))
+    annual_adr = int(round(float(a["adr"]) * 1000))           # 천원→원 (수수료 미적용)
+    annual_occ = round(float(a["occ"]), 4)
+    plan_avail = round(annual_rn / annual_occ) if annual_occ > 0 else 0
+    annual_revpar = round(annual_rev / plan_avail) if plan_avail else 0
+
+    targets = {
+        "revenue": annual_rev,
+        "rn":      annual_rn,
+        "adr":     annual_adr,
+        "occ":     annual_occ,
+        "revpar":  annual_revpar,
+    }
+    monthly_targets = {
+        str(mm): {
+            "rev": round(float(m[mm]["rev"]) * 1000 * REV_UPLIFT),
+            "rn":  int(round(float(m[mm]["rn"]))),
+        } for mm in range(1, 13)
+    }
+    return targets, monthly_targets, plan["source"]
 
 
 def _load_single(path):
@@ -167,6 +245,15 @@ def parse(data_dir: str = "data") -> dict:
     avail_by_month = {str(m): calendar.monthrange(YEAR, m)[1] * TOTAL_ROOMS
                       for m in range(1, 13)}
 
+    # 사업계획 Excel 탐색 → targets / monthly_targets 동적 생성
+    plan_path = _find_business_plan(data_dir)
+    plan = _load_business_plan(plan_path) if plan_path else None
+    targets, monthly_targets, plan_src = _build_targets(plan)
+    if plan_src:
+        print(f"  ✓ 사업계획 적용: {plan_src} (매출 +{(REV_UPLIFT-1)*100:.0f}%)")
+    else:
+        print(f"  ⚠ 사업계획 Excel 미발견 — 기본 TARGETS 사용")
+
     # Slim rows 배열 (클라이언트 필터링용)
     rows_out = []
     for _, r in df.iterrows():
@@ -200,14 +287,10 @@ def parse(data_dir: str = "data") -> dict:
             "min": bd_series.min().strftime("%Y-%m-%d") if len(bd_series) else "",
             "max": bd_series.max().strftime("%Y-%m-%d") if len(bd_series) else "",
         },
-        "targets":        TARGETS,
-        "monthly_rev_target": round(TARGETS["revenue"] / 12),
-        "monthly_targets": {
-            str(m): {
-                "rev": round(TARGETS["revenue"] / 12),
-                "rn":  round(TARGETS["rn"] / 12),
-            } for m in range(1, 13)
-        },
+        "targets":        targets,
+        "monthly_rev_target": round(targets["revenue"] / 12),
+        "monthly_targets": monthly_targets,
+        "business_plan_source": plan_src,
         "avail_by_month": avail_by_month,
         "rows":           rows_out,
     }
