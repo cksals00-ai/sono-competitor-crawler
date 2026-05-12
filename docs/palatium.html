@@ -304,7 +304,7 @@ body{font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',-apple-system,'
     <table class="dtbl" id="ch-tbl">
       <thead><tr>
         <th>세그먼트</th><th>채널명</th>
-        <th class="r">매출</th><th class="r">RN</th><th class="r">ADR</th><th class="r">예약</th><th class="r">취소율</th><th class="r">리드타임</th>
+        <th class="r">객실수</th><th class="r">매출</th><th class="r">ADR</th><th class="r">취소율</th><th class="r">리드타임</th>
       </tr></thead>
       <tbody id="ch-tbody"></tbody>
     </table>
@@ -767,10 +767,9 @@ function renderChTable(rows){
     tbody.innerHTML+=`<tr>
       <td><span class="seg-dot" style="background:${segColor}"></span>${c.seg}</td>
       <td>${c.ch}</td>
-      <td class="r">${fW(c.rev)}원</td>
       <td class="r">${c.rn.toLocaleString()}</td>
+      <td class="r">${fW(c.rev)}원</td>
       <td class="r">${fK(adr)}원</td>
-      <td class="r">${c.all.toLocaleString()}</td>
       <td class="r ${crCls}">${cr.toFixed(1)}%</td>
       <td class="r">${lead}</td>
     </tr>`;
