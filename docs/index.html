@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
 .gsn{background:#0b0f14;border-bottom:1px solid #1e2530;font-family:'Noto Sans KR',-apple-system,sans-serif;font-size:13px;position:sticky;top:0;z-index:200}
 .gsn-wrap{max-width:1400px;margin:0 auto;padding:0 20px;height:42px;display:flex;align-items:center}
@@ -968,11 +969,12 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       </button>
       <button class="sb-item" type="button" data-view="yoy" data-toggle="submenu">
         <svg class="sb-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
-        <span class="sb-item-label">시장점유율</span>
+        <span class="sb-item-label">시장 현황</span>
         <span class="sb-caret">▸</span>
       </button>
       <div class="sb-submenu" id="sb-yoy-submenu">
         <button class="sb-sub-item active" type="button" data-view="yoy" data-month="2026-04">2026년 4월</button>
+        <button class="sb-sub-item" type="button" data-view="trend">월 추이</button>
       </div>
     </div>
   </aside>
@@ -998,7 +1000,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
 </div>
 
 
-<!-- ═══ YoY 시장 점유율 비교 섹션 ═══ -->
+<!-- ═══ YoY 시장 현황 비교 섹션 ═══ -->
 <style>
 .yoy-section{background:var(--bg);border-bottom:1px solid var(--border);padding:0}
 .yoy-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 10px;max-width:1400px;margin:0 auto}
@@ -1045,7 +1047,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
 <div class="yoy-section" id="yoy-market-section">
 <div class="yoy-header">
   <div>
-    <div class="yoy-title">시장 점유율 YoY 비교 <span class="yoy-title-badge">4월 기준</span></div>
+    <div class="yoy-title">시장 현황 YoY 비교 <span class="yoy-title-badge">4월 기준</span></div>
     <div class="yoy-subtitle">112번 사업장 · 2025년 4월 vs 2026년 4월 · 전체 54개 시설</div>
   </div>
 </div>
@@ -1145,7 +1147,131 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
 </div>
 </div>
 </div>
-<!-- ═══ /YoY 시장 점유율 비교 섹션 ═══ -->
+<!-- ═══ /YoY 시장 현황 비교 섹션 ═══ -->
+
+
+<!-- ═══ 월 추이 차트 섹션 ═══ -->
+<style>
+.trend-section{background:var(--bg);border-bottom:1px solid var(--border);padding:14px 0 20px}
+.trend-inner{max-width:1400px;margin:0 auto;padding:0 20px}
+.trend-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.trend-title{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.trend-title-badge{font-size:10px;background:rgba(88,166,255,.12);color:var(--accent);padding:2px 8px;border-radius:10px;font-weight:600}
+.trend-subtitle{font-size:11px;color:var(--muted);margin-top:2px}
+.trend-mode-toggle{display:inline-flex;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.trend-mode-btn{background:none;border:none;color:var(--muted);font-family:inherit;font-size:11px;padding:6px 14px;cursor:pointer;font-weight:600;letter-spacing:.3px;transition:all .15s}
+.trend-mode-btn:not(:last-child){border-right:1px solid var(--border)}
+.trend-mode-btn:hover{color:var(--text)}
+.trend-mode-btn.active{background:rgba(88,166,255,.14);color:var(--accent)}
+.trend-region-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;padding:8px 10px;background:var(--card-bg);border:1px solid var(--border);border-radius:8px}
+.trend-region-btn{background:none;border:1px solid transparent;color:var(--muted);font-family:inherit;font-size:11px;padding:5px 12px;border-radius:14px;cursor:pointer;font-weight:500;transition:all .15s;white-space:nowrap}
+.trend-region-btn:hover{color:var(--text);border-color:var(--border)}
+.trend-region-btn.active{background:rgba(88,166,255,.14);color:var(--accent);border-color:rgba(88,166,255,.35);font-weight:600}
+.trend-chart-wrap{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:16px;position:relative}
+.trend-chart-box{position:relative;height:420px}
+.trend-legend-note{font-size:10px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.trend-legend-note .swatch{display:inline-block;width:10px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.trend-legend-note .swatch.sono{background:var(--accent)}
+.trend-legend-note .swatch.comp{background:#7d8590}
+.trend-empty-hint{font-size:11px;color:var(--muted);text-align:center;padding:8px;background:rgba(33,38,45,.4);border-radius:6px;margin-top:10px}
+@media(max-width:700px){.trend-chart-box{height:340px}.trend-region-tabs{padding:6px 8px}}
+</style>
+<div class="trend-section view-hidden" id="trend-section">
+  <div class="trend-inner">
+    <div class="trend-header">
+      <div>
+        <div class="trend-title">월별 OCC 추이 <span class="trend-title-badge">112번 사업장</span></div>
+        <div class="trend-subtitle">시설별 월별 OCC%/가용객실수 추이 · 전체 54개 시설</div>
+      </div>
+      <div class="trend-mode-toggle" role="tablist" aria-label="차트 종류">
+        <button class="trend-mode-btn active" type="button" data-mode="occ">OCC %</button>
+        <button class="trend-mode-btn" type="button" data-mode="rooms">가용 객실수</button>
+      </div>
+    </div>
+    <div class="trend-region-tabs" id="trend-region-tabs"></div>
+    <div class="trend-chart-wrap">
+      <div class="trend-chart-box"><canvas id="trend-chart"></canvas></div>
+      <div class="trend-legend-note">
+        <span><span class="swatch sono"></span>자사(SONO)</span>
+        <span><span class="swatch comp"></span>경쟁사</span>
+        <span style="margin-left:auto">※ 1~3월 데이터는 추후 업데이트 예정 — 현재는 2026년 4월 시점 단일 포인트</span>
+      </div>
+      <div class="trend-empty-hint" id="trend-empty-hint" style="display:none">해당 지역에 표시할 시설이 없습니다.</div>
+    </div>
+  </div>
+</div>
+<script>
+// 월별 데이터 구조 — 1~3월 추가 시 months 배열과 각 facility의 occ/rooms 객체에 키만 추가
+window.MARKET_TREND_DATA = {
+  months: ['2026-04'],
+  regions: ['전체','강원도 서부','강원도 동부','전라/경상도','경상도','충청/전북','부산','제주도','서울/경기'],
+  facilities: [
+    // 강원도 서부
+    {region:'강원도 서부', name:'소노벨 양평', sono:true,  occ:{'2026-04':49.4}, rooms:{'2026-04':193}},
+    {region:'강원도 서부', name:'소노벨리체 비발디', sono:true, occ:{'2026-04':19.6}, rooms:{'2026-04':500}},
+    {region:'강원도 서부', name:'소노캄 비발디파크', sono:true, occ:{'2026-04':25.4}, rooms:{'2026-04':1762}},
+    {region:'강원도 서부', name:'소노펠리체 빌리지 비발디', sono:true, occ:{'2026-04':24.0}, rooms:{'2026-04':219}},
+    {region:'강원도 서부', name:'오크밸리', sono:false, occ:{'2026-04':39.8}, rooms:{'2026-04':1105}},
+    {region:'강원도 서부', name:'용평', sono:false, occ:{'2026-04':20.6}, rooms:{'2026-04':1298}},
+    {region:'강원도 서부', name:'웰리힐리', sono:false, occ:{'2026-04':16.2}, rooms:{'2026-04':766}},
+    {region:'강원도 서부', name:'휘닉스파크', sono:false, occ:{'2026-04':27.2}, rooms:{'2026-04':962}},
+    // 강원도 동부
+    {region:'강원도 동부', name:'델피노', sono:true, occ:{'2026-04':42.5}, rooms:{'2026-04':1257}},
+    {region:'강원도 동부', name:'롯데리조트 속초', sono:false, occ:{'2026-04':65.2}, rooms:{'2026-04':392}},
+    {region:'강원도 동부', name:'르네블루 by 쏠비치 고성', sono:false, occ:{'2026-04':66.3}, rooms:{'2026-04':87}},
+    {region:'강원도 동부', name:'쏠비치 삼척', sono:false, occ:{'2026-04':63.6}, rooms:{'2026-04':707}},
+    {region:'강원도 동부', name:'쏠비치 양양', sono:false, occ:{'2026-04':50.7}, rooms:{'2026-04':497}},
+    {region:'강원도 동부', name:'윈덤 호텔 고성', sono:false, occ:{'2026-04':20.0}, rooms:{'2026-04':529}},
+    {region:'강원도 동부', name:'카시아리조트', sono:false, occ:{'2026-04':36.0}, rooms:{'2026-04':674}},
+    {region:'강원도 동부', name:'켄싱턴리조트 속초', sono:false, occ:{'2026-04':64.6}, rooms:{'2026-04':176}},
+    {region:'강원도 동부', name:'한화리조트 속초', sono:false, occ:{'2026-04':43.9}, rooms:{'2026-04':1554}},
+    {region:'강원도 동부', name:'한화브리드 양양', sono:false, occ:{'2026-04':61.8}, rooms:{'2026-04':56}},
+    // 전라/경상도
+    {region:'전라/경상도', name:'금호리조트 통영', sono:false, occ:{'2026-04':79.1}, rooms:{'2026-04':272}},
+    {region:'전라/경상도', name:'벨메르 한화', sono:false, occ:{'2026-04':62.5}, rooms:{'2026-04':100}},
+    {region:'전라/경상도', name:'소노캄 거제', sono:true, occ:{'2026-04':49.0}, rooms:{'2026-04':509}},
+    {region:'전라/경상도', name:'소노캄 여수', sono:true, occ:{'2026-04':64.6}, rooms:{'2026-04':310}},
+    {region:'전라/경상도', name:'신라스테이 여수', sono:false, occ:{'2026-04':82.5}, rooms:{'2026-04':315}},
+    {region:'전라/경상도', name:'쏠비치 남해', sono:false, occ:{'2026-04':61.3}, rooms:{'2026-04':449}},
+    {region:'전라/경상도', name:'쏠비치 진도', sono:false, occ:{'2026-04':58.1}, rooms:{'2026-04':561}},
+    {region:'전라/경상도', name:'유탑마리나', sono:false, occ:{'2026-04':69.2}, rooms:{'2026-04':298}},
+    {region:'전라/경상도', name:'한화리조트 벨버디어', sono:false, occ:{'2026-04':38.8}, rooms:{'2026-04':470}},
+    // 경상도
+    {region:'경상도', name:'라한셀렉트', sono:false, occ:{'2026-04':94.3}, rooms:{'2026-04':430}},
+    {region:'경상도', name:'소노벨 단양', sono:true, occ:{'2026-04':41.8}, rooms:{'2026-04':843}},
+    {region:'경상도', name:'소노벨 청송', sono:true, occ:{'2026-04':43.3}, rooms:{'2026-04':320}},
+    {region:'경상도', name:'소노캄 경주', sono:true, occ:{'2026-04':91.8}, rooms:{'2026-04':417}},
+    {region:'경상도', name:'켄싱턴', sono:false, occ:{'2026-04':72.8}, rooms:{'2026-04':501}},
+    {region:'경상도', name:'포레스트 리솜', sono:false, occ:{'2026-04':73.9}, rooms:{'2026-04':450}},
+    {region:'경상도', name:'한화리조트 경주', sono:false, occ:{'2026-04':84.2}, rooms:{'2026-04':393}},
+    // 충청/전북
+    {region:'충청/전북', name:'덕산스플라스 리솜', sono:false, occ:{'2026-04':62.1}, rooms:{'2026-04':405}},
+    {region:'충청/전북', name:'소노벨 변산', sono:true, occ:{'2026-04':50.6}, rooms:{'2026-04':503}},
+    {region:'충청/전북', name:'소노벨 천안', sono:true, occ:{'2026-04':50.5}, rooms:{'2026-04':450}},
+    {region:'충청/전북', name:'안면도 아일랜드 리솜', sono:false, occ:{'2026-04':78.4}, rooms:{'2026-04':248}},
+    // 부산
+    {region:'부산', name:'라마다 해운대', sono:false, occ:{'2026-04':74.2}, rooms:{'2026-04':402}},
+    {region:'부산', name:'롯데 L7호텔 해운대', sono:false, occ:{'2026-04':83.1}, rooms:{'2026-04':383}},
+    {region:'부산', name:'롯데리조트 김해', sono:false, occ:{'2026-04':48.5}, rooms:{'2026-04':250}},
+    {region:'부산', name:'베스트웨스턴', sono:false, occ:{'2026-04':72.0}, rooms:{'2026-04':134}},
+    {region:'부산', name:'소노문 해운대', sono:true, occ:{'2026-04':77.8}, rooms:{'2026-04':235}},
+    {region:'부산', name:'한화리조트 해운대', sono:false, occ:{'2026-04':57.9}, rooms:{'2026-04':417}},
+    // 제주도
+    {region:'제주도', name:'금호리조트 제주', sono:false, occ:{'2026-04':72.9}, rooms:{'2026-04':324}},
+    {region:'제주도', name:'롯데 아트빌라스 제주', sono:false, occ:{'2026-04':71.2}, rooms:{'2026-04':66}},
+    {region:'제주도', name:'소노벨 제주', sono:true, occ:{'2026-04':77.0}, rooms:{'2026-04':397}},
+    {region:'제주도', name:'소노캄 제주', sono:true, occ:{'2026-04':64.7}, rooms:{'2026-04':368}},
+    {region:'제주도', name:'켄싱턴 제주', sono:false, occ:{'2026-04':72.2}, rooms:{'2026-04':214}},
+    {region:'제주도', name:'한화리조트 제주', sono:false, occ:{'2026-04':59.9}, rooms:{'2026-04':395}},
+    {region:'제주도', name:'해비치리조트 제주', sono:false, occ:{'2026-04':79.0}, rooms:{'2026-04':503}},
+    {region:'제주도', name:'휘닉스아일랜드', sono:false, occ:{'2026-04':68.3}, rooms:{'2026-04':300}},
+    // 서울/경기
+    {region:'서울/경기', name:'소노캄 고양', sono:true, occ:{'2026-04':66.1}, rooms:{'2026-04':824}},
+    {region:'서울/경기', name:'안토(구. 파라스파라)', sono:false, occ:{'2026-04':30.0}, rooms:{'2026-04':334}}
+  ]
+};
+</script>
+<!-- ═══ /월 추이 차트 섹션 ═══ -->
 
 
 <div class="cat-tab-bar">
@@ -4861,6 +4987,7 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   var sbItems       = toArr(document.querySelectorAll('.sb-item[data-view]'));
   var sbSubItems    = toArr(document.querySelectorAll('.sb-sub-item[data-view]'));
   var yoySection    = document.getElementById('yoy-market-section');
+  var trendSection  = document.getElementById('trend-section');
   var catTabBar     = document.querySelector('.cat-tab-bar');
   var hotelSec      = document.getElementById('hotel-section');
   var golfSec       = document.getElementById('golf-section');
@@ -4872,24 +4999,22 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       it.classList.toggle('active', it.getAttribute('data-view') === view && it.getAttribute('data-toggle') !== 'submenu');
     });
     // sync submenu parent highlight when sub-item is active
-    if (view === 'yoy' && yoySubmenuBtn) {
+    if ((view === 'yoy' || view === 'trend') && yoySubmenuBtn) {
       yoySubmenuBtn.classList.add('active');
       yoySubmenuBtn.classList.add('expanded');
     } else if (yoySubmenuBtn) {
       yoySubmenuBtn.classList.remove('active');
     }
 
-    if (view === 'yoy') {
-      if (yoySection) yoySection.classList.remove('view-hidden');
-      if (statsBar)   statsBar.classList.add('view-hidden');
-      if (catTabBar)  catTabBar.classList.add('view-hidden');
-      if (hotelSec)   hotelSec.classList.add('view-hidden');
-      if (golfSec)    golfSec.classList.add('view-hidden');
+    var isMarket = (view === 'yoy' || view === 'trend');
+    if (yoySection)   yoySection.classList.toggle('view-hidden', view !== 'yoy');
+    if (trendSection) trendSection.classList.toggle('view-hidden', view !== 'trend');
+    if (statsBar)     statsBar.classList.toggle('view-hidden', isMarket);
+    if (catTabBar)    catTabBar.classList.toggle('view-hidden', isMarket);
+    if (isMarket) {
+      if (hotelSec) hotelSec.classList.add('view-hidden');
+      if (golfSec)  golfSec.classList.add('view-hidden');
     } else { // pricing
-      if (yoySection) yoySection.classList.add('view-hidden');
-      if (statsBar)   statsBar.classList.remove('view-hidden');
-      if (catTabBar)  catTabBar.classList.remove('view-hidden');
-      // restore hotel/golf based on current cat tab
       var activeCat = document.querySelector('.cat-btn.active');
       var cat = activeCat ? activeCat.getAttribute('data-cat') : 'hotel';
       if (hotelSec) {
@@ -4901,6 +5026,11 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         golfSec.style.display = (cat === 'golf') ? '' : 'none';
       }
     }
+
+    if (view === 'trend' && typeof window.renderTrendChart === 'function') {
+      window.renderTrendChart();
+    }
+
     try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, 0); }
   }
 
@@ -4944,11 +5074,184 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   // 초기 뷰: 활성화된 메뉴 항목에 맞춰 표시
   var initialActive = document.querySelector('.sb-item.active[data-view]');
   var initialView = initialActive ? initialActive.getAttribute('data-view') : 'pricing';
-  if (yoySection) yoySection.classList.toggle('view-hidden', initialView !== 'yoy');
-  if (statsBar)   statsBar.classList.toggle('view-hidden', initialView === 'yoy');
-  if (catTabBar)  catTabBar.classList.toggle('view-hidden', initialView === 'yoy');
-  if (hotelSec)   hotelSec.classList.toggle('view-hidden', initialView === 'yoy');
-  if (golfSec)    golfSec.classList.toggle('view-hidden', initialView === 'yoy');
+  var initialIsMarket = (initialView === 'yoy' || initialView === 'trend');
+  if (yoySection)   yoySection.classList.toggle('view-hidden', initialView !== 'yoy');
+  if (trendSection) trendSection.classList.toggle('view-hidden', initialView !== 'trend');
+  if (statsBar)     statsBar.classList.toggle('view-hidden', initialIsMarket);
+  if (catTabBar)    catTabBar.classList.toggle('view-hidden', initialIsMarket);
+  if (hotelSec)     hotelSec.classList.toggle('view-hidden', initialIsMarket);
+  if (golfSec)      golfSec.classList.toggle('view-hidden', initialIsMarket);
+})();
+</script>
+
+<!-- ═══ 월 추이 차트 렌더링 스크립트 ═══ -->
+<script>
+(function () {
+  var DATA = window.MARKET_TREND_DATA;
+  if (!DATA) return;
+
+  var CSS_VAR = function (name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  };
+  var COLORS = {
+    accent:  CSS_VAR('--accent')   || '#58a6ff',
+    text:    CSS_VAR('--text')     || '#e6edf3',
+    muted:   CSS_VAR('--muted')    || '#7d8590',
+    border:  CSS_VAR('--border')   || '#30363d',
+    bg:      CSS_VAR('--bg')       || '#0d1117',
+    cardBg:  CSS_VAR('--card-bg')  || '#161b22'
+  };
+  // 경쟁사 라인용 muted 톤 팔레트
+  var COMP_PALETTE = ['#7d8590','#9aa4ad','#586069','#8b949e','#6e7681','#a0aab4','#5a626b','#b1bac4'];
+
+  var state = { region: '전체', mode: 'occ', chart: null };
+
+  // ── 지역 탭 생성 ─────────────────────────────────────
+  var tabBar = document.getElementById('trend-region-tabs');
+  if (tabBar) {
+    DATA.regions.forEach(function (r) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'trend-region-btn' + (r === state.region ? ' active' : '');
+      btn.setAttribute('data-region', r);
+      btn.textContent = r;
+      btn.addEventListener('click', function () {
+        if (state.region === r) return;
+        state.region = r;
+        tabBar.querySelectorAll('.trend-region-btn').forEach(function (b) {
+          b.classList.toggle('active', b.getAttribute('data-region') === r);
+        });
+        render();
+      });
+      tabBar.appendChild(btn);
+    });
+  }
+
+  // ── OCC/객실수 모드 토글 ──────────────────────────────
+  var modeBtns = document.querySelectorAll('.trend-mode-btn');
+  modeBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var mode = btn.getAttribute('data-mode');
+      if (state.mode === mode) return;
+      state.mode = mode;
+      modeBtns.forEach(function (b) { b.classList.toggle('active', b === btn); });
+      render();
+    });
+  });
+
+  function filteredFacilities() {
+    if (state.region === '전체') return DATA.facilities.slice();
+    return DATA.facilities.filter(function (f) { return f.region === state.region; });
+  }
+
+  function buildDatasets(facilities, mode) {
+    var months = DATA.months;
+    var compIdx = 0;
+    return facilities.map(function (f) {
+      var src = mode === 'occ' ? f.occ : f.rooms;
+      var data = months.map(function (m) {
+        var v = src[m];
+        return (v === undefined || v === null) ? null : v;
+      });
+      var isSono = !!f.sono;
+      var color = isSono ? COLORS.accent : COMP_PALETTE[compIdx++ % COMP_PALETTE.length];
+      return {
+        label: f.name,
+        data: data,
+        borderColor: color,
+        backgroundColor: isSono ? color : color + 'cc',
+        borderWidth: isSono ? 2.5 : 1.4,
+        pointRadius: isSono ? 4 : 2.5,
+        pointHoverRadius: isSono ? 6 : 4.5,
+        pointBackgroundColor: color,
+        tension: 0.25,
+        spanGaps: true,
+        order: isSono ? 0 : 1,
+        _isSono: isSono
+      };
+    });
+  }
+
+  function render() {
+    var canvas = document.getElementById('trend-chart');
+    if (!canvas || !window.Chart) return;
+
+    var facilities = filteredFacilities();
+    var emptyHint = document.getElementById('trend-empty-hint');
+    if (emptyHint) emptyHint.style.display = facilities.length ? 'none' : '';
+
+    var datasets = buildDatasets(facilities, state.mode);
+    var labels = DATA.months.map(function (m) {
+      var parts = m.split('-');
+      return parts[0] + '년 ' + parseInt(parts[1], 10) + '월';
+    });
+
+    var isOcc = state.mode === 'occ';
+    var chartType = (DATA.months.length === 1 && !isOcc) ? 'bar' : 'line';
+
+    if (state.chart) {
+      state.chart.destroy();
+      state.chart = null;
+    }
+
+    state.chart = new Chart(canvas.getContext('2d'), {
+      type: chartType,
+      data: { labels: labels, datasets: datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'nearest', intersect: false },
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: COLORS.text,
+              font: { size: 11 },
+              boxWidth: 12,
+              boxHeight: 3,
+              padding: 8,
+              usePointStyle: false
+            }
+          },
+          tooltip: {
+            backgroundColor: COLORS.cardBg,
+            titleColor: COLORS.text,
+            bodyColor: COLORS.text,
+            borderColor: COLORS.border,
+            borderWidth: 1,
+            padding: 10,
+            callbacks: {
+              label: function (ctx) {
+                var v = ctx.parsed.y;
+                if (v === null || v === undefined) return ctx.dataset.label + ': -';
+                var suffix = isOcc ? '%' : '실';
+                var prefix = ctx.dataset._isSono ? '★ ' : '';
+                return prefix + ctx.dataset.label + ': ' + (isOcc ? v.toFixed(1) : v.toLocaleString()) + suffix;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: COLORS.muted, font: { size: 11 } },
+            grid:  { color: 'rgba(125,133,144,.08)' }
+          },
+          y: {
+            beginAtZero: true,
+            suggestedMax: isOcc ? 100 : undefined,
+            ticks: {
+              color: COLORS.muted,
+              font: { size: 11 },
+              callback: function (v) { return isOcc ? v + '%' : v.toLocaleString(); }
+            },
+            grid: { color: 'rgba(125,133,144,.08)' }
+          }
+        }
+      }
+    });
+  }
+
+  window.renderTrendChart = render;
 })();
 </script>
 </body>
