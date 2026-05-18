@@ -789,6 +789,136 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   border-radius: 3px;
   border: 1px solid rgba(227,179,65,.2);
 }
+
+/* ── App sidebar layout ── */
+.app-layout { display: flex; align-items: flex-start; }
+.app-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border);
+  padding: 14px 0;
+  position: sticky;
+  top: 112px;
+  align-self: flex-start;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  z-index: 80;
+}
+.app-content { flex: 1; min-width: 0; }
+.sb-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 4px 18px 8px;
+}
+.sb-nav { display: flex; flex-direction: column; gap: 1px; padding: 0 8px; }
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+  transition: background .12s, color .12s;
+}
+.sb-item:hover { background: rgba(88,166,255,.08); color: var(--accent); }
+.sb-item.active { background: rgba(88,166,255,.14); color: var(--accent); font-weight: 600; }
+.sb-item-icon { width: 16px; height: 16px; flex-shrink: 0; opacity: .85; }
+.sb-item-label { flex: 1; }
+.sb-caret {
+  font-size: 10px;
+  color: var(--muted);
+  transition: transform .15s;
+}
+.sb-item.expanded .sb-caret { transform: rotate(90deg); }
+.sb-submenu {
+  display: none;
+  flex-direction: column;
+  margin: 2px 0 6px 18px;
+  padding-left: 10px;
+  border-left: 1px solid var(--border);
+  gap: 1px;
+}
+.sb-item.expanded + .sb-submenu { display: flex; }
+.sb-sub-item {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .12s, color .12s;
+}
+.sb-sub-item:hover { background: rgba(88,166,255,.06); color: var(--text); }
+.sb-sub-item.active { color: var(--accent); background: rgba(88,166,255,.10); font-weight: 600; }
+.sb-sub-item.disabled { color: #4a525c; cursor: not-allowed; opacity: .55; }
+.sb-sub-item.disabled:hover { background: none; color: #4a525c; }
+
+/* mobile toggle button */
+.sb-toggle {
+  display: none;
+  position: fixed;
+  left: 12px;
+  bottom: 16px;
+  z-index: 150;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #0d1117;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.45);
+  align-items: center;
+  justify-content: center;
+}
+.sb-toggle:hover { opacity: .9; }
+.sb-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 90;
+}
+.sb-overlay.open { display: block; }
+
+/* view switching */
+.view-hidden { display: none !important; }
+
+@media (max-width: 900px) {
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    max-height: 100vh;
+    height: 100vh;
+    width: 240px;
+    padding-top: 56px;
+    transform: translateX(-100%);
+    transition: transform .22s ease;
+    z-index: 200;
+  }
+  .app-sidebar.open { transform: translateX(0); }
+  .sb-toggle { display: flex; }
+}
 </style>
 </head>
 <body>
@@ -822,6 +952,31 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
     <div class="header-badge">LIVE</div>
   </div>
 </header>
+
+<button class="sb-toggle" id="sb-toggle" aria-label="메뉴 열기" type="button">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sb-overlay" id="sb-overlay"></div>
+
+<div class="app-layout">
+  <aside class="app-sidebar" id="app-sidebar">
+    <div class="sb-section-label">경쟁사 모니터링</div>
+    <div class="sb-nav">
+      <button class="sb-item active" type="button" data-view="pricing">
+        <svg class="sb-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l3-3 4 4 5-6"/></svg>
+        <span class="sb-item-label">판매가 비교</span>
+      </button>
+      <button class="sb-item" type="button" data-view="yoy" data-toggle="submenu">
+        <svg class="sb-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+        <span class="sb-item-label">시장점유율</span>
+        <span class="sb-caret">▸</span>
+      </button>
+      <div class="sb-submenu" id="sb-yoy-submenu">
+        <button class="sb-sub-item active" type="button" data-view="yoy" data-month="2026-04">2026년 4월</button>
+      </div>
+    </div>
+  </aside>
+  <div class="app-content" id="app-content">
 
 <div class="stats-bar">
   <div class="stat-item">
@@ -895,94 +1050,94 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   </div>
 </div>
 <div class="yoy-summary">
-  <div class="yoy-stat"><div class="yoy-stat-label">전체 평균 증감</div><div class="yoy-stat-value up">+1.6pp</div><div class="yoy-stat-sub">경주 제외 50개 시설</div></div>
-  <div class="yoy-stat"><div class="yoy-stat-label">자사(SONO) 평균</div><div class="yoy-stat-value down">-2.8pp</div><div class="yoy-stat-sub">15개 자사 시설</div></div>
-  <div class="yoy-stat"><div class="yoy-stat-label">상승</div><div class="yoy-stat-value up">26</div><div class="yoy-stat-sub">+0.5pp 이상</div></div>
-  <div class="yoy-stat"><div class="yoy-stat-label">하락</div><div class="yoy-stat-value down">22</div><div class="yoy-stat-sub">-0.5pp 이상</div></div>
-  <div class="yoy-stat"><div class="yoy-stat-label">보합</div><div class="yoy-stat-value neutral">2</div><div class="yoy-stat-sub">±0.5pp 이내</div></div>
+  <div class="yoy-stat"><div class="yoy-stat-label">전체 평균 증감</div><div class="yoy-stat-value up">+1.6%p</div><div class="yoy-stat-sub">경주 제외 50개 시설</div></div>
+  <div class="yoy-stat"><div class="yoy-stat-label">자사(SONO) 평균</div><div class="yoy-stat-value down">-2.8%p</div><div class="yoy-stat-sub">15개 자사 시설</div></div>
+  <div class="yoy-stat"><div class="yoy-stat-label">상승</div><div class="yoy-stat-value up">26</div><div class="yoy-stat-sub">+0.5%p 이상</div></div>
+  <div class="yoy-stat"><div class="yoy-stat-label">하락</div><div class="yoy-stat-value down">22</div><div class="yoy-stat-sub">-0.5%p 이상</div></div>
+  <div class="yoy-stat"><div class="yoy-stat-label">보합</div><div class="yoy-stat-value neutral">2</div><div class="yoy-stat-sub">±0.5%p 이내</div></div>
   <div class="yoy-stat"><div class="yoy-stat-label">신규</div><div class="yoy-stat-value" style="color:var(--accent)">3</div><div class="yoy-stat-sub">2026년 신규</div></div>
 </div>
 <div class="yoy-top-section">
 <div class="yoy-top-card"><div class="yoy-top-card-header up-header">▲ 상승 TOP 5</div><ul class="yoy-top-list">
-<li><span class="yoy-top-name">덕산스플라스 리솜</span><span class="yoy-top-val yoy-up">+25.2pp</span></li>
-<li><span class="yoy-top-name">한화리조트 경주</span><span class="yoy-top-val yoy-up">+21.7pp</span></li>
-<li><span class="yoy-top-name">안면도 아일랜드 리솜</span><span class="yoy-top-val yoy-up">+20.5pp</span></li>
-<li><span class="yoy-top-name">한화리조트 제주</span><span class="yoy-top-val yoy-up">+14.5pp</span></li>
-<li><span class="yoy-top-name">카시아리조트</span><span class="yoy-top-val yoy-up">+11.0pp</span></li>
+<li><span class="yoy-top-name">덕산스플라스 리솜</span><span class="yoy-top-val yoy-up">+25.2%p</span></li>
+<li><span class="yoy-top-name">한화리조트 경주</span><span class="yoy-top-val yoy-up">+21.7%p</span></li>
+<li><span class="yoy-top-name">안면도 아일랜드 리솜</span><span class="yoy-top-val yoy-up">+20.5%p</span></li>
+<li><span class="yoy-top-name">한화리조트 제주</span><span class="yoy-top-val yoy-up">+14.5%p</span></li>
+<li><span class="yoy-top-name">카시아리조트</span><span class="yoy-top-val yoy-up">+11.0%p</span></li>
 </ul></div>
 <div class="yoy-top-card"><div class="yoy-top-card-header down-header">▼ 하락 TOP 5</div><ul class="yoy-top-list">
-<li><span class="yoy-top-name sono">소노벨 단양</span><span class="yoy-top-val yoy-down">-18.5pp</span></li>
-<li><span class="yoy-top-name sono">소노캄 거제</span><span class="yoy-top-val yoy-down">-15.7pp</span></li>
-<li><span class="yoy-top-name">베스트웨스턴</span><span class="yoy-top-val yoy-down">-13.0pp</span></li>
-<li><span class="yoy-top-name">켄싱턴리조트 속초</span><span class="yoy-top-val yoy-down">-9.4pp</span></li>
-<li><span class="yoy-top-name sono">소노캄 비발디파크</span><span class="yoy-top-val yoy-down">-8.8pp</span></li>
+<li><span class="yoy-top-name sono">소노벨 단양</span><span class="yoy-top-val yoy-down">-18.5%p</span></li>
+<li><span class="yoy-top-name sono">소노캄 거제</span><span class="yoy-top-val yoy-down">-15.7%p</span></li>
+<li><span class="yoy-top-name">베스트웨스턴</span><span class="yoy-top-val yoy-down">-13.0%p</span></li>
+<li><span class="yoy-top-name">켄싱턴리조트 속초</span><span class="yoy-top-val yoy-down">-9.4%p</span></li>
+<li><span class="yoy-top-name sono">소노캄 비발디파크</span><span class="yoy-top-val yoy-down">-8.8%p</span></li>
 </ul></div>
 </div>
 <div class="yoy-table-wrap">
 <table class="yoy-table">
-<thead><tr><th>지역</th><th>시설명</th><th>객실수(25)</th><th>객실수(26)</th><th>25년4월</th><th>26년4월</th><th>증감(pp)</th></tr></thead>
+<thead><tr><th>지역</th><th>시설명</th><th>가용 객실수(25)</th><th>가용 객실수(26)</th><th>25Y실적</th><th>26년4월</th><th>증감(%p)</th></tr></thead>
 <tbody>
 <tr><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">강원도 서부 지역</td></tr>
-<tr><td></td><td><span class="sono-name">소노벨 양평</span></td><td>189</td><td>193</td><td>50.6%</td><td>49.4%</td><td class="yoy-down">▼ -1.2pp</td></tr>
-<tr><td></td><td><span class="sono-name">소노벨리체 비발디</span></td><td>500</td><td>500</td><td>27.4%</td><td>19.6%</td><td class="yoy-down">▼ -7.8pp</td></tr>
-<tr><td></td><td><span class="sono-name">소노캄 비발디파크</span></td><td>1,723</td><td>1,762</td><td>34.2%</td><td>25.4%</td><td class="yoy-down">▼ -8.8pp</td></tr>
-<tr><td></td><td><span class="sono-name">소노펠리체 빌리지 비발디</span></td><td>219</td><td>219</td><td>30.4%</td><td>24.0%</td><td class="yoy-down">▼ -6.4pp</td></tr>
-<tr><td></td><td><span class="">오크밸리</span></td><td>1,105</td><td>1,105</td><td>47.7%</td><td>39.8%</td><td class="yoy-down">▼ -7.9pp</td></tr>
-<tr><td></td><td><span class="">용평</span></td><td>1,298</td><td>1,298</td><td>18.3%</td><td>20.6%</td><td class="yoy-up">▲ +2.3pp</td></tr>
-<tr><td></td><td><span class="">웰리힐리</span></td><td>766</td><td>766</td><td>16.6%</td><td>16.2%</td><td class="yoy-flat">— -0.4pp</td></tr>
-<tr><td></td><td><span class="">휘닉스파크</span></td><td>962</td><td>962</td><td>22.5%</td><td>27.2%</td><td class="yoy-up">▲ +4.7pp</td></tr>
+<tr><td></td><td><span class="sono-name">소노벨 양평</span></td><td>189</td><td>193</td><td>50.6%</td><td>49.4%</td><td class="yoy-down">▼ -1.2%p</td></tr>
+<tr><td></td><td><span class="sono-name">소노벨리체 비발디</span></td><td>500</td><td>500</td><td>27.4%</td><td>19.6%</td><td class="yoy-down">▼ -7.8%p</td></tr>
+<tr><td></td><td><span class="sono-name">소노캄 비발디파크</span></td><td>1,723</td><td>1,762</td><td>34.2%</td><td>25.4%</td><td class="yoy-down">▼ -8.8%p</td></tr>
+<tr><td></td><td><span class="sono-name">소노펠리체 빌리지 비발디</span></td><td>219</td><td>219</td><td>30.4%</td><td>24.0%</td><td class="yoy-down">▼ -6.4%p</td></tr>
+<tr><td></td><td><span class="">오크밸리</span></td><td>1,105</td><td>1,105</td><td>47.7%</td><td>39.8%</td><td class="yoy-down">▼ -7.9%p</td></tr>
+<tr><td></td><td><span class="">용평</span></td><td>1,298</td><td>1,298</td><td>18.3%</td><td>20.6%</td><td class="yoy-up">▲ +2.3%p</td></tr>
+<tr><td></td><td><span class="">웰리힐리</span></td><td>766</td><td>766</td><td>16.6%</td><td>16.2%</td><td class="yoy-flat">— -0.4%p</td></tr>
+<tr><td></td><td><span class="">휘닉스파크</span></td><td>962</td><td>962</td><td>22.5%</td><td>27.2%</td><td class="yoy-up">▲ +4.7%p</td></tr>
 <tr><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">강원도 동부 지역</td></tr>
-<tr><td></td><td><span class="sono-name">델피노</span></td><td>1,196</td><td>1,257</td><td>42.9%</td><td>42.5%</td><td class="yoy-flat">— -0.4pp</td></tr>
-<tr><td></td><td><span class="">롯데리조트 속초</span></td><td>392</td><td>392</td><td>73.7%</td><td>65.2%</td><td class="yoy-down">▼ -8.5pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">르네블루 by 쏠비치 고성</span></td><td>87</td><td>87</td><td>68.2%</td><td>66.3%</td><td class="yoy-down">▼ -1.9pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 삼척</span></td><td>707</td><td>707</td><td>60.7%</td><td>63.6%</td><td class="yoy-up">▲ +2.9pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 양양</span></td><td>501</td><td>497</td><td>53.3%</td><td>50.7%</td><td class="yoy-down">▼ -2.6pp</td></tr>
+<tr><td></td><td><span class="sono-name">델피노</span></td><td>1,196</td><td>1,257</td><td>42.9%</td><td>42.5%</td><td class="yoy-flat">— -0.4%p</td></tr>
+<tr><td></td><td><span class="">롯데리조트 속초</span></td><td>392</td><td>392</td><td>73.7%</td><td>65.2%</td><td class="yoy-down">▼ -8.5%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">르네블루 by 쏠비치 고성</span></td><td>87</td><td>87</td><td>68.2%</td><td>66.3%</td><td class="yoy-down">▼ -1.9%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 삼척</span></td><td>707</td><td>707</td><td>60.7%</td><td>63.6%</td><td class="yoy-up">▲ +2.9%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 양양</span></td><td>501</td><td>497</td><td>53.3%</td><td>50.7%</td><td class="yoy-down">▼ -2.6%p</td></tr>
 <tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">윈덤 호텔 고성</span><span class="yoy-new-badge">NEW</span></td><td>-</td><td>529</td><td>-</td><td>20.0%</td><td class="yoy-na">NEW</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">카시아리조트</span></td><td>674</td><td>674</td><td>25.0%</td><td>36.0%</td><td class="yoy-up">▲ +11.0pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">켄싱턴리조트 속초</span></td><td>176</td><td>176</td><td>74.0%</td><td>64.6%</td><td class="yoy-down">▼ -9.4pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 속초</span></td><td>1,554</td><td>1,554</td><td>46.8%</td><td>43.9%</td><td class="yoy-down">▼ -2.9pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화브리드 양양</span></td><td>56</td><td>56</td><td>70.5%</td><td>61.8%</td><td class="yoy-down">▼ -8.7pp</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">카시아리조트</span></td><td>674</td><td>674</td><td>25.0%</td><td>36.0%</td><td class="yoy-up">▲ +11.0%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">켄싱턴리조트 속초</span></td><td>176</td><td>176</td><td>74.0%</td><td>64.6%</td><td class="yoy-down">▼ -9.4%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 속초</span></td><td>1,554</td><td>1,554</td><td>46.8%</td><td>43.9%</td><td class="yoy-down">▼ -2.9%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화브리드 양양</span></td><td>56</td><td>56</td><td>70.5%</td><td>61.8%</td><td class="yoy-down">▼ -8.7%p</td></tr>
 <tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">전라/경상도 지역</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">금호리조트 통영</span></td><td>272</td><td>272</td><td>71.2%</td><td>79.1%</td><td class="yoy-up">▲ +7.9pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">벨메르 한화</span></td><td>100</td><td>100</td><td>63.7%</td><td>62.5%</td><td class="yoy-down">▼ -1.2pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 거제</span></td><td>479</td><td>509</td><td>64.7%</td><td>49.0%</td><td class="yoy-down">▼ -15.7pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 여수</span></td><td>309</td><td>310</td><td>60.2%</td><td>64.6%</td><td class="yoy-up">▲ +4.4pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">신라스테이 여수</span></td><td>315</td><td>315</td><td>77.6%</td><td>82.5%</td><td class="yoy-up">▲ +4.9pp</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">금호리조트 통영</span></td><td>272</td><td>272</td><td>71.2%</td><td>79.1%</td><td class="yoy-up">▲ +7.9%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">벨메르 한화</span></td><td>100</td><td>100</td><td>63.7%</td><td>62.5%</td><td class="yoy-down">▼ -1.2%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 거제</span></td><td>479</td><td>509</td><td>64.7%</td><td>49.0%</td><td class="yoy-down">▼ -15.7%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 여수</span></td><td>309</td><td>310</td><td>60.2%</td><td>64.6%</td><td class="yoy-up">▲ +4.4%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">신라스테이 여수</span></td><td>315</td><td>315</td><td>77.6%</td><td>82.5%</td><td class="yoy-up">▲ +4.9%p</td></tr>
 <tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 남해</span><span class="yoy-new-badge">NEW</span></td><td>-</td><td>449</td><td>-</td><td>61.3%</td><td class="yoy-na">NEW</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 진도</span></td><td>561</td><td>561</td><td>56.1%</td><td>58.1%</td><td class="yoy-up">▲ +2.0pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">유탑마리나</span></td><td>298</td><td>298</td><td>74.1%</td><td>69.2%</td><td class="yoy-down">▼ -4.9pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 벨버디어</span></td><td>470</td><td>470</td><td>42.8%</td><td>38.8%</td><td class="yoy-down">▼ -4.0pp</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 진도</span></td><td>561</td><td>561</td><td>56.1%</td><td>58.1%</td><td class="yoy-up">▲ +2.0%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">유탑마리나</span></td><td>298</td><td>298</td><td>74.1%</td><td>69.2%</td><td class="yoy-down">▼ -4.9%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 벨버디어</span></td><td>470</td><td>470</td><td>42.8%</td><td>38.8%</td><td class="yoy-down">▼ -4.0%p</td></tr>
 <tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">경상도 지역</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">라한셀렉트</span></td><td>430</td><td>430</td><td>87.0%</td><td>94.3%</td><td class="yoy-up">▲ +7.3pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 단양</span></td><td>830</td><td>843</td><td>60.3%</td><td>41.8%</td><td class="yoy-down">▼ -18.5pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 청송</span></td><td>306</td><td>320</td><td>36.2%</td><td>43.3%</td><td class="yoy-up">▲ +7.1pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 경주</span> <span class="yoy-note">(25년 휴관)</span></td><td>410</td><td>417</td><td>0.0%</td><td>91.8%</td><td class="yoy-up">▲ +91.8pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">켄싱턴</span></td><td>214</td><td>501</td><td>66.5%</td><td>72.8%</td><td class="yoy-up">▲ +6.3pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">포레스트 리솜</span></td><td>450</td><td>450</td><td>71.9%</td><td>73.9%</td><td class="yoy-up">▲ +2.0pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 경주</span></td><td>393</td><td>393</td><td>62.5%</td><td>84.2%</td><td class="yoy-up">▲ +21.7pp</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">라한셀렉트</span></td><td>430</td><td>430</td><td>87.0%</td><td>94.3%</td><td class="yoy-up">▲ +7.3%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 단양</span></td><td>830</td><td>843</td><td>60.3%</td><td>41.8%</td><td class="yoy-down">▼ -18.5%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 청송</span></td><td>306</td><td>320</td><td>36.2%</td><td>43.3%</td><td class="yoy-up">▲ +7.1%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 경주</span> <span class="yoy-note">(25년 휴관)</span></td><td>410</td><td>417</td><td>0.0%</td><td>91.8%</td><td class="yoy-up">▲ +91.8%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">켄싱턴</span></td><td>214</td><td>501</td><td>66.5%</td><td>72.8%</td><td class="yoy-up">▲ +6.3%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">포레스트 리솜</span></td><td>450</td><td>450</td><td>71.9%</td><td>73.9%</td><td class="yoy-up">▲ +2.0%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 경주</span></td><td>393</td><td>393</td><td>62.5%</td><td>84.2%</td><td class="yoy-up">▲ +21.7%p</td></tr>
 <tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">충청/전북 지역</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">덕산스플라스 리솜</span></td><td>405</td><td>405</td><td>36.9%</td><td>62.1%</td><td class="yoy-up">▲ +25.2pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 변산</span></td><td>502</td><td>503</td><td>53.7%</td><td>50.6%</td><td class="yoy-down">▼ -3.1pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 천안</span></td><td>438</td><td>450</td><td>55.4%</td><td>50.5%</td><td class="yoy-down">▼ -4.9pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">안면도 아일랜드 리솜</span></td><td>248</td><td>248</td><td>57.9%</td><td>78.4%</td><td class="yoy-up">▲ +20.5pp</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">덕산스플라스 리솜</span></td><td>405</td><td>405</td><td>36.9%</td><td>62.1%</td><td class="yoy-up">▲ +25.2%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 변산</span></td><td>502</td><td>503</td><td>53.7%</td><td>50.6%</td><td class="yoy-down">▼ -3.1%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 천안</span></td><td>438</td><td>450</td><td>55.4%</td><td>50.5%</td><td class="yoy-down">▼ -4.9%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">안면도 아일랜드 리솜</span></td><td>248</td><td>248</td><td>57.9%</td><td>78.4%</td><td class="yoy-up">▲ +20.5%p</td></tr>
 <tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">부산지역</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">라마다 해운대</span></td><td>402</td><td>402</td><td>79.0%</td><td>74.2%</td><td class="yoy-down">▼ -4.8pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">롯데 L7호텔 해운대</span></td><td>383</td><td>383</td><td>77.6%</td><td>83.1%</td><td class="yoy-up">▲ +5.5pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">롯데리조트 김해</span></td><td>250</td><td>250</td><td>39.9%</td><td>48.5%</td><td class="yoy-up">▲ +8.6pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">베스트웨스턴</span></td><td>134</td><td>134</td><td>85.0%</td><td>72.0%</td><td class="yoy-down">▼ -13.0pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노문 해운대</span></td><td>235</td><td>235</td><td>69.2%</td><td>77.8%</td><td class="yoy-up">▲ +8.6pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 해운대</span></td><td>417</td><td>417</td><td>50.1%</td><td>57.9%</td><td class="yoy-up">▲ +7.8pp</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">라마다 해운대</span></td><td>402</td><td>402</td><td>79.0%</td><td>74.2%</td><td class="yoy-down">▼ -4.8%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">롯데 L7호텔 해운대</span></td><td>383</td><td>383</td><td>77.6%</td><td>83.1%</td><td class="yoy-up">▲ +5.5%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">롯데리조트 김해</span></td><td>250</td><td>250</td><td>39.9%</td><td>48.5%</td><td class="yoy-up">▲ +8.6%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">베스트웨스턴</span></td><td>134</td><td>134</td><td>85.0%</td><td>72.0%</td><td class="yoy-down">▼ -13.0%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노문 해운대</span></td><td>235</td><td>235</td><td>69.2%</td><td>77.8%</td><td class="yoy-up">▲ +8.6%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 해운대</span></td><td>417</td><td>417</td><td>50.1%</td><td>57.9%</td><td class="yoy-up">▲ +7.8%p</td></tr>
 <tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">제주도 지역</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">금호리조트 제주</span></td><td>324</td><td>324</td><td>68.5%</td><td>72.9%</td><td class="yoy-up">▲ +4.4pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">롯데 아트빌라스 제주</span></td><td>66</td><td>66</td><td>60.6%</td><td>71.2%</td><td class="yoy-up">▲ +10.6pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 제주</span></td><td>388</td><td>397</td><td>69.2%</td><td>77.0%</td><td class="yoy-up">▲ +7.8pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 제주</span></td><td>333</td><td>368</td><td>65.4%</td><td>64.7%</td><td class="yoy-down">▼ -0.7pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">켄싱턴</span></td><td>214</td><td>214</td><td>66.5%</td><td>72.2%</td><td class="yoy-up">▲ +5.7pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 제주</span></td><td>395</td><td>395</td><td>45.4%</td><td>59.9%</td><td class="yoy-up">▲ +14.5pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">해비치리조트 제주</span></td><td>503</td><td>503</td><td>75.0%</td><td>79.0%</td><td class="yoy-up">▲ +4.0pp</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">휘닉스아일랜드</span></td><td>300</td><td>300</td><td>58.1%</td><td>68.3%</td><td class="yoy-up">▲ +10.2pp</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">금호리조트 제주</span></td><td>324</td><td>324</td><td>68.5%</td><td>72.9%</td><td class="yoy-up">▲ +4.4%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">롯데 아트빌라스 제주</span></td><td>66</td><td>66</td><td>60.6%</td><td>71.2%</td><td class="yoy-up">▲ +10.6%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 제주</span></td><td>388</td><td>397</td><td>69.2%</td><td>77.0%</td><td class="yoy-up">▲ +7.8%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 제주</span></td><td>333</td><td>368</td><td>65.4%</td><td>64.7%</td><td class="yoy-down">▼ -0.7%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">켄싱턴</span></td><td>214</td><td>214</td><td>66.5%</td><td>72.2%</td><td class="yoy-up">▲ +5.7%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 제주</span></td><td>395</td><td>395</td><td>45.4%</td><td>59.9%</td><td class="yoy-up">▲ +14.5%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">해비치리조트 제주</span></td><td>503</td><td>503</td><td>75.0%</td><td>79.0%</td><td class="yoy-up">▲ +4.0%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">휘닉스아일랜드</span></td><td>300</td><td>300</td><td>58.1%</td><td>68.3%</td><td class="yoy-up">▲ +10.2%p</td></tr>
 <tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">서울/경기</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 고양</span></td><td>799</td><td>824</td><td>67.8%</td><td>66.1%</td><td class="yoy-down">▼ -1.7pp</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 고양</span></td><td>799</td><td>824</td><td>67.8%</td><td>66.1%</td><td class="yoy-down">▼ -1.7%p</td></tr>
 <tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">안토(구. 파라스파라)</span><span class="yoy-new-badge">NEW</span></td><td>-</td><td>334</td><td>-</td><td>30.0%</td><td class="yoy-na">NEW</td></tr>
 </tbody></table>
 <div class="yoy-toggle-wrap">
@@ -4591,6 +4746,9 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   </main>
 </div>
 
+  </div><!-- /.app-content -->
+</div><!-- /.app-layout -->
+
 <footer class="footer">
   소노호텔앤리조트 경쟁사 가격 모니터링&ensp;&middot;&ensp;매일 04:00 자동 업데이트<br>
   <small>각 OTA 기준 30일 내 최저가 (1박, 성인 2인)&ensp;&middot;&ensp;요일 탭은 체크인 날짜 기준</small>
@@ -4698,6 +4856,99 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
       section.classList.toggle('open');
     });
   });
+
+  // ── 좌측 사이드바 메뉴 ─────────────────────────────────────────────────────
+  var sbItems       = toArr(document.querySelectorAll('.sb-item[data-view]'));
+  var sbSubItems    = toArr(document.querySelectorAll('.sb-sub-item[data-view]'));
+  var yoySection    = document.getElementById('yoy-market-section');
+  var catTabBar     = document.querySelector('.cat-tab-bar');
+  var hotelSec      = document.getElementById('hotel-section');
+  var golfSec       = document.getElementById('golf-section');
+  var statsBar      = document.querySelector('.stats-bar');
+  var yoySubmenuBtn = document.querySelector('.sb-item[data-toggle="submenu"]');
+
+  function setView(view) {
+    sbItems.forEach(function (it) {
+      it.classList.toggle('active', it.getAttribute('data-view') === view && it.getAttribute('data-toggle') !== 'submenu');
+    });
+    // sync submenu parent highlight when sub-item is active
+    if (view === 'yoy' && yoySubmenuBtn) {
+      yoySubmenuBtn.classList.add('active');
+      yoySubmenuBtn.classList.add('expanded');
+    } else if (yoySubmenuBtn) {
+      yoySubmenuBtn.classList.remove('active');
+    }
+
+    if (view === 'yoy') {
+      if (yoySection) yoySection.classList.remove('view-hidden');
+      if (statsBar)   statsBar.classList.add('view-hidden');
+      if (catTabBar)  catTabBar.classList.add('view-hidden');
+      if (hotelSec)   hotelSec.classList.add('view-hidden');
+      if (golfSec)    golfSec.classList.add('view-hidden');
+    } else { // pricing
+      if (yoySection) yoySection.classList.add('view-hidden');
+      if (statsBar)   statsBar.classList.remove('view-hidden');
+      if (catTabBar)  catTabBar.classList.remove('view-hidden');
+      // restore hotel/golf based on current cat tab
+      var activeCat = document.querySelector('.cat-btn.active');
+      var cat = activeCat ? activeCat.getAttribute('data-cat') : 'hotel';
+      if (hotelSec) {
+        hotelSec.classList.remove('view-hidden');
+        hotelSec.style.display = (cat === 'hotel') ? '' : 'none';
+      }
+      if (golfSec) {
+        golfSec.classList.remove('view-hidden');
+        golfSec.style.display = (cat === 'golf') ? '' : 'none';
+      }
+    }
+    try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, 0); }
+  }
+
+  sbItems.forEach(function (it) {
+    it.addEventListener('click', function () {
+      if (it.getAttribute('data-toggle') === 'submenu') {
+        it.classList.toggle('expanded');
+        return;
+      }
+      setView(it.getAttribute('data-view'));
+      closeSidebarMobile();
+    });
+  });
+
+  sbSubItems.forEach(function (it) {
+    it.addEventListener('click', function () {
+      if (it.classList.contains('disabled')) return;
+      sbSubItems.forEach(function (s) { s.classList.remove('active'); });
+      it.classList.add('active');
+      setView(it.getAttribute('data-view'));
+      closeSidebarMobile();
+    });
+  });
+
+  // ── 사이드바 모바일 토글 ───────────────────────────────────────────────────
+  var sidebar    = document.getElementById('app-sidebar');
+  var sbToggle   = document.getElementById('sb-toggle');
+  var sbOverlay  = document.getElementById('sb-overlay');
+
+  function openSidebarMobile() {
+    if (sidebar)   sidebar.classList.add('open');
+    if (sbOverlay) sbOverlay.classList.add('open');
+  }
+  function closeSidebarMobile() {
+    if (sidebar)   sidebar.classList.remove('open');
+    if (sbOverlay) sbOverlay.classList.remove('open');
+  }
+  if (sbToggle)  sbToggle.addEventListener('click', openSidebarMobile);
+  if (sbOverlay) sbOverlay.addEventListener('click', closeSidebarMobile);
+
+  // 초기 뷰: 활성화된 메뉴 항목에 맞춰 표시
+  var initialActive = document.querySelector('.sb-item.active[data-view]');
+  var initialView = initialActive ? initialActive.getAttribute('data-view') : 'pricing';
+  if (yoySection) yoySection.classList.toggle('view-hidden', initialView !== 'yoy');
+  if (statsBar)   statsBar.classList.toggle('view-hidden', initialView === 'yoy');
+  if (catTabBar)  catTabBar.classList.toggle('view-hidden', initialView === 'yoy');
+  if (hotelSec)   hotelSec.classList.toggle('view-hidden', initialView === 'yoy');
+  if (golfSec)    golfSec.classList.toggle('view-hidden', initialView === 'yoy');
 })();
 </script>
 </body>
