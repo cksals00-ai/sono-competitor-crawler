@@ -1604,6 +1604,7 @@ def _render_html(
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
 .gsn{{background:#0b0f14;border-bottom:1px solid #1e2530;font-family:'Noto Sans KR',-apple-system,sans-serif;font-size:13px;position:sticky;top:0;z-index:200}}
 .gsn-wrap{{max-width:1400px;margin:0 auto;padding:0 20px;height:42px;display:flex;align-items:center}}
@@ -1628,6 +1629,7 @@ def _render_html(
     <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/gs-closing-report.html" data-gsn="closing">마감리포트</a>
     <a class="gsn-item active" href="https://cksals00-ai.github.io/sono-competitor-crawler/" data-gsn="monitor">경쟁사 모니터링</a>
     <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/palatium.html" data-gsn="palatium">팔라티움 현황 리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/external-report.html" data-gsn="external-report">외부 리포트 분석</a>
   </div>
   <button class="gsn-toggle" onclick="document.getElementById('gsn-links').classList.toggle('open')" aria-label="메뉴"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
 </div></nav>
@@ -1644,6 +1646,15 @@ def _render_html(
     <div class="header-badge">LIVE</div>
   </div>
 </header>
+
+<button class="sb-toggle" id="sb-toggle" aria-label="메뉴 열기" type="button">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sb-overlay" id="sb-overlay"></div>
+
+<div class="app-layout">
+{_SIDEBAR_HTML}
+  <div class="app-content" id="app-content">
 
 <div class="stats-bar">
   <div class="stat-item">
@@ -1663,6 +1674,10 @@ def _render_html(
     <span class="stat-value">{prices_ok:,}</span>
   </div>
 </div>
+
+{_YOY_SECTION_HTML}
+
+{_TREND_SECTION_HTML}
 
 <div class="cat-tab-bar">
   <button class="cat-btn active" data-cat="hotel">호텔 OTA</button>
@@ -1697,6 +1712,9 @@ def _render_html(
 
 {golf_section_html}
 
+  </div>
+</div>
+
 <footer class="footer">
   소노호텔앤리조트 경쟁사 가격 모니터링&ensp;&middot;&ensp;매일 04:00 자동 업데이트<br>
   <small>각 OTA 기준 30일 내 최저가 (1박, 성인 2인)&ensp;&middot;&ensp;요일 탭은 체크인 날짜 기준</small>
@@ -1706,6 +1724,7 @@ def _render_html(
 </div>
 
 <script>{_JS}</script>
+<script>{_TREND_CHART_JS}</script>
 </body>
 </html>"""
 
@@ -2485,6 +2504,204 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
   border-radius: 3px;
   border: 1px solid rgba(227,179,65,.2);
 }
+
+/* ── App sidebar layout ── */
+.app-layout { display: flex; align-items: flex-start; }
+.app-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border);
+  padding: 14px 0;
+  position: sticky;
+  top: 112px;
+  align-self: flex-start;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  z-index: 80;
+}
+.app-content { flex: 1; min-width: 0; }
+.sb-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 4px 18px 8px;
+}
+.sb-nav { display: flex; flex-direction: column; gap: 1px; padding: 0 8px; }
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+  transition: background .12s, color .12s;
+}
+.sb-item:hover { background: rgba(88,166,255,.08); color: var(--accent); }
+.sb-item.active { background: rgba(88,166,255,.14); color: var(--accent); font-weight: 600; }
+.sb-item-icon { width: 16px; height: 16px; flex-shrink: 0; opacity: .85; }
+.sb-item-label { flex: 1; }
+.sb-caret {
+  font-size: 10px;
+  color: var(--muted);
+  transition: transform .15s;
+}
+.sb-item.expanded .sb-caret { transform: rotate(90deg); }
+.sb-submenu {
+  display: none;
+  flex-direction: column;
+  margin: 2px 0 6px 18px;
+  padding-left: 10px;
+  border-left: 1px solid var(--border);
+  gap: 1px;
+}
+.sb-item.expanded + .sb-submenu { display: flex; }
+.sb-sub-item {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .12s, color .12s;
+}
+.sb-sub-item:hover { background: rgba(88,166,255,.06); color: var(--text); }
+.sb-sub-item.active { color: var(--accent); background: rgba(88,166,255,.10); font-weight: 600; }
+.sb-sub-item.disabled { color: #4a525c; cursor: not-allowed; opacity: .55; }
+.sb-sub-item.disabled:hover { background: none; color: #4a525c; }
+
+/* mobile toggle button */
+.sb-toggle {
+  display: none;
+  position: fixed;
+  left: 12px;
+  bottom: 16px;
+  z-index: 150;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #0d1117;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.45);
+  align-items: center;
+  justify-content: center;
+}
+.sb-toggle:hover { opacity: .9; }
+.sb-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 90;
+}
+.sb-overlay.open { display: block; }
+
+/* view switching */
+.view-hidden { display: none !important; }
+
+@media (max-width: 900px) {
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    max-height: 100vh;
+    height: 100vh;
+    width: 240px;
+    padding-top: 56px;
+    transform: translateX(-100%);
+    transition: transform .22s ease;
+    z-index: 200;
+  }
+  .app-sidebar.open { transform: translateX(0); }
+  .sb-toggle { display: flex; }
+}
+
+/* ── YoY 시장 현황 비교 섹션 ── */
+.yoy-section{background:var(--bg);border-bottom:1px solid var(--border);padding:0}
+.yoy-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 10px;max-width:1400px;margin:0 auto}
+.yoy-title{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.yoy-title-badge{font-size:10px;background:rgba(88,166,255,.12);color:var(--accent);padding:2px 8px;border-radius:10px;font-weight:600}
+.yoy-subtitle{font-size:11px;color:var(--muted)}
+.yoy-summary{display:flex;gap:12px;padding:0 20px 12px;max-width:1400px;margin:0 auto;flex-wrap:wrap}
+.yoy-stat{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:10px 16px;min-width:105px;flex:1}
+.yoy-stat-label{font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px}
+.yoy-stat-value{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.yoy-stat-sub{font-size:10px;color:var(--muted);margin-top:1px}
+.yoy-stat-value.up{color:var(--green)}.yoy-stat-value.down{color:var(--red)}.yoy-stat-value.neutral{color:var(--muted)}
+.yoy-table-wrap{max-width:1400px;margin:0 auto;padding:0 20px 16px;overflow-x:auto}
+.yoy-table{width:100%;border-collapse:collapse;font-size:12px}
+.yoy-table thead th{background:var(--card-header);color:var(--muted);font-size:10px;font-weight:600;letter-spacing:.5px;padding:8px 10px;text-align:center;border-bottom:1px solid var(--border);position:sticky;top:0}
+.yoy-table thead th:first-child{text-align:left;min-width:100px}.yoy-table thead th:nth-child(2){text-align:left;min-width:160px}
+.yoy-table tbody tr{border-bottom:1px solid rgba(48,54,61,.4);transition:background .1s}
+.yoy-table tbody tr:hover{background:rgba(88,166,255,.04)}
+.yoy-table tbody td{padding:7px 10px;text-align:center;font-variant-numeric:tabular-nums}
+.yoy-table tbody td:first-child{text-align:left;color:var(--muted);font-size:11px;white-space:nowrap}
+.yoy-table tbody td:nth-child(2){text-align:left;font-weight:500}
+.yoy-table .sono-name{color:var(--accent)}
+.yoy-table .yoy-up{color:var(--green);font-weight:600}.yoy-table .yoy-down{color:var(--red);font-weight:600}.yoy-table .yoy-flat{color:var(--muted)}.yoy-table .yoy-na{color:var(--muted);font-style:italic}
+.yoy-table .yoy-new-badge{font-size:9px;background:rgba(88,166,255,.15);color:var(--accent);padding:1px 5px;border-radius:3px;margin-left:4px;font-weight:600}
+.yoy-table .yoy-note{font-size:9px;color:var(--muted);font-weight:400}
+.yoy-region-row td{background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px !important}
+.yoy-region-row td:first-child{border-left:3px solid var(--accent)}
+.yoy-toggle-wrap{text-align:center;padding:4px 0 12px}
+.yoy-toggle-btn{background:var(--card-bg);border:1px solid var(--border);color:var(--muted);font-size:11px;padding:5px 16px;border-radius:16px;cursor:pointer;font-family:inherit;transition:all .15s}
+.yoy-toggle-btn:hover{border-color:var(--accent);color:var(--accent)}
+.yoy-extra-row.yoy-hidden,.yoy-extra-region.yoy-hidden{display:none}
+.yoy-top-section{display:flex;gap:16px;padding:0 20px 14px;max-width:1400px;margin:0 auto;flex-wrap:wrap}
+.yoy-top-card{flex:1;min-width:260px;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.yoy-top-card-header{padding:8px 14px;font-size:11px;font-weight:700;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.yoy-top-card-header.up-header{background:rgba(63,185,80,.06);color:var(--green)}
+.yoy-top-card-header.down-header{background:rgba(248,81,73,.06);color:var(--red)}
+.yoy-top-list{list-style:none;padding:0;margin:0}
+.yoy-top-list li{display:flex;justify-content:space-between;align-items:center;padding:6px 14px;border-bottom:1px solid rgba(48,54,61,.3);font-size:12px}
+.yoy-top-list li:last-child{border-bottom:none}
+.yoy-top-name{color:var(--text)}.yoy-top-name.sono{color:var(--accent)}
+.yoy-top-val{font-weight:700;font-variant-numeric:tabular-nums}
+@media(max-width:700px){.yoy-summary{gap:8px}.yoy-stat{min-width:80px;padding:8px 10px}.yoy-stat-value{font-size:16px}.yoy-top-section{flex-direction:column}}
+
+/* ── 월 추이 차트 섹션 ── */
+.trend-section{background:var(--bg);border-bottom:1px solid var(--border);padding:14px 0 20px}
+.trend-inner{max-width:1400px;margin:0 auto;padding:0 20px}
+.trend-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.trend-title{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.trend-title-badge{font-size:10px;background:rgba(88,166,255,.12);color:var(--accent);padding:2px 8px;border-radius:10px;font-weight:600}
+.trend-subtitle{font-size:11px;color:var(--muted);margin-top:2px}
+.trend-mode-toggle{display:inline-flex;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.trend-mode-btn{background:none;border:none;color:var(--muted);font-family:inherit;font-size:11px;padding:6px 14px;cursor:pointer;font-weight:600;letter-spacing:.3px;transition:all .15s}
+.trend-mode-btn:not(:last-child){border-right:1px solid var(--border)}
+.trend-mode-btn:hover{color:var(--text)}
+.trend-mode-btn.active{background:rgba(88,166,255,.14);color:var(--accent)}
+.trend-region-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;padding:8px 10px;background:var(--card-bg);border:1px solid var(--border);border-radius:8px}
+.trend-region-btn{background:none;border:1px solid transparent;color:var(--muted);font-family:inherit;font-size:11px;padding:5px 12px;border-radius:14px;cursor:pointer;font-weight:500;transition:all .15s;white-space:nowrap}
+.trend-region-btn:hover{color:var(--text);border-color:var(--border)}
+.trend-region-btn.active{background:rgba(88,166,255,.14);color:var(--accent);border-color:rgba(88,166,255,.35);font-weight:600}
+.trend-chart-wrap{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:16px;position:relative}
+.trend-chart-box{position:relative;height:420px}
+.trend-legend-note{font-size:10px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.trend-legend-note .swatch{display:inline-block;width:10px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.trend-legend-note .swatch.sono{background:var(--accent)}
+.trend-legend-note .swatch.comp{background:#7d8590}
+.trend-empty-hint{font-size:11px;color:var(--muted);text-align:center;padding:8px;background:rgba(33,38,45,.4);border-radius:6px;margin-top:10px}
+@media(max-width:700px){.trend-chart-box{height:340px}.trend-region-tabs{padding:6px 8px}}
 """
 
 
@@ -2592,6 +2809,497 @@ _JS = """
       section.classList.toggle('open');
     });
   });
+
+  // ── 좌측 사이드바 메뉴 ─────────────────────────────────────────────────────
+  var sbItems       = toArr(document.querySelectorAll('.sb-item[data-view]'));
+  var sbSubItems    = toArr(document.querySelectorAll('.sb-sub-item[data-view]'));
+  var yoySection    = document.getElementById('yoy-market-section');
+  var trendSection  = document.getElementById('trend-section');
+  var catTabBar     = document.querySelector('.cat-tab-bar');
+  var hotelSec      = document.getElementById('hotel-section');
+  var golfSec       = document.getElementById('golf-section');
+  var statsBar      = document.querySelector('.stats-bar');
+  var yoySubmenuBtn = document.querySelector('.sb-item[data-toggle="submenu"]');
+
+  function setView(view) {
+    sbItems.forEach(function (it) {
+      it.classList.toggle('active', it.getAttribute('data-view') === view && it.getAttribute('data-toggle') !== 'submenu');
+    });
+    if ((view === 'yoy' || view === 'trend') && yoySubmenuBtn) {
+      yoySubmenuBtn.classList.add('active');
+      yoySubmenuBtn.classList.add('expanded');
+    } else if (yoySubmenuBtn) {
+      yoySubmenuBtn.classList.remove('active');
+    }
+
+    var isMarket = (view === 'yoy' || view === 'trend');
+    if (yoySection)   yoySection.classList.toggle('view-hidden', view !== 'yoy');
+    if (trendSection) trendSection.classList.toggle('view-hidden', view !== 'trend');
+    if (statsBar)     statsBar.classList.toggle('view-hidden', isMarket);
+    if (catTabBar)    catTabBar.classList.toggle('view-hidden', isMarket);
+    if (isMarket) {
+      if (hotelSec) hotelSec.classList.add('view-hidden');
+      if (golfSec)  golfSec.classList.add('view-hidden');
+    } else {
+      var activeCat = document.querySelector('.cat-btn.active');
+      var cat = activeCat ? activeCat.getAttribute('data-cat') : 'hotel';
+      if (hotelSec) {
+        hotelSec.classList.remove('view-hidden');
+        hotelSec.style.display = (cat === 'hotel') ? '' : 'none';
+      }
+      if (golfSec) {
+        golfSec.classList.remove('view-hidden');
+        golfSec.style.display = (cat === 'golf') ? '' : 'none';
+      }
+    }
+
+    if (view === 'trend' && typeof window.renderTrendChart === 'function') {
+      window.renderTrendChart();
+    }
+
+    try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, 0); }
+  }
+
+  sbItems.forEach(function (it) {
+    it.addEventListener('click', function () {
+      if (it.getAttribute('data-toggle') === 'submenu') {
+        it.classList.toggle('expanded');
+        return;
+      }
+      setView(it.getAttribute('data-view'));
+      closeSidebarMobile();
+    });
+  });
+
+  sbSubItems.forEach(function (it) {
+    it.addEventListener('click', function () {
+      if (it.classList.contains('disabled')) return;
+      sbSubItems.forEach(function (s) { s.classList.remove('active'); });
+      it.classList.add('active');
+      setView(it.getAttribute('data-view'));
+      closeSidebarMobile();
+    });
+  });
+
+  // ── 사이드바 모바일 토글 ───────────────────────────────────────────────────
+  var sidebar    = document.getElementById('app-sidebar');
+  var sbToggle   = document.getElementById('sb-toggle');
+  var sbOverlay  = document.getElementById('sb-overlay');
+
+  function openSidebarMobile() {
+    if (sidebar)   sidebar.classList.add('open');
+    if (sbOverlay) sbOverlay.classList.add('open');
+  }
+  function closeSidebarMobile() {
+    if (sidebar)   sidebar.classList.remove('open');
+    if (sbOverlay) sbOverlay.classList.remove('open');
+  }
+  if (sbToggle)  sbToggle.addEventListener('click', openSidebarMobile);
+  if (sbOverlay) sbOverlay.addEventListener('click', closeSidebarMobile);
+
+  // 초기 뷰: 활성화된 메뉴 항목에 맞춰 표시
+  var initialActive = document.querySelector('.sb-item.active[data-view]');
+  var initialView = initialActive ? initialActive.getAttribute('data-view') : 'pricing';
+  var initialIsMarket = (initialView === 'yoy' || initialView === 'trend');
+  if (yoySection)   yoySection.classList.toggle('view-hidden', initialView !== 'yoy');
+  if (trendSection) trendSection.classList.toggle('view-hidden', initialView !== 'trend');
+  if (statsBar)     statsBar.classList.toggle('view-hidden', initialIsMarket);
+  if (catTabBar)    catTabBar.classList.toggle('view-hidden', initialIsMarket);
+  if (hotelSec)     hotelSec.classList.toggle('view-hidden', initialIsMarket);
+  if (golfSec)      golfSec.classList.toggle('view-hidden', initialIsMarket);
+})();
+"""
+
+
+# ── 좌측 사이드바 HTML ────────────────────────────────────────────────────────
+
+_SIDEBAR_HTML = """  <aside class="app-sidebar" id="app-sidebar">
+    <div class="sb-section-label">경쟁사 모니터링</div>
+    <div class="sb-nav">
+      <button class="sb-item active" type="button" data-view="pricing">
+        <svg class="sb-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l3-3 4 4 5-6"/></svg>
+        <span class="sb-item-label">판매가 비교</span>
+      </button>
+      <button class="sb-item" type="button" data-view="yoy" data-toggle="submenu">
+        <svg class="sb-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+        <span class="sb-item-label">시장 현황</span>
+        <span class="sb-caret">&#9656;</span>
+      </button>
+      <div class="sb-submenu" id="sb-yoy-submenu">
+        <button class="sb-sub-item active" type="button" data-view="yoy" data-month="2026-04">2026년 4월</button>
+        <button class="sb-sub-item" type="button" data-view="trend">월 추이</button>
+      </div>
+    </div>
+  </aside>"""
+
+
+# ── YoY 시장 현황 비교 섹션 HTML (정적 데이터: 2025년 4월 vs 2026년 4월) ─────
+
+_YOY_SECTION_HTML = """<!-- ═══ YoY 시장 현황 비교 섹션 ═══ -->
+<div class="yoy-section" id="yoy-market-section">
+<div class="yoy-header">
+  <div>
+    <div class="yoy-title">시장 현황 YoY 비교 <span class="yoy-title-badge">4월 기준</span></div>
+    <div class="yoy-subtitle">112번 사업장 · 2025년 4월 vs 2026년 4월 · 전체 54개 시설</div>
+  </div>
+</div>
+<div class="yoy-summary">
+  <div class="yoy-stat"><div class="yoy-stat-label">전체 평균 증감</div><div class="yoy-stat-value up">+1.6%p</div><div class="yoy-stat-sub">경주 제외 50개 시설</div></div>
+  <div class="yoy-stat"><div class="yoy-stat-label">자사(SONO) 평균</div><div class="yoy-stat-value down">-2.8%p</div><div class="yoy-stat-sub">15개 자사 시설</div></div>
+  <div class="yoy-stat"><div class="yoy-stat-label">상승</div><div class="yoy-stat-value up">26</div><div class="yoy-stat-sub">+0.5%p 이상</div></div>
+  <div class="yoy-stat"><div class="yoy-stat-label">하락</div><div class="yoy-stat-value down">22</div><div class="yoy-stat-sub">-0.5%p 이상</div></div>
+  <div class="yoy-stat"><div class="yoy-stat-label">보합</div><div class="yoy-stat-value neutral">2</div><div class="yoy-stat-sub">±0.5%p 이내</div></div>
+  <div class="yoy-stat"><div class="yoy-stat-label">신규</div><div class="yoy-stat-value" style="color:var(--accent)">3</div><div class="yoy-stat-sub">2026년 신규</div></div>
+</div>
+<div class="yoy-top-section">
+<div class="yoy-top-card"><div class="yoy-top-card-header up-header">▲ 상승 TOP 5</div><ul class="yoy-top-list">
+<li><span class="yoy-top-name">덕산스플라스 리솜</span><span class="yoy-top-val yoy-up">+25.2%p</span></li>
+<li><span class="yoy-top-name">한화리조트 경주</span><span class="yoy-top-val yoy-up">+21.7%p</span></li>
+<li><span class="yoy-top-name">안면도 아일랜드 리솜</span><span class="yoy-top-val yoy-up">+20.5%p</span></li>
+<li><span class="yoy-top-name">한화리조트 제주</span><span class="yoy-top-val yoy-up">+14.5%p</span></li>
+<li><span class="yoy-top-name">카시아리조트</span><span class="yoy-top-val yoy-up">+11.0%p</span></li>
+</ul></div>
+<div class="yoy-top-card"><div class="yoy-top-card-header down-header">▼ 하락 TOP 5</div><ul class="yoy-top-list">
+<li><span class="yoy-top-name sono">소노벨 단양</span><span class="yoy-top-val yoy-down">-18.5%p</span></li>
+<li><span class="yoy-top-name sono">소노캄 거제</span><span class="yoy-top-val yoy-down">-15.7%p</span></li>
+<li><span class="yoy-top-name">베스트웨스턴</span><span class="yoy-top-val yoy-down">-13.0%p</span></li>
+<li><span class="yoy-top-name">켄싱턴리조트 속초</span><span class="yoy-top-val yoy-down">-9.4%p</span></li>
+<li><span class="yoy-top-name sono">소노캄 비발디파크</span><span class="yoy-top-val yoy-down">-8.8%p</span></li>
+</ul></div>
+</div>
+<div class="yoy-table-wrap">
+<table class="yoy-table">
+<thead><tr><th>지역</th><th>시설명</th><th>가용 객실수(25)</th><th>가용 객실수(26)</th><th>25Y실적</th><th>26년4월</th><th>증감(%p)</th></tr></thead>
+<tbody>
+<tr><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">강원도 서부 지역</td></tr>
+<tr><td></td><td><span class="sono-name">소노벨 양평</span></td><td>189</td><td>193</td><td>50.6%</td><td>49.4%</td><td class="yoy-down">▼ -1.2%p</td></tr>
+<tr><td></td><td><span class="sono-name">소노벨리체 비발디</span></td><td>500</td><td>500</td><td>27.4%</td><td>19.6%</td><td class="yoy-down">▼ -7.8%p</td></tr>
+<tr><td></td><td><span class="sono-name">소노캄 비발디파크</span></td><td>1,723</td><td>1,762</td><td>34.2%</td><td>25.4%</td><td class="yoy-down">▼ -8.8%p</td></tr>
+<tr><td></td><td><span class="sono-name">소노펠리체 빌리지 비발디</span></td><td>219</td><td>219</td><td>30.4%</td><td>24.0%</td><td class="yoy-down">▼ -6.4%p</td></tr>
+<tr><td></td><td><span class="">오크밸리</span></td><td>1,105</td><td>1,105</td><td>47.7%</td><td>39.8%</td><td class="yoy-down">▼ -7.9%p</td></tr>
+<tr><td></td><td><span class="">용평</span></td><td>1,298</td><td>1,298</td><td>18.3%</td><td>20.6%</td><td class="yoy-up">▲ +2.3%p</td></tr>
+<tr><td></td><td><span class="">웰리힐리</span></td><td>766</td><td>766</td><td>16.6%</td><td>16.2%</td><td class="yoy-flat">— -0.4%p</td></tr>
+<tr><td></td><td><span class="">휘닉스파크</span></td><td>962</td><td>962</td><td>22.5%</td><td>27.2%</td><td class="yoy-up">▲ +4.7%p</td></tr>
+<tr><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">강원도 동부 지역</td></tr>
+<tr><td></td><td><span class="sono-name">델피노</span></td><td>1,196</td><td>1,257</td><td>42.9%</td><td>42.5%</td><td class="yoy-flat">— -0.4%p</td></tr>
+<tr><td></td><td><span class="">롯데리조트 속초</span></td><td>392</td><td>392</td><td>73.7%</td><td>65.2%</td><td class="yoy-down">▼ -8.5%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">르네블루 by 쏠비치 고성</span></td><td>87</td><td>87</td><td>68.2%</td><td>66.3%</td><td class="yoy-down">▼ -1.9%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 삼척</span></td><td>707</td><td>707</td><td>60.7%</td><td>63.6%</td><td class="yoy-up">▲ +2.9%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 양양</span></td><td>501</td><td>497</td><td>53.3%</td><td>50.7%</td><td class="yoy-down">▼ -2.6%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">윈덤 호텔 고성</span><span class="yoy-new-badge">NEW</span></td><td>-</td><td>529</td><td>-</td><td>20.0%</td><td class="yoy-na">NEW</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">카시아리조트</span></td><td>674</td><td>674</td><td>25.0%</td><td>36.0%</td><td class="yoy-up">▲ +11.0%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">켄싱턴리조트 속초</span></td><td>176</td><td>176</td><td>74.0%</td><td>64.6%</td><td class="yoy-down">▼ -9.4%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 속초</span></td><td>1,554</td><td>1,554</td><td>46.8%</td><td>43.9%</td><td class="yoy-down">▼ -2.9%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화브리드 양양</span></td><td>56</td><td>56</td><td>70.5%</td><td>61.8%</td><td class="yoy-down">▼ -8.7%p</td></tr>
+<tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">전라/경상도 지역</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">금호리조트 통영</span></td><td>272</td><td>272</td><td>71.2%</td><td>79.1%</td><td class="yoy-up">▲ +7.9%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">벨메르 한화</span></td><td>100</td><td>100</td><td>63.7%</td><td>62.5%</td><td class="yoy-down">▼ -1.2%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 거제</span></td><td>479</td><td>509</td><td>64.7%</td><td>49.0%</td><td class="yoy-down">▼ -15.7%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 여수</span></td><td>309</td><td>310</td><td>60.2%</td><td>64.6%</td><td class="yoy-up">▲ +4.4%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">신라스테이 여수</span></td><td>315</td><td>315</td><td>77.6%</td><td>82.5%</td><td class="yoy-up">▲ +4.9%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 남해</span><span class="yoy-new-badge">NEW</span></td><td>-</td><td>449</td><td>-</td><td>61.3%</td><td class="yoy-na">NEW</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 진도</span></td><td>561</td><td>561</td><td>56.1%</td><td>58.1%</td><td class="yoy-up">▲ +2.0%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">유탑마리나</span></td><td>298</td><td>298</td><td>74.1%</td><td>69.2%</td><td class="yoy-down">▼ -4.9%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 벨버디어</span></td><td>470</td><td>470</td><td>42.8%</td><td>38.8%</td><td class="yoy-down">▼ -4.0%p</td></tr>
+<tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">경상도 지역</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">라한셀렉트</span></td><td>430</td><td>430</td><td>87.0%</td><td>94.3%</td><td class="yoy-up">▲ +7.3%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 단양</span></td><td>830</td><td>843</td><td>60.3%</td><td>41.8%</td><td class="yoy-down">▼ -18.5%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 청송</span></td><td>306</td><td>320</td><td>36.2%</td><td>43.3%</td><td class="yoy-up">▲ +7.1%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 경주</span> <span class="yoy-note">(25년 휴관)</span></td><td>410</td><td>417</td><td>0.0%</td><td>91.8%</td><td class="yoy-up">▲ +91.8%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">켄싱턴</span></td><td>214</td><td>501</td><td>66.5%</td><td>72.8%</td><td class="yoy-up">▲ +6.3%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">포레스트 리솜</span></td><td>450</td><td>450</td><td>71.9%</td><td>73.9%</td><td class="yoy-up">▲ +2.0%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 경주</span></td><td>393</td><td>393</td><td>62.5%</td><td>84.2%</td><td class="yoy-up">▲ +21.7%p</td></tr>
+<tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">충청/전북 지역</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">덕산스플라스 리솜</span></td><td>405</td><td>405</td><td>36.9%</td><td>62.1%</td><td class="yoy-up">▲ +25.2%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 변산</span></td><td>502</td><td>503</td><td>53.7%</td><td>50.6%</td><td class="yoy-down">▼ -3.1%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 천안</span></td><td>438</td><td>450</td><td>55.4%</td><td>50.5%</td><td class="yoy-down">▼ -4.9%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">안면도 아일랜드 리솜</span></td><td>248</td><td>248</td><td>57.9%</td><td>78.4%</td><td class="yoy-up">▲ +20.5%p</td></tr>
+<tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">부산지역</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">라마다 해운대</span></td><td>402</td><td>402</td><td>79.0%</td><td>74.2%</td><td class="yoy-down">▼ -4.8%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">롯데 L7호텔 해운대</span></td><td>383</td><td>383</td><td>77.6%</td><td>83.1%</td><td class="yoy-up">▲ +5.5%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">롯데리조트 김해</span></td><td>250</td><td>250</td><td>39.9%</td><td>48.5%</td><td class="yoy-up">▲ +8.6%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">베스트웨스턴</span></td><td>134</td><td>134</td><td>85.0%</td><td>72.0%</td><td class="yoy-down">▼ -13.0%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노문 해운대</span></td><td>235</td><td>235</td><td>69.2%</td><td>77.8%</td><td class="yoy-up">▲ +8.6%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 해운대</span></td><td>417</td><td>417</td><td>50.1%</td><td>57.9%</td><td class="yoy-up">▲ +7.8%p</td></tr>
+<tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">제주도 지역</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">금호리조트 제주</span></td><td>324</td><td>324</td><td>68.5%</td><td>72.9%</td><td class="yoy-up">▲ +4.4%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">롯데 아트빌라스 제주</span></td><td>66</td><td>66</td><td>60.6%</td><td>71.2%</td><td class="yoy-up">▲ +10.6%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 제주</span></td><td>388</td><td>397</td><td>69.2%</td><td>77.0%</td><td class="yoy-up">▲ +7.8%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 제주</span></td><td>333</td><td>368</td><td>65.4%</td><td>64.7%</td><td class="yoy-down">▼ -0.7%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">켄싱턴</span></td><td>214</td><td>214</td><td>66.5%</td><td>72.2%</td><td class="yoy-up">▲ +5.7%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 제주</span></td><td>395</td><td>395</td><td>45.4%</td><td>59.9%</td><td class="yoy-up">▲ +14.5%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">해비치리조트 제주</span></td><td>503</td><td>503</td><td>75.0%</td><td>79.0%</td><td class="yoy-up">▲ +4.0%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">휘닉스아일랜드</span></td><td>300</td><td>300</td><td>58.1%</td><td>68.3%</td><td class="yoy-up">▲ +10.2%p</td></tr>
+<tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">서울/경기</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 고양</span></td><td>799</td><td>824</td><td>67.8%</td><td>66.1%</td><td class="yoy-down">▼ -1.7%p</td></tr>
+<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">안토(구. 파라스파라)</span><span class="yoy-new-badge">NEW</span></td><td>-</td><td>334</td><td>-</td><td>30.0%</td><td class="yoy-na">NEW</td></tr>
+</tbody></table>
+<div class="yoy-toggle-wrap">
+  <button class="yoy-toggle-btn" id="yoyToggleBtn" onclick="(function(){var r=document.querySelectorAll('.yoy-extra-row,.yoy-extra-region');var b=document.getElementById('yoyToggleBtn');if(r[0]&&r[0].classList.contains('yoy-hidden')){r.forEach(function(e){e.classList.remove('yoy-hidden')});b.textContent='접기'}else{r.forEach(function(e){e.classList.add('yoy-hidden')});b.textContent='전체 보기 (44개 더)'}})()">전체 보기 (44개 더)</button>
+</div>
+</div>
+</div>
+<!-- ═══ /YoY 시장 현황 비교 섹션 ═══ -->"""
+
+
+# ── 월 추이 차트 섹션 HTML + 데이터 ──────────────────────────────────────────
+
+_TREND_SECTION_HTML = """<!-- ═══ 월 추이 차트 섹션 ═══ -->
+<div class="trend-section view-hidden" id="trend-section">
+  <div class="trend-inner">
+    <div class="trend-header">
+      <div>
+        <div class="trend-title">월별 OCC 추이 <span class="trend-title-badge">112번 사업장</span></div>
+        <div class="trend-subtitle">시설별 월별 OCC%/가용 객실수 추이 · 전체 54개 시설</div>
+      </div>
+      <div class="trend-mode-toggle" role="tablist" aria-label="차트 종류">
+        <button class="trend-mode-btn active" type="button" data-mode="occ">OCC %</button>
+        <button class="trend-mode-btn" type="button" data-mode="rooms">가용 객실수</button>
+      </div>
+    </div>
+    <div class="trend-region-tabs" id="trend-region-tabs"></div>
+    <div class="trend-chart-wrap">
+      <div class="trend-chart-box"><canvas id="trend-chart"></canvas></div>
+      <div class="trend-legend-note">
+        <span><span class="swatch sono"></span>자사(SONO)</span>
+        <span><span class="swatch comp"></span>경쟁사</span>
+        <span style="margin-left:auto">※ 1~3월 데이터는 추후 업데이트 예정 — 현재는 2026년 4월 시점 단일 포인트</span>
+      </div>
+      <div class="trend-empty-hint" id="trend-empty-hint" style="display:none">해당 지역에 표시할 시설이 없습니다.</div>
+    </div>
+  </div>
+</div>
+<script>
+window.MARKET_TREND_DATA = {
+  months: ['2026-04'],
+  regions: ['전체','강원도 서부','강원도 동부','전라/경상도','경상도','충청/전북','부산','제주도','서울/경기'],
+  facilities: [
+    {region:'강원도 서부', name:'소노벨 양평', sono:true,  occ:{'2026-04':49.4}, rooms:{'2026-04':193}},
+    {region:'강원도 서부', name:'소노벨리체 비발디', sono:true, occ:{'2026-04':19.6}, rooms:{'2026-04':500}},
+    {region:'강원도 서부', name:'소노캄 비발디파크', sono:true, occ:{'2026-04':25.4}, rooms:{'2026-04':1762}},
+    {region:'강원도 서부', name:'소노펠리체 빌리지 비발디', sono:true, occ:{'2026-04':24.0}, rooms:{'2026-04':219}},
+    {region:'강원도 서부', name:'오크밸리', sono:false, occ:{'2026-04':39.8}, rooms:{'2026-04':1105}},
+    {region:'강원도 서부', name:'용평', sono:false, occ:{'2026-04':20.6}, rooms:{'2026-04':1298}},
+    {region:'강원도 서부', name:'웰리힐리', sono:false, occ:{'2026-04':16.2}, rooms:{'2026-04':766}},
+    {region:'강원도 서부', name:'휘닉스파크', sono:false, occ:{'2026-04':27.2}, rooms:{'2026-04':962}},
+    {region:'강원도 동부', name:'델피노', sono:true, occ:{'2026-04':42.5}, rooms:{'2026-04':1257}},
+    {region:'강원도 동부', name:'롯데리조트 속초', sono:false, occ:{'2026-04':65.2}, rooms:{'2026-04':392}},
+    {region:'강원도 동부', name:'르네블루 by 쏠비치 고성', sono:false, occ:{'2026-04':66.3}, rooms:{'2026-04':87}},
+    {region:'강원도 동부', name:'쏠비치 삼척', sono:false, occ:{'2026-04':63.6}, rooms:{'2026-04':707}},
+    {region:'강원도 동부', name:'쏠비치 양양', sono:false, occ:{'2026-04':50.7}, rooms:{'2026-04':497}},
+    {region:'강원도 동부', name:'윈덤 호텔 고성', sono:false, occ:{'2026-04':20.0}, rooms:{'2026-04':529}},
+    {region:'강원도 동부', name:'카시아리조트', sono:false, occ:{'2026-04':36.0}, rooms:{'2026-04':674}},
+    {region:'강원도 동부', name:'켄싱턴리조트 속초', sono:false, occ:{'2026-04':64.6}, rooms:{'2026-04':176}},
+    {region:'강원도 동부', name:'한화리조트 속초', sono:false, occ:{'2026-04':43.9}, rooms:{'2026-04':1554}},
+    {region:'강원도 동부', name:'한화브리드 양양', sono:false, occ:{'2026-04':61.8}, rooms:{'2026-04':56}},
+    {region:'전라/경상도', name:'금호리조트 통영', sono:false, occ:{'2026-04':79.1}, rooms:{'2026-04':272}},
+    {region:'전라/경상도', name:'벨메르 한화', sono:false, occ:{'2026-04':62.5}, rooms:{'2026-04':100}},
+    {region:'전라/경상도', name:'소노캄 거제', sono:true, occ:{'2026-04':49.0}, rooms:{'2026-04':509}},
+    {region:'전라/경상도', name:'소노캄 여수', sono:true, occ:{'2026-04':64.6}, rooms:{'2026-04':310}},
+    {region:'전라/경상도', name:'신라스테이 여수', sono:false, occ:{'2026-04':82.5}, rooms:{'2026-04':315}},
+    {region:'전라/경상도', name:'쏠비치 남해', sono:false, occ:{'2026-04':61.3}, rooms:{'2026-04':449}},
+    {region:'전라/경상도', name:'쏠비치 진도', sono:false, occ:{'2026-04':58.1}, rooms:{'2026-04':561}},
+    {region:'전라/경상도', name:'유탑마리나', sono:false, occ:{'2026-04':69.2}, rooms:{'2026-04':298}},
+    {region:'전라/경상도', name:'한화리조트 벨버디어', sono:false, occ:{'2026-04':38.8}, rooms:{'2026-04':470}},
+    {region:'경상도', name:'라한셀렉트', sono:false, occ:{'2026-04':94.3}, rooms:{'2026-04':430}},
+    {region:'경상도', name:'소노벨 단양', sono:true, occ:{'2026-04':41.8}, rooms:{'2026-04':843}},
+    {region:'경상도', name:'소노벨 청송', sono:true, occ:{'2026-04':43.3}, rooms:{'2026-04':320}},
+    {region:'경상도', name:'소노캄 경주', sono:true, occ:{'2026-04':91.8}, rooms:{'2026-04':417}},
+    {region:'경상도', name:'켄싱턴', sono:false, occ:{'2026-04':72.8}, rooms:{'2026-04':501}},
+    {region:'경상도', name:'포레스트 리솜', sono:false, occ:{'2026-04':73.9}, rooms:{'2026-04':450}},
+    {region:'경상도', name:'한화리조트 경주', sono:false, occ:{'2026-04':84.2}, rooms:{'2026-04':393}},
+    {region:'충청/전북', name:'덕산스플라스 리솜', sono:false, occ:{'2026-04':62.1}, rooms:{'2026-04':405}},
+    {region:'충청/전북', name:'소노벨 변산', sono:true, occ:{'2026-04':50.6}, rooms:{'2026-04':503}},
+    {region:'충청/전북', name:'소노벨 천안', sono:true, occ:{'2026-04':50.5}, rooms:{'2026-04':450}},
+    {region:'충청/전북', name:'안면도 아일랜드 리솜', sono:false, occ:{'2026-04':78.4}, rooms:{'2026-04':248}},
+    {region:'부산', name:'라마다 해운대', sono:false, occ:{'2026-04':74.2}, rooms:{'2026-04':402}},
+    {region:'부산', name:'롯데 L7호텔 해운대', sono:false, occ:{'2026-04':83.1}, rooms:{'2026-04':383}},
+    {region:'부산', name:'롯데리조트 김해', sono:false, occ:{'2026-04':48.5}, rooms:{'2026-04':250}},
+    {region:'부산', name:'베스트웨스턴', sono:false, occ:{'2026-04':72.0}, rooms:{'2026-04':134}},
+    {region:'부산', name:'소노문 해운대', sono:true, occ:{'2026-04':77.8}, rooms:{'2026-04':235}},
+    {region:'부산', name:'한화리조트 해운대', sono:false, occ:{'2026-04':57.9}, rooms:{'2026-04':417}},
+    {region:'제주도', name:'금호리조트 제주', sono:false, occ:{'2026-04':72.9}, rooms:{'2026-04':324}},
+    {region:'제주도', name:'롯데 아트빌라스 제주', sono:false, occ:{'2026-04':71.2}, rooms:{'2026-04':66}},
+    {region:'제주도', name:'소노벨 제주', sono:true, occ:{'2026-04':77.0}, rooms:{'2026-04':397}},
+    {region:'제주도', name:'소노캄 제주', sono:true, occ:{'2026-04':64.7}, rooms:{'2026-04':368}},
+    {region:'제주도', name:'켄싱턴 제주', sono:false, occ:{'2026-04':72.2}, rooms:{'2026-04':214}},
+    {region:'제주도', name:'한화리조트 제주', sono:false, occ:{'2026-04':59.9}, rooms:{'2026-04':395}},
+    {region:'제주도', name:'해비치리조트 제주', sono:false, occ:{'2026-04':79.0}, rooms:{'2026-04':503}},
+    {region:'제주도', name:'휘닉스아일랜드', sono:false, occ:{'2026-04':68.3}, rooms:{'2026-04':300}},
+    {region:'서울/경기', name:'소노캄 고양', sono:true, occ:{'2026-04':66.1}, rooms:{'2026-04':824}},
+    {region:'서울/경기', name:'안토(구. 파라스파라)', sono:false, occ:{'2026-04':30.0}, rooms:{'2026-04':334}}
+  ]
+};
+</script>
+<!-- ═══ /월 추이 차트 섹션 ═══ -->"""
+
+
+# ── 월 추이 차트 렌더링 스크립트 ─────────────────────────────────────────────
+
+_TREND_CHART_JS = """
+(function () {
+  var DATA = window.MARKET_TREND_DATA;
+  if (!DATA) return;
+
+  var CSS_VAR = function (name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  };
+  var COLORS = {
+    accent:  CSS_VAR('--accent')   || '#58a6ff',
+    text:    CSS_VAR('--text')     || '#e6edf3',
+    muted:   CSS_VAR('--muted')    || '#7d8590',
+    border:  CSS_VAR('--border')   || '#30363d',
+    bg:      CSS_VAR('--bg')       || '#0d1117',
+    cardBg:  CSS_VAR('--card-bg')  || '#161b22'
+  };
+  var COMP_PALETTE = ['#7d8590','#9aa4ad','#586069','#8b949e','#6e7681','#a0aab4','#5a626b','#b1bac4'];
+
+  var state = { region: '전체', mode: 'occ', chart: null };
+
+  var tabBar = document.getElementById('trend-region-tabs');
+  if (tabBar) {
+    DATA.regions.forEach(function (r) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'trend-region-btn' + (r === state.region ? ' active' : '');
+      btn.setAttribute('data-region', r);
+      btn.textContent = r;
+      btn.addEventListener('click', function () {
+        if (state.region === r) return;
+        state.region = r;
+        tabBar.querySelectorAll('.trend-region-btn').forEach(function (b) {
+          b.classList.toggle('active', b.getAttribute('data-region') === r);
+        });
+        render();
+      });
+      tabBar.appendChild(btn);
+    });
+  }
+
+  var modeBtns = document.querySelectorAll('.trend-mode-btn');
+  modeBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var mode = btn.getAttribute('data-mode');
+      if (state.mode === mode) return;
+      state.mode = mode;
+      modeBtns.forEach(function (b) { b.classList.toggle('active', b === btn); });
+      render();
+    });
+  });
+
+  function filteredFacilities() {
+    if (state.region === '전체') return DATA.facilities.slice();
+    return DATA.facilities.filter(function (f) { return f.region === state.region; });
+  }
+
+  function buildDatasets(facilities, mode) {
+    var months = DATA.months;
+    var compIdx = 0;
+    return facilities.map(function (f) {
+      var src = mode === 'occ' ? f.occ : f.rooms;
+      var data = months.map(function (m) {
+        var v = src[m];
+        return (v === undefined || v === null) ? null : v;
+      });
+      var isSono = !!f.sono;
+      var color = isSono ? COLORS.accent : COMP_PALETTE[compIdx++ % COMP_PALETTE.length];
+      return {
+        label: f.name,
+        data: data,
+        borderColor: color,
+        backgroundColor: isSono ? color : color + 'cc',
+        borderWidth: isSono ? 2.5 : 1.4,
+        pointRadius: isSono ? 4 : 2.5,
+        pointHoverRadius: isSono ? 6 : 4.5,
+        pointBackgroundColor: color,
+        tension: 0.25,
+        spanGaps: true,
+        order: isSono ? 0 : 1,
+        _isSono: isSono
+      };
+    });
+  }
+
+  function render() {
+    var canvas = document.getElementById('trend-chart');
+    if (!canvas || !window.Chart) return;
+
+    var facilities = filteredFacilities();
+    var emptyHint = document.getElementById('trend-empty-hint');
+    if (emptyHint) emptyHint.style.display = facilities.length ? 'none' : '';
+
+    var datasets = buildDatasets(facilities, state.mode);
+    var labels = DATA.months.map(function (m) {
+      var parts = m.split('-');
+      return parts[0] + '년 ' + parseInt(parts[1], 10) + '월';
+    });
+
+    var isOcc = state.mode === 'occ';
+    var chartType = (DATA.months.length === 1 && !isOcc) ? 'bar' : 'line';
+
+    if (state.chart) {
+      state.chart.destroy();
+      state.chart = null;
+    }
+
+    state.chart = new Chart(canvas.getContext('2d'), {
+      type: chartType,
+      data: { labels: labels, datasets: datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'nearest', intersect: false },
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: COLORS.text,
+              font: { size: 11 },
+              boxWidth: 12,
+              boxHeight: 3,
+              padding: 8,
+              usePointStyle: false
+            }
+          },
+          tooltip: {
+            backgroundColor: COLORS.cardBg,
+            titleColor: COLORS.text,
+            bodyColor: COLORS.text,
+            borderColor: COLORS.border,
+            borderWidth: 1,
+            padding: 10,
+            callbacks: {
+              label: function (ctx) {
+                var v = ctx.parsed.y;
+                if (v === null || v === undefined) return ctx.dataset.label + ': -';
+                var suffix = isOcc ? '%' : '실';
+                var prefix = ctx.dataset._isSono ? '★ ' : '';
+                return prefix + ctx.dataset.label + ': ' + (isOcc ? v.toFixed(1) : v.toLocaleString()) + suffix;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: COLORS.muted, font: { size: 11 } },
+            grid:  { color: 'rgba(125,133,144,.08)' }
+          },
+          y: {
+            beginAtZero: true,
+            suggestedMax: isOcc ? 100 : undefined,
+            ticks: {
+              color: COLORS.muted,
+              font: { size: 11 },
+              callback: function (v) { return isOcc ? v + '%' : v.toLocaleString(); }
+            },
+            grid: { color: 'rgba(125,133,144,.08)' }
+          }
+        }
+      }
+    });
+  }
+
+  window.renderTrendChart = render;
 })();
 """
 
