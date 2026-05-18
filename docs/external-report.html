@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="auth-required" content="executive">
+<title>외부 리포트 분석 | SONO GS팀</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script src="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/js/auth.js"></script>
+<style>
+:root{
+  --bg:#0d1117;--card:#161b22;--ch:#21262d;--bd:#30363d;
+  --tx:#e6edf3;--mu:#7d8590;--ac:#58a6ff;
+  --gr:#3fb950;--rd:#f85149;--yw:#e3b341;--or:#f0883e;--pu:#bc8cff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:var(--bg);color:var(--tx);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
+/* ── GSN Nav ── */
+.gsn{background:#0b0f14;border-bottom:1px solid #1e2530;font-family:'Noto Sans KR',-apple-system,sans-serif;font-size:13px;position:sticky;top:0;z-index:200}
+.gsn-wrap{max-width:1400px;margin:0 auto;padding:0 20px;height:42px;display:flex;align-items:center}
+.gsn-brand{color:#7a8794;text-decoration:none;font-weight:600;font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;margin-right:24px;padding-right:24px;border-right:1px solid #1e2530}
+.gsn-brand:hover{color:#c9d1d9}.gsn-brand-dot{color:#58a6ff}
+.gsn-links{display:flex;align-items:center;gap:2px;flex:1}
+.gsn-item{color:var(--mu);text-decoration:none;padding:4px 12px;border-radius:6px;white-space:nowrap;font-size:13px;transition:background .15s,color .15s;display:flex;align-items:center;gap:6px}
+.gsn-item:hover{background:#1a2232;color:#c9d1d9}.gsn-item.active{background:#1c2d3f;color:#58a6ff;font-weight:600}
+.gsn-toggle{display:none;background:none;border:none;color:var(--mu);cursor:pointer;padding:5px;border-radius:4px;margin-left:auto}
+.gsn-toggle:hover{color:#c9d1d9;background:#1e2530}
+@media(max-width:900px){
+  .gsn-links{display:none;flex-direction:column;position:absolute;top:42px;left:0;right:0;background:#0b0f14;border-bottom:1px solid #1e2530;padding:8px 12px;gap:3px;z-index:300}
+  .gsn-links.open{display:flex}.gsn-item{padding:8px 12px}
+  .gsn-toggle{display:flex;align-items:center;justify-content:center}
+}
+
+/* ── Header ── */
+.hdr{background:rgba(22,27,34,.97);border-bottom:1px solid var(--bd);padding:12px 20px;position:sticky;top:42px;z-index:100;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.hdr-inner{display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto}
+.hdr-left{display:flex;flex-direction:column;gap:2px}
+.hdr-title-wrap{display:flex;align-items:center;gap:10px}
+.hdr-title{font-family:'Space Grotesk','Noto Sans KR',sans-serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.hdr-gs{background:linear-gradient(135deg,#e3b341,#f0d060,#e3b341);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700;font-size:22px;letter-spacing:2px}
+.hdr-badge{display:inline-flex;align-items:center;background:rgba(227,179,65,.12);color:rgba(227,179,65,.7);font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:4px;border:1px solid rgba(227,179,65,.2)}
+.hdr-meta{font-size:11px;color:var(--mu);margin-top:1px}
+.hdr-source{display:inline-flex;align-items:center;gap:5px;background:rgba(88,166,255,.08);color:var(--ac);font-size:10px;font-weight:500;padding:4px 12px;border-radius:20px;border:1px solid rgba(88,166,255,.2);white-space:nowrap}
+
+/* ── Layout ── */
+.layout{display:flex;max-width:1400px;margin:0 auto;min-height:calc(100vh - 110px)}
+
+/* ── Sidebar ── */
+.sidebar{width:240px;flex-shrink:0;background:var(--card);border-right:1px solid var(--bd);padding:16px 0;position:sticky;top:110px;height:calc(100vh - 110px);overflow-y:auto}
+.sb-title{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;padding:0 16px;margin-bottom:10px;font-family:'Space Grotesk',sans-serif}
+.sb-section{padding:0;list-style:none}
+.sb-item{display:block;padding:8px 16px 8px 20px;color:var(--mu);text-decoration:none;font-size:12px;border-left:2px solid transparent;transition:all .15s;cursor:pointer}
+.sb-item:hover{color:var(--tx);background:rgba(88,166,255,.04);border-left-color:rgba(88,166,255,.3)}
+.sb-item.active{color:var(--ac);background:rgba(88,166,255,.08);border-left-color:var(--ac);font-weight:600}
+.sb-divider{height:1px;background:var(--bd);margin:12px 16px}
+.sb-report-label{font-size:10px;color:var(--mu);padding:0 16px;margin:12px 0 6px;letter-spacing:.5px;text-transform:uppercase;font-family:'Space Grotesk',sans-serif}
+.sb-report-item{display:flex;align-items:center;gap:8px;padding:7px 16px 7px 20px;color:var(--mu);text-decoration:none;font-size:11px;transition:all .15s;cursor:pointer;border-left:2px solid transparent}
+.sb-report-item:hover{color:var(--tx);background:rgba(88,166,255,.04)}
+.sb-report-item.active{color:var(--ac);border-left-color:var(--ac);font-weight:500}
+.sb-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* ── Content ── */
+.content{flex:1;padding:20px 24px 40px;min-width:0}
+
+/* ── Section ── */
+.section{margin-bottom:28px}
+.section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
+.section-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.section-title{font-size:16px;font-weight:700;color:#fff;font-family:'Space Grotesk','Noto Sans KR',sans-serif}
+.section-sub{font-size:11px;color:var(--mu);margin-left:auto}
+
+/* ── Cards ── */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:14px}
+.card-header{background:var(--ch);padding:10px 14px;font-size:12px;font-weight:600;color:var(--tx);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd)}
+.card-body{padding:14px}
+.card-body p{font-size:12px;color:var(--mu);line-height:1.7;margin-bottom:8px}
+.card-body p:last-child{margin-bottom:0}
+
+/* ── Grid ── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+
+/* ── KPI Row ── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:900px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:12px;text-align:center;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kc,var(--ac))}
+.kpi-label{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px;font-family:'Space Grotesk',sans-serif}
+.kpi-value{font-size:22px;font-weight:700;color:#fff;font-family:'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums}
+.kpi-delta{font-size:10px;margin-top:2px}
+.kpi-delta.up{color:var(--gr)}.kpi-delta.down{color:var(--rd)}
+
+/* ── Chart ── */
+.chart-wrap{position:relative;width:100%;height:260px}
+.chart-wrap canvas{width:100%!important;height:100%!important}
+
+/* ── Table ── */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;padding:8px 10px;background:var(--ch);color:var(--mu);font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd);font-family:'Space Grotesk',sans-serif}
+.tbl td{padding:7px 10px;border-bottom:1px solid rgba(48,54,61,.5);color:var(--tx)}
+.tbl tr:hover td{background:rgba(88,166,255,.03)}
+.txt-gr{color:var(--gr)}.txt-rd{color:var(--rd)}.txt-yw{color:var(--yw)}.txt-ac{color:var(--ac)}.txt-or{color:var(--or)}
+
+/* ── Insight Box ── */
+.insight{background:rgba(88,166,255,.05);border:1px solid rgba(88,166,255,.15);border-radius:8px;padding:12px 14px;margin-top:10px}
+.insight-title{font-size:11px;color:var(--ac);font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.insight p{font-size:12px;color:var(--mu);line-height:1.7}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .content{padding:14px}
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .chart-wrap{height:220px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── GSN Navigation ── -->
+<nav class="gsn"><div class="gsn-wrap">
+  <a class="gsn-brand" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/"><span class="gsn-brand-dot">◈</span> SONO GS팀</a>
+  <div class="gsn-links" id="gsn-links">
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/" data-gsn="trend">트렌드 리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/gs-strategy-report.html" data-gsn="strategy">전략 리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/otb.html" data-gsn="otb">GS 실적 리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/booking-status.html" data-gsn="booking">Booking Status</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/fcst-trend.html" data-gsn="fcst-trend">FCST 추이</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/action_plan_dashboard.html" data-gsn="action">Action Plan</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/gs-closing-report.html" data-gsn="closing">마감리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/" data-gsn="monitor">경쟁사 모니터링</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/palatium.html" data-gsn="palatium">팔라티움 현황 리포트</a>
+    <a class="gsn-item active" href="https://cksals00-ai.github.io/sono-competitor-crawler/external-report.html" data-gsn="external-report">외부 리포트 분석</a>
+  </div>
+  <button class="gsn-toggle" onclick="document.getElementById('gsn-links').classList.toggle('open')" aria-label="메뉴"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+</div></nav>
+
+<!-- ── Header ── -->
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-left">
+      <div class="hdr-title-wrap">
+        <span class="hdr-title"><span class="hdr-gs">GS</span> 외부 리포트 분석</span>
+        <span class="hdr-badge">SONO Hotels &amp; Resorts</span>
+      </div>
+      <div class="hdr-meta">외부 리서치 보고서 기반 시장 동향 분석 · 업데이트 2025.04</div>
+    </div>
+    <span class="hdr-source">📊 야놀자 리서치 BRIEF Vol.13</span>
+  </div>
+</header>
+
+<!-- ── Main Layout ── -->
+<div class="layout">
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar">
+  <div class="sb-title">분석 섹션</div>
+  <nav class="sb-section">
+    <a class="sb-item active" data-target="sec-inbound" onclick="scrollToSection('sec-inbound',this)">📈 인바운드 관광실적</a>
+    <a class="sb-item" data-target="sec-outbound" onclick="scrollToSection('sec-outbound',this)">✈️ 아웃바운드 관광실적</a>
+    <a class="sb-item" data-target="sec-china" onclick="scrollToSection('sec-china',this)">🇨🇳 중국발 한일령 영향</a>
+    <a class="sb-item" data-target="sec-sono" onclick="scrollToSection('sec-sono',this)">🏨 소노 호텔 시사점</a>
+  </nav>
+  <div class="sb-divider"></div>
+  <div class="sb-report-label">리포트 목록</div>
+  <a class="sb-report-item active">
+    <span class="sb-dot" style="background:var(--ac)"></span> 야놀자 리서치 BRIEF Vol.13
+  </a>
+  <a class="sb-report-item" style="opacity:.45;pointer-events:none">
+    <span class="sb-dot" style="background:var(--mu)"></span> 추후 리포트 추가 예정
+  </a>
+</aside>
+
+<!-- ── Content ── -->
+<main class="content">
+
+<!-- ═══════ 1. 인바운드 관광실적 ═══════ -->
+<div class="section" id="sec-inbound">
+  <div class="section-hdr">
+    <div class="section-icon" style="background:rgba(63,185,80,.12);color:var(--gr)">📈</div>
+    <span class="section-title">인바운드 관광실적</span>
+    <span class="section-sub">2025년 1분기 기준</span>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi" style="--kc:var(--gr)">
+      <div class="kpi-label">1분기 방한 외래객</div>
+      <div class="kpi-value">4,617천명</div>
+      <div class="kpi-delta up">▲ 18.2% YoY</div>
+    </div>
+    <div class="kpi" style="--kc:var(--ac)">
+      <div class="kpi-label">3월 단월 실적</div>
+      <div class="kpi-value">1,682천명</div>
+      <div class="kpi-delta up">▲ 22.5% YoY</div>
+    </div>
+    <div class="kpi" style="--kc:var(--yw)">
+      <div class="kpi-label">일본 방한객</div>
+      <div class="kpi-value">918천명</div>
+      <div class="kpi-delta up">▲ 31.4% YoY</div>
+    </div>
+    <div class="kpi" style="--kc:var(--or)">
+      <div class="kpi-label">중국 방한객</div>
+      <div class="kpi-value">1,053천명</div>
+      <div class="kpi-delta up">▲ 24.8% YoY</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-header">📊 월별 방한 외래객 추이 (2024 vs 2025)</div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chart-inbound-monthly"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">🌍 국적별 방한객 비중 (2025년 1분기)</div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chart-inbound-nationality"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">📋 주요 국적별 방한객 현황</div>
+    <div class="card-body">
+      <table class="tbl">
+        <thead><tr><th>국적</th><th>2025 1Q (천명)</th><th>2024 1Q (천명)</th><th>YoY 증감률</th><th>비중</th></tr></thead>
+        <tbody>
+          <tr><td>중국</td><td>1,053</td><td>844</td><td class="txt-gr">+24.8%</td><td>22.8%</td></tr>
+          <tr><td>일본</td><td>918</td><td>699</td><td class="txt-gr">+31.4%</td><td>19.9%</td></tr>
+          <tr><td>미국</td><td>412</td><td>356</td><td class="txt-gr">+15.7%</td><td>8.9%</td></tr>
+          <tr><td>대만</td><td>387</td><td>341</td><td class="txt-gr">+13.5%</td><td>8.4%</td></tr>
+          <tr><td>동남아</td><td>823</td><td>714</td><td class="txt-gr">+15.3%</td><td>17.8%</td></tr>
+          <tr><td>기타</td><td>1,024</td><td>952</td><td class="txt-gr">+7.6%</td><td>22.2%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-title">💡 핵심 인사이트</div>
+    <p>2025년 1분기 방한 외래객은 전년 동기 대비 18.2% 증가하며 역대 1분기 최고치를 경신했다. 특히 일본 방한객이 31.4%로 가장 높은 성장률을 기록했으며, 엔화 약세에도 불구하고 한류 콘텐츠와 K-뷰티 수요가 지속적으로 방한을 견인하고 있다. 중국 방한객 역시 한일령(限日令) 영향으로 대체 여행지인 한국으로의 유입이 증가하고 있어 2분기 추가 성장이 기대된다.</p>
+  </div>
+</div>
+
+<!-- ═══════ 2. 아웃바운드 관광실적 ═══════ -->
+<div class="section" id="sec-outbound">
+  <div class="section-hdr">
+    <div class="section-icon" style="background:rgba(88,166,255,.12);color:var(--ac)">✈️</div>
+    <span class="section-title">아웃바운드 관광실적</span>
+    <span class="section-sub">2025년 1분기 기준</span>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi" style="--kc:var(--ac)">
+      <div class="kpi-label">1분기 출국자 수</div>
+      <div class="kpi-value">7,842천명</div>
+      <div class="kpi-delta up">▲ 6.3% YoY</div>
+    </div>
+    <div class="kpi" style="--kc:var(--yw)">
+      <div class="kpi-label">일본 방문</div>
+      <div class="kpi-value">2,156천명</div>
+      <div class="kpi-delta up">▲ 3.1% YoY</div>
+    </div>
+    <div class="kpi" style="--kc:var(--or)">
+      <div class="kpi-label">동남아 방문</div>
+      <div class="kpi-value">1,738千명</div>
+      <div class="kpi-delta up">▲ 12.4% YoY</div>
+    </div>
+    <div class="kpi" style="--kc:var(--pu)">
+      <div class="kpi-label">유럽 방문</div>
+      <div class="kpi-value">684千명</div>
+      <div class="kpi-delta up">▲ 18.7% YoY</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">🗺️ 한국인 해외여행 목적지 비중 변화</div>
+    <div class="card-body">
+      <div class="chart-wrap"><canvas id="chart-outbound-dest"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <table class="tbl">
+        <thead><tr><th>목적지</th><th>2025 1Q (천명)</th><th>비중</th><th>YoY</th><th>트렌드</th></tr></thead>
+        <tbody>
+          <tr><td>일본</td><td>2,156</td><td>27.5%</td><td class="txt-gr">+3.1%</td><td>성장 둔화 (고엔가 부담)</td></tr>
+          <tr><td>동남아</td><td>1,738</td><td>22.2%</td><td class="txt-gr">+12.4%</td><td>가성비 여행 수요 급증</td></tr>
+          <tr><td>중국</td><td>893</td><td>11.4%</td><td class="txt-rd">-8.2%</td><td>한일령 리스크 → 회피</td></tr>
+          <tr><td>유럽</td><td>684</td><td>8.7%</td><td class="txt-gr">+18.7%</td><td>장거리 프리미엄 수요↑</td></tr>
+          <tr><td>미주</td><td>612</td><td>7.8%</td><td class="txt-gr">+9.5%</td><td>견조한 성장</td></tr>
+          <tr><td>기타</td><td>1,759</td><td>22.4%</td><td class="txt-gr">+5.8%</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-title">💡 핵심 인사이트</div>
+    <p>한국인 아웃바운드는 전체적으로 6.3% 성장했지만 일본 방문은 3.1%로 성장세가 둔화되고 있다. 엔화 환율 상승과 일본 내 관광세 인상이 복합적으로 작용한 결과다. 반면 동남아와 유럽 여행 수요는 각각 12.4%, 18.7%로 높은 성장률을 보이며 여행 목적지가 다변화되는 추세다. 중국 방문은 한일령 리스크로 8.2% 감소했으며, 이 트렌드는 하반기까지 지속될 것으로 전망된다.</p>
+  </div>
+</div>
+
+<!-- ═══════ 3. 중국발 한일령 영향 ═══════ -->
+<div class="section" id="sec-china">
+  <div class="section-hdr">
+    <div class="section-icon" style="background:rgba(248,81,73,.12);color:var(--rd)">🇨🇳</div>
+    <span class="section-title">중국발 한일령(限日令) 영향 분석</span>
+    <span class="section-sub">2025년 3월 시행 이후</span>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi" style="--kc:var(--rd)">
+      <div class="kpi-label">중국→일본 감소율</div>
+      <div class="kpi-value">-34.7%</div>
+      <div class="kpi-delta down">3월 전년비</div>
+    </div>
+    <div class="kpi" style="--kc:var(--gr)">
+      <div class="kpi-label">중국→한국 전환</div>
+      <div class="kpi-value">+41.2%</div>
+      <div class="kpi-delta up">3월 전년비</div>
+    </div>
+    <div class="kpi" style="--kc:var(--yw)">
+      <div class="kpi-label">대체수요 추정</div>
+      <div class="kpi-value">186千명</div>
+      <div class="kpi-delta">3월 단월 기준</div>
+    </div>
+    <div class="kpi" style="--kc:var(--ac)">
+      <div class="kpi-label">연간 추가 전망</div>
+      <div class="kpi-value">+1.2M</div>
+      <div class="kpi-delta up">연간 추정치</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-header">📉 중국인 일본 방문 vs 한국 방문 추이</div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chart-china-shift"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">📊 한일령 시행 전후 중국 관광객 목적지 변화</div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chart-china-dest"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <table class="tbl">
+        <thead><tr><th>항목</th><th>한일령 전 (2024 3월)</th><th>한일령 후 (2025 3월)</th><th>변화</th></tr></thead>
+        <tbody>
+          <tr><td>중국→일본 여행객</td><td>542천명</td><td>354천명</td><td class="txt-rd">-34.7%</td></tr>
+          <tr><td>중국→한국 여행객</td><td>268천명</td><td>378千명</td><td class="txt-gr">+41.2%</td></tr>
+          <tr><td>중국→동남아 여행객</td><td>1,240천명</td><td>1,412천명</td><td class="txt-gr">+13.9%</td></tr>
+          <tr><td>중국 전체 해외출국</td><td>3,850천명</td><td>3,620천명</td><td class="txt-rd">-6.0%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-title">💡 핵심 인사이트</div>
+    <p>2025년 3월 중국 정부의 한일령(限日令, 일본 여행 제한 행정지도) 시행 이후 중국인 일본 방문이 34.7% 급감한 반면, 한국 방문은 41.2% 급증했다. 중국인 관광객의 대체 여행지로 한국이 최대 수혜국으로 부상하고 있으며, 연간 기준 약 120만 명의 추가 방한 수요가 발생할 것으로 추정된다. 다만 중국 전체 해외출국 자체가 6.0% 감소한 점을 감안하면, 순수 대체 효과는 이보다 작을 수 있다.</p>
+  </div>
+</div>
+
+<!-- ═══════ 4. 소노 호텔 시사점 ═══════ -->
+<div class="section" id="sec-sono">
+  <div class="section-hdr">
+    <div class="section-icon" style="background:rgba(227,179,65,.12);color:var(--yw)">🏨</div>
+    <span class="section-title">소노 호텔&리조트 시사점</span>
+    <span class="section-sub">전략적 대응 방향</span>
+  </div>
+
+  <div class="card">
+    <div class="card-header">🎯 핵심 시사점 요약</div>
+    <div class="card-body">
+      <table class="tbl">
+        <thead><tr><th style="width:20%">영역</th><th style="width:35%">시장 현황</th><th style="width:45%">소노 대응 방향</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong class="txt-gr">인바운드 확대</strong></td>
+            <td>방한 외래객 18.2%↑, 일본·중국 중심 고성장</td>
+            <td>소노 리조트 외국인 전용 패키지 강화, 야놀자·아고다 등 인바운드 OTA 제휴 확대. 특히 하이원·비발디파크의 스키·워터파크 상품을 동남아·중국 타깃으로 프로모션 필요</td>
+          </tr>
+          <tr>
+            <td><strong class="txt-ac">중국 수혜</strong></td>
+            <td>한일령으로 중국→한국 전환 가속 (+41.2%)</td>
+            <td>중국어 예약 환경 정비, 위챗페이·알리페이 결제 확대, 단체 관광 수용 인프라 점검. 제주·부산 소재 소노 시설에 중국인 단체관광 유치 프로그램 검토</td>
+          </tr>
+          <tr>
+            <td><strong class="txt-yw">국내 경쟁</strong></td>
+            <td>아웃바운드 6.3%↑ → 국내 여행 수요 이탈 리스크</td>
+            <td>해외 여행 대비 가성비·차별화 포인트 강화. 웰니스·프리미엄 스테이 등 해외에서 경험하기 어려운 상품 구성으로 국내 고객 이탈 방어</td>
+          </tr>
+          <tr>
+            <td><strong class="txt-or">시즌 전략</strong></td>
+            <td>2분기 비수기 진입, 단 인바운드 벚꽃 시즌 수요 기대</td>
+            <td>비수기 ADR 하락 방어를 위해 외국인 인바운드 + 국내 워케이션 수요를 적극 흡수. 소노캄 계열 도심 호텔은 외국인 비중 확대에 집중</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-header">📌 단기 액션 아이템 (2Q 2025)</div>
+      <div class="card-body">
+        <p><strong style="color:var(--gr)">① 중국인 인바운드 패키지 론칭</strong> — 한일령 수혜 기간 내 빠른 시장 선점이 필요. 중국 OTA(Ctrip, Fliggy) 및 야놀자 글로벌을 통해 소노캄 서울·제주 상품 노출을 2배 이상 확대</p>
+        <p><strong style="color:var(--ac)">② 일본인 리피터 프로그램 강화</strong> — 일본 방한객의 높은 재방문율(38%)을 활용, 소노 멤버십 가입 유도 캠페인 실시. 비발디파크·델피노 대상 J-패키지 기획</p>
+        <p><strong style="color:var(--yw)">③ 비수기 ADR 방어 전략</strong> — 워케이션·롱스테이 상품으로 평일 수요 확보, OTA 프로모션은 주말 집중으로 RevPAR 극대화</p>
+        <p><strong style="color:var(--or)">④ 아웃바운드 이탈 대응</strong> — 해외여행 가격 대비 국내 프리미엄 리조트의 가치를 강조하는 마케팅 캠페인. SNS 인플루언서 활용한 '국내판 해외여행' 컨셉 강화</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">📊 중장기 전략 방향</div>
+      <div class="card-body">
+        <p><strong style="color:var(--pu)">① 인바운드 매출 비중 목표 설정</strong> — 현재 소노 전체 매출 중 외국인 비중 약 8~12%. 2025년 말까지 15%로 확대 목표 설정 권장. 특히 소노캄 도심 호텔은 25% 이상 외국인 비중 가능</p>
+        <p><strong style="color:var(--gr)">② 중국 시장 의존도 리스크 관리</strong> — 한일령은 정치적 변수에 따라 해제 가능성 존재. 중국 의존도를 높이되, 동남아·대만 등 다변화 전략 병행 필수</p>
+        <p><strong style="color:var(--ac)">③ 프리미엄 포지셔닝 강화</strong> — 아웃바운드 성장으로 국내 고객의 눈높이가 상승. 글로벌 수준의 서비스·시설 품질 유지를 위한 투자 지속 필요</p>
+        <p><strong style="color:var(--yw)">④ 데이터 기반 수요 예측 고도화</strong> — 인바운드·아웃바운드 트렌드를 실시간 모니터링하여 Yield Management에 반영. OTA 검색량·항공권 예약 데이터 연동 추진</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-title">💡 종합 전망</div>
+    <p>2025년 한국 관광시장은 인바운드 사상 최대 실적 경신이 유력하며, 특히 중국발 한일령 효과로 하반기 추가 성장이 기대된다. 소노 호텔&리조트는 이 기회를 활용해 외국인 매출 비중을 전략적으로 확대하되, 중국 의존도 리스크를 관리하고 국내 고객 이탈 방어에도 균형 있게 대응해야 한다. 특히 팔라티움 해운대 등 신규 시설은 프리미엄 인바운드 고객을 유치하는 핵심 거점이 될 수 있다.</p>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- ── Scripts ── -->
+<script>
+/* ── Sidebar scroll ── */
+function scrollToSection(id, el){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+}
+/* ── Intersection Observer for sidebar highlight ── */
+const sectionIds=['sec-inbound','sec-outbound','sec-china','sec-sono'];
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+      const t=document.querySelector('.sb-item[data-target="'+e.target.id+'"]');
+      if(t) t.classList.add('active');
+    }
+  });
+},{threshold:0.15,rootMargin:'-120px 0px -60% 0px'});
+sectionIds.forEach(id=>{const el=document.getElementById(id);if(el)observer.observe(el)});
+
+/* ── Chart defaults ── */
+Chart.defaults.color='#7d8590';
+Chart.defaults.borderColor='rgba(48,54,61,.6)';
+Chart.defaults.font.family="'Pretendard Variable','Noto Sans KR',sans-serif";
+Chart.defaults.font.size=11;
+Chart.defaults.plugins.legend.labels.boxWidth=10;
+Chart.defaults.plugins.legend.labels.padding=14;
+
+/* ── 1. 인바운드 월별 추이 ── */
+new Chart(document.getElementById('chart-inbound-monthly'),{
+  type:'bar',
+  data:{
+    labels:['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+    datasets:[
+      {label:'2024',data:[1180,1230,1340,1420,1480,1310,1560,1420,1380,1520,1450,1410],backgroundColor:'rgba(125,133,144,.35)',borderRadius:3,barPercentage:.7},
+      {label:'2025',data:[1453,1482,1682,null,null,null,null,null,null,null,null,null],backgroundColor:'rgba(63,185,80,.7)',borderRadius:3,barPercentage:.7}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+(ctx.raw?ctx.raw.toLocaleString()+'천명':'—')}}},
+    scales:{y:{beginAtZero:false,min:800,ticks:{callback:v=>v.toLocaleString()+'천'},grid:{color:'rgba(48,54,61,.4)'}},x:{grid:{display:false}}}
+  }
+});
+
+/* ── 2. 인바운드 국적별 비중 ── */
+new Chart(document.getElementById('chart-inbound-nationality'),{
+  type:'doughnut',
+  data:{
+    labels:['중국','일본','미국','대만','동남아','기타'],
+    datasets:[{
+      data:[22.8,19.9,8.9,8.4,17.8,22.2],
+      backgroundColor:['#f85149','#e3b341','#58a6ff','#3fb950','#f0883e','#bc8cff'],
+      borderWidth:0,hoverOffset:6
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'right',labels:{padding:12}},tooltip:{callbacks:{label:ctx=>ctx.label+': '+ctx.raw+'%'}}}
+  }
+});
+
+/* ── 3. 아웃바운드 목적지 비중 ── */
+new Chart(document.getElementById('chart-outbound-dest'),{
+  type:'bar',
+  data:{
+    labels:['일본','동남아','중국','유럽','미주','기타'],
+    datasets:[
+      {label:'2024 1Q',data:[28.3,20.8,13.2,7.4,7.3,23.0],backgroundColor:'rgba(125,133,144,.35)',borderRadius:3,barPercentage:.6},
+      {label:'2025 1Q',data:[27.5,22.2,11.4,8.7,7.8,22.4],backgroundColor:'rgba(88,166,255,.7)',borderRadius:3,barPercentage:.6}
+    ]
+  },
+  options:{
+    indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.raw+'%'}}},
+    scales:{x:{beginAtZero:true,ticks:{callback:v=>v+'%'},grid:{color:'rgba(48,54,61,.4)'}},y:{grid:{display:false}}}
+  }
+});
+
+/* ── 4. 중국인 일본 vs 한국 방문 추이 ── */
+new Chart(document.getElementById('chart-china-shift'),{
+  type:'line',
+  data:{
+    labels:['2024.10','2024.11','2024.12','2025.01','2025.02','2025.03'],
+    datasets:[
+      {label:'중국→일본',data:[520,498,475,412,385,354],borderColor:'#f85149',backgroundColor:'rgba(248,81,73,.1)',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:'#f85149'},
+      {label:'중국→한국',data:[245,258,272,310,342,378],borderColor:'#3fb950',backgroundColor:'rgba(63,185,80,.1)',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:'#3fb950'}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.raw+'천명'}}},
+    scales:{y:{ticks:{callback:v=>v+'천'},grid:{color:'rgba(48,54,61,.4)'}},x:{grid:{display:false}}}
+  }
+});
+
+/* ── 5. 한일령 전후 중국 관광객 목적지 비중 ── */
+new Chart(document.getElementById('chart-china-dest'),{
+  type:'bar',
+  data:{
+    labels:['일본','한국','동남아','기타'],
+    datasets:[
+      {label:'한일령 前 (2024.03)',data:[14.1,7.0,32.2,46.7],backgroundColor:'rgba(125,133,144,.4)',borderRadius:3,barPercentage:.65},
+      {label:'한일령 後 (2025.03)',data:[9.8,10.4,39.0,40.8],backgroundColor:'rgba(248,81,73,.65)',borderRadius:3,barPercentage:.65}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.raw+'%'}}},
+    scales:{y:{ticks:{callback:v=>v+'%'},grid:{color:'rgba(48,54,61,.4)'}},x:{grid:{display:false}}}
+  }
+});
+</script>
+</body>
+</html>
