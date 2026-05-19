@@ -2696,8 +2696,9 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
 .trend-region-btn.active{background:rgba(88,166,255,.14);color:var(--accent);border-color:rgba(88,166,255,.35);font-weight:600}
 .trend-chart-wrap{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:16px;position:relative}
 .trend-chart-box{position:relative;height:420px}
+.trend-chart-box.ranking{height:auto}
 .trend-legend-note{font-size:10px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.trend-legend-note .swatch{display:inline-block;width:10px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.trend-legend-note .swatch{display:inline-block;width:10px;height:8px;border-radius:2px;margin-right:5px;vertical-align:middle}
 .trend-legend-note .swatch.sono{background:var(--accent)}
 .trend-legend-note .swatch.comp{background:#7d8590}
 .trend-empty-hint{font-size:11px;color:var(--muted);text-align:center;padding:8px;background:rgba(33,38,45,.4);border-radius:6px;margin-top:10px}
@@ -3049,8 +3050,8 @@ _TREND_SECTION_HTML = """<!-- ═══ 월 추이 차트 섹션 ═══ -->
   <div class="trend-inner">
     <div class="trend-header">
       <div>
-        <div class="trend-title">월별 OCC 추이 <span class="trend-title-badge">112번 사업장</span></div>
-        <div class="trend-subtitle">시설별 월별 OCC%/가용 객실수 추이 · 전체 54개 시설</div>
+        <div class="trend-title" id="trend-title">사업장별 OCC 랭킹 <span class="trend-title-badge" id="trend-title-badge">2026년 4월</span></div>
+        <div class="trend-subtitle" id="trend-subtitle">전체 54개 시설 · 자사 12개 / 경쟁사 42개 — OCC% 내림차순 정렬</div>
       </div>
       <div class="trend-mode-toggle" role="tablist" aria-label="차트 종류">
         <button class="trend-mode-btn active" type="button" data-mode="occ">OCC %</button>
@@ -3059,11 +3060,11 @@ _TREND_SECTION_HTML = """<!-- ═══ 월 추이 차트 섹션 ═══ -->
     </div>
     <div class="trend-region-tabs" id="trend-region-tabs"></div>
     <div class="trend-chart-wrap">
-      <div class="trend-chart-box"><canvas id="trend-chart"></canvas></div>
+      <div class="trend-chart-box" id="trend-chart-box"><canvas id="trend-chart"></canvas></div>
       <div class="trend-legend-note">
         <span><span class="swatch sono"></span>자사(SONO)</span>
         <span><span class="swatch comp"></span>경쟁사</span>
-        <span style="margin-left:auto">※ 1~3월 데이터는 추후 업데이트 예정 — 현재는 2026년 4월 시점 단일 포인트</span>
+        <span id="trend-legend-note-extra" style="margin-left:auto">※ 1~3월 데이터는 추후 업데이트 예정 — 다중 월 누적 시 자동으로 추이 라인차트로 전환됩니다</span>
       </div>
       <div class="trend-empty-hint" id="trend-empty-hint" style="display:none">해당 지역에 표시할 시설이 없습니다.</div>
     </div>
@@ -3152,7 +3153,11 @@ _TREND_CHART_JS = """
     bg:      CSS_VAR('--bg')       || '#0d1117',
     cardBg:  CSS_VAR('--card-bg')  || '#161b22'
   };
+  var SONO_COLOR = COLORS.accent;
+  var COMP_COLOR = '#7d8590';
   var COMP_PALETTE = ['#7d8590','#9aa4ad','#586069','#8b949e','#6e7681','#a0aab4','#5a626b','#b1bac4'];
+
+  var IS_SINGLE_MONTH = DATA.months.length === 1;
 
   var state = { region: '전체', mode: 'occ', chart: null };
 
@@ -3192,17 +3197,156 @@ _TREND_CHART_JS = """
     return DATA.facilities.filter(function (f) { return f.region === state.region; });
   }
 
-  function buildDatasets(facilities, mode) {
+  function formatMonth(m) {
+    var parts = m.split('-');
+    return parts[0] + '년 ' + parseInt(parts[1], 10) + '월';
+  }
+
+  function valueOf(f, mode, m) {
+    var src = mode === 'occ' ? f.occ : f.rooms;
+    var v = src[m];
+    return (v === undefined || v === null) ? null : v;
+  }
+
+  function updateChrome(rankingMode, isOcc, facilities) {
+    var titleEl   = document.getElementById('trend-title');
+    var badgeEl   = document.getElementById('trend-title-badge');
+    var subEl     = document.getElementById('trend-subtitle');
+    var noteEl    = document.getElementById('trend-legend-note-extra');
+    var metric    = isOcc ? 'OCC %' : '가용 객실수';
+    var sonoCount = 0;
+    facilities.forEach(function (f) { if (f.sono) sonoCount++; });
+    var compCount = facilities.length - sonoCount;
+
+    if (rankingMode) {
+      if (titleEl) titleEl.firstChild.nodeValue = '사업장별 ' + metric + ' 랭킹 ';
+      if (badgeEl) badgeEl.textContent = formatMonth(DATA.months[0]);
+      if (subEl)   subEl.textContent = '전체 ' + facilities.length + '개 시설 · 자사 ' + sonoCount + '개 / 경쟁사 ' + compCount + '개 — ' + metric + ' 내림차순 정렬';
+      if (noteEl)  noteEl.textContent = '※ 단일 월 시점 — 다중 월 누적 시 자동으로 추이 라인차트로 전환됩니다';
+    } else {
+      if (titleEl) titleEl.firstChild.nodeValue = '월별 ' + metric + ' 추이 ';
+      if (badgeEl) badgeEl.textContent = DATA.months.length + '개월';
+      if (subEl)   subEl.textContent = '시설별 ' + metric + ' 월 추이 · 자사 ' + sonoCount + '개 / 경쟁사 ' + compCount + '개';
+      if (noteEl)  noteEl.textContent = '';
+    }
+  }
+
+  function setChartBoxHeight(rankingMode, n) {
+    var box = document.getElementById('trend-chart-box');
+    if (!box) return;
+    if (rankingMode) {
+      box.classList.add('ranking');
+      // 한 행당 22px + 패딩, 최소 320px
+      var h = Math.max(320, n * 22 + 60);
+      box.style.height = h + 'px';
+    } else {
+      box.classList.remove('ranking');
+      box.style.height = '';
+    }
+  }
+
+  function renderRanking(facilities, isOcc) {
+    var m = DATA.months[0];
+    var sorted = facilities.slice().sort(function (a, b) {
+      var va = valueOf(a, state.mode, m);
+      var vb = valueOf(b, state.mode, m);
+      if (va === null) va = -1;
+      if (vb === null) vb = -1;
+      return vb - va;
+    });
+
+    var labels = sorted.map(function (f) {
+      return (f.sono ? '★ ' : '') + f.name;
+    });
+    var values = sorted.map(function (f) { return valueOf(f, state.mode, m); });
+    var bgColors = sorted.map(function (f) { return f.sono ? SONO_COLOR : COMP_COLOR; });
+    var bdColors = sorted.map(function (f) { return f.sono ? SONO_COLOR : '#5a626b'; });
+    var sonoFlags = sorted.map(function (f) { return !!f.sono; });
+
+    setChartBoxHeight(true, sorted.length);
+
+    var canvas = document.getElementById('trend-chart');
+    state.chart = new Chart(canvas.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: isOcc ? 'OCC %' : '가용 객실수',
+          data: values,
+          backgroundColor: bgColors,
+          borderColor: bdColors,
+          borderWidth: 1,
+          borderRadius: 3,
+          barPercentage: 0.85,
+          categoryPercentage: 0.85,
+          _sonoFlags: sonoFlags
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'nearest', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: COLORS.cardBg,
+            titleColor: COLORS.text,
+            bodyColor: COLORS.text,
+            borderColor: COLORS.border,
+            borderWidth: 1,
+            padding: 10,
+            callbacks: {
+              label: function (ctx) {
+                var v = ctx.parsed.x;
+                if (v === null || v === undefined) return '-';
+                var isSono = ctx.dataset._sonoFlags[ctx.dataIndex];
+                var tag = isSono ? '자사' : '경쟁사';
+                var suffix = isOcc ? '%' : '실';
+                return tag + ' · ' + (isOcc ? v.toFixed(1) : v.toLocaleString()) + suffix;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            suggestedMax: isOcc ? 100 : undefined,
+            ticks: {
+              color: COLORS.muted,
+              font: { size: 11 },
+              callback: function (v) { return isOcc ? v + '%' : v.toLocaleString(); }
+            },
+            grid: { color: 'rgba(125,133,144,.08)' }
+          },
+          y: {
+            ticks: {
+              color: function (ctx) {
+                var i = ctx.index;
+                return sonoFlags[i] ? COLORS.accent : COLORS.text;
+              },
+              font: function (ctx) {
+                var i = ctx.index;
+                return { size: 11, weight: sonoFlags[i] ? '700' : '400' };
+              },
+              autoSkip: false
+            },
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  }
+
+  function renderTrendLine(facilities, isOcc) {
+    setChartBoxHeight(false);
+
     var months = DATA.months;
     var compIdx = 0;
-    return facilities.map(function (f) {
-      var src = mode === 'occ' ? f.occ : f.rooms;
-      var data = months.map(function (m) {
-        var v = src[m];
-        return (v === undefined || v === null) ? null : v;
-      });
+    var datasets = facilities.map(function (f) {
+      var data = months.map(function (m) { return valueOf(f, state.mode, m); });
       var isSono = !!f.sono;
-      var color = isSono ? COLORS.accent : COMP_PALETTE[compIdx++ % COMP_PALETTE.length];
+      var color = isSono ? SONO_COLOR : COMP_PALETTE[compIdx++ % COMP_PALETTE.length];
       return {
         label: f.name,
         data: data,
@@ -3218,32 +3362,11 @@ _TREND_CHART_JS = """
         _isSono: isSono
       };
     });
-  }
 
-  function render() {
+    var labels = months.map(formatMonth);
     var canvas = document.getElementById('trend-chart');
-    if (!canvas || !window.Chart) return;
-
-    var facilities = filteredFacilities();
-    var emptyHint = document.getElementById('trend-empty-hint');
-    if (emptyHint) emptyHint.style.display = facilities.length ? 'none' : '';
-
-    var datasets = buildDatasets(facilities, state.mode);
-    var labels = DATA.months.map(function (m) {
-      var parts = m.split('-');
-      return parts[0] + '년 ' + parseInt(parts[1], 10) + '월';
-    });
-
-    var isOcc = state.mode === 'occ';
-    var chartType = (DATA.months.length === 1 && !isOcc) ? 'bar' : 'line';
-
-    if (state.chart) {
-      state.chart.destroy();
-      state.chart = null;
-    }
-
     state.chart = new Chart(canvas.getContext('2d'), {
-      type: chartType,
+      type: 'line',
       data: { labels: labels, datasets: datasets },
       options: {
         responsive: true,
@@ -3297,6 +3420,35 @@ _TREND_CHART_JS = """
         }
       }
     });
+  }
+
+  function render() {
+    var canvas = document.getElementById('trend-chart');
+    if (!canvas || !window.Chart) return;
+
+    var facilities = filteredFacilities();
+    var emptyHint = document.getElementById('trend-empty-hint');
+    if (emptyHint) emptyHint.style.display = facilities.length ? 'none' : '';
+
+    var isOcc = state.mode === 'occ';
+    var rankingMode = IS_SINGLE_MONTH;
+
+    updateChrome(rankingMode, isOcc, facilities);
+
+    if (state.chart) {
+      state.chart.destroy();
+      state.chart = null;
+    }
+    if (!facilities.length) {
+      setChartBoxHeight(rankingMode, 1);
+      return;
+    }
+
+    if (rankingMode) {
+      renderRanking(facilities, isOcc);
+    } else {
+      renderTrendLine(facilities, isOcc);
+    }
   }
 
   window.renderTrendChart = render;
