@@ -111,6 +111,25 @@ body{font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',-apple-system,'
 .insight-title{font-size:11px;color:var(--ac);font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:5px}
 .insight p{font-size:12px;color:var(--mu);line-height:1.7}
 
+/* ── References ── */
+.ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:900px){.ref-grid{grid-template-columns:1fr}}
+.ref-card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s,transform .15s}
+.ref-card:hover{border-color:rgba(88,166,255,.4);transform:translateY(-1px)}
+.ref-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ref-badge{display:inline-flex;align-items:center;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid}
+.ref-badge.jll{background:rgba(63,185,80,.1);color:var(--gr);border-color:rgba(63,185,80,.3)}
+.ref-badge.kpmg{background:rgba(88,166,255,.1);color:var(--ac);border-color:rgba(88,166,255,.3)}
+.ref-badge.ktovis{background:rgba(227,179,65,.1);color:var(--yw);border-color:rgba(227,179,65,.3)}
+.ref-badge.leisure{background:rgba(188,140,255,.1);color:var(--pu);border-color:rgba(188,140,255,.3)}
+.ref-meta{font-size:10px;color:var(--mu);font-family:'Space Grotesk',sans-serif;letter-spacing:.3px}
+.ref-title{font-size:13px;font-weight:700;color:#fff;line-height:1.45}
+.ref-summary{font-size:12px;color:var(--mu);line-height:1.7;flex:1}
+.ref-summary strong{color:var(--tx);font-weight:600}
+.ref-link{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;padding:6px 10px;border:1px solid rgba(88,166,255,.25);border-radius:6px;background:rgba(88,166,255,.05);align-self:flex-start;transition:all .15s;font-family:'Space Grotesk','Noto Sans KR',sans-serif}
+.ref-link:hover{background:rgba(88,166,255,.12);border-color:rgba(88,166,255,.5)}
+.ref-link.disabled{color:var(--mu);background:rgba(125,133,144,.06);border-color:rgba(125,133,144,.2);cursor:default;pointer-events:none}
+
 /* ── Responsive ── */
 @media(max-width:768px){
   .sidebar{display:none}
@@ -165,6 +184,7 @@ body{font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',-apple-system,'
     <a class="sb-item" data-target="sec-outbound" onclick="scrollToSection('sec-outbound',this)">✈️ 아웃바운드 관광실적</a>
     <a class="sb-item" data-target="sec-china" onclick="scrollToSection('sec-china',this)">🇨🇳 중국발 한일령 영향</a>
     <a class="sb-item" data-target="sec-sono" onclick="scrollToSection('sec-sono',this)">🏨 소노 호텔 시사점</a>
+    <a class="sb-item" data-target="sec-references" onclick="scrollToSection('sec-references',this)">📚 참고 문헌</a>
   </nav>
   <div class="sb-divider"></div>
   <div class="sb-report-label">리포트 목록</div>
@@ -440,6 +460,97 @@ body{font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',-apple-system,'
   </div>
 </div>
 
+<!-- ═══════ 5. 참고 문헌 / 외부 리서치 ═══════ -->
+<div class="section" id="sec-references">
+  <div class="section-hdr">
+    <div class="section-icon" style="background:rgba(188,140,255,.12);color:var(--pu)">📚</div>
+    <span class="section-title">참고 문헌 / 외부 리서치</span>
+    <span class="section-sub">호텔·관광산업 주요 리포트</span>
+  </div>
+
+  <div class="ref-grid">
+
+    <!-- JLL -->
+    <div class="ref-card">
+      <div class="ref-head">
+        <span class="ref-badge jll">JLL</span>
+        <span class="ref-meta">호텔 투자 시장 전망 · 2025–2026</span>
+      </div>
+      <div class="ref-title">한국 호텔 투자 시장 전망 보고서 2025-2026</div>
+      <div class="ref-summary">
+        <p>2025년 한국 호텔 거래량 <strong>약 2.2조원</strong> 수준 전망. 글로벌 투자자 중심의 <strong>value-add 자산</strong> 거래가 시장을 견인하며, 서울 럭셔리 호텔 공급 확대와 코어 자산 재거래 가능성을 핵심 모멘텀으로 제시.</p>
+      </div>
+      <a class="ref-link" href="https://www.jll.com/ko-kr/insights/market-outlook/south-korea-hotel-investment" target="_blank" rel="noopener">
+        원문 보기 →
+      </a>
+    </div>
+
+    <!-- KPMG 호텔산업 -->
+    <div class="ref-card">
+      <div class="ref-head">
+        <span class="ref-badge kpmg">삼정KPMG</span>
+        <span class="ref-meta">Business Focus · 2025.07.20</span>
+      </div>
+      <div class="ref-title">전환점 맞이한 호텔산업 비즈니스 트렌드와 성장 전략</div>
+      <div class="ref-summary">
+        <p>국내외 호텔산업이 코로나 회복 이후 <strong>구조적 전환점</strong>에 진입. 럭셔리·라이프스타일 브랜드 확장, 운영-소유 분리(asset-light) 모델 가속화, 데이터·디지털 기반 수익관리 고도화를 새로운 성장축으로 제시.</p>
+      </div>
+      <a class="ref-link" href="https://assets.kpmg.com/content/dam/kpmg/kr/pdf/2025/business-focus/%EC%82%BC%EC%A0%95KPMG-%EC%A0%84%ED%99%98%EC%A0%90-%EB%A7%9E%EC%9D%B4%ED%95%9C-%ED%98%B8%ED%85%94%EC%82%B0%EC%97%85-%EB%B9%84%EC%A6%88%EB%8B%88%EC%8A%A4-%ED%8A%B8%EB%A0%8C%EB%93%9C%EC%99%80-%EC%84%B1%EC%9E%A5-%EC%A0%84%EB%9E%B5-20250720.pdf" target="_blank" rel="noopener">
+        PDF 다운로드 →
+      </a>
+    </div>
+
+    <!-- KPMG 2026 경제·산업 전망 -->
+    <div class="ref-card">
+      <div class="ref-head">
+        <span class="ref-badge kpmg">삼정KPMG</span>
+        <span class="ref-meta">ERI · 2025.12.04</span>
+      </div>
+      <div class="ref-title">2026년 국내 경제·산업 전망</div>
+      <div class="ref-summary">
+        <p>2026년 한국 거시경제 시나리오와 주요 산업별 영향 분석. 관광·서비스 산업 회복 모멘텀 지속 여부, 내수·수출 수요 균형, 금리·환율 가정에 따른 호텔·레저 부문 시사점을 종합 제시.</p>
+      </div>
+      <a class="ref-link" href="https://assets.kpmg.com/content/dam/kpmgsites/kr/pdf/2025/eri/business_focus/%EC%82%BC%EC%A0%95KPMG-2026%EB%85%84-%EA%B2%BD%EC%A0%9C-%EB%B0%8F-%EC%82%B0%EC%97%85-%EC%A0%84%EB%A7%9D-20251204.pdf" target="_blank" rel="noopener">
+        PDF 다운로드 →
+      </a>
+    </div>
+
+    <!-- 한국관광공사 D.U.A.L.I.S.M. -->
+    <div class="ref-card">
+      <div class="ref-head">
+        <span class="ref-badge ktovis">한국관광공사</span>
+        <span class="ref-meta">관광트렌드 · 2026</span>
+      </div>
+      <div class="ref-title">2026 관광트렌드 ‘D.U.A.L.I.S.M.’</div>
+      <div class="ref-summary">
+        <p><strong>기술과 감성, 럭셔리와 실속</strong>이 공존하는 이원적(Dualism) 관광 시대를 키워드로 제시. AI·디지털 경험 확대와 동시에 휴머니즘·웰니스 수요가 병행되며, 럭셔리·가성비 양극화가 동시에 심화되는 흐름.</p>
+      </div>
+      <a class="ref-link" href="https://academy.visitkorea.or.kr/macademy/notice/bbs/detail.do?seq=3512" target="_blank" rel="noopener">
+        원문 보기 →
+      </a>
+    </div>
+
+    <!-- 레저백서 2025 -->
+    <div class="ref-card" style="grid-column:1/-1">
+      <div class="ref-head">
+        <span class="ref-badge leisure">한국레저산업연구소</span>
+        <span class="ref-meta">레저백서 · 2025 (유료 출판물)</span>
+      </div>
+      <div class="ref-title">레저백서 2025</div>
+      <div class="ref-summary">
+        <p>리조트·스키장·콘도·테마파크·골프장 등 국내 레저산업 전반의 통계와 운영 현황을 다룬 <strong>484쪽 분량</strong>의 종합 자료집. 시설별 이용객·매출 추이, 신규 개장·휴장 동향, 사업자별 시장 점유율 데이터가 수록되어 있어 경쟁사 벤치마크에 활용 가능.</p>
+      </div>
+      <span class="ref-link disabled">📕 유료 출판물 · 외부 구매</span>
+    </div>
+
+  </div>
+
+  <div class="insight">
+    <div class="insight-title">💡 활용 가이드</div>
+    <p>본 외부 리포트는 시장 환경 진단, 중장기 전략 수립, 신규 투자 검토 시 근거 자료로 활용된다. JLL·KPMG 보고서는 투자·재무 관점에서, 한국관광공사 트렌드는 상품기획·마케팅 관점에서, 레저백서는 운영·벤치마크 관점에서 각각 우선적으로 참고하기를 권장한다.</p>
+  </div>
+</div>
+
 </main>
 </div>
 
@@ -452,7 +563,7 @@ function scrollToSection(id, el){
   el.classList.add('active');
 }
 /* ── Intersection Observer for sidebar highlight ── */
-const sectionIds=['sec-inbound','sec-outbound','sec-china','sec-sono'];
+const sectionIds=['sec-inbound','sec-outbound','sec-china','sec-sono','sec-references'];
 const observer=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
