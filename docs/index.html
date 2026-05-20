@@ -1042,6 +1042,9 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
         <span class="sb-caret">&#9656;</span>
       </button>
       <div class="sb-submenu" id="sb-yoy-submenu">
+        <button class="sb-sub-item" type="button" data-view="yoy" data-month="2026-01">2026년 1월</button>
+        <button class="sb-sub-item" type="button" data-view="yoy" data-month="2026-02">2026년 2월</button>
+        <button class="sb-sub-item" type="button" data-view="yoy" data-month="2026-03">2026년 3월</button>
         <button class="sb-sub-item active" type="button" data-view="yoy" data-month="2026-04">2026년 4월</button>
         <button class="sb-sub-item" type="button" data-view="trend">월 추이</button>
       </div>
@@ -1069,110 +1072,147 @@ tr.own-row:hover td { background: rgba(88,166,255,.16); }
 </div>
 
 <!-- ═══ YoY 시장 현황 비교 섹션 ═══ -->
-<div class="yoy-section" id="yoy-market-section">
+<div class="yoy-section view-hidden" id="yoy-market-section">
 <div class="yoy-header">
   <div>
-    <div class="yoy-title">시장 현황 YoY 비교 <span class="yoy-title-badge">4월 기준</span></div>
-    <div class="yoy-subtitle">112번 사업장 · 2025년 4월 vs 2026년 4월 · 전체 54개 시설</div>
+    <div class="yoy-title">시장 현황 YoY 비교 <span class="yoy-title-badge" id="yoy-badge">4월 기준</span></div>
+    <div class="yoy-subtitle" id="yoy-subtitle"></div>
   </div>
 </div>
-<div class="yoy-summary">
-  <div class="yoy-stat"><div class="yoy-stat-label">전체 평균 증감</div><div class="yoy-stat-value up">+1.6%p</div><div class="yoy-stat-sub">경주 제외 50개 시설</div></div>
-  <div class="yoy-stat"><div class="yoy-stat-label">자사(SONO) 평균</div><div class="yoy-stat-value down">-2.8%p</div><div class="yoy-stat-sub">15개 자사 시설</div></div>
-  <div class="yoy-stat"><div class="yoy-stat-label">상승</div><div class="yoy-stat-value up">26</div><div class="yoy-stat-sub">+0.5%p 이상</div></div>
-  <div class="yoy-stat"><div class="yoy-stat-label">하락</div><div class="yoy-stat-value down">22</div><div class="yoy-stat-sub">-0.5%p 이상</div></div>
-  <div class="yoy-stat"><div class="yoy-stat-label">보합</div><div class="yoy-stat-value neutral">2</div><div class="yoy-stat-sub">±0.5%p 이내</div></div>
-  <div class="yoy-stat"><div class="yoy-stat-label">신규</div><div class="yoy-stat-value" style="color:var(--accent)">3</div><div class="yoy-stat-sub">2026년 신규</div></div>
-</div>
-<div class="yoy-top-section">
-<div class="yoy-top-card"><div class="yoy-top-card-header up-header">▲ 상승 TOP 5</div><ul class="yoy-top-list">
-<li><span class="yoy-top-name">덕산스플라스 리솜</span><span class="yoy-top-val yoy-up">+25.2%p</span></li>
-<li><span class="yoy-top-name">한화리조트 경주</span><span class="yoy-top-val yoy-up">+21.7%p</span></li>
-<li><span class="yoy-top-name">안면도 아일랜드 리솜</span><span class="yoy-top-val yoy-up">+20.5%p</span></li>
-<li><span class="yoy-top-name">한화리조트 제주</span><span class="yoy-top-val yoy-up">+14.5%p</span></li>
-<li><span class="yoy-top-name">카시아리조트</span><span class="yoy-top-val yoy-up">+11.0%p</span></li>
-</ul></div>
-<div class="yoy-top-card"><div class="yoy-top-card-header down-header">▼ 하락 TOP 5</div><ul class="yoy-top-list">
-<li><span class="yoy-top-name sono">소노벨 단양</span><span class="yoy-top-val yoy-down">-18.5%p</span></li>
-<li><span class="yoy-top-name sono">소노캄 거제</span><span class="yoy-top-val yoy-down">-15.7%p</span></li>
-<li><span class="yoy-top-name">베스트웨스턴</span><span class="yoy-top-val yoy-down">-13.0%p</span></li>
-<li><span class="yoy-top-name">켄싱턴리조트 속초</span><span class="yoy-top-val yoy-down">-9.4%p</span></li>
-<li><span class="yoy-top-name sono">소노캄 비발디파크</span><span class="yoy-top-val yoy-down">-8.8%p</span></li>
-</ul></div>
-</div>
+<div class="yoy-summary" id="yoy-summary"></div>
+<div class="yoy-top-section" id="yoy-top-section"></div>
 <div class="yoy-table-wrap">
 <table class="yoy-table">
-<thead><tr><th>지역</th><th>시설명</th><th>가용 객실수(25)</th><th>가용 객실수(26)</th><th>25Y실적</th><th>26년4월</th><th>증감(%p)</th></tr></thead>
-<tbody>
-<tr><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">강원도 서부 지역</td></tr>
-<tr><td></td><td><span class="sono-name">소노벨 양평</span></td><td>189</td><td>193</td><td>50.6%</td><td>49.4%</td><td class="yoy-down">▼ -1.2%p</td></tr>
-<tr><td></td><td><span class="sono-name">소노벨리체 비발디</span></td><td>500</td><td>500</td><td>27.4%</td><td>19.6%</td><td class="yoy-down">▼ -7.8%p</td></tr>
-<tr><td></td><td><span class="sono-name">소노캄 비발디파크</span></td><td>1,723</td><td>1,762</td><td>34.2%</td><td>25.4%</td><td class="yoy-down">▼ -8.8%p</td></tr>
-<tr><td></td><td><span class="sono-name">소노펠리체 빌리지 비발디</span></td><td>219</td><td>219</td><td>30.4%</td><td>24.0%</td><td class="yoy-down">▼ -6.4%p</td></tr>
-<tr><td></td><td><span class="">오크밸리</span></td><td>1,105</td><td>1,105</td><td>47.7%</td><td>39.8%</td><td class="yoy-down">▼ -7.9%p</td></tr>
-<tr><td></td><td><span class="">용평</span></td><td>1,298</td><td>1,298</td><td>18.3%</td><td>20.6%</td><td class="yoy-up">▲ +2.3%p</td></tr>
-<tr><td></td><td><span class="">웰리힐리</span></td><td>766</td><td>766</td><td>16.6%</td><td>16.2%</td><td class="yoy-flat">— -0.4%p</td></tr>
-<tr><td></td><td><span class="">휘닉스파크</span></td><td>962</td><td>962</td><td>22.5%</td><td>27.2%</td><td class="yoy-up">▲ +4.7%p</td></tr>
-<tr><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">강원도 동부 지역</td></tr>
-<tr><td></td><td><span class="sono-name">델피노</span></td><td>1,196</td><td>1,257</td><td>42.9%</td><td>42.5%</td><td class="yoy-flat">— -0.4%p</td></tr>
-<tr><td></td><td><span class="">롯데리조트 속초</span></td><td>392</td><td>392</td><td>73.7%</td><td>65.2%</td><td class="yoy-down">▼ -8.5%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">르네블루 by 쏠비치 고성</span></td><td>87</td><td>87</td><td>68.2%</td><td>66.3%</td><td class="yoy-down">▼ -1.9%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 삼척</span></td><td>707</td><td>707</td><td>60.7%</td><td>63.6%</td><td class="yoy-up">▲ +2.9%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 양양</span></td><td>501</td><td>497</td><td>53.3%</td><td>50.7%</td><td class="yoy-down">▼ -2.6%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">윈덤 호텔 고성</span><span class="yoy-new-badge">NEW</span></td><td>-</td><td>529</td><td>-</td><td>20.0%</td><td class="yoy-na">NEW</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">카시아리조트</span></td><td>674</td><td>674</td><td>25.0%</td><td>36.0%</td><td class="yoy-up">▲ +11.0%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">켄싱턴리조트 속초</span></td><td>176</td><td>176</td><td>74.0%</td><td>64.6%</td><td class="yoy-down">▼ -9.4%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 속초</span></td><td>1,554</td><td>1,554</td><td>46.8%</td><td>43.9%</td><td class="yoy-down">▼ -2.9%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화브리드 양양</span></td><td>56</td><td>56</td><td>70.5%</td><td>61.8%</td><td class="yoy-down">▼ -8.7%p</td></tr>
-<tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">전라/경상도 지역</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">금호리조트 통영</span></td><td>272</td><td>272</td><td>71.2%</td><td>79.1%</td><td class="yoy-up">▲ +7.9%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">벨메르 한화</span></td><td>100</td><td>100</td><td>63.7%</td><td>62.5%</td><td class="yoy-down">▼ -1.2%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 거제</span></td><td>479</td><td>509</td><td>64.7%</td><td>49.0%</td><td class="yoy-down">▼ -15.7%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 여수</span></td><td>309</td><td>310</td><td>60.2%</td><td>64.6%</td><td class="yoy-up">▲ +4.4%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">신라스테이 여수</span></td><td>315</td><td>315</td><td>77.6%</td><td>82.5%</td><td class="yoy-up">▲ +4.9%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 남해</span><span class="yoy-new-badge">NEW</span></td><td>-</td><td>449</td><td>-</td><td>61.3%</td><td class="yoy-na">NEW</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">쏠비치 진도</span></td><td>561</td><td>561</td><td>56.1%</td><td>58.1%</td><td class="yoy-up">▲ +2.0%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">유탑마리나</span></td><td>298</td><td>298</td><td>74.1%</td><td>69.2%</td><td class="yoy-down">▼ -4.9%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 벨버디어</span></td><td>470</td><td>470</td><td>42.8%</td><td>38.8%</td><td class="yoy-down">▼ -4.0%p</td></tr>
-<tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">경상도 지역</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">라한셀렉트</span></td><td>430</td><td>430</td><td>87.0%</td><td>94.3%</td><td class="yoy-up">▲ +7.3%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 단양</span></td><td>830</td><td>843</td><td>60.3%</td><td>41.8%</td><td class="yoy-down">▼ -18.5%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 청송</span></td><td>306</td><td>320</td><td>36.2%</td><td>43.3%</td><td class="yoy-up">▲ +7.1%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 경주</span> <span class="yoy-note">(25년 휴관)</span></td><td>410</td><td>417</td><td>0.0%</td><td>91.8%</td><td class="yoy-up">▲ +91.8%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">켄싱턴</span></td><td>214</td><td>501</td><td>66.5%</td><td>72.8%</td><td class="yoy-up">▲ +6.3%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">포레스트 리솜</span></td><td>450</td><td>450</td><td>71.9%</td><td>73.9%</td><td class="yoy-up">▲ +2.0%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 경주</span></td><td>393</td><td>393</td><td>62.5%</td><td>84.2%</td><td class="yoy-up">▲ +21.7%p</td></tr>
-<tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">충청/전북 지역</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">덕산스플라스 리솜</span></td><td>405</td><td>405</td><td>36.9%</td><td>62.1%</td><td class="yoy-up">▲ +25.2%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 변산</span></td><td>502</td><td>503</td><td>53.7%</td><td>50.6%</td><td class="yoy-down">▼ -3.1%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 천안</span></td><td>438</td><td>450</td><td>55.4%</td><td>50.5%</td><td class="yoy-down">▼ -4.9%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">안면도 아일랜드 리솜</span></td><td>248</td><td>248</td><td>57.9%</td><td>78.4%</td><td class="yoy-up">▲ +20.5%p</td></tr>
-<tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">부산지역</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">라마다 해운대</span></td><td>402</td><td>402</td><td>79.0%</td><td>74.2%</td><td class="yoy-down">▼ -4.8%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">롯데 L7호텔 해운대</span></td><td>383</td><td>383</td><td>77.6%</td><td>83.1%</td><td class="yoy-up">▲ +5.5%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">롯데리조트 김해</span></td><td>250</td><td>250</td><td>39.9%</td><td>48.5%</td><td class="yoy-up">▲ +8.6%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">베스트웨스턴</span></td><td>134</td><td>134</td><td>85.0%</td><td>72.0%</td><td class="yoy-down">▼ -13.0%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노문 해운대</span></td><td>235</td><td>235</td><td>69.2%</td><td>77.8%</td><td class="yoy-up">▲ +8.6%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 해운대</span></td><td>417</td><td>417</td><td>50.1%</td><td>57.9%</td><td class="yoy-up">▲ +7.8%p</td></tr>
-<tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">제주도 지역</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">금호리조트 제주</span></td><td>324</td><td>324</td><td>68.5%</td><td>72.9%</td><td class="yoy-up">▲ +4.4%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">롯데 아트빌라스 제주</span></td><td>66</td><td>66</td><td>60.6%</td><td>71.2%</td><td class="yoy-up">▲ +10.6%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노벨 제주</span></td><td>388</td><td>397</td><td>69.2%</td><td>77.0%</td><td class="yoy-up">▲ +7.8%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 제주</span></td><td>333</td><td>368</td><td>65.4%</td><td>64.7%</td><td class="yoy-down">▼ -0.7%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">켄싱턴</span></td><td>214</td><td>214</td><td>66.5%</td><td>72.2%</td><td class="yoy-up">▲ +5.7%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">한화리조트 제주</span></td><td>395</td><td>395</td><td>45.4%</td><td>59.9%</td><td class="yoy-up">▲ +14.5%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">해비치리조트 제주</span></td><td>503</td><td>503</td><td>75.0%</td><td>79.0%</td><td class="yoy-up">▲ +4.0%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">휘닉스아일랜드</span></td><td>300</td><td>300</td><td>58.1%</td><td>68.3%</td><td class="yoy-up">▲ +10.2%p</td></tr>
-<tr class="yoy-extra-region yoy-hidden"><td colspan="7" style="background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)">서울/경기</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="sono-name">소노캄 고양</span></td><td>799</td><td>824</td><td>67.8%</td><td>66.1%</td><td class="yoy-down">▼ -1.7%p</td></tr>
-<tr class="yoy-extra-row yoy-hidden"><td></td><td><span class="">안토(구. 파라스파라)</span><span class="yoy-new-badge">NEW</span></td><td>-</td><td>334</td><td>-</td><td>30.0%</td><td class="yoy-na">NEW</td></tr>
-</tbody></table>
+<thead id="yoy-thead"></thead>
+<tbody id="yoy-tbody"></tbody>
+</table>
 <div class="yoy-toggle-wrap">
-  <button class="yoy-toggle-btn" id="yoyToggleBtn" onclick="(function(){var r=document.querySelectorAll('.yoy-extra-row,.yoy-extra-region');var b=document.getElementById('yoyToggleBtn');if(r[0]&&r[0].classList.contains('yoy-hidden')){r.forEach(function(e){e.classList.remove('yoy-hidden')});b.textContent='접기'}else{r.forEach(function(e){e.classList.add('yoy-hidden')});b.textContent='전체 보기 (44개 더)'}})()">전체 보기 (44개 더)</button>
+  <button class="yoy-toggle-btn" id="yoyToggleBtn" type="button">전체 보기</button>
 </div>
 </div>
 </div>
 <!-- ═══ /YoY 시장 현황 비교 섹션 ═══ -->
+
+<script>
+window.YOY_MARKET_DATA = {"months":["2026-01","2026-02","2026-03","2026-04"],"latest":"2026-04","data":{"2026-01":{"regions":[{"name":"강원도 서부 지역","properties":[{"name":"소노캄 비발디파크","isSono":true,"rooms25":1723,"rooms26":1762,"occ25":79.1,"occ26":77.0,"yoyPp":-2.1,"isNew":false,"isClosed":false},{"name":"소노벨리체 비발디","isSono":true,"rooms25":500,"rooms26":500,"occ25":56.9,"occ26":52.9,"yoyPp":-4.0,"isNew":false,"isClosed":false},{"name":"소노펠리체 빌리지 비발디","isSono":true,"rooms25":219,"rooms26":219,"occ25":47.7,"occ26":42.0,"yoyPp":-5.7,"isNew":false,"isClosed":false},{"name":"용평","isSono":false,"rooms25":1298,"rooms26":1298,"occ25":87.3,"occ26":85.3,"yoyPp":-2.0,"isNew":false,"isClosed":false},{"name":"휘닉스파크","isSono":false,"rooms25":962,"rooms26":962,"occ25":73.5,"occ26":75.1,"yoyPp":1.6,"isNew":false,"isClosed":false},{"name":"오크밸리","isSono":false,"rooms25":1105,"rooms26":1105,"occ25":54.4,"occ26":51.4,"yoyPp":-3.0,"isNew":false,"isClosed":false},{"name":"웰리힐리","isSono":false,"rooms25":766,"rooms26":766,"occ25":73.0,"occ26":64.3,"yoyPp":-8.7,"isNew":false,"isClosed":false},{"name":"소노벨 양평","isSono":true,"rooms25":189,"rooms26":193,"occ25":58.5,"occ26":52.9,"yoyPp":-5.6,"isNew":false,"isClosed":false}]},{"name":"강원도 동부 지역","properties":[{"name":"델피노","isSono":true,"rooms25":1196,"rooms26":1257,"occ25":65.6,"occ26":59.0,"yoyPp":-6.6,"isNew":false,"isClosed":false},{"name":"쏠비치 양양","isSono":true,"rooms25":501,"rooms26":497,"occ25":56.5,"occ26":55.6,"yoyPp":-0.9,"isNew":false,"isClosed":false},{"name":"쏠비치 삼척","isSono":true,"rooms25":707,"rooms26":707,"occ25":61.2,"occ26":61.6,"yoyPp":0.4,"isNew":false,"isClosed":false},{"name":"롯데리조트 속초","isSono":false,"rooms25":392,"rooms26":392,"occ25":63.1,"occ26":64.6,"yoyPp":1.5,"isNew":false,"isClosed":false},{"name":"카시아리조트","isSono":false,"rooms25":674,"rooms26":674,"occ25":29.0,"occ26":38.0,"yoyPp":9.0,"isNew":false,"isClosed":false},{"name":"한화리조트 속초","isSono":false,"rooms25":1554,"rooms26":1554,"occ25":46.8,"occ26":29.9,"yoyPp":-16.9,"isNew":false,"isClosed":false},{"name":"한화브리드 양양","isSono":false,"rooms25":56,"rooms26":56,"occ25":81.9,"occ26":72.5,"yoyPp":-9.4,"isNew":false,"isClosed":false},{"name":"윈덤 호텔 고성","isSono":false,"rooms25":null,"rooms26":529,"occ25":null,"occ26":15.0,"yoyPp":null,"isNew":true,"isClosed":false},{"name":"르네블루 by 쏠비치 고성","isSono":false,"rooms25":87,"rooms26":87,"occ25":75.8,"occ26":80.4,"yoyPp":4.6,"isNew":false,"isClosed":false},{"name":"켄싱턴리조트 속초","isSono":false,"rooms25":176,"rooms26":176,"occ25":78.0,"occ26":73.5,"yoyPp":-4.5,"isNew":false,"isClosed":false}]},{"name":"경상도 지역","properties":[{"name":"소노캄 경주","isSono":true,"rooms25":410,"rooms26":417,"occ25":0,"occ26":74.5,"yoyPp":74.5,"isNew":false,"isClosed":true},{"name":"라한셀렉트","isSono":false,"rooms25":430,"rooms26":430,"occ25":82.0,"occ26":78.6,"yoyPp":-3.4,"isNew":false,"isClosed":false},{"name":"한화리조트 경주","isSono":false,"rooms25":393,"rooms26":393,"occ25":55.1,"occ26":61.1,"yoyPp":6.0,"isNew":false,"isClosed":false},{"name":"소노벨 단양","isSono":true,"rooms25":830,"rooms26":843,"occ25":56.3,"occ26":57.4,"yoyPp":1.1,"isNew":false,"isClosed":false},{"name":"포레스트 리솜","isSono":false,"rooms25":450,"rooms26":450,"occ25":85.8,"occ26":81.0,"yoyPp":-4.8,"isNew":false,"isClosed":false},{"name":"소노벨 청송","isSono":true,"rooms25":306,"rooms26":320,"occ25":69.1,"occ26":68.8,"yoyPp":-0.3,"isNew":false,"isClosed":false}]},{"name":"제주도 지역","properties":[{"name":"켄싱턴","isSono":false,"rooms25":214,"rooms26":501,"occ25":61.7,"occ26":47.1,"yoyPp":-14.6,"isNew":false,"isClosed":false},{"name":"소노벨 제주","isSono":true,"rooms25":388,"rooms26":397,"occ25":43.7,"occ26":56.7,"yoyPp":13.0,"isNew":false,"isClosed":false},{"name":"소노캄 제주","isSono":true,"rooms25":333,"rooms26":368,"occ25":42.6,"occ26":44.9,"yoyPp":2.3,"isNew":false,"isClosed":false},{"name":"한화리조트 제주","isSono":false,"rooms25":395,"rooms26":395,"occ25":45.3,"occ26":48.8,"yoyPp":3.5,"isNew":false,"isClosed":false},{"name":"롯데 아트빌라스 제주","isSono":false,"rooms25":66,"rooms26":66,"occ25":37.0,"occ26":55.4,"yoyPp":18.4,"isNew":false,"isClosed":false},{"name":"휘닉스아일랜드","isSono":false,"rooms25":300,"rooms26":300,"occ25":50.0,"occ26":55.5,"yoyPp":5.5,"isNew":false,"isClosed":false},{"name":"켄싱턴","isSono":false,"rooms25":214,"rooms26":214,"occ25":61.7,"occ26":76.6,"yoyPp":14.9,"isNew":false,"isClosed":false},{"name":"금호리조트 제주","isSono":false,"rooms25":324,"rooms26":324,"occ25":59.3,"occ26":72.7,"yoyPp":13.4,"isNew":false,"isClosed":false},{"name":"해비치리조트 제주","isSono":false,"rooms25":503,"rooms26":503,"occ25":52.0,"occ26":71.2,"yoyPp":19.2,"isNew":false,"isClosed":false}]},{"name":"충청/전북 지역","properties":[{"name":"소노벨 천안","isSono":true,"rooms25":438,"rooms26":450,"occ25":76.7,"occ26":75.5,"yoyPp":-1.2,"isNew":false,"isClosed":false},{"name":"덕산스플라스 리솜","isSono":false,"rooms25":405,"rooms26":405,"occ25":89.4,"occ26":90.1,"yoyPp":0.7,"isNew":false,"isClosed":false},{"name":"안면도 아일랜드 리솜","isSono":false,"rooms25":248,"rooms26":248,"occ25":62.0,"occ26":60.5,"yoyPp":-1.5,"isNew":false,"isClosed":false},{"name":"소노벨 변산","isSono":true,"rooms25":502,"rooms26":503,"occ25":60.3,"occ26":46.4,"yoyPp":-13.9,"isNew":false,"isClosed":false}]},{"name":"전라/경상도 지역","properties":[{"name":"소노캄 여수","isSono":true,"rooms25":309,"rooms26":310,"occ25":49.2,"occ26":40.9,"yoyPp":-8.3,"isNew":false,"isClosed":false},{"name":"쏠비치 진도","isSono":false,"rooms25":561,"rooms26":561,"occ25":63.0,"occ26":52.0,"yoyPp":-11.0,"isNew":false,"isClosed":false},{"name":"벨메르 한화","isSono":false,"rooms25":100,"rooms26":100,"occ25":44.2,"occ26":43.5,"yoyPp":-0.7,"isNew":false,"isClosed":false},{"name":"신라스테이 여수","isSono":false,"rooms25":315,"rooms26":315,"occ25":72.4,"occ26":81.0,"yoyPp":8.6,"isNew":false,"isClosed":false},{"name":"유탑마리나","isSono":false,"rooms25":298,"rooms26":298,"occ25":75.0,"occ26":64.6,"yoyPp":-10.4,"isNew":false,"isClosed":false},{"name":"금호리조트 통영","isSono":false,"rooms25":272,"rooms26":272,"occ25":73.0,"occ26":67.6,"yoyPp":-5.4,"isNew":false,"isClosed":false},{"name":"쏠비치 남해","isSono":false,"rooms25":null,"rooms26":449,"occ25":null,"occ26":54.1,"yoyPp":null,"isNew":true,"isClosed":false},{"name":"소노캄 거제","isSono":true,"rooms25":479,"rooms26":509,"occ25":60.8,"occ26":52.0,"yoyPp":-8.8,"isNew":false,"isClosed":false},{"name":"한화리조트 벨버디어","isSono":false,"rooms25":470,"rooms26":470,"occ25":54.8,"occ26":45.9,"yoyPp":-8.9,"isNew":false,"isClosed":false}]},{"name":"부산지역","properties":[{"name":"소노문 해운대","isSono":true,"rooms25":235,"rooms26":235,"occ25":61.3,"occ26":68.3,"yoyPp":7.0,"isNew":false,"isClosed":false},{"name":"한화리조트 해운대","isSono":false,"rooms25":417,"rooms26":417,"occ25":68.3,"occ26":62.3,"yoyPp":-6.0,"isNew":false,"isClosed":false},{"name":"롯데 L7호텔 해운대","isSono":false,"rooms25":383,"rooms26":383,"occ25":59.5,"occ26":65.3,"yoyPp":5.8,"isNew":false,"isClosed":false},{"name":"베스트웨스턴","isSono":false,"rooms25":134,"rooms26":134,"occ25":73.7,"occ26":62.3,"yoyPp":-11.4,"isNew":false,"isClosed":false},{"name":"라마다 해운대","isSono":false,"rooms25":402,"rooms26":402,"occ25":58.0,"occ26":65.3,"yoyPp":7.3,"isNew":false,"isClosed":false},{"name":"롯데리조트 김해","isSono":false,"rooms25":250,"rooms26":250,"occ25":29.7,"occ26":58.4,"yoyPp":28.7,"isNew":false,"isClosed":false}]},{"name":"서울/경기","properties":[{"name":"소노캄 고양","isSono":true,"rooms25":799,"rooms26":824,"occ25":43.4,"occ26":38.6,"yoyPp":-4.8,"isNew":false,"isClosed":false},{"name":"안토(구. 파라스파라)","isSono":false,"rooms25":null,"rooms26":334,"occ25":null,"occ26":33.1,"yoyPp":null,"isNew":true,"isClosed":false}]}]},"2026-02":{"regions":[{"name":"강원도 서부 지역","properties":[{"name":"소노캄 비발디파크","isSono":true,"rooms25":1723,"rooms26":1762,"occ25":75.6,"occ26":79.2,"yoyPp":3.6,"isNew":false,"isClosed":false},{"name":"소노벨리체 비발디","isSono":true,"rooms25":500,"rooms26":500,"occ25":47.2,"occ26":58.9,"yoyPp":11.7,"isNew":false,"isClosed":false},{"name":"소노펠리체 빌리지 비발디","isSono":true,"rooms25":219,"rooms26":219,"occ25":34.3,"occ26":43.3,"yoyPp":9.0,"isNew":false,"isClosed":false},{"name":"용평","isSono":false,"rooms25":1298,"rooms26":1298,"occ25":76.1,"occ26":81.8,"yoyPp":5.7,"isNew":false,"isClosed":false},{"name":"휘닉스파크","isSono":false,"rooms25":962,"rooms26":962,"occ25":60.7,"occ26":65.3,"yoyPp":4.6,"isNew":false,"isClosed":false},{"name":"오크밸리","isSono":false,"rooms25":1105,"rooms26":1105,"occ25":41.7,"occ26":56.2,"yoyPp":14.5,"isNew":false,"isClosed":false},{"name":"웰리힐리","isSono":false,"rooms25":766,"rooms26":766,"occ25":57.6,"occ26":60.0,"yoyPp":2.4,"isNew":false,"isClosed":false},{"name":"소노벨 양평","isSono":true,"rooms25":189,"rooms26":193,"occ25":46.5,"occ26":56.3,"yoyPp":9.8,"isNew":false,"isClosed":false}]},{"name":"강원도 동부 지역","properties":[{"name":"델피노","isSono":true,"rooms25":1196,"rooms26":1257,"occ25":54.7,"occ26":62.3,"yoyPp":7.6,"isNew":false,"isClosed":false},{"name":"쏠비치 양양","isSono":true,"rooms25":501,"rooms26":497,"occ25":53.5,"occ26":61.2,"yoyPp":7.7,"isNew":false,"isClosed":false},{"name":"쏠비치 삼척","isSono":true,"rooms25":707,"rooms26":707,"occ25":64.6,"occ26":69.6,"yoyPp":5.0,"isNew":false,"isClosed":false},{"name":"롯데리조트 속초","isSono":false,"rooms25":392,"rooms26":392,"occ25":63.3,"occ26":71.5,"yoyPp":8.2,"isNew":false,"isClosed":false},{"name":"카시아리조트","isSono":false,"rooms25":674,"rooms26":674,"occ25":26.0,"occ26":42.0,"yoyPp":16.0,"isNew":false,"isClosed":false},{"name":"한화리조트 속초","isSono":false,"rooms25":1554,"rooms26":1554,"occ25":38.1,"occ26":29.3,"yoyPp":-8.8,"isNew":false,"isClosed":false},{"name":"한화브리드 양양","isSono":false,"rooms25":56,"rooms26":56,"occ25":88.5,"occ26":71.3,"yoyPp":-17.2,"isNew":false,"isClosed":false},{"name":"윈덤 호텔 고성","isSono":false,"rooms25":null,"rooms26":529,"occ25":null,"occ26":19.0,"yoyPp":null,"isNew":true,"isClosed":false},{"name":"르네블루 by 쏠비치 고성","isSono":false,"rooms25":87,"rooms26":87,"occ25":76.1,"occ26":82.6,"yoyPp":6.5,"isNew":false,"isClosed":false},{"name":"켄싱턴리조트 속초","isSono":false,"rooms25":176,"rooms26":176,"occ25":85.0,"occ26":70.8,"yoyPp":-14.2,"isNew":false,"isClosed":false}]},{"name":"경상도 지역","properties":[{"name":"소노캄 경주","isSono":true,"rooms25":410,"rooms26":417,"occ25":0,"occ26":80.5,"yoyPp":80.5,"isNew":false,"isClosed":true},{"name":"라한셀렉트","isSono":false,"rooms25":430,"rooms26":430,"occ25":85.0,"occ26":74.9,"yoyPp":-10.1,"isNew":false,"isClosed":false},{"name":"한화리조트 경주","isSono":false,"rooms25":393,"rooms26":393,"occ25":41.7,"occ26":61.1,"yoyPp":19.4,"isNew":false,"isClosed":false},{"name":"소노벨 단양","isSono":true,"rooms25":830,"rooms26":843,"occ25":40.7,"occ26":60.9,"yoyPp":20.2,"isNew":false,"isClosed":false},{"name":"포레스트 리솜","isSono":false,"rooms25":450,"rooms26":450,"occ25":80.6,"occ26":83.5,"yoyPp":2.9,"isNew":false,"isClosed":false},{"name":"소노벨 청송","isSono":true,"rooms25":306,"rooms26":320,"occ25":62.6,"occ26":70.3,"yoyPp":7.7,"isNew":false,"isClosed":false}]},{"name":"제주도 지역","properties":[{"name":"켄싱턴","isSono":false,"rooms25":214,"rooms26":501,"occ25":50.5,"occ26":54.4,"yoyPp":3.9,"isNew":false,"isClosed":false},{"name":"소노벨 제주","isSono":true,"rooms25":388,"rooms26":397,"occ25":46.3,"occ26":55.3,"yoyPp":9.0,"isNew":false,"isClosed":false},{"name":"소노캄 제주","isSono":true,"rooms25":333,"rooms26":368,"occ25":40.8,"occ26":40.6,"yoyPp":-0.2,"isNew":false,"isClosed":false},{"name":"한화리조트 제주","isSono":false,"rooms25":395,"rooms26":395,"occ25":43.6,"occ26":39.7,"yoyPp":-3.9,"isNew":false,"isClosed":false},{"name":"롯데 아트빌라스 제주","isSono":false,"rooms25":66,"rooms26":66,"occ25":34.5,"occ26":60.8,"yoyPp":26.3,"isNew":false,"isClosed":false},{"name":"휘닉스아일랜드","isSono":false,"rooms25":300,"rooms26":300,"occ25":46.3,"occ26":57.8,"yoyPp":11.5,"isNew":false,"isClosed":false},{"name":"켄싱턴","isSono":false,"rooms25":214,"rooms26":214,"occ25":50.5,"occ26":64.4,"yoyPp":13.9,"isNew":false,"isClosed":false},{"name":"금호리조트 제주","isSono":false,"rooms25":324,"rooms26":324,"occ25":50.4,"occ26":56.7,"yoyPp":6.3,"isNew":false,"isClosed":false},{"name":"해비치리조트 제주","isSono":false,"rooms25":503,"rooms26":503,"occ25":57.1,"occ26":70.5,"yoyPp":13.4,"isNew":false,"isClosed":false}]},{"name":"충청/전북 지역","properties":[{"name":"소노벨 천안","isSono":true,"rooms25":438,"rooms26":450,"occ25":74.3,"occ26":77.5,"yoyPp":3.2,"isNew":false,"isClosed":false},{"name":"덕산스플라스 리솜","isSono":false,"rooms25":405,"rooms26":405,"occ25":83.2,"occ26":88.2,"yoyPp":5.0,"isNew":false,"isClosed":false},{"name":"안면도 아일랜드 리솜","isSono":false,"rooms25":248,"rooms26":248,"occ25":67.1,"occ26":68.1,"yoyPp":1.0,"isNew":false,"isClosed":false},{"name":"소노벨 변산","isSono":true,"rooms25":502,"rooms26":503,"occ25":59.5,"occ26":62.0,"yoyPp":2.5,"isNew":false,"isClosed":false}]},{"name":"전라/경상도 지역","properties":[{"name":"소노캄 여수","isSono":true,"rooms25":309,"rooms26":310,"occ25":49.8,"occ26":49.1,"yoyPp":-0.7,"isNew":false,"isClosed":false},{"name":"쏠비치 진도","isSono":false,"rooms25":561,"rooms26":561,"occ25":60.8,"occ26":66.7,"yoyPp":5.9,"isNew":false,"isClosed":false},{"name":"벨메르 한화","isSono":false,"rooms25":100,"rooms26":100,"occ25":47.4,"occ26":49.3,"yoyPp":1.9,"isNew":false,"isClosed":false},{"name":"신라스테이 여수","isSono":false,"rooms25":315,"rooms26":315,"occ25":75.0,"occ26":84.2,"yoyPp":9.2,"isNew":false,"isClosed":false},{"name":"유탑마리나","isSono":false,"rooms25":298,"rooms26":298,"occ25":80.8,"occ26":68.7,"yoyPp":-12.1,"isNew":false,"isClosed":false},{"name":"금호리조트 통영","isSono":false,"rooms25":272,"rooms26":272,"occ25":72.3,"occ26":82.4,"yoyPp":10.1,"isNew":false,"isClosed":false},{"name":"쏠비치 남해","isSono":false,"rooms25":null,"rooms26":449,"occ25":null,"occ26":61.0,"yoyPp":null,"isNew":true,"isClosed":false},{"name":"소노캄 거제","isSono":true,"rooms25":479,"rooms26":509,"occ25":61.8,"occ26":60.5,"yoyPp":-1.3,"isNew":false,"isClosed":false},{"name":"한화리조트 벨버디어","isSono":false,"rooms25":470,"rooms26":470,"occ25":51.7,"occ26":54.5,"yoyPp":2.8,"isNew":false,"isClosed":false}]},{"name":"부산지역","properties":[{"name":"소노문 해운대","isSono":true,"rooms25":235,"rooms26":235,"occ25":72.2,"occ26":67.8,"yoyPp":-4.4,"isNew":false,"isClosed":false},{"name":"한화리조트 해운대","isSono":false,"rooms25":417,"rooms26":417,"occ25":67.9,"occ26":63.7,"yoyPp":-4.2,"isNew":false,"isClosed":false},{"name":"롯데 L7호텔 해운대","isSono":false,"rooms25":383,"rooms26":383,"occ25":65.6,"occ26":77.2,"yoyPp":11.6,"isNew":false,"isClosed":false},{"name":"베스트웨스턴","isSono":false,"rooms25":134,"rooms26":134,"occ25":70.0,"occ26":64.6,"yoyPp":-5.4,"isNew":false,"isClosed":false},{"name":"라마다 해운대","isSono":false,"rooms25":402,"rooms26":402,"occ25":58.0,"occ26":66.3,"yoyPp":8.3,"isNew":false,"isClosed":false},{"name":"롯데리조트 김해","isSono":false,"rooms25":250,"rooms26":250,"occ25":37.3,"occ26":54.9,"yoyPp":17.6,"isNew":false,"isClosed":false}]},{"name":"서울/경기","properties":[{"name":"소노캄 고양","isSono":true,"rooms25":799,"rooms26":824,"occ25":63.8,"occ26":44.7,"yoyPp":-19.1,"isNew":false,"isClosed":false},{"name":"안토(구. 파라스파라)","isSono":false,"rooms25":null,"rooms26":334,"occ25":null,"occ26":69.1,"yoyPp":null,"isNew":true,"isClosed":false}]}]},"2026-03":{"regions":[{"name":"강원도 서부 지역","properties":[{"name":"소노캄 비발디파크","isSono":true,"rooms25":1723,"rooms26":1762,"occ25":25.8,"occ26":20.8,"yoyPp":-5.0,"isNew":false,"isClosed":false},{"name":"소노벨리체 비발디","isSono":true,"rooms25":500,"rooms26":500,"occ25":15.8,"occ26":12.0,"yoyPp":-3.8,"isNew":false,"isClosed":false},{"name":"소노펠리체 빌리지 비발디","isSono":true,"rooms25":219,"rooms26":219,"occ25":20.5,"occ26":15.3,"yoyPp":-5.2,"isNew":false,"isClosed":false},{"name":"용평","isSono":false,"rooms25":1298,"rooms26":1298,"occ25":33.0,"occ26":26.8,"yoyPp":-6.2,"isNew":false,"isClosed":false},{"name":"휘닉스파크","isSono":false,"rooms25":962,"rooms26":962,"occ25":21.3,"occ26":10.5,"yoyPp":-10.8,"isNew":false,"isClosed":false},{"name":"오크밸리","isSono":false,"rooms25":1105,"rooms26":1105,"occ25":22.5,"occ26":24.4,"yoyPp":1.9,"isNew":false,"isClosed":false},{"name":"웰리힐리","isSono":false,"rooms25":766,"rooms26":766,"occ25":12.2,"occ26":9.6,"yoyPp":-2.6,"isNew":false,"isClosed":false},{"name":"소노벨 양평","isSono":true,"rooms25":189,"rooms26":193,"occ25":39.9,"occ26":38.6,"yoyPp":-1.3,"isNew":false,"isClosed":false}]},{"name":"강원도 동부 지역","properties":[{"name":"델피노","isSono":true,"rooms25":1196,"rooms26":1257,"occ25":31.1,"occ26":25.9,"yoyPp":-5.2,"isNew":false,"isClosed":false},{"name":"쏠비치 양양","isSono":true,"rooms25":501,"rooms26":497,"occ25":38.3,"occ26":33.9,"yoyPp":-4.4,"isNew":false,"isClosed":false},{"name":"쏠비치 삼척","isSono":true,"rooms25":707,"rooms26":707,"occ25":42.9,"occ26":38.1,"yoyPp":-4.8,"isNew":false,"isClosed":false},{"name":"롯데리조트 속초","isSono":false,"rooms25":392,"rooms26":392,"occ25":54.9,"occ26":47.9,"yoyPp":-7.0,"isNew":false,"isClosed":false},{"name":"카시아리조트","isSono":false,"rooms25":674,"rooms26":674,"occ25":24.0,"occ26":30.0,"yoyPp":6.0,"isNew":false,"isClosed":false},{"name":"한화리조트 속초","isSono":false,"rooms25":1554,"rooms26":1554,"occ25":15.0,"occ26":11.5,"yoyPp":-3.5,"isNew":false,"isClosed":false},{"name":"한화브리드 양양","isSono":false,"rooms25":56,"rooms26":56,"occ25":69.6,"occ26":56.0,"yoyPp":-13.6,"isNew":false,"isClosed":false},{"name":"윈덤 호텔 고성","isSono":false,"rooms25":null,"rooms26":529,"occ25":null,"occ26":9.0,"yoyPp":null,"isNew":true,"isClosed":false},{"name":"르네블루 by 쏠비치 고성","isSono":false,"rooms25":87,"rooms26":87,"occ25":62.9,"occ26":57.5,"yoyPp":-5.4,"isNew":false,"isClosed":false},{"name":"켄싱턴리조트 속초","isSono":false,"rooms25":176,"rooms26":176,"occ25":58.3,"occ26":41.9,"yoyPp":-16.4,"isNew":false,"isClosed":false}]},{"name":"경상도 지역","properties":[{"name":"소노캄 경주","isSono":true,"rooms25":410,"rooms26":417,"occ25":0,"occ26":56.0,"yoyPp":56.0,"isNew":false,"isClosed":true},{"name":"라한셀렉트","isSono":false,"rooms25":430,"rooms26":430,"occ25":88.5,"occ26":63.8,"yoyPp":-24.7,"isNew":false,"isClosed":false},{"name":"한화리조트 경주","isSono":false,"rooms25":393,"rooms26":393,"occ25":38.2,"occ26":56.8,"yoyPp":18.6,"isNew":false,"isClosed":false},{"name":"소노벨 단양","isSono":true,"rooms25":830,"rooms26":843,"occ25":49.6,"occ26":31.1,"yoyPp":-18.5,"isNew":false,"isClosed":false},{"name":"포레스트 리솜","isSono":false,"rooms25":450,"rooms26":450,"occ25":63.1,"occ26":55.0,"yoyPp":-8.1,"isNew":false,"isClosed":false},{"name":"소노벨 청송","isSono":true,"rooms25":306,"rooms26":320,"occ25":27.9,"occ26":35.6,"yoyPp":7.7,"isNew":false,"isClosed":false}]},{"name":"제주도 지역","properties":[{"name":"켄싱턴","isSono":false,"rooms25":214,"rooms26":501,"occ25":44.1,"occ26":34.3,"yoyPp":-9.8,"isNew":false,"isClosed":false},{"name":"소노벨 제주","isSono":true,"rooms25":388,"rooms26":397,"occ25":45.4,"occ26":55.0,"yoyPp":9.6,"isNew":false,"isClosed":false},{"name":"소노캄 제주","isSono":true,"rooms25":333,"rooms26":368,"occ25":39.0,"occ26":42.0,"yoyPp":3.0,"isNew":false,"isClosed":false},{"name":"한화리조트 제주","isSono":false,"rooms25":395,"rooms26":395,"occ25":28.3,"occ26":39.2,"yoyPp":10.9,"isNew":false,"isClosed":false},{"name":"롯데 아트빌라스 제주","isSono":false,"rooms25":66,"rooms26":66,"occ25":44.7,"occ26":49.2,"yoyPp":4.5,"isNew":false,"isClosed":false},{"name":"휘닉스아일랜드","isSono":false,"rooms25":300,"rooms26":300,"occ25":39.5,"occ26":43.1,"yoyPp":3.6,"isNew":false,"isClosed":false},{"name":"켄싱턴","isSono":false,"rooms25":214,"rooms26":214,"occ25":44.1,"occ26":55.3,"yoyPp":11.2,"isNew":false,"isClosed":false},{"name":"금호리조트 제주","isSono":false,"rooms25":324,"rooms26":324,"occ25":46.3,"occ26":46.7,"yoyPp":0.4,"isNew":false,"isClosed":false},{"name":"해비치리조트 제주","isSono":false,"rooms25":503,"rooms26":503,"occ25":55.2,"occ26":66.5,"yoyPp":11.3,"isNew":false,"isClosed":false}]},{"name":"충청/전북 지역","properties":[{"name":"소노벨 천안","isSono":true,"rooms25":438,"rooms26":450,"occ25":47.1,"occ26":36.9,"yoyPp":-10.2,"isNew":false,"isClosed":false},{"name":"덕산스플라스 리솜","isSono":false,"rooms25":405,"rooms26":405,"occ25":35.2,"occ26":42.1,"yoyPp":6.9,"isNew":false,"isClosed":false},{"name":"안면도 아일랜드 리솜","isSono":false,"rooms25":248,"rooms26":248,"occ25":42.4,"occ26":49.4,"yoyPp":7.0,"isNew":false,"isClosed":false},{"name":"소노벨 변산","isSono":true,"rooms25":502,"rooms26":503,"occ25":41.6,"occ26":31.5,"yoyPp":-10.1,"isNew":false,"isClosed":false}]},{"name":"전라/경상도 지역","properties":[{"name":"소노캄 여수","isSono":true,"rooms25":309,"rooms26":310,"occ25":53.1,"occ26":42.0,"yoyPp":-11.1,"isNew":false,"isClosed":false},{"name":"쏠비치 진도","isSono":false,"rooms25":561,"rooms26":561,"occ25":43.7,"occ26":29.4,"yoyPp":-14.3,"isNew":false,"isClosed":false},{"name":"벨메르 한화","isSono":false,"rooms25":100,"rooms26":100,"occ25":47.4,"occ26":43.6,"yoyPp":-3.8,"isNew":false,"isClosed":false},{"name":"신라스테이 여수","isSono":false,"rooms25":315,"rooms26":315,"occ25":65.6,"occ26":72.4,"yoyPp":6.8,"isNew":false,"isClosed":false},{"name":"유탑마리나","isSono":false,"rooms25":298,"rooms26":298,"occ25":65.9,"occ26":55.4,"yoyPp":-10.5,"isNew":false,"isClosed":false},{"name":"금호리조트 통영","isSono":false,"rooms25":272,"rooms26":272,"occ25":64.0,"occ26":65.0,"yoyPp":1.0,"isNew":false,"isClosed":false},{"name":"쏠비치 남해","isSono":false,"rooms25":null,"rooms26":449,"occ25":null,"occ26":40.8,"yoyPp":null,"isNew":true,"isClosed":false},{"name":"소노캄 거제","isSono":true,"rooms25":479,"rooms26":509,"occ25":44.6,"occ26":35.5,"yoyPp":-9.1,"isNew":false,"isClosed":false},{"name":"한화리조트 벨버디어","isSono":false,"rooms25":470,"rooms26":470,"occ25":33.9,"occ26":30.7,"yoyPp":-3.2,"isNew":false,"isClosed":false}]},{"name":"부산지역","properties":[{"name":"소노문 해운대","isSono":true,"rooms25":235,"rooms26":235,"occ25":58.4,"occ26":60.0,"yoyPp":1.6,"isNew":false,"isClosed":false},{"name":"한화리조트 해운대","isSono":false,"rooms25":417,"rooms26":417,"occ25":37.5,"occ26":38.1,"yoyPp":0.6,"isNew":false,"isClosed":false},{"name":"롯데 L7호텔 해운대","isSono":false,"rooms25":383,"rooms26":383,"occ25":61.0,"occ26":72.6,"yoyPp":11.6,"isNew":false,"isClosed":false},{"name":"베스트웨스턴","isSono":false,"rooms25":134,"rooms26":134,"occ25":72.0,"occ26":58.5,"yoyPp":-13.5,"isNew":false,"isClosed":false},{"name":"라마다 해운대","isSono":false,"rooms25":402,"rooms26":402,"occ25":62.0,"occ26":62.1,"yoyPp":0.1,"isNew":false,"isClosed":false},{"name":"롯데리조트 김해","isSono":false,"rooms25":250,"rooms26":250,"occ25":28.6,"occ26":37.3,"yoyPp":8.7,"isNew":false,"isClosed":false}]},{"name":"서울/경기","properties":[{"name":"소노캄 고양","isSono":true,"rooms25":799,"rooms26":824,"occ25":49.6,"occ26":49.9,"yoyPp":0.3,"isNew":false,"isClosed":false},{"name":"안토(구. 파라스파라)","isSono":false,"rooms25":null,"rooms26":334,"occ25":null,"occ26":25.0,"yoyPp":null,"isNew":true,"isClosed":false}]}]},"2026-04":{"regions":[{"name":"강원도 서부 지역","properties":[{"name":"소노캄 비발디파크","isSono":true,"rooms25":1723,"rooms26":1762,"occ25":34.2,"occ26":25.4,"yoyPp":-8.8,"isNew":false,"isClosed":false},{"name":"소노벨리체 비발디","isSono":true,"rooms25":500,"rooms26":500,"occ25":27.4,"occ26":19.6,"yoyPp":-7.8,"isNew":false,"isClosed":false},{"name":"소노펠리체 빌리지 비발디","isSono":true,"rooms25":219,"rooms26":219,"occ25":30.4,"occ26":24.0,"yoyPp":-6.4,"isNew":false,"isClosed":false},{"name":"용평","isSono":false,"rooms25":1298,"rooms26":1298,"occ25":18.3,"occ26":20.6,"yoyPp":2.3,"isNew":false,"isClosed":false},{"name":"휘닉스파크","isSono":false,"rooms25":962,"rooms26":962,"occ25":22.5,"occ26":27.2,"yoyPp":4.7,"isNew":false,"isClosed":false},{"name":"오크밸리","isSono":false,"rooms25":1105,"rooms26":1105,"occ25":47.7,"occ26":39.8,"yoyPp":-7.9,"isNew":false,"isClosed":false},{"name":"웰리힐리","isSono":false,"rooms25":766,"rooms26":766,"occ25":16.6,"occ26":16.2,"yoyPp":-0.4,"isNew":false,"isClosed":false},{"name":"소노벨 양평","isSono":true,"rooms25":189,"rooms26":193,"occ25":50.6,"occ26":49.4,"yoyPp":-1.2,"isNew":false,"isClosed":false}]},{"name":"강원도 동부 지역","properties":[{"name":"델피노","isSono":true,"rooms25":1196,"rooms26":1257,"occ25":42.9,"occ26":42.5,"yoyPp":-0.4,"isNew":false,"isClosed":false},{"name":"쏠비치 양양","isSono":true,"rooms25":501,"rooms26":497,"occ25":53.3,"occ26":50.7,"yoyPp":-2.6,"isNew":false,"isClosed":false},{"name":"쏠비치 삼척","isSono":true,"rooms25":707,"rooms26":707,"occ25":60.7,"occ26":63.6,"yoyPp":2.9,"isNew":false,"isClosed":false},{"name":"롯데리조트 속초","isSono":false,"rooms25":392,"rooms26":392,"occ25":73.7,"occ26":65.2,"yoyPp":-8.5,"isNew":false,"isClosed":false},{"name":"카시아리조트","isSono":false,"rooms25":674,"rooms26":674,"occ25":25.0,"occ26":36.0,"yoyPp":11.0,"isNew":false,"isClosed":false},{"name":"한화리조트 속초","isSono":false,"rooms25":1554,"rooms26":1554,"occ25":46.8,"occ26":43.9,"yoyPp":-2.9,"isNew":false,"isClosed":false},{"name":"한화브리드 양양","isSono":false,"rooms25":56,"rooms26":56,"occ25":70.5,"occ26":61.8,"yoyPp":-8.7,"isNew":false,"isClosed":false},{"name":"윈덤 호텔 고성","isSono":false,"rooms25":null,"rooms26":529,"occ25":null,"occ26":20.0,"yoyPp":null,"isNew":true,"isClosed":false},{"name":"르네블루 by 쏠비치 고성","isSono":false,"rooms25":87,"rooms26":87,"occ25":68.2,"occ26":66.3,"yoyPp":-1.9,"isNew":false,"isClosed":false},{"name":"켄싱턴리조트 속초","isSono":false,"rooms25":176,"rooms26":176,"occ25":74.0,"occ26":64.6,"yoyPp":-9.4,"isNew":false,"isClosed":false}]},{"name":"경상도 지역","properties":[{"name":"소노캄 경주","isSono":true,"rooms25":410,"rooms26":417,"occ25":0,"occ26":91.8,"yoyPp":91.8,"isNew":false,"isClosed":true},{"name":"라한셀렉트","isSono":false,"rooms25":430,"rooms26":430,"occ25":87.0,"occ26":94.3,"yoyPp":7.3,"isNew":false,"isClosed":false},{"name":"한화리조트 경주","isSono":false,"rooms25":393,"rooms26":393,"occ25":62.5,"occ26":84.2,"yoyPp":21.7,"isNew":false,"isClosed":false},{"name":"소노벨 단양","isSono":true,"rooms25":830,"rooms26":843,"occ25":60.3,"occ26":41.8,"yoyPp":-18.5,"isNew":false,"isClosed":false},{"name":"포레스트 리솜","isSono":false,"rooms25":450,"rooms26":450,"occ25":71.9,"occ26":73.9,"yoyPp":2.0,"isNew":false,"isClosed":false},{"name":"소노벨 청송","isSono":true,"rooms25":306,"rooms26":320,"occ25":36.2,"occ26":43.3,"yoyPp":7.1,"isNew":false,"isClosed":false}]},{"name":"제주도 지역","properties":[{"name":"켄싱턴","isSono":false,"rooms25":214,"rooms26":501,"occ25":66.5,"occ26":72.8,"yoyPp":6.3,"isNew":false,"isClosed":false},{"name":"소노벨 제주","isSono":true,"rooms25":388,"rooms26":397,"occ25":69.2,"occ26":77.0,"yoyPp":7.8,"isNew":false,"isClosed":false},{"name":"소노캄 제주","isSono":true,"rooms25":333,"rooms26":368,"occ25":65.4,"occ26":64.7,"yoyPp":-0.7,"isNew":false,"isClosed":false},{"name":"한화리조트 제주","isSono":false,"rooms25":395,"rooms26":395,"occ25":45.4,"occ26":59.9,"yoyPp":14.5,"isNew":false,"isClosed":false},{"name":"롯데 아트빌라스 제주","isSono":false,"rooms25":66,"rooms26":66,"occ25":60.6,"occ26":71.2,"yoyPp":10.6,"isNew":false,"isClosed":false},{"name":"휘닉스아일랜드","isSono":false,"rooms25":300,"rooms26":300,"occ25":58.1,"occ26":68.3,"yoyPp":10.2,"isNew":false,"isClosed":false},{"name":"켄싱턴","isSono":false,"rooms25":214,"rooms26":214,"occ25":66.5,"occ26":72.2,"yoyPp":5.7,"isNew":false,"isClosed":false},{"name":"금호리조트 제주","isSono":false,"rooms25":324,"rooms26":324,"occ25":68.5,"occ26":72.9,"yoyPp":4.4,"isNew":false,"isClosed":false},{"name":"해비치리조트 제주","isSono":false,"rooms25":503,"rooms26":503,"occ25":75.0,"occ26":79.0,"yoyPp":4.0,"isNew":false,"isClosed":false}]},{"name":"충청/전북 지역","properties":[{"name":"소노벨 천안","isSono":true,"rooms25":438,"rooms26":450,"occ25":55.4,"occ26":50.5,"yoyPp":-4.9,"isNew":false,"isClosed":false},{"name":"덕산스플라스 리솜","isSono":false,"rooms25":405,"rooms26":405,"occ25":36.9,"occ26":62.1,"yoyPp":25.2,"isNew":false,"isClosed":false},{"name":"안면도 아일랜드 리솜","isSono":false,"rooms25":248,"rooms26":248,"occ25":57.9,"occ26":78.4,"yoyPp":20.5,"isNew":false,"isClosed":false},{"name":"소노벨 변산","isSono":true,"rooms25":502,"rooms26":503,"occ25":53.7,"occ26":50.6,"yoyPp":-3.1,"isNew":false,"isClosed":false}]},{"name":"전라/경상도 지역","properties":[{"name":"소노캄 여수","isSono":true,"rooms25":309,"rooms26":310,"occ25":60.2,"occ26":64.6,"yoyPp":4.4,"isNew":false,"isClosed":false},{"name":"쏠비치 진도","isSono":false,"rooms25":561,"rooms26":561,"occ25":56.1,"occ26":58.1,"yoyPp":2.0,"isNew":false,"isClosed":false},{"name":"벨메르 한화","isSono":false,"rooms25":100,"rooms26":100,"occ25":63.7,"occ26":62.5,"yoyPp":-1.2,"isNew":false,"isClosed":false},{"name":"신라스테이 여수","isSono":false,"rooms25":315,"rooms26":315,"occ25":77.6,"occ26":82.5,"yoyPp":4.9,"isNew":false,"isClosed":false},{"name":"유탑마리나","isSono":false,"rooms25":298,"rooms26":298,"occ25":74.1,"occ26":69.2,"yoyPp":-4.9,"isNew":false,"isClosed":false},{"name":"금호리조트 통영","isSono":false,"rooms25":272,"rooms26":272,"occ25":71.2,"occ26":79.1,"yoyPp":7.9,"isNew":false,"isClosed":false},{"name":"쏠비치 남해","isSono":false,"rooms25":null,"rooms26":449,"occ25":null,"occ26":61.3,"yoyPp":null,"isNew":true,"isClosed":false},{"name":"소노캄 거제","isSono":true,"rooms25":479,"rooms26":509,"occ25":64.7,"occ26":49.0,"yoyPp":-15.7,"isNew":false,"isClosed":false},{"name":"한화리조트 벨버디어","isSono":false,"rooms25":470,"rooms26":470,"occ25":42.8,"occ26":38.8,"yoyPp":-4.0,"isNew":false,"isClosed":false}]},{"name":"부산지역","properties":[{"name":"소노문 해운대","isSono":true,"rooms25":235,"rooms26":235,"occ25":69.2,"occ26":77.8,"yoyPp":8.6,"isNew":false,"isClosed":false},{"name":"한화리조트 해운대","isSono":false,"rooms25":417,"rooms26":417,"occ25":50.1,"occ26":57.9,"yoyPp":7.8,"isNew":false,"isClosed":false},{"name":"롯데 L7호텔 해운대","isSono":false,"rooms25":383,"rooms26":383,"occ25":77.6,"occ26":83.1,"yoyPp":5.5,"isNew":false,"isClosed":false},{"name":"베스트웨스턴","isSono":false,"rooms25":134,"rooms26":134,"occ25":85.0,"occ26":72.0,"yoyPp":-13.0,"isNew":false,"isClosed":false},{"name":"라마다 해운대","isSono":false,"rooms25":402,"rooms26":402,"occ25":79.0,"occ26":74.2,"yoyPp":-4.8,"isNew":false,"isClosed":false},{"name":"롯데리조트 김해","isSono":false,"rooms25":250,"rooms26":250,"occ25":39.9,"occ26":48.5,"yoyPp":8.6,"isNew":false,"isClosed":false}]},{"name":"서울/경기","properties":[{"name":"소노캄 고양","isSono":true,"rooms25":799,"rooms26":824,"occ25":67.8,"occ26":66.1,"yoyPp":-1.7,"isNew":false,"isClosed":false},{"name":"안토(구. 파라스파라)","isSono":false,"rooms25":null,"rooms26":334,"occ25":null,"occ26":30.0,"yoyPp":null,"isNew":true,"isClosed":false}]}]}}};
+
+(function(){
+  var DATA = window.YOY_MARKET_DATA;
+  if (!DATA) return;
+  var DEFAULT_VISIBLE = 10;
+
+  function fmtPct(v){ return (v==null?'-':v.toFixed(1)+'%'); }
+  function fmtRooms(v){ return (v==null?'-':v.toLocaleString()); }
+  function monthLabel(key){ return parseInt(key.slice(5),10)+'월'; }
+
+  function yoyCell(p){
+    if (p.isNew) return '<td class="yoy-na">NEW</td>';
+    var v = p.yoyPp;
+    if (v>=0.5) return '<td class="yoy-up">▲ +'+v.toFixed(1)+'%p</td>';
+    if (v<=-0.5) return '<td class="yoy-down">▼ '+v.toFixed(1)+'%p</td>';
+    var s=(v>0?'+':'')+v.toFixed(1);
+    return '<td class="yoy-flat">— '+s+'%p</td>';
+  }
+
+  function computeSummary(props){
+    var base = props.filter(function(p){return !p.isNew && !p.isClosed;});
+    var sono = base.filter(function(p){return p.isSono;});
+    var avg = function(a){return a.length? a.reduce(function(s,p){return s+p.yoyPp;},0)/a.length : 0;};
+    return {
+      overall: avg(base), sono: avg(sono), sonoN: sono.length,
+      up: base.filter(function(p){return p.yoyPp>=0.5;}).length,
+      down: base.filter(function(p){return p.yoyPp<=-0.5;}).length,
+      flat: base.filter(function(p){return p.yoyPp>-0.5 && p.yoyPp<0.5;}).length,
+      newN: props.filter(function(p){return p.isNew;}).length,
+      baseN: base.length
+    };
+  }
+
+  function render(monthKey){
+    var month = DATA.data[monthKey];
+    if (!month) return;
+    var ml = monthLabel(monthKey);
+    var allProps = [];
+    month.regions.forEach(function(r){ r.properties.forEach(function(p){ allProps.push(p); }); });
+
+    document.getElementById('yoy-badge').textContent = ml+' 기준';
+    document.getElementById('yoy-subtitle').textContent =
+      '112번 사업장 · 2025년 '+ml+' vs 2026년 '+ml+' · 전체 '+allProps.length+'개 시설';
+
+    var s = computeSummary(allProps);
+    var sgn = function(v){return (v>=0?'+':'')+v.toFixed(1);};
+    var cls = function(v){return v>0.05?'up':(v<-0.05?'down':'neutral');};
+    document.getElementById('yoy-summary').innerHTML =
+      '<div class="yoy-stat"><div class="yoy-stat-label">전체 평균 증감</div><div class="yoy-stat-value '+cls(s.overall)+'">'+sgn(s.overall)+'%p</div><div class="yoy-stat-sub">경주 제외 '+s.baseN+'개 시설</div></div>'+
+      '<div class="yoy-stat"><div class="yoy-stat-label">자사(SONO) 평균</div><div class="yoy-stat-value '+cls(s.sono)+'">'+sgn(s.sono)+'%p</div><div class="yoy-stat-sub">'+s.sonoN+'개 자사 시설</div></div>'+
+      '<div class="yoy-stat"><div class="yoy-stat-label">상승</div><div class="yoy-stat-value up">'+s.up+'</div><div class="yoy-stat-sub">+0.5%p 이상</div></div>'+
+      '<div class="yoy-stat"><div class="yoy-stat-label">하락</div><div class="yoy-stat-value down">'+s.down+'</div><div class="yoy-stat-sub">-0.5%p 이상</div></div>'+
+      '<div class="yoy-stat"><div class="yoy-stat-label">보합</div><div class="yoy-stat-value neutral">'+s.flat+'</div><div class="yoy-stat-sub">±0.5%p 이내</div></div>'+
+      '<div class="yoy-stat"><div class="yoy-stat-label">신규</div><div class="yoy-stat-value" style="color:var(--accent)">'+s.newN+'</div><div class="yoy-stat-sub">2026년 신규</div></div>';
+
+    var ranked = allProps.filter(function(p){return !p.isNew && !p.isClosed;}).slice();
+    var up5 = ranked.slice().sort(function(a,b){return b.yoyPp-a.yoyPp;}).slice(0,5);
+    var down5 = ranked.slice().sort(function(a,b){return a.yoyPp-b.yoyPp;}).slice(0,5);
+    var topLi = function(p,dir){
+      return '<li><span class="yoy-top-name'+(p.isSono?' sono':'')+'">'+p.name+'</span><span class="yoy-top-val yoy-'+dir+'">'+(dir==='up'?'+':'')+p.yoyPp.toFixed(1)+'%p</span></li>';
+    };
+    document.getElementById('yoy-top-section').innerHTML =
+      '<div class="yoy-top-card"><div class="yoy-top-card-header up-header">▲ 상승 TOP 5</div><ul class="yoy-top-list">'+up5.map(function(p){return topLi(p,'up');}).join('')+'</ul></div>'+
+      '<div class="yoy-top-card"><div class="yoy-top-card-header down-header">▼ 하락 TOP 5</div><ul class="yoy-top-list">'+down5.map(function(p){return topLi(p,'down');}).join('')+'</ul></div>';
+
+    var regionStyle = 'background:rgba(33,38,45,.6);font-weight:700;color:var(--text);font-size:11px;letter-spacing:.3px;padding:6px 10px;border-left:3px solid var(--accent)';
+    var html = '';
+    var fIdx = 0;
+    month.regions.forEach(function(r){
+      var props = r.properties.slice().sort(function(a,b){return a.name.localeCompare(b.name,'ko');});
+      var rowsHtml = '';
+      var anyVisible = false;
+      props.forEach(function(p){
+        var visible = fIdx < DEFAULT_VISIBLE;
+        if (visible) anyVisible = true;
+        fIdx++;
+        var rowCls = visible ? '' : ' class="yoy-extra-row yoy-hidden"';
+        var nameCls = p.isSono ? 'sono-name' : '';
+        var note = p.isClosed ? ' <span class="yoy-note">(25년 휴관)</span>' : '';
+        var badge = p.isNew ? '<span class="yoy-new-badge">NEW</span>' : '';
+        rowsHtml += '<tr'+rowCls+'><td></td><td><span class="'+nameCls+'">'+p.name+'</span>'+note+badge+'</td>'+
+          '<td>'+fmtRooms(p.rooms25)+'</td><td>'+fmtRooms(p.rooms26)+'</td>'+
+          '<td>'+fmtPct(p.occ25)+'</td><td>'+fmtPct(p.occ26)+'</td>'+yoyCell(p)+'</tr>';
+      });
+      var regCls = anyVisible ? '' : ' class="yoy-extra-region yoy-hidden"';
+      html += '<tr'+regCls+'><td colspan="7" style="'+regionStyle+'">'+r.name+'</td></tr>'+rowsHtml;
+    });
+    document.getElementById('yoy-tbody').innerHTML = html;
+
+    document.getElementById('yoy-thead').innerHTML =
+      '<tr><th>지역</th><th>시설명</th><th>가용 객실수(25)</th><th>가용 객실수(26)</th><th>25년 '+ml+'</th><th>26년 '+ml+'</th><th>증감(%p)</th></tr>';
+
+    var hidden = Math.max(0, allProps.length - DEFAULT_VISIBLE);
+    var btn = document.getElementById('yoyToggleBtn');
+    btn.textContent = '전체 보기 ('+hidden+'개 더)';
+    btn.dataset.expanded = '0';
+  }
+
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest && e.target.closest('#yoyToggleBtn');
+    if (!btn) return;
+    var rows = document.querySelectorAll('.yoy-extra-row,.yoy-extra-region');
+    if (btn.dataset.expanded === '1'){
+      rows.forEach(function(el){ el.classList.add('yoy-hidden'); });
+      btn.dataset.expanded = '0';
+      btn.textContent = '전체 보기 ('+document.querySelectorAll('.yoy-extra-row').length+'개 더)';
+    } else {
+      rows.forEach(function(el){ el.classList.remove('yoy-hidden'); });
+      btn.dataset.expanded = '1';
+      btn.textContent = '접기';
+    }
+  });
+
+  window.renderYoyMarket = render;
+  window.YOY_DEFAULT_MONTH = DATA.latest;
+})();
+
+</script>
 
 <!-- ═══ 월 추이 차트 섹션 ═══ -->
 <div class="trend-section view-hidden" id="trend-section">
@@ -4983,7 +5023,16 @@ window.MARKET_TREND_DATA = {
   var statsBar      = document.querySelector('.stats-bar');
   var yoySubmenuBtn = document.querySelector('.sb-item[data-toggle="submenu"]');
 
-  function setView(view) {
+  var currentYoyMonth = window.YOY_DEFAULT_MONTH || '2026-04';
+
+  function syncYoyActive(monthKey) {
+    sbSubItems.forEach(function (s) {
+      s.classList.toggle('active', s.getAttribute('data-month') === monthKey);
+    });
+  }
+
+  function setView(view, monthKey) {
+    if (view === 'yoy' && monthKey) currentYoyMonth = monthKey;
     sbItems.forEach(function (it) {
       it.classList.toggle('active', it.getAttribute('data-view') === view && it.getAttribute('data-toggle') !== 'submenu');
     });
@@ -5015,6 +5064,11 @@ window.MARKET_TREND_DATA = {
       }
     }
 
+    if (view === 'yoy' && typeof window.renderYoyMarket === 'function') {
+      window.renderYoyMarket(currentYoyMonth);
+      syncYoyActive(currentYoyMonth);
+    }
+
     if (view === 'trend' && typeof window.renderTrendChart === 'function') {
       window.renderTrendChart();
     }
@@ -5025,7 +5079,8 @@ window.MARKET_TREND_DATA = {
   sbItems.forEach(function (it) {
     it.addEventListener('click', function () {
       if (it.getAttribute('data-toggle') === 'submenu') {
-        it.classList.toggle('expanded');
+        it.classList.add('expanded');
+        setView('yoy', currentYoyMonth);
         return;
       }
       setView(it.getAttribute('data-view'));
@@ -5038,7 +5093,7 @@ window.MARKET_TREND_DATA = {
       if (it.classList.contains('disabled')) return;
       sbSubItems.forEach(function (s) { s.classList.remove('active'); });
       it.classList.add('active');
-      setView(it.getAttribute('data-view'));
+      setView(it.getAttribute('data-view'), it.getAttribute('data-month'));
       closeSidebarMobile();
     });
   });
@@ -5069,6 +5124,11 @@ window.MARKET_TREND_DATA = {
   if (catTabBar)    catTabBar.classList.toggle('view-hidden', initialIsMarket);
   if (hotelSec)     hotelSec.classList.toggle('view-hidden', initialIsMarket);
   if (golfSec)      golfSec.classList.toggle('view-hidden', initialIsMarket);
+
+  if (typeof window.renderYoyMarket === 'function') {
+    window.renderYoyMarket(currentYoyMonth);
+    syncYoyActive(currentYoyMonth);
+  }
 })();
 </script>
 <script>
