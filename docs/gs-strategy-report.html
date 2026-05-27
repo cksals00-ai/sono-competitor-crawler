@@ -1,0 +1,3220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta name="auth-required" content="admin">
+<script src="./js/auth.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>월 전략 리포트 — SONO GS팀</title>
+
+<!-- PWA 메타태그 -->
+<meta name="theme-color" content="#1a1d23">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SONO GS 리포트">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%231a1d23' width='180' height='180'/><circle cx='90' cy='90' r='80' fill='%23252932'/><text x='90' y='98' font-size='80' font-weight='700' fill='%23c9a063' text-anchor='middle' font-family='sans-serif'>GS</text></svg>">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%231a1d23' width='192' height='192'/><circle cx='96' cy='96' r='85' fill='%23252932'/><text x='96' y='100' font-size='96' font-weight='700' fill='%23c9a063' text-anchor='middle' font-family='sans-serif'>GS</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+  :root{
+    --bg:#1a1d23;--bg-card:#252932;--bg-deep:#14171c;--bg-soft:#2d3138;--bg-hover:#353a44;
+    --ink:#f5f5f7;--ink-soft:#e0e0e3;--ink-muted:#a8acb3;--ink-faint:#7a7e85;
+    --gold:#c9a063;--gold-bright:#e6b970;
+    --positive:#4caf6f;--positive-bg:#1f3a28;
+    --warning:#e8a256;--warning-bg:#3d2e1a;
+    --negative:#e57373;--negative-bg:#3d1f1f;
+    --info:#5a9fc4;--info-bg:#1a2e3d;
+    --rule:rgba(255,255,255,0.12);
+    --rule-strong:rgba(255,255,255,0.18);
+    --sidebar-w:220px;
+    --sans:'Pretendard Variable',Pretendard,'Noto Sans KR',-apple-system,sans-serif;
+    --mono:'JetBrains Mono','Pretendard Variable',Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+
+  /* GSN NAV — index.html 동일 */
+  .gsn{background:#0b0f14;border-bottom:1px solid #1e2530;font-family:'Noto Sans KR',-apple-system,sans-serif;font-size:13px;position:relative;z-index:200;padding-top:env(safe-area-inset-top,0px)}
+  .gsn-wrap{max-width:1400px;margin:0 auto;padding:0 20px;height:42px;display:flex;align-items:center}
+  .gsn-brand{color:#7a8794;text-decoration:none;font-weight:600;font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;margin-right:24px;padding-right:24px;border-right:1px solid #1e2530}
+  .gsn-brand:hover{color:#c9d1d9}
+  .gsn-brand-dot{color:#58a6ff}
+  .gsn-links{display:flex;align-items:center;gap:2px;flex:1}
+  .gsn-item{color:#7d8590;text-decoration:none;padding:4px 12px;border-radius:6px;white-space:nowrap;font-size:13px;transition:.15s;display:flex;align-items:center;gap:6px}
+  .gsn-item:hover{background:#1a2232;color:#c9d1d9}
+  .gsn-item.active{background:#1c2d3f;color:#58a6ff;font-weight:600}
+  .gsn-toggle{display:none;background:none;border:none;color:#7d8590;cursor:pointer;padding:5px;border-radius:4px;margin-left:auto}
+  @media(max-width:900px){
+    .gsn-links{display:none;flex-direction:column;position:absolute;top:42px;left:0;right:0;background:#0b0f14;border-bottom:1px solid #1e2530;padding:8px 12px;gap:3px;z-index:300}
+    .gsn-links.open{display:flex}
+    .gsn-item{padding:8px 12px}
+    .gsn-toggle{display:flex;align-items:center;justify-content:center}
+  }
+  @media(max-width:480px){.gsn-wrap{padding:0 10px}.gsn-brand{margin-right:12px;padding-right:12px;font-size:11px}}
+
+  /* MASTHEAD */
+  .masthead{background:var(--bg-deep);border-bottom:3px solid var(--gold);position:sticky;top:42px;z-index:180}
+  .masthead-inner{max-width:1640px;margin:0 auto;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .logo-wrap{display:flex;align-items:baseline;gap:0;flex-wrap:nowrap}
+  .logo-mark{font-family:var(--sans);font-weight:800;font-size:18px;color:var(--gold-bright);white-space:nowrap}
+  .team-tag{font-family:var(--mono);font-size:11px;letter-spacing:0.15em;color:rgba(255,255,255,0.5);border-left:1px solid rgba(255,255,255,0.2);padding-left:14px;margin-left:14px;white-space:nowrap}
+  .page-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(201,160,99,0.15);border:1px solid rgba(201,160,99,0.35);border-radius:3px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gold-bright);letter-spacing:0.12em}
+  .masthead-right{display:flex;align-items:center;gap:16px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,0.6)}
+
+  /* APP SHELL with SIDEBAR */
+  .app-shell{display:flex;min-height:calc(100vh - 94px)}
+  .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--bg-deep);border-right:1px solid var(--rule);padding:18px 14px;position:sticky;top:94px;height:calc(100vh - 94px);overflow-y:auto;display:flex;flex-direction:column;gap:18px}
+  .sb-section{display:flex;flex-direction:column;gap:7px}
+  .sb-label{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;color:var(--ink-faint);text-transform:uppercase;font-weight:700}
+  .chips{display:flex;flex-wrap:wrap;gap:5px}
+  .chip{padding:4px 10px;border-radius:3px;border:1px solid var(--rule-strong);background:transparent;color:var(--ink-muted);font-family:var(--mono);font-size:11px;font-weight:600;cursor:pointer;transition:.15s;letter-spacing:.04em}
+  .chip:hover{background:var(--bg-soft);color:var(--ink)}
+  .chip.active{background:rgba(201,160,99,0.18);border-color:var(--gold);color:var(--gold-bright)}
+  .sb-divider{height:1px;background:var(--rule)}
+  .prop-list{display:flex;flex-direction:column;gap:2px}
+  /* 권역 → 사업장 2뎁스 트리 */
+  .region-tree{display:flex;flex-direction:column;gap:3px}
+  .region-group{border-radius:4px;overflow:hidden}
+  .region-toggle{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;font-size:12px;font-weight:700;color:var(--ink);background:var(--bg-soft);border:1px solid var(--rule);border-radius:4px;cursor:pointer;transition:.15s;width:100%;text-align:left;font-family:var(--sans)}
+  .region-toggle:hover{background:var(--bg-hover);border-color:var(--gold)}
+  .region-toggle.active{background:rgba(201,160,99,0.18);border-color:var(--gold);color:var(--gold-bright)}
+  .region-toggle .arr{font-family:var(--mono);font-size:10px;color:var(--ink-faint);transition:transform .15s}
+  .region-toggle.open .arr{transform:rotate(180deg)}
+  .region-toggle .cnt{font-family:var(--mono);font-size:9.5px;color:var(--ink-faint);margin-left:auto;margin-right:6px;background:var(--bg-deep);padding:1px 5px;border-radius:3px}
+  .region-children{display:none;flex-direction:column;gap:2px;padding:4px 0 4px 10px;border-left:2px solid var(--rule);margin-left:6px;margin-top:2px}
+  .region-children.open{display:flex}
+  .region-children .prop-item{padding:4px 8px;font-size:11.5px}
+  /* 페이지 앵커 네비 */
+  .anchor-nav{display:flex;flex-direction:column;gap:2px}
+  .anchor-item{padding:5px 9px;font-size:11.5px;color:var(--ink-muted);text-decoration:none;border-radius:4px;border-left:2px solid transparent;transition:.15s;font-family:var(--sans)}
+  .anchor-item:hover{background:var(--bg-soft);color:var(--ink);border-left-color:var(--gold)}
+  .anchor-item.active-section{background:rgba(201,160,99,0.10);color:var(--gold-bright);border-left-color:var(--gold);font-weight:700}
+  html{scroll-behavior:smooth}
+  section.card,.summary-wrap,.exec-wrap{scroll-margin-top:60px}
+  .prop-item{padding:5px 9px;font-size:12px;color:var(--ink-muted);background:transparent;border:1px solid transparent;border-radius:4px;cursor:pointer;text-align:left;font-family:var(--sans);transition:.15s}
+  .prop-item:hover{background:var(--bg-soft);color:var(--ink)}
+  .prop-item.active{background:rgba(201,160,99,0.18);border-color:var(--gold);color:var(--gold-bright);font-weight:700}
+  .sb-meta{margin-top:auto;padding-top:14px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:10px;color:var(--ink-faint);letter-spacing:.05em;line-height:1.5}
+
+  /* MAIN */
+  .main{flex:1;min-width:0;padding:18px 22px 40px}
+  .page-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .page-title{font-size:clamp(20px,2.4vw,28px);font-weight:900;letter-spacing:-.02em;line-height:1.15}
+  .page-title em{font-family:var(--sans);font-weight:600;color:var(--ink-muted);font-size:0.6em;font-style:normal;margin-left:8px}
+  .page-context{font-family:var(--mono);font-size:11px;color:var(--ink-faint);letter-spacing:.05em}
+  .page-context b{color:var(--gold-bright)}
+
+  /* Executive Summary 카드 — 임원 보고용 결론 */
+  .exec-wrap{background:linear-gradient(180deg,rgba(201,160,99,0.08) 0%,var(--bg-card) 35%);border:1px solid var(--rule);border-top:3px solid var(--gold);border-radius:8px;padding:18px 20px;margin-bottom:18px;position:relative}
+  .exec-wrap::before{content:"";position:absolute;top:-3px;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold) 0%,var(--gold-bright) 50%,var(--gold) 100%)}
+  .exec-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--rule)}
+  .exec-title{font-size:16px;font-weight:900;letter-spacing:-.01em;color:var(--gold-bright);display:flex;align-items:center;gap:8px}
+  .exec-title .badge{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;padding:2px 7px;background:rgba(201,160,99,0.2);color:var(--gold-bright);border-radius:3px}
+  .exec-ctx{font-family:var(--mono);font-size:11px;color:var(--ink-muted);letter-spacing:.05em}
+  .exec-ctx b{color:var(--gold-bright);font-weight:700}
+  .exec-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:14px}
+  @media(max-width:900px){.exec-grid{grid-template-columns:1fr}}
+  .exec-block{background:var(--bg-deep);border:1px solid var(--rule);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+  .exec-block.verdict{border-left:3px solid var(--gold)}
+  .exec-block.verdict.tier-hi{border-left-color:var(--positive)}
+  .exec-block.verdict.tier-md{border-left-color:var(--warning)}
+  .exec-block.verdict.tier-lo{border-left-color:var(--negative)}
+  .exec-block .h{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+  .exec-block .h .ach{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:none}
+  .exec-block .h .ach.pos{color:var(--positive)}
+  .exec-block .h .ach.warn{color:var(--warning)}
+  .exec-block .h .ach.neg{color:var(--negative)}
+  .exec-verdict-text{font-size:13.5px;font-weight:700;color:var(--ink);line-height:1.5;letter-spacing:-.005em}
+  .exec-verdict-text b{color:var(--gold-bright)}
+  .exec-list{display:flex;flex-direction:column;gap:6px;list-style:none;padding:0;margin:0}
+  .exec-list li{font-size:12.5px;color:var(--ink-soft);line-height:1.5;padding:6px 8px 6px 24px;background:var(--bg-soft);border-radius:4px;position:relative}
+  .exec-list li::before{content:attr(data-idx);position:absolute;left:7px;top:6px;font-family:var(--mono);font-size:10px;font-weight:800;color:var(--gold-bright);width:14px;height:14px;display:flex;align-items:center;justify-content:center;background:rgba(201,160,99,0.18);border-radius:3px;line-height:1}
+  .exec-list li.empty-pos{color:var(--positive);background:var(--positive-bg);padding-left:12px}
+  .exec-list li.empty-pos::before{display:none}
+  .exec-list li b{color:var(--gold-bright);font-weight:700}
+  .exec-list.actions li::before{color:var(--positive);background:rgba(76,175,111,0.18)}
+  .exec-list.actions li b{color:var(--positive)}
+
+  /* 핵심 지표 요약 테이블 */
+  .summary-wrap{background:var(--bg-card);border:1px solid var(--rule);border-radius:8px;padding:16px;margin-bottom:18px}
+  .summary-wrap h3{font-size:13px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .summary-wrap h3 .num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#1a1d23;font-size:10px;font-weight:900;font-family:var(--mono)}
+  .summary-tbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
+  .summary-tbl th{background:var(--bg-deep);color:var(--gold);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:8px 10px;text-align:right;border-bottom:1px solid var(--rule);font-weight:700}
+  .summary-tbl th:first-child,.summary-tbl td:first-child{text-align:left;font-family:var(--sans);font-weight:700;color:var(--ink)}
+  .summary-tbl td{padding:9px 10px;border-bottom:1px solid var(--rule);color:var(--ink-soft);text-align:right}
+  .summary-tbl tr:last-child td{border-bottom:none}
+  .summary-tbl td.muted{color:var(--ink-faint)}
+  .summary-tbl td.pos{color:var(--positive);font-weight:700}
+  .summary-tbl td.neg{color:var(--negative);font-weight:700}
+  .summary-tbl .badge{display:inline-block;padding:1px 7px;border-radius:3px;font-size:11px;font-weight:700}
+  .summary-tbl .badge.hi{background:var(--positive-bg);color:var(--positive)}
+  .summary-tbl .badge.md{background:var(--warning-bg);color:var(--warning)}
+  .summary-tbl .badge.lo{background:var(--negative-bg);color:var(--negative)}
+  .summary-extra{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .extra-card{background:var(--bg-deep);border:1px solid var(--rule);border-radius:6px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+  .extra-card .l{font-family:var(--mono);font-size:10px;color:var(--ink-faint);letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+  .extra-card .v{font-family:var(--mono);font-size:18px;font-weight:800;color:var(--ink)}
+  .extra-card .v.pos{color:var(--positive)}
+  .extra-card .v.neg{color:var(--negative)}
+  .extra-card .sub{font-family:var(--mono);font-size:10.5px;color:var(--ink-muted);margin-top:2px}
+  @media(max-width:620px){
+    .summary-tbl{font-size:11px}
+    .summary-tbl th,.summary-tbl td{padding:6px 5px}
+    .summary-extra{grid-template-columns:1fr}
+  }
+
+  /* SECTION CARD */
+  section.card{background:var(--bg-card);border:1px solid var(--rule);border-radius:8px;padding:18px;margin-bottom:18px}
+  section.card h2{font-size:15px;font-weight:800;letter-spacing:-.01em;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  section.card h2 .num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--gold);color:#1a1d23;font-size:11px;font-weight:900;font-family:var(--mono)}
+  section.card .sub{color:var(--ink-muted);font-size:12px;margin-bottom:14px}
+
+  /* 달성 방안 — 2+2 레이아웃 */
+  .top-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:14px;margin-bottom:14px}
+  @media(max-width:1100px){.top-grid{grid-template-columns:1fr}}
+  .insights-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media(max-width:760px){.insights-grid{grid-template-columns:1fr}}
+  .gap-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:14px}
+  .gap-block{background:var(--bg-deep);border:1px solid var(--rule);border-radius:6px;padding:14px}
+  .gap-block h3{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px}
+  .progress-row{margin-bottom:10px}
+  .progress-row:last-child{margin-bottom:0}
+  .progress-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+  .progress-label .v{font-family:var(--mono);font-weight:700;color:var(--ink)}
+  .progress-bar{height:8px;background:var(--bg-soft);border-radius:4px;overflow:hidden;position:relative}
+  .progress-fill{height:100%;background:var(--gold);border-radius:4px;transition:width .4s}
+  .progress-fill.hi{background:var(--positive)}
+  .progress-fill.lo{background:var(--negative)}
+  .progress-fill.md{background:var(--warning)}
+
+  .insight-list{display:flex;flex-direction:column;gap:8px}
+  .insight-item{padding:10px 12px;border-left:3px solid var(--gold);background:var(--bg-soft);border-radius:0 4px 4px 0;font-size:12.5px;line-height:1.5;color:var(--ink-soft)}
+  .insight-item.warn{border-left-color:var(--warning)}
+  .insight-item.neg{border-left-color:var(--negative)}
+  .insight-item.pos{border-left-color:var(--positive)}
+  .insight-item .src{font-family:var(--mono);font-size:9px;color:var(--ink-faint);letter-spacing:.1em;display:block;margin-bottom:3px}
+
+  /* TIMELINE */
+  .timeline-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--bg-deep)}
+  .timeline{display:grid;grid-template-columns:160px 1fr;min-width:800px}
+  .tl-head-l,.tl-head-r{background:var(--bg-soft);padding:8px 12px;font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--rule);font-weight:700}
+  .tl-head-r{position:relative;height:32px}
+  .tl-tick{position:absolute;top:0;height:100%;border-left:1px dashed rgba(255,255,255,0.08);padding-left:4px;font-family:var(--mono);font-size:9px;color:var(--ink-faint);display:flex;align-items:center}
+  .tl-cell-l{padding:7px 12px;font-size:12px;color:var(--ink);border-bottom:1px solid var(--rule);background:var(--bg-deep);font-weight:500;display:flex;align-items:center;gap:6px}
+  .tl-cell-l .cnt{font-family:var(--mono);font-size:9px;color:var(--ink-faint);background:var(--bg-soft);padding:1px 5px;border-radius:3px;margin-left:auto}
+  .tl-cell-r{position:relative;border-bottom:1px solid var(--rule);height:36px}
+  .tl-bar{position:absolute;top:8px;height:20px;background:var(--info);border-radius:3px;cursor:pointer;display:flex;align-items:center;padding:0 6px;font-family:var(--mono);font-size:9px;color:#fff;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:filter .15s}
+  .tl-bar:hover{filter:brightness(1.25);z-index:5}
+  .tl-bar.b-카카오{background:#FEE500;color:#3c1e1e}
+  .tl-bar.b-여기어때{background:#FF5A4D}
+  .tl-bar.b-인플루언서{background:#a855f7}
+  .tl-bar.b-카카오메이커스{background:#FEE500;color:#3c1e1e}
+  .tl-bar.b-마이리얼트립{background:#0099CC}
+  .tl-bar.b-카카오쇼핑라이브{background:#fbbf24;color:#3c1e1e}
+  .tl-bar.b-G마켓{background:#10b981}
+  .tl-bar.b-쿠팡{background:#fb7185}
+  .tl-bar.b-네이버{background:#4ade80;color:#3c1e1e}
+  .tl-bar.b-와디즈{background:#3b82f6}
+  .tl-bar.b-놀유니버스{background:#8b5cf6}
+  .tl-bar.b-티딜{background:#ec4899}
+  .tl-bar.b-11번가{background:#ef4444}
+  .tl-bar.b-롯데온{background:#dc2626}
+  .tl-bar.b-프리즘{background:#7c3aed}
+
+  .tl-tip{position:fixed;background:var(--bg-deep);border:1px solid var(--gold);border-radius:5px;padding:8px 10px;font-size:11.5px;color:var(--ink-soft);max-width:300px;box-shadow:0 4px 20px rgba(0,0,0,0.6);z-index:1000;pointer-events:none;line-height:1.5}
+  .tl-tip strong{color:var(--gold-bright);font-weight:700}
+  .tl-tip .row{display:flex;justify-content:space-between;gap:8px;margin-top:2px;font-family:var(--mono);font-size:10.5px}
+  .tl-tip .perf{margin-top:6px;padding-top:6px;border-top:1px dashed var(--rule);font-family:var(--mono);font-size:10.5px;color:var(--gold-bright)}
+
+  /* 캠페인 카드 */
+  .camp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+  .camp-card{background:var(--bg-deep);border:1px solid var(--rule);border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:6px}
+  .camp-card .ch{font-family:var(--mono);font-size:10px;color:var(--gold-bright);font-weight:700;letter-spacing:.05em;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .camp-status{font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:3px;letter-spacing:.06em;font-weight:700;margin-left:auto}
+  .camp-status.s-soon{background:var(--info-bg);color:var(--info)}
+  .camp-status.s-live{background:var(--positive-bg);color:var(--positive)}
+  .camp-status.s-done{background:var(--bg-soft);color:var(--ink-faint)}
+  .camp-prop{font-size:13px;font-weight:700;color:var(--ink)}
+  .camp-product{font-size:12px;color:var(--ink-soft);line-height:1.45}
+  .camp-dates{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:auto;padding-top:6px;border-top:1px dotted var(--rule)}
+  .camp-dates .blk{font-size:10px}
+  .camp-dates .blk .l{color:var(--ink-faint);font-family:var(--mono);font-size:9px;letter-spacing:.05em;margin-bottom:1px}
+  .camp-dates .blk .v{color:var(--ink-soft);font-family:var(--mono);font-weight:600}
+  .camp-extra{font-size:11px;color:var(--ink-muted);font-style:italic}
+  .camp-perf{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:var(--bg-soft);border-radius:4px;font-family:var(--mono);font-size:10.5px;margin-top:4px}
+  .camp-perf .l{color:var(--ink-faint);letter-spacing:.05em}
+  .camp-perf .v{color:var(--gold-bright);font-weight:700}
+
+  /* SECTION 4 — 단순 테이블 */
+  .perf-table{width:100%;border-collapse:collapse;font-size:12.5px}
+  .perf-table th{background:var(--bg-deep);color:var(--gold);font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:9px 10px;text-align:right;border-bottom:1px solid var(--rule);font-weight:700;position:sticky;top:0}
+  .perf-table th:first-child,.perf-table td:first-child{text-align:left}
+  .perf-table td{padding:7px 10px;border-bottom:1px solid var(--rule);font-family:var(--mono);text-align:right;color:var(--ink-soft)}
+  .perf-table tr:hover td{background:var(--bg-soft);cursor:pointer}
+  .perf-table tr.active td{background:rgba(201,160,99,0.08)}
+  .perf-table .name{font-family:var(--sans);font-weight:600;color:var(--ink)}
+  .perf-table .ach-cell{display:inline-flex;align-items:center;gap:8px;justify-content:flex-end;width:100%}
+  .perf-table .mini-bar{flex:1;max-width:80px;height:6px;background:var(--bg-soft);border-radius:3px;overflow:hidden}
+  .perf-table .mini-fill{height:100%;border-radius:3px}
+  .perf-table .mini-fill.hi{background:var(--positive)}
+  .perf-table .mini-fill.md{background:var(--warning)}
+  .perf-table .mini-fill.lo{background:var(--negative)}
+  .perf-table .badge{display:inline-block;padding:1px 7px;border-radius:3px;font-size:11px;font-weight:700;font-family:var(--mono)}
+  .perf-table .badge.hi{background:var(--positive-bg);color:var(--positive)}
+  .perf-table .badge.md{background:var(--warning-bg);color:var(--warning)}
+  .perf-table .badge.lo{background:var(--negative-bg);color:var(--negative)}
+  .perf-table td.pos{color:var(--positive)}
+  .perf-table td.neg{color:var(--negative)}
+  .perf-tbl-wrap{max-height:520px;overflow:auto;border:1px solid var(--rule);border-radius:6px}
+
+  /* KPI 진단 — 채널/권역별 카드 (2줄 분리: 세그 3 / 권역 4) */
+  .diag-grid{display:grid;gap:10px}
+  @media(max-width:1100px){.diag-grid{grid-template-columns:repeat(2,1fr) !important}}
+  @media(max-width:680px){.diag-grid{grid-template-columns:1fr !important}}
+  .diag-card{background:var(--bg-deep);border:1px solid var(--rule);border-radius:7px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+  .diag-card.tier-good{border-left:3px solid var(--positive)}
+  .diag-card.tier-warn{border-left:3px solid var(--warning)}
+  .diag-card.tier-bad{border-left:3px solid var(--negative)}
+  .diag-card .dh{display:flex;justify-content:space-between;align-items:baseline}
+  .diag-card .dn{font-size:14px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+  .diag-card .dt{font-family:var(--mono);font-size:10px;color:var(--ink-faint);letter-spacing:.06em}
+  .diag-card .dv{font-family:var(--mono);font-size:18px;font-weight:800;line-height:1.1}
+  .diag-card .dv.pos{color:var(--positive)}
+  .diag-card .dv.neg{color:var(--negative)}
+  .diag-card .dv.warn{color:var(--warning)}
+  .diag-card .dr{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;padding:2px 0;color:var(--ink-soft)}
+  .diag-card .dr span:first-child{color:var(--ink-faint)}
+  .diag-card .dnote{font-size:11.5px;color:var(--gold-bright);background:var(--bg-soft);padding:7px 9px;border-radius:4px;line-height:1.5;border-left:2px solid var(--gold);margin-top:4px}
+  .diag-card .dtrend{font-family:var(--mono);font-size:10.5px;color:var(--info)}
+
+  /* 월별 차별화 전략 */
+  .strategy-block{display:flex;flex-direction:column;gap:14px}
+  .strategy-row{background:var(--bg-deep);border:1px solid var(--rule);border-left:3px solid var(--gold);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+  .strategy-row.priority-A{border-left-color:var(--negative);background:rgba(229,115,115,0.05)}
+  .strategy-row.priority-B{border-left-color:var(--warning)}
+  .strategy-row.priority-C{border-left-color:var(--info)}
+  .strategy-row .sh{display:flex;align-items:center;gap:10px}
+  .strategy-row .sp{font-family:var(--mono);font-size:10px;font-weight:800;padding:2px 7px;border-radius:3px;letter-spacing:.05em}
+  .strategy-row .sp.priority-A{background:var(--negative-bg);color:var(--negative)}
+  .strategy-row .sp.priority-B{background:var(--warning-bg);color:var(--warning)}
+  .strategy-row .sp.priority-C{background:var(--info-bg);color:var(--info)}
+  .strategy-row .stitle{font-size:14px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+  .strategy-row .ssub{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);margin-left:auto;letter-spacing:.04em}
+  .strategy-row .sdesc{font-size:13px;color:var(--ink-soft);line-height:1.6}
+  .strategy-row .sactions{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:4px}
+  .strategy-row .saction{font-size:12px;background:var(--bg-soft);padding:8px 10px;border-radius:4px;color:var(--ink-soft);line-height:1.5}
+  .strategy-row .saction b{color:var(--gold-bright);font-weight:700}
+  .strategy-row .stargets{display:flex;flex-wrap:wrap;gap:8px;font-family:var(--mono);font-size:11px;padding-top:6px;border-top:1px dashed var(--rule);margin-top:2px}
+  .strategy-row .stargets .tg{background:var(--bg-soft);padding:3px 8px;border-radius:3px;color:var(--ink-muted)}
+  .strategy-row .stargets .tg b{color:var(--positive);font-weight:700}
+
+  /* RM FCST 추이 차트 — 세그먼트별 행 레이아웃 (좌측 세그 라벨 + 우측 차트) */
+  .fcst-mini-grid{display:flex;flex-direction:column;gap:8px}
+  .fcst-mini{background:var(--bg-deep);border:1px solid var(--rule);border-radius:6px;padding:10px 14px;display:grid;grid-template-columns:100px 1fr;grid-template-rows:auto auto;gap:0 14px;align-items:center}
+  .fcst-mini.tier-bad{border-left:3px solid var(--negative)}
+  .fcst-mini.tier-warn{border-left:3px solid var(--warning)}
+  .fcst-mini.tier-good{border-left:3px solid var(--positive)}
+  .fcst-mini-label{grid-row:1/3;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px}
+  .fcst-mini-title{font-family:var(--mono);font-size:12px;font-weight:800;letter-spacing:.05em;color:var(--gold-bright);line-height:1.2}
+  .fcst-mini-meta{font-family:var(--mono);font-size:9px;color:var(--ink-faint)}
+  .fcst-mini-meta .pos{color:var(--positive);font-weight:700}
+  .fcst-mini-meta .neg{color:var(--negative);font-weight:700}
+  .fcst-mini-canvas{position:relative;height:120px}
+  .fcst-mini-foot{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;color:var(--ink-muted);padding-top:4px;border-top:1px dashed var(--rule)}
+  .fcst-mini-foot b{color:var(--gold-bright);font-weight:700}
+  /* 기존 단일 차트 (사용 안 함, hidden) */
+  .fcst-chart-wrap{display:none}
+  .fcst-legend-note{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);align-items:center}
+  .fcst-legend-note .lg{display:inline-flex;align-items:center;gap:5px}
+  .fcst-legend-note .swatch{width:14px;height:3px;border-radius:1px;display:inline-block}
+  .fcst-legend-note .swatch.dashed{height:0;border-top:2px dashed var(--gold)}
+
+  /* 임박 기획전 제안 */
+  .sug-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+  .sug-card{background:var(--bg-deep);border:1px solid var(--rule);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px;border-left:3px solid var(--gold)}
+  .sug-card.tier-A{border-left-color:var(--positive)}
+  .sug-card.tier-B{border-left-color:var(--warning)}
+  .sug-card.tier-C{border-left-color:var(--info)}
+  .sug-card .sug-h{display:flex;align-items:center;gap:8px}
+  .sug-card .sug-tier{font-family:var(--mono);font-size:10px;font-weight:800;padding:2px 6px;border-radius:3px;letter-spacing:.05em}
+  .sug-card .sug-tier.tier-A{background:var(--positive-bg);color:var(--positive)}
+  .sug-card .sug-tier.tier-B{background:var(--warning-bg);color:var(--warning)}
+  .sug-card .sug-tier.tier-C{background:var(--info-bg);color:var(--info)}
+  .sug-card .sug-title{font-size:14px;font-weight:800;color:var(--ink);line-height:1.3}
+  .sug-card .sug-meta{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);letter-spacing:.04em}
+  .sug-card .sug-meta b{color:var(--gold-bright);font-weight:700}
+  .sug-card .sug-rationale{font-size:12px;color:var(--ink-soft);line-height:1.55;background:var(--bg-soft);padding:8px 10px;border-radius:4px}
+  .sug-card .sug-kpi{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-family:var(--mono);font-size:11px}
+  .sug-card .sug-kpi .blk{background:var(--bg-soft);padding:7px 9px;border-radius:4px}
+  .sug-card .sug-kpi .l{color:var(--ink-faint);font-size:9.5px;letter-spacing:.05em;margin-bottom:2px}
+  .sug-card .sug-kpi .v{color:var(--gold-bright);font-weight:700;font-size:13px}
+  .sug-card .sug-action{font-size:11.5px;color:var(--positive);font-weight:600;padding-top:4px;border-top:1px dashed var(--rule);font-family:var(--mono);letter-spacing:.02em}
+
+  .empty{padding:20px;text-align:center;color:var(--ink-faint);font-size:13px;border:1px dashed var(--rule);border-radius:6px}
+
+  footer.foot{padding:14px 22px;border-top:1px solid var(--rule);color:var(--ink-faint);font-size:10px;font-family:var(--mono);text-align:center;letter-spacing:.05em;background:var(--bg-deep)}
+
+  /* TAB BAR — 전략 리포트 / 운영·관리 분리 */
+  .tab-bar{display:flex;gap:0;margin-bottom:18px;border-bottom:1px solid var(--rule-strong);background:var(--bg-card);border-radius:8px 8px 0 0;padding:0 6px}
+  .tab-btn{background:transparent;border:none;color:var(--ink-muted);font-family:var(--sans);font-size:13.5px;font-weight:700;padding:12px 18px;cursor:pointer;border-bottom:3px solid transparent;transition:.15s;display:flex;align-items:center;gap:7px;margin-bottom:-1px;letter-spacing:-.01em}
+  .tab-btn:hover{color:var(--ink)}
+  .tab-btn.active{color:var(--gold-bright);border-bottom-color:var(--gold)}
+  .tab-btn .tcnt{font-family:var(--mono);font-size:10px;color:var(--ink-faint);background:var(--bg-soft);padding:1px 6px;border-radius:3px;font-weight:600}
+  .tab-btn.active .tcnt{color:var(--gold);background:rgba(201,160,99,0.15)}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
+
+  /* SEASON BAR — 월별 시즌 컨텍스트 */
+  .season-bar{background:var(--bg-deep);border:1px solid var(--rule);border-left:3px solid var(--gold);border-radius:6px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .season-bar .sb-mon{font-family:var(--mono);font-size:11px;color:var(--gold);font-weight:800;letter-spacing:.08em;padding:3px 9px;background:rgba(201,160,99,0.14);border-radius:3px}
+  .season-bar .sb-name{font-size:14px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+  .season-bar .sb-divider{width:1px;height:18px;background:var(--rule)}
+  .season-bar .sb-traits{display:flex;flex-wrap:wrap;gap:5px;flex:1}
+  .season-bar .sb-trait{font-family:var(--sans);font-size:11.5px;color:var(--ink-soft);background:var(--bg-soft);padding:3px 9px;border-radius:12px;border:1px solid var(--rule);font-weight:500}
+
+  /* RISK GRADE TABLE — 사업장별 위험도 */
+  .risk-tbl-wrap{max-height:520px;overflow:auto;border:1px solid var(--rule);border-radius:6px}
+  .risk-table{width:100%;border-collapse:collapse;font-size:12.5px}
+  .risk-table th{background:var(--bg-deep);color:var(--gold);font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:9px 10px;text-align:right;border-bottom:1px solid var(--rule);font-weight:700;position:sticky;top:0;z-index:1}
+  .risk-table th:nth-child(1),.risk-table th:nth-child(2),.risk-table th:nth-child(3){text-align:left}
+  .risk-table td{padding:7px 10px;border-bottom:1px solid var(--rule);font-family:var(--mono);text-align:right;color:var(--ink-soft)}
+  .risk-table .name{font-family:var(--sans);font-weight:700;color:var(--ink);text-align:left;display:flex;align-items:center;gap:8px}
+  .risk-table .region{font-family:var(--mono);font-size:10px;color:var(--ink-faint);letter-spacing:.05em;text-align:left}
+  .risk-table .risk-dot{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-family:var(--mono);font-size:11px;font-weight:900;color:#fff;flex-shrink:0}
+  .risk-table .risk-dot.A{background:var(--positive)}
+  .risk-table .risk-dot.B{background:var(--info)}
+  .risk-table .risk-dot.C{background:var(--warning);color:#1a1d23}
+  .risk-table .risk-dot.D{background:var(--negative)}
+  .risk-table .risk-msg{font-family:var(--sans);font-size:11.5px;text-align:left;line-height:1.4}
+  .risk-table .risk-msg.A{color:var(--positive)}
+  .risk-table .risk-msg.B{color:var(--info)}
+  .risk-table .risk-msg.C{color:var(--warning)}
+  .risk-table .risk-msg.D{color:var(--negative)}
+  .risk-table tr:hover td{background:var(--bg-soft);cursor:pointer}
+  .risk-table td.pos{color:var(--positive)}
+  .risk-table td.neg{color:var(--negative)}
+
+  /* CAMPAIGN VERDICT — 기획전 성과 판단 */
+  .camp-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;font-family:var(--mono);font-size:10px;margin-top:4px}
+  .camp-kpi .blk{background:var(--bg-soft);padding:5px 6px;border-radius:3px;text-align:center}
+  .camp-kpi .blk .l{color:var(--ink-faint);font-size:9px;letter-spacing:.04em}
+  .camp-kpi .blk .v{color:var(--ink);font-weight:700;font-size:11.5px;margin-top:1px}
+  .camp-kpi .blk .v.pos{color:var(--positive)}
+  .camp-kpi .blk .v.neg{color:var(--negative)}
+  .camp-verdict{display:flex;justify-content:space-between;align-items:center;padding:6px 9px;border-radius:4px;font-family:var(--mono);font-size:10.5px;margin-top:4px;font-weight:700;border-left:3px solid;letter-spacing:.04em}
+  .camp-verdict.v-expand{background:var(--positive-bg);color:var(--positive);border-left-color:var(--positive)}
+  .camp-verdict.v-keep{background:var(--info-bg);color:var(--info);border-left-color:var(--info)}
+  .camp-verdict.v-renotice{background:var(--warning-bg);color:var(--warning);border-left-color:var(--warning)}
+  .camp-verdict.v-end{background:var(--negative-bg);color:var(--negative);border-left-color:var(--negative)}
+  .camp-verdict .l{font-size:9.5px;color:inherit;opacity:0.75}
+  .camp-verdict .v{font-size:11.5px;font-weight:800}
+
+  /* 모바일 */
+  .mobile-filter-bar{display:none;background:var(--bg-deep);border-bottom:1px solid var(--rule);padding:8px 12px;position:sticky;top:42px;z-index:170;flex-direction:column;gap:8px}
+  @media(max-width:900px){
+    .sidebar{display:none}
+    .mobile-filter-bar{display:flex}
+    .kpi-strip{grid-template-columns:repeat(2,1fr)}
+    .gap-grid{grid-template-columns:1fr}
+    .main{padding:14px 12px 30px}
+    section.card{padding:14px}
+    .masthead{display:none}
+    .tab-btn{padding:10px 12px;font-size:12.5px}
+    .season-bar{padding:9px 11px;gap:8px}
+    .season-bar .sb-traits{width:100%;margin-top:4px}
+    .camp-kpi{grid-template-columns:1fr 1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<nav class="gsn">
+  <div class="gsn-wrap">
+    <a class="gsn-brand" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/"><span class="gsn-brand-dot">◈</span> SONO GS팀</a>
+    <div class="gsn-links" id="gsn-links">
+      <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/" data-gsn="trend">트렌드 리포트</a>
+      <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/gs-strategy-report.html" data-gsn="strategy">전략 리포트</a>
+      <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/otb.html" data-gsn="otb">GS 실적 리포트</a>
+      <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/booking-status.html" data-gsn="booking">Booking Status</a>
+      <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/fcst-trend.html" data-gsn="fcst-trend">FCST 추이</a>
+      <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/action_plan_dashboard.html" data-gsn="action">Action Plan</a>
+      <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/gs-closing-report.html" data-gsn="closing">마감리포트</a>
+      <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/" data-gsn="monitor">경쟁사 모니터링</a>
+      <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/palatium.html" data-gsn="palatium">팔라티움 현황 리포트</a>
+      <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/external-report.html" data-gsn="external-report">외부 리포트 분석</a>
+    </div>
+    <button class="gsn-toggle" onclick="document.getElementById('gsn-links').classList.toggle('open')" aria-label="메뉴">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+<script>(function(){var h=location.href;document.querySelectorAll('.gsn-item[data-gsn]').forEach(function(a){var k=a.getAttribute('data-gsn'),hit=false;if(k==='trend')hit=h.indexOf('gs_daily_trend_news_public_temp')!==-1&&(h.match(/\/(?:index\.html)?(?:[?#]|$)/)||h.match(/gs_daily_trend_news_public_temp\/?$/));else if(k==='strategy')hit=h.indexOf('gs-strategy-report.html')!==-1;else if(k==='otb')hit=h.indexOf('otb.html')!==-1;else if(k==='booking')hit=h.indexOf('booking-status.html')!==-1;else if(k==='fcst-trend')hit=h.indexOf('fcst-trend.html')!==-1;else if(k==='action')hit=h.indexOf('action_plan')!==-1;else if(k==='closing')hit=h.indexOf('gs-closing-report.html')!==-1;else if(k==='monitor')hit=h.indexOf('sono-competitor-crawler')!==-1&&h.indexOf('palatium')===-1;else if(k==='palatium')hit=h.indexOf('palatium.html')!==-1;if(hit)a.classList.add('active');});})();</script>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="logo-wrap">
+      <span class="logo-mark">SONO</span>
+      <span class="team-tag">GS · STRATEGY</span>
+    </div>
+    <div class="masthead-right">
+      <span class="page-badge">월 전략 리포트</span>
+      <span>📅 <span id="hdr-date">—</span></span>
+    </div>
+  </div>
+</header>
+
+<!-- 모바일 -->
+<div class="mobile-filter-bar">
+  <div style="display:flex;align-items:center;gap:8px"><span class="sb-label">월</span><div class="chips" id="month-chips-m"></div></div>
+  <div style="display:flex;align-items:center;gap:8px"><span class="sb-label">사업장</span>
+    <select id="prop-select-m" style="background:var(--bg-card);border:1px solid var(--rule);color:var(--ink);font-family:var(--sans);font-size:13px;padding:5px 10px;border-radius:5px;flex:1"></select>
+  </div>
+</div>
+
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sb-section">
+      <div class="sb-label">월 선택</div>
+      <div class="chips" id="month-chips"></div>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">
+      <div class="sb-label">사업장 <span id="prop-cnt" style="color:var(--gold);"></span></div>
+      <button class="prop-item" data-p="ALL" id="prop-all-btn" style="margin-bottom:4px">전체</button>
+      <div class="region-tree" id="region-tree"></div>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">
+      <div class="sb-label">페이지 이동</div>
+      <div class="anchor-nav" id="anchor-nav" data-tab="strategy">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--gold);font-weight:700;padding:4px 9px 2px">— 전략 리포트 —</div>
+        <a href="#sec-exec" class="anchor-item" data-tab="strategy" style="color:var(--gold-bright);font-weight:700">★ Executive Summary</a>
+        <a href="#sec-summary" class="anchor-item" data-tab="strategy">0 · 핵심 지표 요약</a>
+        <a href="#sec-matrix" class="anchor-item" data-tab="strategy">1 · 거래처×시기 매트릭스</a>
+        <a href="#sec-kpi" class="anchor-item" data-tab="strategy">2 · 채널 KPI 진단</a>
+        <a href="#sec-risk" class="anchor-item" data-tab="strategy">3 · 사업장별 위험도</a>
+        <a href="#sec-monthly" class="anchor-item" data-tab="strategy">4 · 월별 차별화 전략</a>
+        <a href="#sec-camp" class="anchor-item" data-tab="strategy">5 · 기획전 상세</a>
+        <a href="#sec-channel" class="anchor-item" data-tab="strategy">6 · 거래처별 현황</a>
+        <a href="#sec-fcst" class="anchor-item" data-tab="strategy">7 · RM FCST 추이</a>
+        <a href="#sec-sug" class="anchor-item" data-tab="strategy">8 · 임박 기획전 제안</a>
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--ink-faint);font-weight:700;padding:10px 9px 2px;border-top:1px solid var(--rule);margin-top:6px">— 운영 · 관리 —</div>
+        <a href="#sec-process" class="anchor-item" data-tab="ops">· 상품 기획 프로세스</a>
+        <a href="#sec-build" class="anchor-item" data-tab="ops">· 시스템 구축현황</a>
+        <a href="#sec-automation" class="anchor-item" data-tab="ops">· 자동화 점검</a>
+        <a href="#sec-changelog" class="anchor-item" data-tab="ops">· 변경이력</a>
+      </div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--rule)">
+        <div class="sb-label" style="margin-bottom:6px">관리 도구</div>
+        <a href="gs-proposal.html" class="anchor-item" style="color:#f59e0b;font-weight:700">📋 품의 작성</a>
+        <a href="strategy-keyin.html" class="anchor-item">📊 전략 키인</a>
+        <a href="fcst-admin.html" class="anchor-item">📈 FCST 키인</a>
+        <a href="request.html" class="anchor-item">💬 요청사항 관리</a>
+        <a href="inbound-nationality.html" class="anchor-item">🌍 인바운드 국적 확인</a>
+        <a href="data-validation.html" class="anchor-item">🔍 데이터 검증</a>
+      </div>
+    </div>
+    <div class="sb-meta">
+      DATA<br>
+      otb_data · campaign_data<br>
+      admin_input · rm_fcst
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">월 전략 리포트<em>월별·사업장별 채널 기획전 + 목표 달성 방안</em></h1>
+        <div class="page-context">선택: <b id="ctx-month">—</b> · <b id="ctx-prop">전체</b></div>
+      </div>
+    </div>
+
+    <!-- 탭 바: 전략 리포트 / 운영·관리 -->
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" data-tab="strategy" role="tab" aria-selected="true">📈 전략 리포트 <span class="tcnt">월간</span></button>
+      <button class="tab-btn" data-tab="ops" role="tab" aria-selected="false">🛠 운영 · 관리 <span class="tcnt">프로세스 / 시스템</span></button>
+    </div>
+
+    <!-- ━━━━━━━━━━ 전략 리포트 탭 ━━━━━━━━━━ -->
+    <div class="tab-panel active" id="tab-strategy" role="tabpanel">
+
+    <div class="exec-wrap" id="sec-exec">
+      <div class="exec-head">
+        <div class="exec-title">EXECUTIVE SUMMARY <span class="badge">AUTO</span></div>
+        <div class="exec-ctx">선택 월: <b id="exec-ctx-month">—</b> · 사업장: <b id="exec-ctx-prop">전체</b></div>
+      </div>
+      <div class="exec-grid">
+        <div class="exec-block verdict" id="exec-verdict-block">
+          <div class="h"><span>종합 판단</span><span class="ach" id="exec-ach">—</span></div>
+          <div class="exec-verdict-text" id="exec-verdict-text">데이터 로딩 중…</div>
+        </div>
+        <div class="exec-block">
+          <div class="h"><span>핵심 이슈</span></div>
+          <ul class="exec-list" id="exec-issues"></ul>
+        </div>
+        <div class="exec-block">
+          <div class="h"><span>즉시 액션</span></div>
+          <ul class="exec-list actions" id="exec-actions"></ul>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="summary-wrap" id="sec-summary">
+      <h3><span class="num">0</span> 핵심 지표 요약 — <span style="font-family:var(--mono);font-size:11px;color:var(--ink-faint);font-weight:500">선택 월·사업장 기준</span></h3>
+      <table class="summary-tbl">
+        <thead><tr>
+          <th>지표</th>
+          <th>목표 (Budget)</th>
+          <th>FCST</th>
+          <th>실적 (Actual)</th>
+          <th>달성률</th>
+          <th>전년 <span style="font-size:0.75em;opacity:0.55;font-weight:normal">(동기간)</span> (<span class="dy-ly"></span>)</th>
+          <th>전년(동기간)비 <span style="font-size:0.75em;opacity:0.55;font-weight:normal">(동기간)</span></th>
+        </tr></thead>
+        <tbody id="summary-tbody"></tbody>
+      </table>
+      <div class="summary-extra">
+        <div class="extra-card">
+          <div>
+            <div class="l">주간 픽업 (최근 7일 net_rn)</div>
+            <div class="sub" id="weekly-pickup-sub">—</div>
+          </div>
+          <div class="v" id="weekly-pickup-v">—</div>
+        </div>
+        <div class="extra-card">
+          <div>
+            <div class="l">FCST 전주비 (RM PDF)</div>
+            <div class="sub" id="fcst-wow-sub">—</div>
+          </div>
+          <div class="v" id="fcst-wow-v">—</div>
+        </div>
+      </div>
+    </div>
+
+    <section class="card" id="sec-matrix">
+      <h2><span class="num">1</span> 거래처 × 시기 매트릭스</h2>
+      <div class="sub">투숙일이 선택 월에 하루라도 걸치는 기획전 — 막대 hover 시 사업장 실적까지 / 노란 라인 = 오늘</div>
+      <div class="timeline-wrap" id="timeline-wrap"></div>
+      <div class="insights-grid" id="gap-insights" style="margin-top:14px"></div>
+      <!-- gap-progress / gap-fcst 는 더 이상 표시 안 함 (KPI strip 이 핵심 숫자 대체) -->
+      <div id="gap-progress" style="display:none"></div>
+      <div id="gap-fcst" style="display:none"></div>
+    </section>
+
+    <section class="card" id="sec-kpi">
+      <h2><span class="num">2</span> 채널 × 사업장 KPI 추이 (전략 진단)</h2>
+      <div class="sub">세그먼트(OTA/G-OTA/Inbound) FCST 변화 추세 + 채널별 평가 + 권역별 진단 — 4개년 동월 비교 포함</div>
+      <div id="kpi-diagnosis-wrap"></div>
+    </section>
+
+    <section class="card" id="sec-risk">
+      <h2><span class="num">3</span> 사업장별 위험도 등급 (FCST 기준)</h2>
+      <div class="sub">FCST 기준 목표 달성률에 따른 A/B/C/D 등급 — <b>A</b> 초과(100%+) / <b>B</b> 정상(85~100%) / <b>C</b> 미달(70~85%) / <b>D</b> 긴급(70% 미만)</div>
+      <div class="risk-tbl-wrap"><table class="risk-table" id="risk-table"></table></div>
+    </section>
+
+    <section class="card" id="sec-monthly">
+      <h2><span class="num">4</span> 월별 차별화 전략 + 액션 제안</h2>
+      <div class="sub">선택 월(<b id="ctx-strategy-month">5</b>월)의 시기 특성에 맞춘 구체 액션 — FCST 갭별 채널·기획전·타이밍 명시</div>
+      <div id="season-context-bar"></div>
+      <div id="monthly-strategy-wrap"></div>
+    </section>
+
+    <section class="card" id="sec-camp">
+      <h2><span class="num">5</span> 기획전 상세 (투숙월 기준)</h2>
+      <div class="sub">진행 상태별 카드 — <b id="camp-count">0</b>건 매칭 · 사업장 실적도 함께 표기 / 데이터: campaign_data + individual_analysis · 판단 자동 매칭</div>
+      <div class="camp-grid" id="camp-grid"></div>
+    </section>
+
+    <section class="card" id="sec-channel">
+      <h2><span class="num">6</span> <span id="seg-title">거래처별 진행 현황</span></h2>
+      <div class="sub" id="seg-sub">세그먼트 선택 → 해당 세그먼트 거래처만 표시 / 데이터: db_aggregated.by_channel_segment</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center;flex-wrap:wrap">
+        <span class="sb-label">세그먼트</span>
+        <div class="chips" id="ch-seg-chips"></div>
+        <span style="margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--ink-faint)">⚠ 채널별 Budget 미집계 → "—" / LY 비교 기준</span>
+      </div>
+      <div class="perf-tbl-wrap"><table class="perf-table" id="perf-table"></table></div>
+    </section>
+
+    <section class="card" id="sec-fcst">
+      <h2><span class="num">7</span> RM FCST 추이 (Budget vs Forecast)</h2>
+      <div class="sub" id="fcst-sub">RM 미팅 PDF 스냅샷 시계열 — 세그먼트별 5개 mini chart (자체 스케일 → 변화량 명확) · 점선=Budget · 실선=FCST</div>
+      <div class="fcst-mini-grid" id="fcst-mini-grid"></div>
+      <div class="fcst-legend-note">
+        <span class="lg"><span class="swatch dashed"></span>Budget</span>
+        <span class="lg"><span class="swatch" style="background:#e6b970"></span>FCST 라인</span>
+        <span style="margin-left:auto" id="fcst-snap-meta"></span>
+      </div>
+    </section>
+
+    <section class="card" id="sec-sug">
+      <h2><span class="num">8</span> 임박 기획전 제안 (전년(동기간) 데이터 기반)</h2>
+      <div class="sub">전년(동기간)/금년도 채널·인플루언서 실적 분석을 토대로 한 즉시 실행 가능한 제안 — 우선순위 A→B→C</div>
+      <div class="sug-grid" id="sug-grid"></div>
+    </section>
+
+    </div><!-- /#tab-strategy -->
+
+    <!-- ━━━━━━━━━━ 운영 · 관리 탭 ━━━━━━━━━━ -->
+    <div class="tab-panel" id="tab-ops" role="tabpanel">
+
+    <!-- ══════ 운영-1. 상품 기획 운영 프로세스 ══════ -->
+    <section class="card" id="sec-process">
+      <h2><span class="num">1</span> 상품 기획 운영 프로세스</h2>
+      <div class="sub">세일즈 인사이트 → 프로모션 기획 → 품의 → 실행 → 성과 추적 전체 워크플로우</div>
+      <div style="overflow-x:auto;padding:8px 0">
+        <svg viewBox="0 0 960 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;font-family:var(--sans)">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#c9a063"/></marker>
+            <linearGradient id="gFlow" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#c9a063" stop-opacity="0.25"/><stop offset="100%" stop-color="#c9a063" stop-opacity="0.05"/></linearGradient>
+          </defs>
+          <rect x="0" y="0" width="960" height="420" rx="8" fill="#14171c"/>
+          <!-- Step 1 -->
+          <rect x="30" y="30" width="180" height="80" rx="6" fill="#252932" stroke="#c9a063" stroke-width="1.5"/>
+          <text x="120" y="58" text-anchor="middle" fill="#c9a063" font-size="11" font-weight="800" letter-spacing="0.05em">① 인사이트 도출</text>
+          <text x="120" y="78" text-anchor="middle" fill="#a8acb3" font-size="10">세일즈 리포트에서</text>
+          <text x="120" y="92" text-anchor="middle" fill="#a8acb3" font-size="10">프로모션 필요성 감지</text>
+          <line x1="210" y1="70" x2="240" y2="70" stroke="#c9a063" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Step 2 -->
+          <rect x="240" y="30" width="180" height="80" rx="6" fill="#252932" stroke="#5a9fc4" stroke-width="1.5"/>
+          <text x="330" y="58" text-anchor="middle" fill="#5a9fc4" font-size="11" font-weight="800" letter-spacing="0.05em">② 과거 성과 검색</text>
+          <text x="330" y="78" text-anchor="middle" fill="#a8acb3" font-size="10">동기간 프로모션</text>
+          <text x="330" y="92" text-anchor="middle" fill="#a8acb3" font-size="10">실적 데이터 조회</text>
+          <line x1="420" y1="70" x2="450" y2="70" stroke="#c9a063" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Step 3 -->
+          <rect x="450" y="30" width="200" height="80" rx="6" fill="#252932" stroke="#e8a256" stroke-width="1.5"/>
+          <text x="550" y="58" text-anchor="middle" fill="#e8a256" font-size="11" font-weight="800" letter-spacing="0.05em">③ 조건 선택</text>
+          <text x="550" y="78" text-anchor="middle" fill="#a8acb3" font-size="10">사업장 / 투숙기간 / 채널</text>
+          <text x="550" y="92" text-anchor="middle" fill="#a8acb3" font-size="10">→ OCC·현황 자동 로드</text>
+          <line x1="650" y1="70" x2="680" y2="70" stroke="#c9a063" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Step 4 -->
+          <rect x="680" y="30" width="250" height="80" rx="6" fill="#252932" stroke="#4caf6f" stroke-width="1.5"/>
+          <text x="805" y="58" text-anchor="middle" fill="#4caf6f" font-size="11" font-weight="800" letter-spacing="0.05em">④ 요금표 업로드</text>
+          <text x="805" y="78" text-anchor="middle" fill="#a8acb3" font-size="10">정상가 / 스마트요금 / 프로모션요금</text>
+          <text x="805" y="92" text-anchor="middle" fill="#a8acb3" font-size="10">+ 부대시설 패키지</text>
+          <!-- Row 2 -->
+          <line x1="805" y1="110" x2="805" y2="140" stroke="#c9a063" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Step 5 -->
+          <rect x="680" y="145" width="250" height="80" rx="6" fill="#252932" stroke="#e57373" stroke-width="1.5"/>
+          <text x="805" y="173" text-anchor="middle" fill="#e57373" font-size="11" font-weight="800" letter-spacing="0.05em">⑤ 경쟁사 비교</text>
+          <text x="805" y="193" text-anchor="middle" fill="#a8acb3" font-size="10">경쟁사 대비 요금 비교</text>
+          <text x="805" y="207" text-anchor="middle" fill="#a8acb3" font-size="10">+ 경쟁력 점수화</text>
+          <line x1="680" y1="185" x2="650" y2="185" stroke="#c9a063" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Step 6 -->
+          <rect x="420" y="145" width="230" height="80" rx="6" fill="#252932" stroke="#c9a063" stroke-width="1.5"/>
+          <text x="535" y="173" text-anchor="middle" fill="#c9a063" font-size="11" font-weight="800" letter-spacing="0.05em">⑥ 품의 내용 편집</text>
+          <text x="535" y="193" text-anchor="middle" fill="#a8acb3" font-size="10">시행취지 · 배분가 · KPI</text>
+          <text x="535" y="207" text-anchor="middle" fill="#a8acb3" font-size="10">등 상세 내용 작성</text>
+          <line x1="420" y1="185" x2="390" y2="185" stroke="#c9a063" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Step 7 -->
+          <rect x="160" y="145" width="230" height="80" rx="6" fill="#252932" stroke="#4caf6f" stroke-width="1.5"/>
+          <text x="275" y="173" text-anchor="middle" fill="#4caf6f" font-size="11" font-weight="800" letter-spacing="0.05em">⑦ 내보내기</text>
+          <text x="275" y="193" text-anchor="middle" fill="#a8acb3" font-size="10">엑셀 2시트 (요금표+품의)</text>
+          <text x="275" y="207" text-anchor="middle" fill="#a8acb3" font-size="10">+ 그룹웨어 HTML 복붙</text>
+          <!-- Row 3 -->
+          <line x1="275" y1="225" x2="275" y2="260" stroke="#c9a063" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Step 8 -->
+          <rect x="160" y="265" width="230" height="80" rx="6" fill="#252932" stroke="#5a9fc4" stroke-width="1.5"/>
+          <text x="275" y="293" text-anchor="middle" fill="#5a9fc4" font-size="11" font-weight="800" letter-spacing="0.05em">⑧ Action Plan 연동</text>
+          <text x="275" y="313" text-anchor="middle" fill="#a8acb3" font-size="10">구글시트 자동 연동</text>
+          <text x="275" y="327" text-anchor="middle" fill="#a8acb3" font-size="10">(프로모션 일정 · 목표 관리)</text>
+          <line x1="390" y1="305" x2="430" y2="305" stroke="#c9a063" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Step 9 -->
+          <rect x="430" y="265" width="230" height="80" rx="6" fill="#1f3a28" stroke="#4caf6f" stroke-width="2"/>
+          <text x="545" y="293" text-anchor="middle" fill="#4caf6f" font-size="11" font-weight="800" letter-spacing="0.05em">⑨ 실적 추적 + 성과 평가</text>
+          <text x="545" y="313" text-anchor="middle" fill="#a8acb3" font-size="10">프로모션 실적 모니터링</text>
+          <text x="545" y="327" text-anchor="middle" fill="#a8acb3" font-size="10">목표 달성률 · ROI 평가</text>
+          <!-- Loop back arrow -->
+          <path d="M660,305 L700,305 L700,395 L80,395 L80,70 L30,70" stroke="#c9a063" stroke-width="1" stroke-dasharray="5,3" fill="none" marker-end="url(#arr)" opacity="0.5"/>
+          <text x="400" y="390" text-anchor="middle" fill="#c9a063" font-size="9" opacity="0.7" font-style="italic">성과 기반 재기획 루프</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ══════ 운영-2. 구축현황 ══════ -->
+    <section class="card" id="sec-build">
+      <h2><span class="num">2</span> 시스템 구축현황</h2>
+      <div class="sub">GS팀 영업기획 자동화 시스템 현황</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px" id="build-grid">
+        <div class="diag-card tier-good">
+          <div class="dh"><div class="dn">일별 트렌드 뉴스</div><div class="dt" style="color:var(--positive)">● 운영중</div></div>
+          <div class="dr"><span>경쟁사 크롤링 + 뉴스 요약 자동화</span></div>
+          <div class="dr"><span>gs_daily_trend_news_public_temp</span></div>
+        </div>
+        <div class="diag-card tier-good">
+          <div class="dh"><div class="dn">월 전략 리포트</div><div class="dt" style="color:var(--positive)">● 운영중</div></div>
+          <div class="dr"><span>채널 KPI · 기획전 분석 · 자동 제안</span></div>
+          <div class="dr"><span>gs-strategy-report.html</span></div>
+        </div>
+        <div class="diag-card tier-good">
+          <div class="dh"><div class="dn">Booking Status</div><div class="dt" style="color:var(--positive)">● 운영중</div></div>
+          <div class="dr"><span>OTB · OCC · Pickup 실시간 현황</span></div>
+          <div class="dr"><span>booking-status.html</span></div>
+        </div>
+        <div class="diag-card tier-good">
+          <div class="dh"><div class="dn">팔라티움 현황 리포트</div><div class="dt" style="color:var(--positive)">● 운영중</div></div>
+          <div class="dr"><span>팔라티움 OCC · 경쟁사 모니터링</span></div>
+          <div class="dr"><span>palatium.html</span></div>
+        </div>
+        <div class="diag-card tier-good">
+          <div class="dh"><div class="dn">당일분석 대시보드</div><div class="dt" style="color:var(--positive)">● 운영중</div></div>
+          <div class="dr"><span>당일 투숙 채널별 분석</span></div>
+          <div class="dr"><span>product-detail.html</span></div>
+        </div>
+        <div class="diag-card tier-good">
+          <div class="dh"><div class="dn">RM FCST 추이</div><div class="dt" style="color:var(--positive)">● 운영중</div></div>
+          <div class="dr"><span>Forecast 변동 추이 시각화</span></div>
+          <div class="dr"><span>fcst-trend.html</span></div>
+        </div>
+        <div class="diag-card tier-good">
+          <div class="dh"><div class="dn">Action Plan</div><div class="dt" style="color:var(--positive)">● 운영중</div></div>
+          <div class="dr"><span>구글시트 CSV publish 자동 연동 (기준일자 자동 갱신)</span></div>
+          <div class="dr"><span>action_plan_dashboard.html</span></div>
+        </div>
+        <div class="diag-card tier-warn">
+          <div class="dh"><div class="dn">품의 자동화 시스템</div><div class="dt" style="color:var(--warning)">◐ 프로토타입</div></div>
+          <div class="dr"><span>요금표 업로드 → 시각화 → 품의서 HTML/엑셀 내보내기</span></div>
+          <div class="dr"><span>gs-proposal.html</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════ 운영-3. 자동화 로직 점검 ══════ -->
+    <section class="card" id="sec-automation">
+      <h2><span class="num">3</span> 자동화 로직 점검</h2>
+      <div class="sub">데이터 입력 → 파싱 → 출력 → 리포트 반영 전 단계 점검 <span style="font-family:var(--mono);font-size:11px;color:var(--gold-bright);margin-left:8px">점검기간: 2026-05-20 ~ 05-22</span></div>
+
+      <!-- 긴급 점검 사항 -->
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
+        <div style="border-left:4px solid var(--negative);background:var(--negative-bg);padding:12px 16px;border-radius:0 6px 6px 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--negative);background:rgba(229,115,115,0.15);padding:2px 7px;border-radius:3px">🔴 CRITICAL</span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink)">기획전 실적 업데이트 지연</span>
+          </div>
+          <div style="font-size:12px;color:var(--ink-soft);line-height:1.55">비발디 5월 프로모션 <b style="color:var(--gold-bright)">1,867실 → 2,000+실</b>로 증가했으나 리포트 미반영. 원인: cowork 스케줄러 5/14 이후 중단 + GH Actions가 빈 데이터로 덮어씀 (5/19 안전망 추가)</div>
+        </div>
+        <div style="border-left:4px solid var(--negative);background:var(--negative-bg);padding:12px 16px;border-radius:0 6px 6px 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--negative);background:rgba(229,115,115,0.15);padding:2px 7px;border-radius:3px">🔴 CRITICAL</span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink)">cowork 스케줄러 파이프라인 stuck</span>
+          </div>
+          <div style="font-size:12px;color:var(--ink-soft);line-height:1.55"><span style="font-family:var(--mono);color:var(--gold-bright)">_pipeline_status.json</span>의 <b>"git" 스테이지</b>에서 멈춤. <b style="color:var(--negative)">5/14 이후</b> 자동 실행되지 않음 — 일별 자동화 전반 영향</div>
+        </div>
+        <div style="border-left:4px solid var(--negative);background:var(--negative-bg);padding:12px 16px;border-radius:0 6px 6px 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--negative);background:rgba(229,115,115,0.15);padding:2px 7px;border-radius:3px">🔴 CRITICAL</span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink)">campaign_data 갱신 파이프라인 누락</span>
+          </div>
+          <div style="font-size:12px;color:var(--ink-soft);line-height:1.55"><span style="font-family:var(--mono);color:var(--gold-bright)">scripts/generate_campaign_data.py</span>가 <b>deploy.yml · _run_daily_pipeline.sh · daily_update.sh 모두에 미포함</b>. 구글시트 → <span style="font-family:var(--mono);color:var(--gold-bright)">campaign_data.json</span> 갱신이 수동 실행에만 의존 → 다운스트림 <span style="font-family:var(--mono)">campaign_performance.py</span>가 stale 데이터로 매칭. 액션플랜 대시보드(기획전 목록 + 86코드 매핑)에도 직접 영향.</div>
+        </div>
+        <div style="border-left:4px solid var(--warning);background:var(--warning-bg);padding:12px 16px;border-radius:0 6px 6px 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--warning);background:rgba(232,162,86,0.15);padding:2px 7px;border-radius:3px">🟡 ATTENTION</span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink)">기획전 패키지코드 매핑 1/216건만 등록</span>
+          </div>
+          <div style="font-size:12px;color:var(--ink-soft);line-height:1.55"><span style="font-family:var(--mono);color:var(--gold-bright)">campaign_data.json</span>의 <b>events 216건</b> 중 <b style="color:var(--negative)">key 198 하나만</b> <span style="font-family:var(--mono)">package_codes</span> 등록 (86xxx 코드 124개). 나머지 <b>215건은 실적 매칭 불가</b> — 구글시트 Key시트(패키지코드 컬럼)에 코드 채워야 <span style="font-family:var(--mono)">generate_campaign_performance.py</span>가 매칭 가능.</div>
+        </div>
+        <div style="border-left:4px solid var(--warning);background:var(--warning-bg);padding:12px 16px;border-radius:0 6px 6px 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--warning);background:rgba(232,162,86,0.15);padding:2px 7px;border-radius:3px">🟡 PATCHED</span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink)">FCST 폴백 OTB 배지 표시</span>
+          </div>
+          <div style="font-size:12px;color:var(--ink-soft);line-height:1.55">7월 이후 RM FCST 미제공 월에 대해 OTB로 폴백 + 배지로 사용자 인지성 개선 (5/19 수정)</div>
+        </div>
+        <div style="border-left:4px solid var(--warning);background:var(--warning-bg);padding:12px 16px;border-radius:0 6px 6px 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--warning);background:rgba(232,162,86,0.15);padding:2px 7px;border-radius:3px">🟡 PATCHED</span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink)">deploy.yml 27/28 txt 가드 수정</span>
+          </div>
+          <div style="font-size:12px;color:var(--ink-soft);line-height:1.55"><span style="font-family:var(--mono);color:var(--gold-bright)">raw_db/27/28</span> txt 파일 유무로 판정하도록 수정 — 빈 데이터로 인한 실적 덮어쓰기 차단 (5/19 수정)</div>
+        </div>
+      </div>
+
+      <!-- 카테고리 1: 일별 -->
+      <div style="margin-top:18px">
+        <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;font-weight:800">① 일별 업데이트 자료 <span style="color:var(--ink-faint);font-weight:600">— 매일</span></h3>
+        <div style="overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--bg-deep)">
+          <table class="summary-tbl" style="font-size:11.5px">
+            <thead>
+              <tr>
+                <th style="text-align:left">입력 자료</th>
+                <th style="text-align:left">파싱 스크립트</th>
+                <th style="text-align:left">출력 데이터</th>
+                <th style="text-align:left">반영 리포트</th>
+                <th style="text-align:center">자동화</th>
+                <th style="text-align:center">검증</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>온북 txt (27/28)</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">parse_raw_db.py</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">db_aggregated.json</td>
+                <td style="text-align:left;color:var(--ink-soft)">OTB · Booking Status · 당일분석 · 기획전 · 주간회의</td>
+                <td style="text-align:center;color:var(--warning)">⚠ 반자동<div style="font-size:10px;color:var(--ink-faint);font-weight:400">cowork 5/14 중단</div></td>
+                <td style="text-align:center;color:var(--warning)">⚠ 미연동<div style="font-size:10px;color:var(--ink-faint);font-weight:400">스크립트만 존재</div></td>
+              </tr>
+              <tr>
+                <td>온북 txt (43/44)</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">parse_raw_db.py</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">db_aggregated.json</td>
+                <td style="text-align:left;color:var(--ink-soft)">투숙일 기준 분석</td>
+                <td style="text-align:center;color:var(--warning)">⚠ 반자동</td>
+                <td style="text-align:center;color:var(--warning)">⚠</td>
+              </tr>
+              <tr>
+                <td>Daily Booking PDF</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">parse_daily_booking.py</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">daily_booking.json</td>
+                <td style="text-align:left;color:var(--ink-soft)">금일 주요지표 · Booking Status</td>
+                <td style="text-align:center;color:var(--negative)">❌ 수동<div style="font-size:10px;color:var(--ink-faint);font-weight:400">PDF 업로드 필요</div></td>
+                <td style="text-align:center;color:var(--positive)">✅ 자동검증</td>
+              </tr>
+              <tr>
+                <td>경쟁사 크롤링</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">crawler (GH Actions)</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">CSV → dashboard</td>
+                <td style="text-align:left;color:var(--ink-soft)">경쟁사 대시보드</td>
+                <td style="text-align:center;color:var(--positive)">✅ 자동</td>
+                <td style="text-align:center;color:var(--warning)">⚠ 실패 알림 없음</td>
+              </tr>
+              <tr>
+                <td>뉴스 수집</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">news_crawler.py</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">news.json</td>
+                <td style="text-align:left;color:var(--ink-soft)">트렌드 뉴스</td>
+                <td style="text-align:center;color:var(--positive)">✅ 자동</td>
+                <td style="text-align:center;color:var(--positive)">✅ 중복제거</td>
+              </tr>
+              <tr>
+                <td>구글시트(기획전)<div style="font-size:10px;color:var(--ink-faint);font-weight:400">CSV publish</div></td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">generate_campaign_<br>data.py</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">campaign_<br>data.json</td>
+                <td style="text-align:left;color:var(--ink-soft)">기획전 카드 · 액션플랜 대시보드 · 86코드 매핑</td>
+                <td style="text-align:center;color:var(--negative)">❌ 수동만<div style="font-size:10px;color:var(--ink-faint);font-weight:400">deploy.yml · _run_daily_pipeline.sh · daily_update.sh 미포함</div></td>
+                <td style="text-align:center;color:var(--warning)">⚠ events 216 중 코드 1건만<div style="font-size:10px;color:var(--ink-faint);font-weight:400">key 198만 등록</div></td>
+              </tr>
+              <tr>
+                <td>기획전 실적</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">generate_campaign_<br>performance.py</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">campaign_<br>performance.json</td>
+                <td style="text-align:left;color:var(--ink-soft)">기획전 카드</td>
+                <td style="text-align:center;color:var(--warning)">⚠ GH Actions 이슈<div style="font-size:10px;color:var(--ink-faint);font-weight:400">빈데이터 덮어쓰기 (5/19 수정) · 단, 상류 campaign_data가 stale이면 매칭 누락</div></td>
+                <td style="text-align:center;color:var(--warning)">⚠ 안전망 추가됨</td>
+              </tr>
+              <tr>
+                <td>AI 인사이트</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">generate_insights.py</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">enriched_notes.json</td>
+                <td style="text-align:left;color:var(--ink-soft)">메인 대시보드</td>
+                <td style="text-align:center;color:var(--positive)">✅ 자동</td>
+                <td style="text-align:center;color:var(--negative)">❌ 관리자 검수 미구현</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 카테고리 2: 주간 -->
+      <div style="margin-top:22px">
+        <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;font-weight:800">② 주간 업데이트 자료</h3>
+        <div style="overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--bg-deep)">
+          <table class="summary-tbl" style="font-size:11.5px">
+            <thead>
+              <tr>
+                <th style="text-align:left">입력 자료</th>
+                <th style="text-align:left">처리</th>
+                <th style="text-align:left">출력</th>
+                <th style="text-align:left">반영 리포트</th>
+                <th style="text-align:center">자동화</th>
+                <th style="text-align:center">검증</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>RM FCST PDF<div style="font-size:10px;color:var(--ink-faint);font-weight:400">Revenue Meeting</div></td>
+                <td style="text-align:left;color:var(--ink-soft)">parse 수동</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">rm_fcst.json</td>
+                <td style="text-align:left;color:var(--ink-soft)">Booking Status Forecast</td>
+                <td style="text-align:center;color:var(--negative)">❌ 수동 파싱</td>
+                <td style="text-align:center;color:var(--positive)">✅ 값 검증</td>
+              </tr>
+              <tr>
+                <td>팔라티움 엑셀</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">parse_palatium.py</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">palatium_data.json</td>
+                <td style="text-align:left;color:var(--ink-soft)">팔라티움 리포트</td>
+                <td style="text-align:center;color:var(--negative)">❌ 수동 업로드</td>
+                <td style="text-align:center;color:var(--warning)">⚠</td>
+              </tr>
+              <tr>
+                <td>주간회의 데이터</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">build.py</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">gs-weekly.html</td>
+                <td style="text-align:left;color:var(--ink-soft)">주간회의 자료</td>
+                <td style="text-align:center;color:var(--warning)">⚠ 반자동</td>
+                <td style="text-align:center;color:var(--warning)">⚠</td>
+              </tr>
+              <tr>
+                <td>외부 리서치</td>
+                <td style="text-align:left;color:var(--ink-soft)">수동 분석</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">external-report.html</td>
+                <td style="text-align:left;color:var(--ink-soft)">외부 리포트</td>
+                <td style="text-align:center;color:var(--negative)">❌ 수동</td>
+                <td style="text-align:center;color:var(--negative)">❌</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 카테고리 3: 마감 -->
+      <div style="margin-top:22px">
+        <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;font-weight:800">③ 마감 자료</h3>
+        <div style="overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--bg-deep)">
+          <table class="summary-tbl" style="font-size:11.5px">
+            <thead>
+              <tr>
+                <th style="text-align:left">입력 자료</th>
+                <th style="text-align:left">처리</th>
+                <th style="text-align:left">반영 리포트</th>
+                <th style="text-align:center">자동화</th>
+                <th style="text-align:center">검증</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>사업계획 xlsx</td>
+                <td style="text-align:left;color:var(--ink-soft)">budget 파싱</td>
+                <td style="text-align:left;color:var(--ink-soft)">목표 기준 (전체)</td>
+                <td style="text-align:center;color:var(--warning)">⚠ 연초 1회</td>
+                <td style="text-align:center;color:var(--positive)">✅</td>
+              </tr>
+              <tr>
+                <td>월별 마감 데이터</td>
+                <td style="text-align:left;color:var(--ink-soft)">관리자 키인</td>
+                <td style="text-align:left;color:var(--ink-soft)">전략리포트 · 마감</td>
+                <td style="text-align:center;color:var(--negative)">❌ 수동 키인</td>
+                <td style="text-align:center;color:var(--warning)">⚠</td>
+              </tr>
+              <tr>
+                <td>채널 매핑</td>
+                <td style="text-align:left;font-family:var(--mono);color:var(--ink-soft)">channel-mapping.html</td>
+                <td style="text-align:left;color:var(--ink-soft)">거래처-세그먼트 분류</td>
+                <td style="text-align:center;color:var(--negative)">❌ 수동</td>
+                <td style="text-align:center;color:var(--negative)">❌</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 범례 -->
+      <div style="margin-top:16px;padding:10px 14px;background:var(--bg-deep);border:1px solid var(--rule);border-radius:6px;display:flex;flex-wrap:wrap;gap:18px;font-size:11px;color:var(--ink-muted);font-family:var(--mono)">
+        <span><span style="color:var(--positive);font-weight:700">✅</span> 정상 자동화</span>
+        <span><span style="color:var(--warning);font-weight:700">⚠</span> 반자동 · 모니터링 필요</span>
+        <span><span style="color:var(--negative);font-weight:700">❌</span> 수동 · 자동화 미구현</span>
+        <span style="margin-left:auto;color:var(--ink-faint)">점검 책임: 영업기획 GS팀</span>
+      </div>
+    </section>
+
+    <!-- ══════ 운영-4. 변경이력 ══════ -->
+    <section class="card" id="sec-changelog">
+      <h2><span class="num">4</span> 변경이력</h2>
+      <div class="sub">시스템 업데이트 및 수정 내역</div>
+      <div style="display:flex;flex-direction:column;gap:14px" id="changelog-list">
+        <div style="border-left:3px solid var(--gold);padding:10px 14px;background:var(--bg-deep);border-radius:0 6px 6px 0">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span style="font-family:var(--mono);font-size:12px;font-weight:800;color:var(--gold-bright)">2026-05-19 ~ 20</span>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--ink-faint);background:var(--bg-soft);padding:2px 6px;border-radius:3px">v2.9</span>
+          </div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:4px">
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span><b style="color:var(--gold-bright)">자동화 로직 점검 섹션 신규 추가</b> (일별·주간·마감 3개 카테고리 + 긴급 점검 사항)</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span><b style="color:var(--gold-bright)">campaign_data 파이프라인 누락 진단 추가</b> — generate_campaign_data.py가 deploy.yml/_run_daily_pipeline.sh/daily_update.sh 미포함, 패키지코드 1/216건만 매핑</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>FCST 폴백 OTB 배지 표시 개선 (7월 이후 RM FCST 미제공 월 사용자 인지성)</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>campaign_performance GH Actions 안전망 추가 (빈 raw_db에서 기존 실적 덮어쓰기 방지)</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>deploy.yml 가드 수정 — raw_db 27/28 txt 파일 유무로 판정</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>OCC 차트 바 랭킹으로 변경 (가독성 개선)</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>overseas 네비 제거 (영업기획 링크 격리)</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>요약표 엑셀 다운로드 추가</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>외부리포트 참고문헌 추가 (JLL / KPMG / 관광공사 / 레저백서)</li>
+          </ul>
+        </div>
+        <div style="border-left:3px solid var(--gold);padding:10px 14px;background:var(--bg-deep);border-radius:0 6px 6px 0">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span style="font-family:var(--mono);font-size:12px;font-weight:800;color:var(--gold-bright)">2026-05-14</span>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--ink-faint);background:var(--bg-soft);padding:2px 6px;border-radius:3px">v2.8</span>
+          </div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:4px">
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>주간회의 스냅샷 확정 기능 + 채널별 목표 연동</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>전략리포트 Executive Summary 자동생성 카드 추가</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>영업기획맵 데이터 상태 대시보드 카드 추가</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>숙박세일페스타 단독 페이지 + 영업기획맵 상품기획 카테고리</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>구축가이드 변경이력 최신화 + Action Plan 경로 정정 (action_plan_dashboard.html)</li>
+          </ul>
+        </div>
+        <div style="border-left:3px solid var(--gold);padding:10px 14px;background:var(--bg-deep);border-radius:0 6px 6px 0">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span style="font-family:var(--mono);font-size:12px;font-weight:800;color:var(--gold-bright)">2026-05-13</span>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--ink-faint);background:var(--bg-soft);padding:2px 6px;border-radius:3px">v2.7</span>
+          </div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:4px">
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>기획전 카드/전략보드/구축리포트/마감자료메뉴/PPT 생성/권한 분기 추가</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>주간회의자료 페이지 추가 (gs-weekly.html) + 인바운드 KPI 도전목표 갱신</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>ADR 버그 수정 + 동기간 로직 보정 + 채널별 월 복수선택 + RM FCST 최신화</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>주간회의 인바운드 국가 분류 변경 (홍콩/대만/중국/베트남/기타)</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>5/13 daily booking + OCC 데이터 반영</li>
+          </ul>
+        </div>
+        <div style="border-left:3px solid var(--gold);padding:10px 14px;background:var(--bg-deep);border-radius:0 6px 6px 0">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span style="font-family:var(--mono);font-size:12px;font-weight:800;color:var(--gold-bright)">2026-05-12</span>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--ink-faint);background:var(--bg-soft);padding:2px 6px;border-radius:3px">v2.6</span>
+          </div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:4px">
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>브랜드명 일괄 변경: "GSN 리포트" → "SONO GS 리포트"</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>auth API URL + OAuth Client ID 하드코딩 (가드 메타 없는 페이지에서도 뱃지 표시)</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>data/ JSON 충돌 마커 정리 + 빌드 재생성 + 온북 0512 파싱·반영</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>기획전 196 실적 갱신 (332→1460실)</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>KPI 바 0% 트랙 배경 수정</li>
+          </ul>
+        </div>
+        <div style="border-left:3px solid var(--gold);padding:10px 14px;background:var(--bg-deep);border-radius:0 6px 6px 0">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span style="font-family:var(--mono);font-size:12px;font-weight:800;color:var(--gold-bright)">2026-05-11</span>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--ink-faint);background:var(--bg-soft);padding:2px 6px;border-radius:3px">v2.5</span>
+          </div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:4px">
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>로그인 / 회원관리 / 권한제어 도입 (4단계 role · Apps Script 백엔드)</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>FCST 키인 구글시트 중앙저장 (Apps Script 웹앱 + sync 스크립트)</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>FCST 키인 3행 구조 (RNS/ADR/매출) + 전년동기간 + 스티키헤더 + 월별 분리</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>채널 예약일자 필터 LY 동기간 비교 보정 (-1년 shift + 28번 취소 차감)</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>통합차트 10개 채널만 표시 + 더보기 토글 + 패키지 Top 카테고리 '기타' 제외</li>
+          </ul>
+        </div>
+        <div style="border-left:3px solid var(--gold);padding:10px 14px;background:var(--bg-deep);border-radius:0 6px 6px 0">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span style="font-family:var(--mono);font-size:12px;font-weight:800;color:var(--gold-bright)">2026-05-09</span>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--ink-faint);background:var(--bg-soft);padding:2px 6px;border-radius:3px">v2.4</span>
+          </div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:4px">
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>팔라티움 OCC 게이지 수정 (avail_by_month 57→238실 교정)</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>당일분석 채널별 탭 수정 (세그먼트→개별 채널 분리)</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>품의 페이지 프로토타입 추가 (gs-proposal.html) — 테스트</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>product-detail.html 한글 엔티티 수정</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>Booking Status 5/8 OCC 최신화</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>todayDt2 오류 수정</li>
+            <li style="font-size:12px;color:var(--ink-soft);padding-left:12px;position:relative"><span style="position:absolute;left:0;color:var(--gold)">·</span>TY/LY 동적 라벨</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    </div><!-- /#tab-ops -->
+
+  </main>
+
+</div>
+
+<div class="tl-tip" id="tl-tip" style="display:none"></div>
+
+<footer class="foot">
+  MONTHLY STRATEGY REPORT · 데이터: docs/data/otb_data.json · campaign_data.json · admin_input.json
+</footer>
+
+<script>
+(function(){var h=location.href;document.querySelectorAll('.gsn-item[data-gsn]').forEach(function(a){var k=a.getAttribute('data-gsn'),hit=false;if(k==='trend')hit=h.indexOf('gs_daily_trend_news_public_temp')!==-1&&(h.indexOf('index.html')!==-1||h.match(/gs_daily_trend_news_public_temp\/?$/));else if(k==='strategy')hit=h.indexOf('gs-strategy-report')!==-1||h.indexOf('gs-strategy.html')!==-1;else if(k==='otb')hit=h.indexOf('otb.html')!==-1;else if(k==='booking')hit=h.indexOf('booking-status')!==-1;else if(k==='fcst-trend')hit=h.indexOf('fcst-trend')!==-1;else if(k==='action')hit=h.indexOf('action_plan')!==-1;else if(k==='monitor')hit=h.indexOf('sono-competitor-crawler')!==-1&&h.indexOf('palatium')===-1;else if(k==='palatium')hit=h.indexOf('palatium')!==-1;if(hit)a.classList.add('active');});})();
+</script>
+
+<script>
+// Dynamic year labels
+var _TY = (new Date().getFullYear() % 100) + 'Y';
+var _LY = ((new Date().getFullYear() - 1) % 100) + 'Y';
+
+const fmt = {
+  num: v => v == null || isNaN(v) ? '—' : Math.round(v).toLocaleString('ko-KR'),
+  pct: v => v == null || isNaN(v) ? '—' : v.toFixed(1) + '%',
+  signed: v => v == null || isNaN(v) ? '—' : (v >= 0 ? '+' : '') + v.toFixed(1) + '%',
+};
+function achClass(v){
+  if (v == null || isNaN(v)) return 'lo';
+  if (v >= 90) return 'hi';
+  if (v >= 70) return 'md';
+  return 'lo';
+}
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function parseDate(s){
+  if (!s) return null;
+  const m = String(s).match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  return m ? new Date(+m[1], +m[2]-1, +m[3]) : null;
+}
+
+let DATA = { otb: null, campaigns: null, admin: null, fcstTrend: null, campAnalysis: null, db: null };
+let _fcstChart = null;
+let STATE = { month: null, prop: 'ALL', region: 'ALL', chSegment: 'ALL', tab: 'strategy' };
+
+const REGION_DEFS = [
+  { key:'ALL', label:'전체' },
+  { key:'vivaldi', label:'비발디' },
+  { key:'central', label:'중부' },
+  { key:'south', label:'남부' },
+  { key:'apac', label:'APAC' },
+];
+
+// === 월별 시즌 컨텍스트 (월별 차별화 전략 입력) ===
+const SEASON_CONTEXT = {
+  1: { name: '비수기', traits: ['신년 연휴 마감', '설 연휴 대비', '주중 공실 최대', 'NR 비율 확대 검토'] },
+  2: { name: '비수기', traits: ['설 연휴 집중', '스키시즌 후반', '봄 시즌 사전 편성', '밸런타인/졸업 패키지'] },
+  3: { name: '준성수기 전환', traits: ['봄 시즌 개막', '벚꽃/졸업 수요', '주말 OCC 상승', '평일 보완 필요'] },
+  4: { name: '준성수기', traits: ['봄 여행 성수기', '워터파크 개장 준비', '가정의달 사전 판매', 'G-OTA 해외 유입↑'] },
+  5: { name: '가정의달', traits: ['가정의 달', '연휴/징검다리 수요', '주말 선점 수요 높음', '주중 보완 필요', '가족형/키즈/워터파크/펫 상품 반응 가능'] },
+  6: { name: '준성수기→성수기', traits: ['여름 성수기 전환 전 구간', '장마 변수', '주중·비수기 객실 소진 필요', '얼리버드/워터파크 연계 필요'] },
+  7: { name: '성수기', traits: ['본격 성수기', 'ADR 상향 가능', '주말 만실 관리', 'NR 기획전 런칭', 'OB 관리'] },
+  8: { name: '성수기→비수기', traits: ['8월 중순 이후 비수기 전환', 'ADR 하방 관리', '추석 연박 사전 편성', '하위 사업장 집중'] },
+  9: { name: '추석 연휴', traits: ['추석 연휴', '가을 시즌 시작', '단풍 패키지', '인바운드 회복 기대'] },
+  10: { name: '가을 시즌', traits: ['단풍 시즌', '주말 OCC 반등', '평일 프로모션 강화', '겨울 사전 편성'] },
+  11: { name: '비수기 진입', traits: ['비수기 진입', '블프 할인', '크리스마스 사전판매', '스키장 개장'] },
+  12: { name: '연말 시즌', traits: ['크리스마스/연말', '스키 시즌 본격화', '신년 패키지', '겨울 워터파크'] }
+};
+
+async function loadJSON(p){
+  try{
+    const r = await fetch(p + '?_=' + Date.now());
+    if (!r.ok) throw new Error(r.status);
+    return await r.json();
+  }catch(e){ console.warn('load fail', p, e); return null; }
+}
+
+function propertyMatchesCampaign(propName, campProp){
+  if (!propName || !campProp) return false;
+  if (campProp === '전체') return true;
+  const stripped = propName.replace(/^\d+\./, '');
+  return stripped.indexOf(campProp) !== -1;
+}
+
+// 월 선택 chips
+function buildMonthChips(){
+  const now = new Date();
+  const cur = now.getMonth() + 1;
+  const months = [0,1,2].map(i => ((cur - 1 + i) % 12) + 1);
+  ['month-chips','month-chips-m'].forEach(id => {
+    const host = document.getElementById(id);
+    host.innerHTML = months.map(m => `<button class="chip" data-m="${m}">${m}월</button>`).join('');
+    host.querySelectorAll('.chip').forEach(b => {
+      b.addEventListener('click', () => {
+        STATE.month = +b.dataset.m;
+        ['month-chips','month-chips-m'].forEach(id2 => {
+          document.querySelectorAll('#'+id2+' .chip').forEach(x => x.classList.toggle('active', +x.dataset.m === STATE.month));
+        });
+        render();
+      });
+    });
+  });
+  STATE.month = months[0];
+  ['month-chips','month-chips-m'].forEach(id => {
+    document.querySelectorAll('#'+id+' .chip').forEach(x => x.classList.toggle('active', +x.dataset.m === STATE.month));
+  });
+}
+
+// (구) buildRegionChips — region-tree 로 통합되어 더 이상 필요 없음, no-op 으로 유지
+function buildRegionChips(){ /* deprecated — buildRegionTree 로 대체 */ }
+
+// 사업장 리스트 — 권역→사업장 2뎁스 트리 (collapsible)
+function buildPropList(){
+  buildRegionTree();
+}
+
+function buildRegionTree(){
+  const host = document.getElementById('region-tree');
+  const allBtn = document.getElementById('prop-all-btn');
+  const sel = document.getElementById('prop-select-m');
+  if (!DATA.otb || !host){ return; }
+  const props = DATA.otb.byProperty || [];
+  document.getElementById('prop-cnt').textContent = '· ' + props.length;
+
+  // 전체 버튼 active 상태
+  if (allBtn){
+    allBtn.classList.toggle('active', STATE.prop === 'ALL');
+    allBtn.onclick = () => {
+      STATE.prop = 'ALL';
+      STATE.region = 'ALL';
+      buildRegionTree();
+      if (sel) sel.value = 'ALL';
+      render();
+    };
+  }
+
+  // 권역별 그룹화
+  const regionDefs = [
+    { key:'vivaldi', label:'비발디' },
+    { key:'central', label:'중부' },
+    { key:'south', label:'남부' },
+    { key:'apac', label:'APAC' },
+  ];
+  const byRegion = {};
+  regionDefs.forEach(r => byRegion[r.key] = []);
+  props.forEach(p => { if (byRegion[p.region]) byRegion[p.region].push(p); });
+
+  // 현재 선택된 사업장의 권역 = 자동 펼침
+  const curProp = props.find(p => p.name === STATE.prop);
+  const expandedRegion = curProp ? curProp.region : (STATE.region !== 'ALL' ? STATE.region : null);
+
+  host.innerHTML = regionDefs.map(r => {
+    const list = byRegion[r.key];
+    const isOpen = expandedRegion === r.key;
+    const isActive = STATE.region === r.key;
+    return `
+      <div class="region-group">
+        <button class="region-toggle ${isOpen ? 'open' : ''} ${isActive ? 'active' : ''}" data-r="${r.key}">
+          ${r.label}
+          <span class="cnt">${list.length}</span>
+          <span class="arr">▼</span>
+        </button>
+        <div class="region-children ${isOpen ? 'open' : ''}" data-r="${r.key}">
+          ${list.map(p => `<button class="prop-item ${STATE.prop === p.name ? 'active' : ''}" data-p="${p.name}">${p.name}</button>`).join('')}
+        </div>
+      </div>`;
+  }).join('');
+
+  // 권역 토글: 클릭 시 펼침/접힘 + 권역 필터로 설정
+  host.querySelectorAll('.region-toggle').forEach(b => {
+    b.addEventListener('click', () => {
+      const rkey = b.dataset.r;
+      const children = host.querySelector(`.region-children[data-r="${rkey}"]`);
+      const wasOpen = b.classList.contains('open');
+      // 모두 접고 클릭한 것만 토글
+      host.querySelectorAll('.region-toggle').forEach(x => x.classList.remove('open'));
+      host.querySelectorAll('.region-children').forEach(x => x.classList.remove('open'));
+      if (!wasOpen){
+        b.classList.add('open');
+        children.classList.add('open');
+        // 권역 필터 적용 + 사업장 ALL 로
+        STATE.region = rkey;
+        STATE.prop = 'ALL';
+      } else {
+        // 다시 클릭 시 권역 ALL 로
+        STATE.region = 'ALL';
+      }
+      buildRegionTree();
+      render();
+    });
+  });
+
+  // 사업장 클릭
+  host.querySelectorAll('.prop-item').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      STATE.prop = b.dataset.p;
+      // 사업장의 권역도 자동 설정
+      const p = props.find(pp => pp.name === STATE.prop);
+      if (p) STATE.region = p.region;
+      buildRegionTree();
+      if (sel) sel.value = STATE.prop;
+      render();
+    });
+  });
+
+  // 모바일 dropdown 동기화
+  if (sel){
+    sel.innerHTML = '<option value="ALL">전체</option>' + props.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+    sel.value = STATE.prop;
+    sel.onchange = () => {
+      STATE.prop = sel.value;
+      const p = props.find(pp => pp.name === STATE.prop);
+      STATE.region = p ? p.region : 'ALL';
+      buildRegionTree();
+      render();
+    };
+  }
+}
+
+// 페이지 앵커 active 하이라이트 — IntersectionObserver
+function setupAnchorObserver(){
+  const sections = document.querySelectorAll('#sec-exec, #sec-summary, #sec-matrix, #sec-kpi, #sec-monthly, #sec-camp, #sec-channel, #sec-fcst, #sec-sug, #sec-process, #sec-build, #sec-automation, #sec-changelog');
+  if (!sections.length || !window.IntersectionObserver) return;
+  const links = document.querySelectorAll('.anchor-item');
+  const linkMap = {};
+  links.forEach(a => { const id = a.getAttribute('href').replace('#',''); linkMap[id] = a; });
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        links.forEach(a => a.classList.remove('active-section'));
+        const id = e.target.id;
+        if (linkMap[id]) linkMap[id].classList.add('active-section');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+  sections.forEach(s => obs.observe(s));
+}
+
+function getSelectedSummary(){
+  if (!DATA.otb) return null;
+  const monthSnap = (DATA.otb.allMonths || {})[String(STATE.month)] || {};
+  if (STATE.prop === 'ALL') return monthSnap.summary || null;
+  const props = monthSnap.byProperty || [];
+  return props.find(p => p.name === STATE.prop) || null;
+}
+
+function getMonthPropertyEntry(propName){
+  if (!DATA.otb || !propName) return null;
+  const monthSnap = (DATA.otb.allMonths || {})[String(STATE.month)] || {};
+  return (monthSnap.byProperty || []).find(p => p.name === propName) || null;
+}
+
+// campaign 사업장 → otb property name 추정
+function findOtbPropForCampaign(campProp){
+  if (!campProp || !DATA.otb) return null;
+  const props = DATA.otb.byProperty || [];
+  return props.find(p => propertyMatchesCampaign(p.name, campProp)) || null;
+}
+
+function renderHeaderContext(){
+  document.getElementById('ctx-month').textContent = STATE.month + '월';
+  document.getElementById('ctx-prop').textContent = STATE.prop === 'ALL' ? '전체' : STATE.prop.replace(/^\d+\./, '');
+}
+
+// 주간 픽업 — db_aggregated.net_daily_by_month[targetMonth] 의 최근 7일 net_rn 합
+// 사업장 필터 시 net_daily_by_month 에는 사업장 차원이 없으므로
+// 사업장의 월 stay-actual 비중으로 proxy 분배
+function getWeeklyPickup(){
+  if (!DATA.db) return null;
+  const ndm = DATA.db.net_daily_by_month || {};
+  const target = '2026' + String(STATE.month).padStart(2,'0');
+  const md = ndm[target];
+  if (!md) return null;
+  const today = new Date();
+  let totalSum = 0, daysWithData = 0;
+  for (let i = 0; i < 7; i++){
+    const d = new Date(today); d.setDate(d.getDate() - i);
+    const k = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0');
+    if (md[k]){
+      totalSum += md[k].net_rn || 0;
+      daysWithData++;
+    }
+  }
+  // 사업장 필터 적용 (proxy 분배)
+  let sum = totalSum;
+  let propShare = null;
+  if (STATE.prop !== 'ALL' && DATA.otb){
+    const monthSnap = (DATA.otb.allMonths || {})[String(STATE.month)] || {};
+    const props = monthSnap.byProperty || [];
+    const totalActual = props.reduce((a, p) => a + (p.rns_actual || 0), 0);
+    const propEntry = props.find(p => p.name === STATE.prop);
+    if (propEntry && totalActual > 0){
+      const propActual = propEntry.rns_actual || 0;
+      propShare = propActual / totalActual;
+      sum = Math.round(totalSum * propShare);
+    } else {
+      sum = 0;
+    }
+  }
+  // 권역 필터 (사업장 ALL 일 때만)
+  if (STATE.prop === 'ALL' && STATE.region !== 'ALL' && DATA.otb){
+    const monthSnap = (DATA.otb.allMonths || {})[String(STATE.month)] || {};
+    const props = monthSnap.byProperty || [];
+    const totalActual = props.reduce((a, p) => a + (p.rns_actual || 0), 0);
+    const regionActual = props.filter(p => p.region === STATE.region).reduce((a, p) => a + (p.rns_actual || 0), 0);
+    if (totalActual > 0){
+      propShare = regionActual / totalActual;
+      sum = Math.round(totalSum * propShare);
+    }
+  }
+  return { sum, daysWithData, total: totalSum, share: propShare };
+}
+
+// FCST 전주비 — rm_fcst_trend 의 마지막 2개 스냅샷 비교
+// 사업장 필터: properties[prop] 직접 사용 / 권역 필터: 권역 사업장 합산
+function getFcstWoW(){
+  if (!DATA.fcstTrend) return null;
+  const snaps = DATA.fcstTrend.snapshots || [];
+  const target = '2026-' + String(STATE.month).padStart(2,'0');
+  const usePropertyLevel = STATE.prop !== 'ALL';
+  // 권역 필터링 위해 사업장→권역 매핑 (otb_data.byProperty)
+  const propRegionMap = {};
+  if (DATA.otb && STATE.region !== 'ALL' && !usePropertyLevel){
+    (DATA.otb.byProperty || []).forEach(p => { propRegionMap[p.name] = p.region; });
+  }
+  const totalFcst = (s) => {
+    if (usePropertyLevel){
+      const md = (s.properties[STATE.prop] || {})[target];
+      return md ? (md.rm_fcst_rn || 0) : null;
+    }
+    let t = 0, has = false;
+    for (const [pname, p] of Object.entries(s.properties || {})){
+      // 권역 필터 시 해당 권역 사업장만 합산
+      if (STATE.region !== 'ALL' && propRegionMap[pname] !== STATE.region) continue;
+      const md = p[target];
+      if (md){ t += md.rm_fcst_rn || 0; has = true; }
+    }
+    return has ? t : null;
+  };
+  const filt = snaps.filter(s => totalFcst(s) != null);
+  if (filt.length < 2) return null;
+  const last = filt[filt.length - 1];
+  const prev = filt[filt.length - 2];
+  const lastF = totalFcst(last);
+  const prevF = totalFcst(prev);
+  return { lastF, prevF, delta: lastF - prevF, deltaPct: prevF ? (lastF - prevF) / prevF * 100 : 0, lastDate: last._snapshot_date, prevDate: prev._snapshot_date };
+}
+
+function renderKPI(){
+  const s = getSelectedSummary();
+  const tbody = document.getElementById('summary-tbody');
+  if (!s){
+    tbody.innerHTML = '<tr><td colspan="7" class="muted" style="text-align:center;padding:18px">선택 월·사업장 데이터 없음</td></tr>';
+    return;
+  }
+  // 행 정의
+  const rows = [
+    {
+      name: 'RN (객실)',
+      budget: s.rns_budget, fcst: s.rns_fcst, actual: s.rns_actual,
+      ach: s.rns_achievement, last: s.rns_last, yoy: s.rns_yoy,
+      fmt: fmt.num
+    },
+    {
+      name: 'ADR (단가, 원)',
+      budget: s.adr_budget, fcst: s.adr_fcst, actual: s.adr_actual,
+      ach: s.adr_actual && s.adr_budget ? (s.adr_actual / s.adr_budget * 100) : null,
+      last: s.adr_last, yoy: s.adr_yoy,
+      fmt: fmt.num
+    },
+    {
+      name: 'Revenue (백만원)',
+      budget: s.rev_budget ? s.rev_budget / 1000000 : null,
+      fcst: s.rev_fcst ? s.rev_fcst / 1000000 : null,
+      actual: s.rev_actual ? s.rev_actual / 1000000 : null,
+      ach: s.rev_achievement,
+      last: s.rev_last ? s.rev_last / 1000000 : null,
+      yoy: s.rev_yoy,
+      fmt: fmt.num
+    }
+  ];
+  tbody.innerHTML = rows.map(r => {
+    const c = r.ach != null ? (r.ach >= 90 ? 'hi' : r.ach >= 70 ? 'md' : 'lo') : null;
+    return `<tr>
+      <td>${r.name}</td>
+      <td>${r.budget != null ? r.fmt(r.budget) : '<span class="muted">—</span>'}</td>
+      <td>${r.fcst != null ? r.fmt(r.fcst) : '<span class="muted">—</span>'}</td>
+      <td>${r.actual != null ? r.fmt(r.actual) : '<span class="muted">—</span>'}</td>
+      <td>${r.ach != null ? `<span class="badge ${c}">${fmt.pct(r.ach)}</span>` : '<span class="muted">—</span>'}</td>
+      <td>${r.last != null ? r.fmt(r.last) : '<span class="muted">—</span>'}</td>
+      <td class="${(r.yoy||0)>=0?'pos':'neg'}">${r.yoy != null ? fmt.signed(r.yoy) : '—'}</td>
+    </tr>`;
+  }).join('');
+
+  // 주간 픽업
+  const wp = getWeeklyPickup();
+  const wpV = document.getElementById('weekly-pickup-v');
+  const wpSub = document.getElementById('weekly-pickup-sub');
+  if (wp){
+    wpV.textContent = (wp.sum >= 0 ? '+' : '') + fmt.num(wp.sum) + '실';
+    wpV.className = 'v ' + (wp.sum >= 0 ? 'pos' : 'neg');
+    let sub = `${STATE.month}월 stay · 최근 ${wp.daysWithData}일 booking date 합산`;
+    if (STATE.prop !== 'ALL' && wp.share != null){
+      // 사업장 필터 시 비중 분배 명시
+      sub = `${STATE.prop.replace(/^\d+\./,'')} 추정 · 전사 ${fmt.num(wp.total)}실 × ${(wp.share * 100).toFixed(1)}% 분배`;
+    } else if (STATE.region !== 'ALL' && wp.share != null){
+      sub = `${STATE.region} 권역 · 전사 ${fmt.num(wp.total)}실 × ${(wp.share * 100).toFixed(1)}% 분배`;
+    }
+    wpSub.textContent = sub;
+  } else {
+    wpV.textContent = '—'; wpV.className = 'v'; wpSub.textContent = '데이터 없음';
+  }
+
+  // FCST 전주비
+  const wow = getFcstWoW();
+  const wowV = document.getElementById('fcst-wow-v');
+  const wowSub = document.getElementById('fcst-wow-sub');
+  if (wow){
+    wowV.textContent = (wow.delta >= 0 ? '+' : '') + fmt.num(wow.delta) + '실 (' + (wow.deltaPct >= 0 ? '+' : '') + wow.deltaPct.toFixed(1) + '%)';
+    wowV.className = 'v ' + (wow.delta >= 0 ? 'pos' : 'neg');
+    wowSub.textContent = `${wow.prevDate} → ${wow.lastDate} · ${fmt.num(wow.prevF)} → ${fmt.num(wow.lastF)}실`;
+  } else {
+    wowV.textContent = '—'; wowV.className = 'v'; wowSub.textContent = '스냅샷 부족';
+  }
+}
+
+function renderGapPlan(){
+  const s = getSelectedSummary();
+  if (!s){
+    document.getElementById('gap-progress').innerHTML = '<div class="empty">데이터 없음</div>';
+    document.getElementById('gap-fcst').innerHTML = '';
+    document.getElementById('gap-insights').innerHTML = '';
+    return;
+  }
+  const ach = s.rns_achievement || 0;
+  const revAch = s.rev_achievement || 0;
+  const adrPct = s.adr_actual && s.adr_budget ? (s.adr_actual / s.adr_budget * 100) : null;
+  const cls = v => v >= 90 ? 'hi' : v >= 70 ? 'md' : 'lo';
+  document.getElementById('gap-progress').innerHTML = `
+    <div class="progress-row">
+      <div class="progress-label"><span>RN 달성</span><span class="v">${fmt.pct(ach)}</span></div>
+      <div class="progress-bar"><div class="progress-fill ${cls(ach)}" style="width:${Math.min(ach,100)}%"></div></div>
+    </div>
+    <div class="progress-row">
+      <div class="progress-label"><span>Revenue 달성</span><span class="v">${fmt.pct(revAch)}</span></div>
+      <div class="progress-bar"><div class="progress-fill ${cls(revAch)}" style="width:${Math.min(revAch,100)}%"></div></div>
+    </div>
+    ${adrPct != null ? `
+    <div class="progress-row">
+      <div class="progress-label"><span>ADR Budget 대비</span><span class="v">${fmt.pct(adrPct)}</span></div>
+      <div class="progress-bar"><div class="progress-fill ${cls(adrPct)}" style="width:${Math.min(adrPct,120)}%"></div></div>
+    </div>` : ''}
+  `;
+
+  const fAch = s.fcst_achievement;
+  const gap = fAch != null ? (fAch - 100) : null;
+  const gapColor = gap == null ? 'var(--ink-faint)' : (gap >= 0 ? 'var(--positive)' : gap > -5 ? 'var(--warning)' : 'var(--negative)');
+  const gapNote = gap == null ? '데이터 없음'
+    : gap >= 3 ? `초과 페이싱 — Budget ${fmt.pct(gap)} 상회. 단가/믹스 최적화로 Revenue 추가 확보 가능`
+    : gap >= 0 ? `Budget 도달 — 기획전 가속화로 안전 마진 확보`
+    : gap > -5 ? `소폭 갭 (${fmt.pct(gap)}) — 채널 노출 강화 / 단가 협상`
+    : `갭 확대 (${fmt.pct(gap)}) — 즉시 기획전 보강·CT 활성화·OTA 광고 검토`;
+  document.getElementById('gap-fcst').innerHTML = `
+    <div style="font-family:var(--mono);font-size:32px;font-weight:800;color:${gapColor};line-height:1;margin-bottom:6px">${gap == null ? '—' : (gap >= 0 ? '+' : '') + gap.toFixed(1) + '%'}</div>
+    <div style="font-size:11px;color:var(--ink-faint);margin-bottom:10px;font-family:var(--mono)">FCST 달성 ${fmt.pct(fAch)}</div>
+    <div style="font-size:12px;color:var(--ink-soft);line-height:1.55">${gapNote}</div>
+  `;
+
+  const insights = (DATA.admin && DATA.admin.daily_insights) || [];
+  const items = [];
+  insights.forEach(it => {
+    items.push(`<div class="insight-item ${it.type === 'positive' ? 'pos' : it.type === 'negative' ? 'neg' : 'warn'}"><span class="src">${(it.source||'').toUpperCase()}</span>${it.text}</div>`);
+  });
+  const camps = filteredCampaigns();
+  const liveCamps = camps.filter(c => campStatus(c) === 'live').length;
+  const soonCamps = camps.filter(c => campStatus(c) === 'soon').length;
+  if (liveCamps + soonCamps === 0 && (gap != null && gap < -3)) {
+    items.push(`<div class="insight-item neg"><span class="src">ACTION · CAMPAIGN</span>${STATE.month}월 ${STATE.prop === 'ALL' ? '전사' : STATE.prop} 진행/예정 기획전이 없는데 FCST 갭 ${fmt.pct(gap)} — 신규 채널 기획 시급</div>`);
+  } else if (liveCamps + soonCamps > 0) {
+    items.push(`<div class="insight-item pos"><span class="src">ACTION · CAMPAIGN</span>${STATE.month}월 매칭 기획전 ${liveCamps + soonCamps}건 진행/예정 — 노출 모니터링하며 채널별 KPI 추적</div>`);
+  }
+  if (s.adr_yoy != null) {
+    if (s.adr_yoy > 5) items.push(`<div class="insight-item pos"><span class="src">ADR · YoY</span>ADR ${fmt.signed(s.adr_yoy)} — 단가 상승세 활용해 high-margin 채널 비중 확대</div>`);
+    else if (s.adr_yoy < -3) items.push(`<div class="insight-item neg"><span class="src">ADR · YoY</span>ADR ${fmt.signed(s.adr_yoy)} 하락 — Mega Channel 의존도 점검 + Direct 채널 강화</div>`);
+  }
+  document.getElementById('gap-insights').innerHTML = items.join('') || '<div class="empty">표시할 인사이트 없음</div>';
+}
+
+function campStatus(c){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const sStart = parseDate(c['판매시작']);
+  const sEnd = parseDate(c['판매종료']);
+  if (!sStart || !sEnd) return 'soon';
+  if (today < sStart) return 'soon';
+  if (today > sEnd) return 'done';
+  return 'live';
+}
+function statusLabel(st){ return st === 'live' ? '진행 중' : st === 'soon' ? '예정' : '종료'; }
+
+function channelKey(rawCh){
+  const c = String(rawCh || '');
+  if (c.indexOf('카카오 메이커스') !== -1 || c.indexOf('카카오메이커스') !== -1) return '카카오메이커스';
+  if (c.indexOf('카카오쇼핑') !== -1) return '카카오쇼핑라이브';
+  if (c.indexOf('카카오') !== -1) return '카카오';
+  if (c.indexOf('여기어때') !== -1) return '여기어때';
+  if (c.indexOf('마이리얼트립') !== -1) return '마이리얼트립';
+  if (c.indexOf('인플루언서') !== -1) return '인플루언서';
+  if (c.indexOf('G마켓') !== -1) return 'G마켓';
+  if (c.indexOf('쿠팡') !== -1) return '쿠팡';
+  if (c.indexOf('네이버') !== -1) return '네이버';
+  if (c.indexOf('와디즈') !== -1) return '와디즈';
+  if (c.indexOf('놀유니버스') !== -1) return '놀유니버스';
+  if (c.indexOf('티딜') !== -1 || c.indexOf('톡딜') !== -1) return '티딜';
+  if (c.indexOf('11번가') !== -1) return '11번가';
+  if (c.indexOf('롯데온') !== -1) return '롯데온';
+  if (c.indexOf('프리즘') !== -1) return '프리즘';
+  return c.split(/[\s\-(]/)[0].slice(0, 8);
+}
+
+// 두 데이터 소스 normalize → 공통 형식
+function normalizeFromSummer(c){
+  return {
+    사업장: c['사업장'], 채널: c['채널'], 구분: c['구분'] || '',
+    상품: c['상품'] || '', 노출영역: c['노출영역'] || '',
+    판매시작: c['판매시작'], 판매종료: c['판매종료'],
+    투숙시작: c['투숙시작'], 투숙종료: c['투숙종료'],
+    _src: 'summer_detail'
+  };
+}
+function normalizeFromIndividual(c){
+  if (!c || !c.property || c.property === '사업장') return null; // 헤더 제외
+  const sp = c.sale_period || {}; const tp = c.stay_period || {};
+  return {
+    사업장: c.property, 채널: c.channel || '', 구분: c.division || '',
+    상품: c.product || '', 노출영역: c.exposure || '',
+    판매시작: sp.start, 판매종료: sp.end,
+    투숙시작: tp.start, 투숙종료: tp.end,
+    _src: 'individual_analysis', _id: c.campaign_id, _seg: c.segment
+  };
+}
+
+// 통합 + dedupe (사업장+채널+판매기간 키)
+function getAllCampaigns(){
+  const list = [];
+  const seen = new Set();
+  const push = (c) => {
+    if (!c) return;
+    const k = (c.사업장||'') + '|' + (c.채널||'') + '|' + (c.판매시작||'') + '|' + (c.판매종료||'');
+    if (seen.has(k)) return;
+    seen.add(k);
+    list.push(c);
+  };
+  if (DATA.campaigns){
+    (DATA.campaigns.summer_detail || []).forEach(c => push(normalizeFromSummer(c)));
+  }
+  if (DATA.campAnalysis){
+    (DATA.campAnalysis.individual_analysis || []).forEach(c => push(normalizeFromIndividual(c)));
+  }
+  return list;
+}
+
+// 필터: 투숙기간이 선택 월에 하루라도 걸치면 매칭 (판매기간 무시)
+function filteredCampaigns(){
+  const all = getAllCampaigns();
+  const m = STATE.month;
+  const mStart = new Date(2026, m-1, 1);
+  const mEnd = new Date(2026, m, 0);
+  return all.filter(c => {
+    const tStart = parseDate(c['투숙시작']);
+    const tEnd = parseDate(c['투숙종료']);
+    if (!tStart || !tEnd) return false;
+    if (tEnd < mStart || tStart > mEnd) return false;
+    if (STATE.prop === 'ALL'){
+      if (STATE.region === 'ALL') return true;
+      const otbProp = findOtbPropForCampaign(c['사업장']);
+      return otbProp && otbProp.region === STATE.region;
+    }
+    return propertyMatchesCampaign(STATE.prop, c['사업장']);
+  });
+}
+
+function renderTimeline(){
+  const wrap = document.getElementById('timeline-wrap');
+  const camps = filteredCampaigns();
+  if (!camps.length){
+    wrap.innerHTML = '<div class="empty" style="margin:10px">선택 필터에 매칭되는 기획전 없음 (투숙월 기준)</div>';
+    return;
+  }
+  const m = STATE.month;
+  const winStart = new Date(2026, m - 2, 1);
+  const winEnd = new Date(2026, m + 1, 0);
+  const totalDays = Math.round((winEnd - winStart) / 86400000) + 1;
+
+  const byCh = {};
+  camps.forEach(c => {
+    const k = channelKey(c['채널']);
+    if (!byCh[k]) byCh[k] = [];
+    byCh[k].push(c);
+  });
+  const chKeys = Object.keys(byCh).sort((a, b) => byCh[b].length - byCh[a].length);
+
+  const ticks = [];
+  for (let i = 0; i <= totalDays; i++) {
+    const d = new Date(winStart); d.setDate(d.getDate() + i);
+    if (d.getDate() === 1 || d.getDate() === 15) {
+      const left = (i / totalDays * 100).toFixed(2) + '%';
+      ticks.push(`<div class="tl-tick" style="left:${left}">${(d.getMonth()+1)}/${d.getDate()}</div>`);
+    }
+  }
+  const today = new Date(); today.setHours(0,0,0,0);
+  let todayMarker = '';
+  if (today >= winStart && today <= winEnd){
+    const todayPos = ((today - winStart) / 86400000 / totalDays * 100).toFixed(2) + '%';
+    todayMarker = `<div style="position:absolute;top:0;bottom:0;left:${todayPos};width:1.5px;background:var(--gold);z-index:3"></div>`;
+  }
+
+  let html = '<div class="timeline">';
+  html += `<div class="tl-head-l">채널 (${chKeys.length}개 · ${camps.length}건)</div>`;
+  html += `<div class="tl-head-r">${ticks.join('')}${todayMarker}</div>`;
+
+  chKeys.forEach(ck => {
+    html += `<div class="tl-cell-l">${ck}<span class="cnt">${byCh[ck].length}</span></div>`;
+    let rowHtml = `<div class="tl-cell-r">${todayMarker}`;
+    byCh[ck].forEach(c => {
+      const sStart = parseDate(c['판매시작']);
+      const sEnd = parseDate(c['판매종료']);
+      if (!sStart || !sEnd) return;
+      const startDays = Math.max(0, Math.round((sStart - winStart) / 86400000));
+      const endDays = Math.min(totalDays, Math.round((sEnd - winStart) / 86400000));
+      if (endDays < 0 || startDays > totalDays) return;
+      const left = (startDays / totalDays * 100).toFixed(2) + '%';
+      const w = Math.max(2, ((endDays - startDays + 1) / totalDays * 100)).toFixed(2) + '%';
+      // 사업장 실적 추가
+      const otbProp = findOtbPropForCampaign(c['사업장']);
+      const monthEntry = otbProp ? getMonthPropertyEntry(otbProp.name) : null;
+      const tipData = encodeURIComponent(JSON.stringify({
+        ch: c['채널'], prop: c['사업장'], product: c['상품'],
+        sale: (c['판매시작']||'') + ' ~ ' + (c['판매종료']||''),
+        stay: (c['투숙시작']||'') + ' ~ ' + (c['투숙종료']||''),
+        expose: c['노출영역'] || '',
+        propAct: monthEntry ? monthEntry.rns_actual : null,
+        propBud: monthEntry ? monthEntry.rns_budget : null,
+        propAch: monthEntry ? monthEntry.rns_achievement : null,
+        propName: otbProp ? otbProp.name.replace(/^\d+\./,'') : c['사업장']
+      }));
+      const label = (c['사업장'] || '').slice(0, 6);
+      rowHtml += `<div class="tl-bar b-${ck}" style="left:${left};width:${w}" data-tip="${tipData}">${label}</div>`;
+    });
+    rowHtml += '</div>';
+    html += rowHtml;
+  });
+  html += '</div>';
+  wrap.innerHTML = html;
+
+  const tip = document.getElementById('tl-tip');
+  wrap.querySelectorAll('.tl-bar').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      const d = JSON.parse(decodeURIComponent(el.dataset.tip));
+      let perfHtml = '';
+      if (d.propAct != null && d.propBud != null){
+        perfHtml = `<div class="perf">${d.propName} ${STATE.month}월: ${fmt.num(d.propAct)} / ${fmt.num(d.propBud)}실 (${fmt.pct(d.propAch)})</div>`;
+      }
+      tip.innerHTML = `
+        <strong>${d.ch}</strong>
+        <div class="row"><span style="color:var(--ink-faint)">사업장</span><span>${d.prop}</span></div>
+        <div class="row"><span style="color:var(--ink-faint)">판매</span><span>${d.sale}</span></div>
+        <div class="row"><span style="color:var(--ink-faint)">투숙</span><span>${d.stay}</span></div>
+        ${d.product ? `<div style="margin-top:5px;color:var(--ink-soft);font-size:11px">${d.product}</div>` : ''}
+        ${d.expose ? `<div style="margin-top:3px;color:var(--ink-faint);font-size:10.5px;font-style:italic">노출: ${d.expose}</div>` : ''}
+        ${perfHtml}
+      `;
+      tip.style.display = 'block';
+    });
+    el.addEventListener('mousemove', e => {
+      tip.style.left = Math.min(window.innerWidth - 320, e.clientX + 12) + 'px';
+      tip.style.top = (e.clientY + 12) + 'px';
+    });
+    el.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+  });
+}
+
+// 기획전 성과 판단 — 달성률 + YoY + 상태(종료) 조합
+function campaignVerdict(ach, yoy, status){
+  // 기간 종료 → 종료 우선
+  if (status === 'done') return { cls: 'v-end', label: '종료', note: '기간 종료 — 효과 평가 후 차기 발주 결정' };
+  if (ach == null) return { cls: 'v-keep', label: '추적', note: '사업장 실적 데이터 부족' };
+  if (ach < 50) return { cls: 'v-end', label: '종료', note: '달성률 50% 미만 — 채널 효율 점검 후 중단 검토' };
+  if (ach < 70) return { cls: 'v-renotice', label: '재노출 필요', note: '달성률 50~70% — 노출 강화 / 단가 협상 필요' };
+  if (ach < 100) return { cls: 'v-keep', label: '유지', note: '달성률 70~100% — 현재 페이스 유지 모니터링' };
+  // 100%+
+  if (yoy != null && yoy >= 0) return { cls: 'v-expand', label: '확대', note: `달성률 ${fmt.pct(ach)} + YoY ${fmt.signed(yoy)} — 확대 발주 / 단가 협상` };
+  return { cls: 'v-expand', label: '확대', note: `달성률 ${fmt.pct(ach)} — 초과 페이싱, 추가 객실 확보 검토` };
+}
+
+function renderCampaignCards(){
+  const camps = filteredCampaigns();
+  document.getElementById('camp-count').textContent = camps.length;
+  const host = document.getElementById('camp-grid');
+  if (!camps.length){
+    host.innerHTML = '<div class="empty" style="grid-column:1/-1">선택 필터에 매칭되는 기획전 없음 (투숙월 기준)</div>';
+    return;
+  }
+  const order = { live: 0, soon: 1, done: 2 };
+  const sorted = [...camps].sort((a, b) => order[campStatus(a)] - order[campStatus(b)]);
+  host.innerHTML = sorted.map(c => {
+    const st = campStatus(c);
+    const otbProp = findOtbPropForCampaign(c['사업장']);
+    const monthEntry = otbProp ? getMonthPropertyEntry(otbProp.name) : null;
+    // 성과 데이터 추출 (사업장 OTB 기반 — 카드별 실데이터)
+    const ach = monthEntry ? monthEntry.rns_achievement : null;
+    const yoy = monthEntry ? monthEntry.rns_yoy : null;
+    const targetRn = monthEntry ? monthEntry.rns_budget : null;
+    const actualRn = monthEntry ? monthEntry.rns_actual : null;
+    const verdict = campaignVerdict(ach, yoy, st);
+    // KPI 3-blk: 목표RN / 현재RN / 달성률
+    const kpiHtml = monthEntry ? `
+      <div class="camp-kpi">
+        <div class="blk"><div class="l">목표 RN</div><div class="v">${targetRn != null ? fmt.num(targetRn) : '—'}</div></div>
+        <div class="blk"><div class="l">현재 RN</div><div class="v">${actualRn != null ? fmt.num(actualRn) : '—'}</div></div>
+        <div class="blk"><div class="l">달성률</div><div class="v ${ach != null ? (ach >= 100 ? 'pos' : ach < 70 ? 'neg' : '') : ''}">${ach != null ? fmt.pct(ach) : '—'}</div></div>
+      </div>` : '';
+    const yoyHtml = monthEntry && yoy != null ? `
+      <div style="font-family:var(--mono);font-size:10px;color:var(--ink-faint);padding:2px 0 0">전년 동기간 대비 <span style="color:${yoy>=0?'var(--positive)':'var(--negative)'};font-weight:700">${fmt.signed(yoy)}</span></div>` : '';
+    const verdictHtml = monthEntry ? `
+      <div class="camp-verdict ${verdict.cls}" title="${verdict.note}">
+        <span class="l">판단</span>
+        <span class="v">${verdict.label}</span>
+      </div>` : '';
+    const propName = (otbProp && otbProp.name || '').replace(/^\d+\./,'') || c['사업장'] || '—';
+    return `
+      <div class="camp-card">
+        <div class="ch">${c['채널'] || '—'}<span class="camp-status s-${st}">${statusLabel(st)}</span></div>
+        <div class="camp-prop">${c['사업장'] || '—'} <span style="color:var(--ink-faint);font-size:10px;font-weight:500">· ${c['구분'] || ''}</span></div>
+        <div class="camp-product">${c['상품'] || '상품 미정'}</div>
+        ${c['노출영역'] ? `<div class="camp-extra">📢 ${c['노출영역']}</div>` : ''}
+        <div class="camp-dates">
+          <div class="blk"><div class="l">판매</div><div class="v">${c['판매시작']||'—'} ~ ${c['판매종료']||'—'}</div></div>
+          <div class="blk"><div class="l">투숙</div><div class="v">${c['투숙시작']||'—'} ~ ${c['투숙종료']||'—'}</div></div>
+        </div>
+        ${kpiHtml}
+        ${yoyHtml}
+        ${verdictHtml}
+      </div>`;
+  }).join('');
+}
+
+// 거래처 → 세그먼트 매핑 (db_aggregated.by_channel_segment 에서 자동 추출)
+// 복수 세그먼트가 있는 거래처는 OTA/G-OTA/Inbound 중 총 net_rn이 가장 큰 세그먼트로 결정
+function getChannelSegmentMap(){
+  if (!DATA.db) return {};
+  const bcs = DATA.db.by_channel_segment || {};
+  const validSegs = new Set(['OTA','G-OTA','Inbound']);
+  const map = {};
+  Object.entries(bcs).forEach(([ch, segs]) => {
+    let bestSeg = null, bestRn = -1;
+    Object.entries(segs || {}).forEach(([seg, months]) => {
+      if (!validSegs.has(seg)) return;
+      let totalRn = 0;
+      Object.values(months || {}).forEach(m => { totalRn += (m.net_rn || 0); });
+      if (totalRn > bestRn) { bestRn = totalRn; bestSeg = seg; }
+    });
+    map[ch] = bestSeg || Object.keys(segs || {})[0] || 'OTHER';
+  });
+  return map;
+}
+
+// OTB property name ("NN.foo") → db_aggregated.by_property_channel 키 목록
+// 출처: scripts/generate_otb_data.py PROPERTY_DEFS
+const PROP_TO_DB_KEYS = {
+  '01.벨비발디':     ['소노벨 비발디파크', '소노문 비발디파크'],
+  '02.캄비발디':     ['소노캄 비발디파크'],
+  '03.펫비발디':     ['소노펫 비발디파크'],
+  '04.펠리체비발디': ['소노펠리체 비발디파크'],
+  '05.빌리지비발디': ['소노펠리체 빌리지 비발디파크'],
+  '06.양평':         ['소노휴 양평', '소노벨 양평'],
+  '07.델피노':       ['델피노'],
+  '08.쏠비치양양':   ['쏠비치 양양'],
+  '09.쏠비치삼척':   ['쏠비치 삼척'],
+  '10.소노벨단양':   ['소노문 단양', '소노벨 단양'],
+  '11.소노캄경주':   ['소노벨 경주', '소노캄 경주'],
+  '12.소노벨청송':   ['소노벨 청송'],
+  '13.소노벨천안':   ['소노벨 천안'],
+  '14.소노벨변산':   ['소노벨 변산'],
+  '15.소노캄여수':   ['소노캄 여수'],
+  '16.소노캄거제':   ['소노캄 거제'],
+  '17.쏠비치진도':   ['쏠비치 진도'],
+  '18.소노벨제주':   ['소노벨 제주'],
+  '19.소노캄제주':   ['소노캄 제주'],
+  '20.소노캄고양':   ['소노캄 고양'],
+  '21.소노문해운대': ['소노문 해운대'],
+  '22.쏠비치남해':   ['쏠비치 남해'],
+  '23.르네블루':     ['르네블루'],
+  '25.팔라티움':     []   // DB 미포함
+};
+
+// 사업장/권역 필터를 반영한 by_channel 데이터
+// STATE.prop !== 'ALL'           → 해당 사업장 DB 키 합산
+// STATE.region !== 'ALL' (prop ALL) → 권역 내 사업장 합산
+// 둘 다 ALL                       → DATA.db.by_channel 그대로
+// 반환 shape: { channel: { '2026MM': {net_rn, gross_rn, cancel_rn, booking_rn, net_rev, adr, ...}, ... } }
+function getScopedByChannel(){
+  if (!DATA.db) return {};
+  if (STATE.prop === 'ALL' && STATE.region === 'ALL') return DATA.db.by_channel || {};
+
+  const dbKeys = [];
+  if (STATE.prop !== 'ALL'){
+    (PROP_TO_DB_KEYS[STATE.prop] || []).forEach(k => dbKeys.push(k));
+  } else {
+    (DATA.otb && DATA.otb.byProperty || []).forEach(p => {
+      if (p.region === STATE.region){
+        (PROP_TO_DB_KEYS[p.name] || []).forEach(k => dbKeys.push(k));
+      }
+    });
+  }
+  if (!dbKeys.length) return {};
+
+  const bpc = DATA.db.by_property_channel || {};
+  const agg = {};
+  dbKeys.forEach(propKey => {
+    const propData = bpc[propKey];
+    if (!propData) return;
+    Object.entries(propData).forEach(([ch, months]) => {
+      if (!agg[ch]) agg[ch] = {};
+      Object.entries(months).forEach(([mo, v]) => {
+        if (!agg[ch][mo]){
+          agg[ch][mo] = { booking_rn:0, cancel_rn:0, gross_rn:0, net_rn:0,
+                           booking_rev:0, cancel_rev:0, net_rev:0, adr:0 };
+        }
+        const a = agg[ch][mo];
+        a.booking_rn += v.booking_rn || 0;
+        a.cancel_rn  += v.cancel_rn  || 0;
+        a.gross_rn   += v.gross_rn   || 0;
+        a.net_rn     += v.net_rn     || 0;
+        a.booking_rev += v.booking_rev || 0;
+        a.cancel_rev  += v.cancel_rev  || 0;
+        a.net_rev     += v.net_rev     || 0;
+      });
+    });
+  });
+  // ADR 재계산 (단위: net_rev 백만원 × 1000 / net_rn = 천원/RN)
+  Object.values(agg).forEach(months => {
+    Object.values(months).forEach(v => {
+      if (v.net_rn > 0) v.adr = Math.round(v.net_rev * 1000 / v.net_rn);
+    });
+  });
+  return agg;
+}
+
+// Section 5 — 거래처별 진행 현황 (세그먼트 chip 필터)
+function buildChSegChips(){
+  const host = document.getElementById('ch-seg-chips');
+  if (!host) return;
+  // OTA/G-OTA 만 (Inbound 스킵)
+  const segs = ['ALL', 'OTA', 'G-OTA'];
+  host.innerHTML = segs.map(s => `<button class="chip ${STATE.chSegment === s ? 'active' : ''}" data-s="${s}">${s === 'ALL' ? '전체' : s}</button>`).join('');
+  host.querySelectorAll('.chip').forEach(b => {
+    b.addEventListener('click', () => {
+      STATE.chSegment = b.dataset.s;
+      host.querySelectorAll('.chip').forEach(x => x.classList.toggle('active', x === b));
+      renderPerfTable();
+    });
+  });
+}
+
+// strategy-keyin localStorage 에서 거래처별 목표 추출
+// ============================================================
+//  AI 1차 배분 — strategy-keyin.html 의 calcAISuggest 와 동일 로직
+//  근거: 전년(동기간) 동월 LY (db_aggregated) × YoY 보정률 (CH_YOY_RATES)
+//  전략 보정: 급감(-20% 미만) → 감소폭 50%만 반영, 급성장(+50% 초과) → 성장폭 80% 반영
+// ============================================================
+const CH_YOY_RATES = {
+  '야놀자':       -3.4,
+  '여기어때':      5.2,
+  '네이버':       -1.1,
+  '쿠팡':         39.6,
+  '스마트인피니':  158.1,
+  '종이비행기':   -13.1,
+  '프리즘':       -8.5,
+  '아고다':        6.8,
+  '트립닷컴':     12.3,
+  '트립비토즈':   -5.2,
+  '익스피디아':  -33.0,
+  '부킹닷컴':    -34.6,
+  '여행사(합산)': 15.0
+};
+
+function calcAITargetRn(channel, month, byChannel){
+  const bc = byChannel || (DATA.db && DATA.db.by_channel) || null;
+  if (!bc) return null;
+  const monthStr = String(month).padStart(2, '0');
+  const lyKey = `2025${monthStr}`; // 전년(동기간) 동월
+  const lyMonthly = ((bc[channel] || {})[lyKey] || {}).net_rn || 0;
+  if (lyMonthly === 0) return null;
+  const rate = CH_YOY_RATES[channel] != null ? CH_YOY_RATES[channel] : 0;
+  // 전략 보정 (strategy-keyin 의 calcAISuggest 와 동일)
+  let adjustedRate = rate;
+  if (rate < -20) adjustedRate = rate * 0.5;       // 급감 보수적
+  else if (rate > 50) adjustedRate = rate * 0.8;    // 급성장 현실적
+  else if (rate > 20) adjustedRate = rate * 0.9;    // 성장 소폭 보수적
+  return Math.round(lyMonthly * (1 + adjustedRate / 100));
+}
+
+function getChannelTargetsFromKeyin(month, byChannel){
+  // keyin 목표는 전사 단위 — 사업장/권역 필터 시에는 사용하지 않고 AI 만 사용
+  const scoped = (STATE.prop !== 'ALL') || (STATE.region !== 'ALL');
+  const bc = byChannel || (DATA.db && DATA.db.by_channel) || {};
+
+  // 1) user 입력 (localStorage) — 전사 모드에서만
+  const userTargets = {};
+  if (!scoped){
+    try {
+      const raw = localStorage.getItem('gs_strategy_keyin_v2');
+      if (raw){
+        const data = JSON.parse(raw);
+        const monthStr = String(month).padStart(2, '0');
+        const monthData = data[`2026-${monthStr}`] || data[month] || data[String(month)] || {};
+        const channels = monthData.channels || {};
+        Object.entries(channels).forEach(([ch, v]) => {
+          const t = (v && v.target_rn) || null;
+          if (t != null && t !== '' && !isNaN(+t)) userTargets[ch] = +t;
+        });
+      }
+    } catch(e){ console.warn('keyin parse fail', e); }
+  }
+
+  // 2) AI 자동 배분 — bc[ch][LY 동월] × YoY 보정 (필터된 bc 기준)
+  const out = {};
+  Object.keys(bc).forEach(ch => {
+    if (ch === '기타') return;
+    if (userTargets[ch] != null) out[ch] = { value: userTargets[ch], source: 'keyin' };
+    else {
+      const ai = calcAITargetRn(ch, month, bc);
+      if (ai != null) out[ch] = { value: ai, source: 'ai' };
+    }
+  });
+  // user 입력만 있고 db 데이터 없는 경우 fallback (전사 모드)
+  Object.entries(userTargets).forEach(([ch, v]) => {
+    if (!out[ch]) out[ch] = { value: v, source: 'keyin' };
+  });
+  return out;
+}
+
+// === Section 3 (NEW): 사업장별 위험도 등급 ===
+// FCST 기준 목표 달성률 → A/B/C/D 등급 부여 + 판단 문구
+function riskGrade(fAch){
+  if (fAch == null || isNaN(fAch)) return { grade: '—', cls: '', msg: '데이터 없음', action: '—' };
+  if (fAch >= 100) return { grade: 'A', cls: 'A', msg: '목표 초과 (100%+)', action: '추가 객실 확보 검토' };
+  if (fAch >= 85)  return { grade: 'B', cls: 'B', msg: '정상 진행 (85~100%)', action: '모니터링' };
+  if (fAch >= 70)  return { grade: 'C', cls: 'C', msg: '목표 미달 (70~85%)', action: '채널 프로모션 필요' };
+  return                  { grade: 'D', cls: 'D', msg: '긴급 대응 (70% 미만)', action: '단가 조정 또는 노출 강화 필요' };
+}
+
+function renderRiskTable(){
+  const tbl = document.getElementById('risk-table');
+  if (!tbl) return;
+  if (!DATA.otb){ tbl.innerHTML = '<tbody><tr><td class="empty" colspan="8">otb_data.json 로드 실패</td></tr></tbody>'; return; }
+  const m = STATE.month;
+  const monthSnap = (DATA.otb.allMonths || {})[String(m)] || {};
+  let props = monthSnap.byProperty || [];
+
+  // 권역/사업장 필터 (사이드바 선택 반영)
+  if (STATE.prop !== 'ALL'){
+    props = props.filter(p => p.name === STATE.prop);
+  } else if (STATE.region !== 'ALL'){
+    props = props.filter(p => p.region === STATE.region);
+  }
+
+  if (!props.length){
+    tbl.innerHTML = '<tbody><tr><td class="empty" colspan="8">선택 필터에 매칭되는 사업장 없음</td></tr></tbody>';
+    return;
+  }
+
+  const regionLabels = { vivaldi: '비발디', central: '중부', south: '남부', apac: 'APAC', unknown: '—' };
+
+  // FCST 기준 목표 달성률 = fcst_achievement (FCST/Budget*100). null이면 rns_achievement fallback.
+  const enriched = props.map(p => {
+    const fAch = p.fcst_achievement != null ? p.fcst_achievement
+               : (p.rns_budget > 0 && p.rns_fcst != null ? (p.rns_fcst / p.rns_budget * 100) : null);
+    const ach = p.rns_achievement;
+    const yoy = p.rns_yoy;
+    return { ...p, fAch, ach, yoy, grade: riskGrade(fAch) };
+  });
+
+  // 위험도 D → C → B → A 순 정렬 (긴급 먼저)
+  const order = { D: 0, C: 1, B: 2, A: 3, '—': 4 };
+  enriched.sort((a,b) => {
+    if (order[a.grade.grade] !== order[b.grade.grade]) return order[a.grade.grade] - order[b.grade.grade];
+    return (a.fAch || 0) - (b.fAch || 0);
+  });
+
+  tbl.innerHTML = `
+    <thead><tr>
+      <th>등급</th>
+      <th>사업장</th>
+      <th>권역</th>
+      <th>FCST 달성률</th>
+      <th>Gap</th>
+      <th>실적 / Budget</th>
+      <th>YoY</th>
+      <th>판단</th>
+    </tr></thead>
+    <tbody>
+      ${enriched.map(p => {
+        const g = p.grade;
+        const gap = p.fAch != null ? (p.fAch - 100) : null;
+        const gapCls = gap != null ? (gap >= 0 ? 'pos' : 'neg') : '';
+        const gapStyle = gap != null && gap < -15 ? 'font-weight:700' : '';
+        return `<tr>
+          <td><span class="risk-dot ${g.cls}">${g.grade}</span></td>
+          <td><span class="name">${(p.name||'').replace(/^\d+\./,'')}</span></td>
+          <td><span class="region">${regionLabels[p.region] || p.region || '—'}</span></td>
+          <td>${p.fAch != null ? fmt.pct(p.fAch) : '—'}</td>
+          <td class="${gapCls}" style="${gapStyle}">${gap != null ? (gap >= 0 ? '+' : '') + gap.toFixed(1) + 'p' : '—'}</td>
+          <td>${fmt.num(p.rns_actual)} / ${fmt.num(p.rns_budget)}</td>
+          <td class="${(p.yoy||0)>=0?'pos':'neg'}">${p.yoy != null ? fmt.signed(p.yoy) : '—'}</td>
+          <td><span class="risk-msg ${g.cls}">▸ ${g.action}</span></td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  `;
+}
+
+function renderPerfTable(){
+  const titleEl = document.getElementById('seg-title');
+  const subEl = document.getElementById('seg-sub');
+  const tbl = document.getElementById('perf-table');
+  if (!DATA.db){ tbl.innerHTML = '<tbody><tr><td class="empty" colspan="10">db_aggregated.json 로드 실패</td></tr></tbody>'; return; }
+  const m = STATE.month;
+  const target = '2026' + String(m).padStart(2, '0');
+  const lastY = '2025' + String(m).padStart(2, '0');
+  const bc = getScopedByChannel();  // 사업장/권역 필터 반영
+  const map = getChannelSegmentMap();
+
+  // 사업장 필터 적용 여부 (scope label 표시)
+  const propLabel = STATE.prop !== 'ALL'
+    ? STATE.prop.replace(/^\d+\./, '')
+    : (STATE.region !== 'ALL' ? ((REGION_DEFS.find(r => r.key === STATE.region) || {}).label || STATE.region) + ' 권역' : '전사');
+  const isScoped = STATE.prop !== 'ALL' || STATE.region !== 'ALL';
+
+  // 거래처 리스트 — '기타' 제외, OTA/G-OTA만 (사용자 요청: Inbound 스킵)
+  let channels = Object.keys(bc).filter(ch => ch !== '기타' && (map[ch] === 'OTA' || map[ch] === 'G-OTA'));
+  if (STATE.chSegment !== 'ALL'){
+    channels = channels.filter(ch => map[ch] === STATE.chSegment);
+  }
+
+  // 기획전 매핑 — campaign 채널명에 거래처 substring 매칭
+  const camps = filteredCampaigns();
+  const cleanCount = {};
+  camps.forEach(c => {
+    const chRaw = (c['채널'] || '').toLowerCase();
+    Object.keys(bc).forEach(chName => {
+      if (chRaw.indexOf(chName.toLowerCase()) !== -1){
+        cleanCount[chName] = (cleanCount[chName] || 0) + 1;
+      }
+    });
+  });
+
+  // strategy-keyin 목표 (localStorage) — 사업장/권역 필터 시 AI 만 사용
+  const keyinTargets = getChannelTargetsFromKeyin(m, bc); // {ch: {value, source: 'keyin'|'ai'}}
+  const keyinCount = Object.values(keyinTargets).filter(v => v.source === 'keyin').length;
+  const aiCount = Object.values(keyinTargets).filter(v => v.source === 'ai').length;
+
+  titleEl.textContent = `${m}월 거래처별 진행 현황 — ${propLabel} ${STATE.chSegment === 'ALL' ? '(OTA + G-OTA)' : '(' + STATE.chSegment + ')'}`;
+  const scopeNote = isScoped ? `<b style="color:var(--gold-bright)">${propLabel}</b> 필터 적용 · ` : '';
+  const keyinNote = keyinCount + aiCount > 0
+    ? `${scopeNote}✓ 목표 ${keyinCount + aiCount}개 거래처 — ${isScoped ? `AI 1차 배분 ${aiCount}건 (해당 사업장 LY × YoY 보정)` : `strategy-keyin 키인 ${keyinCount}건 + AI 1차 배분 ${aiCount}건 (전년(동기간) 동월 LY × YoY 보정)`}`
+    : `${scopeNote}⚠ 목표 데이터 없음 — 해당 ${isScoped ? '사업장/권역의 ' : ''}LY 데이터 확인 필요`;
+  subEl.innerHTML = `${channels.length}개 거래처 · ${keyinNote}`;
+
+  if (!channels.length){
+    const msg = isScoped
+      ? `${propLabel} ${STATE.chSegment === 'ALL' ? '' : '· ' + STATE.chSegment + ' '}거래처 데이터 없음`
+      : '선택 세그먼트의 거래처 없음';
+    tbl.innerHTML = `<tbody><tr><td class="empty" colspan="10">${msg}</td></tr></tbody>`;
+    return;
+  }
+
+  const sorted = [...channels].sort((a, b) => {
+    const aNet = (bc[a][target] || {}).net_rn || 0;
+    const bNet = (bc[b][target] || {}).net_rn || 0;
+    return bNet - aNet;
+  });
+
+  tbl.innerHTML = `
+    <thead><tr>
+      <th>거래처</th>
+      <th>세그먼트</th>
+      <th>목표(Budget)</th>
+      <th>실적 RN</th>
+      <th>달성률</th>
+      <th>전년 <span style="font-size:0.75em;opacity:0.55;font-weight:normal">(동기간)</span></th>
+      <th>YoY</th>
+      <th>기획전</th>
+      <th>주간픽업</th>
+      <th>ADR</th>
+    </tr></thead>
+    <tbody>
+      ${sorted.map(ch => {
+        const cur = bc[ch][target] || {};
+        const ly = bc[ch][lastY] || {};
+        const seg = map[ch] || '—';
+        const net = cur.net_rn || 0;
+        const lyNet = ly.net_rn || 0;
+        const yoy = lyNet > 0 ? ((net - lyNet) / lyNet * 100) : null;
+        const adr = cur.adr || 0;
+        const wkPickup = Math.round(net / 4);
+        const cnt = cleanCount[ch] || 0;
+        const tgtObj = keyinTargets[ch];
+        const target_rn = tgtObj ? tgtObj.value : null;
+        const tgtSrc = tgtObj ? tgtObj.source : null;
+        const ach = target_rn ? (net / target_rn * 100) : null;
+        const c = ach != null ? achClass(ach) : null;
+        // 목표 셀: keyin = gold + 별표, ai = muted + AI 배지
+        const tgtCell = target_rn != null
+          ? (tgtSrc === 'keyin'
+             ? `<span style="color:var(--gold-bright);font-weight:700" title="strategy-keyin 사용자 입력">${fmt.num(target_rn)} ★</span>`
+             : `<span style="color:var(--ink-soft)" title="AI 1차 배분 (전년(동기간) 동월 LY × YoY 보정)">${fmt.num(target_rn)} <span style="font-size:9px;color:var(--info);background:var(--info-bg);padding:1px 4px;border-radius:2px;font-weight:700">AI</span></span>`)
+          : '<span style="color:var(--ink-faint)">—</span>';
+        return `<tr>
+          <td class="name">${ch}</td>
+          <td style="font-family:var(--mono);font-size:11px;color:${seg==='OTA'?'#5a9fc4':seg==='G-OTA'?'#a855f7':'var(--ink-faint)'};font-weight:700">${seg}</td>
+          <td>${tgtCell}</td>
+          <td>${fmt.num(net)}</td>
+          <td>${ach != null ? '<span class="ach-cell"><span class="mini-bar"><span class="mini-fill ' + c + '" style="width:' + Math.min(ach,100) + '%"></span></span><span class="badge ' + c + '">' + fmt.pct(ach) + '</span></span>' : '<span style="color:var(--ink-faint)">—</span>'}</td>
+          <td>${fmt.num(lyNet)}</td>
+          <td class="${(yoy||0)>=0?'pos':'neg'}">${yoy != null ? fmt.signed(yoy) : '—'}</td>
+          <td>${cnt}건</td>
+          <td>${fmt.num(wkPickup)}</td>
+          <td>${adr ? fmt.num(adr) : '—'}</td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  `;
+}
+
+// === Section 6: RM FCST 추이 — 5 라인 (전체/GS전체/OTA/G-OTA/Inbound) ===
+// 데이터 검증: rm_fcst_trend.json 의 properties.* 합산 = rm_fcst.json regions 합산 (215,280 일치 확인)
+// segments(OTA+G-OTA+Inbound) 는 GS팀 직접 관할 일부 — D멤버스/FIT 미포함
+// 따라서 "전체"는 properties.rm_fcst_rn 합산, "GS전체"는 segments 합산
+function renderFcstTrend(){
+  if (!DATA.fcstTrend){
+    document.getElementById('fcst-sub').textContent = 'rm_fcst_trend.json 로드 실패';
+    return;
+  }
+  const snaps = DATA.fcstTrend.snapshots || [];
+  const targetMonth = `2026-${String(STATE.month).padStart(2,'0')}`;
+  const usePropertyLevel = STATE.prop !== 'ALL';
+  const segNames = ['OTA', 'G-OTA', 'Inbound'];
+
+  // 시계열: 각 스냅샷의 (전체 budget, 전체 fcst, segments)
+  const series = [];
+  snaps.forEach(s => {
+    const sd = s._snapshot_date;
+    if (!sd) return;
+    if (usePropertyLevel){
+      const propData = (s.properties || {})[STATE.prop];
+      if (!propData) return;
+      const monthData = propData[targetMonth];
+      if (!monthData) return;
+      const segs = monthData.segments || {};
+      series.push({
+        date: sd,
+        totalBudget: monthData.rm_budget_rn || 0,
+        totalFcst: monthData.rm_fcst_rn || 0,
+        segments: segs
+      });
+    } else {
+      const props = s.properties || {};
+      let totalB = 0, totalF = 0;
+      const segAgg = { 'OTA': {b:0,f:0}, 'G-OTA': {b:0,f:0}, 'Inbound': {b:0,f:0} };
+      Object.values(props).forEach(p => {
+        const md = p[targetMonth];
+        if (!md) return;
+        totalB += md.rm_budget_rn || 0;
+        totalF += md.rm_fcst_rn || 0;
+        const segs = md.segments || {};
+        segNames.forEach(sn => {
+          const sd2 = segs[sn] || {};
+          segAgg[sn].b += sd2.rm_budget_rn || 0;
+          segAgg[sn].f += sd2.rm_fcst_rn || 0;
+        });
+      });
+      if (totalB === 0 && totalF === 0) return;
+      const segOut = {};
+      segNames.forEach(sn => { segOut[sn] = { rm_budget_rn: segAgg[sn].b, rm_fcst_rn: segAgg[sn].f }; });
+      series.push({
+        date: sd,
+        totalBudget: totalB,
+        totalFcst: totalF,
+        segments: segOut
+      });
+    }
+  });
+
+  const meta = document.getElementById('fcst-snap-meta');
+  const grid = document.getElementById('fcst-mini-grid');
+  if (!series.length){
+    // 모든 mini chart 정리
+    Object.values(_fcstMiniCharts || {}).forEach(c => c && c.destroy());
+    _fcstMiniCharts = {};
+    if (grid) grid.innerHTML = '<div class="empty" style="grid-column:1/-1">선택 월 RM FCST 스냅샷 없음</div>';
+    if (meta) meta.textContent = `${targetMonth} 스냅샷 없음`;
+    return;
+  }
+  const last12 = series.slice(-12);
+  const labels = last12.map(x => x.date);
+  const lastSnap = last12[last12.length - 1];
+  const segColors = { 'OTA': '#5a9fc4', 'G-OTA': '#a855f7', 'Inbound': '#4caf6f' };
+
+  // 5 mini chart 정의: 각각 자체 스케일 + Budget(점선) + FCST(실선)
+  const miniSpecs = [
+    { key: 'total', title: '전체 (RM PDF)', color: '#e6b970',
+      fcst: x => x.totalFcst, budget: x => x.totalBudget },
+    { key: 'gs', title: 'GS전체 (OTA+G-OTA+Inb)', color: '#c9a063',
+      fcst: x => segNames.reduce((a, sn) => a + ((x.segments[sn] || {}).rm_fcst_rn || 0), 0),
+      budget: x => segNames.reduce((a, sn) => a + ((x.segments[sn] || {}).rm_budget_rn || 0), 0) },
+    { key: 'OTA', title: 'OTA', color: segColors.OTA,
+      fcst: x => (x.segments.OTA || {}).rm_fcst_rn || 0,
+      budget: x => (x.segments.OTA || {}).rm_budget_rn || 0 },
+    { key: 'G-OTA', title: 'G-OTA', color: segColors['G-OTA'],
+      fcst: x => (x.segments['G-OTA'] || {}).rm_fcst_rn || 0,
+      budget: x => (x.segments['G-OTA'] || {}).rm_budget_rn || 0 },
+    { key: 'Inbound', title: 'Inbound (여행사)', color: segColors.Inbound,
+      fcst: x => (x.segments.Inbound || {}).rm_fcst_rn || 0,
+      budget: x => (x.segments.Inbound || {}).rm_budget_rn || 0 },
+  ];
+
+  // 각 spec 별 카드 + canvas DOM 생성
+  grid.innerHTML = miniSpecs.map(spec => {
+    const lastF = spec.fcst(lastSnap);
+    const lastB = spec.budget(lastSnap);
+    const gap = lastB > 0 ? ((lastF - lastB) / lastB * 100) : null;
+    const gapText = gap == null ? '—' : (gap >= 0 ? '+' : '') + gap.toFixed(1) + '%';
+    const tier = gap == null ? '' : (gap >= 0 ? 'tier-good' : gap > -5 ? 'tier-warn' : 'tier-bad');
+    const gapClass = gap == null ? '' : (gap >= 0 ? 'pos' : 'neg');
+    let wow = '';
+    if (last12.length >= 2){
+      const prev = last12[last12.length - 2];
+      const prevF = spec.fcst(prev);
+      const delta = lastF - prevF;
+      const dPct = prevF ? (delta / prevF * 100) : 0;
+      const sign = delta >= 0 ? '+' : '';
+      wow = `<span class="${delta >= 0 ? 'pos' : 'neg'}">${sign}${Math.round(delta).toLocaleString()} (${sign}${dPct.toFixed(1)}%)</span>`;
+    }
+    return `
+      <div class="fcst-mini ${tier}">
+        <div class="fcst-mini-label">
+          <span class="fcst-mini-title">${spec.title}</span>
+          <span class="fcst-mini-meta">전주비 ${wow}</span>
+          <span class="fcst-mini-meta ${gapClass}" style="font-weight:700;font-size:11px">${gapText}</span>
+        </div>
+        <div class="fcst-mini-canvas"><canvas id="fcst-mini-${spec.key}"></canvas></div>
+        <div class="fcst-mini-foot" style="grid-column:2">
+          <span>F <b>${Math.round(lastF).toLocaleString()}</b> / B ${Math.round(lastB).toLocaleString()}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // 각 spec 별 Chart.js 인스턴스 생성
+  if (!window._fcstMiniCharts) window._fcstMiniCharts = {};
+  const charts = window._fcstMiniCharts;
+  miniSpecs.forEach(spec => {
+    if (charts[spec.key]) charts[spec.key].destroy();
+    const ctx = document.getElementById(`fcst-mini-${spec.key}`).getContext('2d');
+    const fcstSeries = last12.map(spec.fcst);
+    const budgetSeries = last12.map(spec.budget);
+    charts[spec.key] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Budget', data: budgetSeries, borderColor: '#c9a063', borderDash: [4, 3], borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0 },
+          { label: 'FCST', data: fcstSeries, borderColor: spec.color, backgroundColor: spec.color + '22', borderWidth: 2.5, pointRadius: 2.5, fill: true, tension: 0.25 },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { mode: 'index', callbacks: { label: c => c.dataset.label + ' ' + Math.round(c.raw).toLocaleString() + '실' } }
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.35)', font: { size: 9 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 8, callback: function(v,i){ const d=this.getLabelForValue(v); if(!d) return d; const p=d.split('-'); return p.length>=3 ? parseInt(p[1])+'/'+parseInt(p[2]) : d; } } },
+          y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 9 }, maxTicksLimit: 4, callback: v => v >= 1000 ? (v/1000).toFixed(0) + 'k' : v } }
+        }
+      }
+    });
+  });
+
+  // 종합 캡션
+  if (meta){
+    const lastTotal = lastSnap.totalFcst;
+    const lastBud = lastSnap.totalBudget;
+    const gap = lastBud > 0 ? ((lastTotal - lastBud) / lastBud * 100) : null;
+    const gapText = gap == null ? '—' : (gap >= 0 ? '+' : '') + gap.toFixed(1) + '%';
+    meta.innerHTML = `최신 ${labels[labels.length-1]} · 전체 FCST ${Math.round(lastTotal).toLocaleString()}실 / Budget ${Math.round(lastBud).toLocaleString()}실 (${gapText}) · ${last12.length}개 스냅샷`;
+  }
+}
+
+// === Section 2: 채널 × 사업장 KPI 추이 진단 ===
+function renderKpiDiagnosis(){
+  const host = document.getElementById('kpi-diagnosis-wrap');
+  if (!DATA.fcstTrend || !DATA.otb){ host.innerHTML = '<div class="empty">데이터 없음</div>'; return; }
+  const m = STATE.month;
+  const targetMonth = `2026-${String(m).padStart(2,'0')}`;
+  const monthSnap = (DATA.otb.allMonths || {})[String(m)] || {};
+
+  const segCards = [];
+  const regionCards = [];
+  // 1) 세그먼트별 FCST 추이 진단 (rm_fcst_trend.json)
+  const snaps = DATA.fcstTrend.snapshots || [];
+  const segNames = ['OTA', 'G-OTA', 'Inbound'];
+  const segHistory = { 'OTA': [], 'G-OTA': [], 'Inbound': [] };
+  snaps.forEach(s => {
+    const props = s.properties || {};
+    let agg = { 'OTA': {b:0,f:0}, 'G-OTA': {b:0,f:0}, 'Inbound': {b:0,f:0} };
+    let hasData = false;
+    Object.values(props).forEach(p => {
+      const md = p[targetMonth];
+      if (!md) return;
+      hasData = true;
+      const segs = md.segments || {};
+      segNames.forEach(sn => {
+        const sd = segs[sn] || {};
+        agg[sn].b += sd.rm_budget_rn || 0;
+        agg[sn].f += sd.rm_fcst_rn || 0;
+      });
+    });
+    if (!hasData) return;
+    segNames.forEach(sn => {
+      segHistory[sn].push({ date: s._snapshot_date, b: agg[sn].b, f: agg[sn].f });
+    });
+  });
+
+  // 4개년 동월 비교 (db_aggregated.monthly_total — 우리 데이터는 otb_data.monthly 만 있음)
+  // otb_data.monthly = 단년 — 4년 비교는 byPropertySegment 로 yoy 만 추출
+  const segData = monthSnap.segmentData || {};
+
+  segNames.forEach(sn => {
+    const hist = segHistory[sn];
+    if (!hist.length){ return; }
+    const last = hist[hist.length - 1];
+    const first = hist[0];
+    const fcstChange = first.f > 0 ? ((last.f - first.f) / first.f * 100) : null;
+    const gap = last.b > 0 ? ((last.f - last.b) / last.b * 100) : null;
+    const segOtb = segData[sn] || {};
+    const otbAch = segOtb.rns_achievement;
+    const otbYoy = segOtb.rns_yoy;
+
+    // 진단 tier
+    let tier = 'good', tierLabel = '양호';
+    if (gap == null) { tier = 'warn'; tierLabel = '데이터 부족'; }
+    else if (gap < -3) { tier = 'bad'; tierLabel = '갭 확대'; }
+    else if (gap < 0) { tier = 'warn'; tierLabel = '주의'; }
+
+    // 추이 화살표
+    const trendArrow = fcstChange == null ? '—' : (fcstChange >= 1 ? '↗ 개선' : fcstChange <= -1 ? '↘ 하락' : '→ 정체');
+    const trendColor = fcstChange == null ? 'var(--ink-faint)' : (fcstChange >= 1 ? 'var(--positive)' : fcstChange <= -1 ? 'var(--negative)' : 'var(--ink-faint)');
+
+    // 채널별 액션 — 회사 기준 매핑
+    //  OTA = 국내 채널 (여기어때, 야놀자(놀유니버스), 쿠팡, 인터파크, 티몬, 네이버, 스마트인피니, 종이비행기, 프리즘)
+    //  G-OTA = 글로벌 채널 (아고다, 트립닷컴, 익스피디아, 부킹닷컴, 트립비토즈)
+    //  Inbound = 여행사 물량 (트립닷컴/아고다는 G-OTA, Inbound 아님)
+    let action = '';
+    if (sn === 'OTA'){
+      if (gap != null && gap < -3) action = `OTA 갭 ${gap.toFixed(1)}% — 여기어때·야놀자(놀) 광고 입찰 +20% 상향, 라이브방송 추가 편성. 쿠팡 와우 단독 기획전 발주.`;
+      else if (gap != null && gap >= 3) action = `OTA 초과 페이싱 ${gap.toFixed(1)}% — Mega channel 추가 push 자제, 단가 인상 검토 (ADR 최적화).`;
+      else action = `OTA 페이싱 안정 — 여기어때·야놀자 ROAS 모니터링, 카카오/G마켓 push 유지.`;
+    } else if (sn === 'G-OTA'){
+      if (gap != null && gap < -3) action = `G-OTA 갭 ${gap.toFixed(1)}% — 아고다·트립닷컴·익스피디아 키워드 광고 +20% 입찰, 글로벌 트래픽 확대. 외국인 전용 패키지 영문 노출 강화.`;
+      else if (gap != null && gap >= 3) action = `G-OTA 초과 — 글로벌 OTA 단가 마진 확보, 패키지 단가 5% 상향 검토.`;
+      else action = `G-OTA 안정 — 아고다/트립닷컴 ESG·B2B 패키지 contracting 분기 점검.`;
+    } else {
+      // Inbound = 여행사 물량
+      if (otbYoy != null && otbYoy < -10) action = `Inbound YoY ${otbYoy.toFixed(1)}% 감소 — 글로벌 여행사 contracting 점검, 인바운드 단체·MICE 기획전 신규 발주.`;
+      else action = `Inbound 여행사 물량 모니터링 — 글로벌 여행사 송객 페이스, 단체 inquiry 추적.`;
+    }
+
+    segCards.push(`
+      <div class="diag-card tier-${tier}">
+        <div class="dh"><div class="dn">${sn}</div><div class="dt">${tierLabel}</div></div>
+        <div class="dv ${gap == null ? '' : (gap >= 0 ? 'pos' : 'neg')}">${gap == null ? '—' : (gap >= 0 ? '+' : '') + gap.toFixed(1) + '%'}</div>
+        <div class="dr"><span>FCST 추이 (${hist.length}회)</span><span class="dtrend" style="color:${trendColor}">${trendArrow} ${fcstChange != null ? (fcstChange >= 0 ? '+' : '') + fcstChange.toFixed(1) + '%' : ''}</span></div>
+        <div class="dr"><span>최신 FCST / Budget</span><span>${fmt.num(last.f)} / ${fmt.num(last.b)}실</span></div>
+        ${otbAch != null ? `<div class="dr"><span>OTB 달성률</span><span>${fmt.pct(otbAch)}</span></div>` : ''}
+        ${otbYoy != null ? `<div class="dr"><span>OTB YoY</span><span style="color:${otbYoy>=0?'var(--positive)':'var(--negative)'}">${fmt.signed(otbYoy)}</span></div>` : ''}
+        <div class="dnote">▸ ${action}</div>
+      </div>
+    `);
+  });
+
+  // 권역별 진단 카드 (사업장=ALL 일 때)
+  if (STATE.prop === 'ALL'){
+    const props = monthSnap.byProperty || [];
+    const regionAgg = {};
+    props.forEach(p => {
+      const r = p.region || 'unknown';
+      if (!regionAgg[r]) regionAgg[r] = { budget: 0, actual: 0, fcst: 0, last: 0, props: [] };
+      regionAgg[r].budget += p.rns_budget || 0;
+      regionAgg[r].actual += p.rns_actual || 0;
+      regionAgg[r].fcst += p.rns_fcst || 0;
+      regionAgg[r].last += p.rns_last || 0;
+      regionAgg[r].props.push(p);
+    });
+    const regionLabels = { vivaldi: '비발디', central: '한국중부', south: '한국남부', apac: '아시아퍼시픽' };
+    Object.entries(regionAgg).forEach(([r, agg]) => {
+      const ach = agg.budget > 0 ? (agg.actual / agg.budget * 100) : null;
+      const fcstAch = agg.budget > 0 ? (agg.fcst / agg.budget * 100) : null;
+      const yoy = agg.last > 0 ? ((agg.actual - agg.last) / agg.last * 100) : null;
+      // worst performer
+      const worst = [...agg.props].sort((a,b) => (a.rns_achievement||0) - (b.rns_achievement||0))[0];
+      const best = [...agg.props].sort((a,b) => (b.rns_achievement||0) - (a.rns_achievement||0))[0];
+      let tier = 'good';
+      if (fcstAch != null && fcstAch < 90) tier = 'bad';
+      else if (fcstAch != null && fcstAch < 100) tier = 'warn';
+      let action = '';
+      if (worst && (worst.rns_achievement||0) < 50){
+        action = `${worst.name.replace(/^\d+\./,'')} ${(worst.rns_achievement||0).toFixed(1)}% — 권역 최저, 즉시 채널 mix 점검·취소율 분석. ${best ? best.name.replace(/^\d+\./,'') + '(' + (best.rns_achievement||0).toFixed(1) + '%)' + ' 의 채널 패턴 차용' : ''}`;
+      } else {
+        action = `평균 OTB ${ach != null ? ach.toFixed(1) : '—'}%, 사업장 ${agg.props.length}개 — ${best ? best.name.replace(/^\d+\./,'') + ' 견인' : ''}, ${worst ? worst.name.replace(/^\d+\./,'') + ' 점검' : ''}`;
+      }
+      regionCards.push(`
+        <div class="diag-card tier-${tier}">
+          <div class="dh"><div class="dn">${regionLabels[r] || r}</div><div class="dt">${agg.props.length}개 사업장</div></div>
+          <div class="dv ${ach != null && ach >= 90 ? 'pos' : ach != null && ach < 70 ? 'neg' : 'warn'}">${fmt.pct(ach)}</div>
+          <div class="dr"><span>FCST 달성</span><span>${fmt.pct(fcstAch)}</span></div>
+          <div class="dr"><span>YoY</span><span style="color:${(yoy||0)>=0?'var(--positive)':'var(--negative)'}">${fmt.signed(yoy)}</span></div>
+          <div class="dr"><span>실적/Budget</span><span>${fmt.num(agg.actual)} / ${fmt.num(agg.budget)}실</span></div>
+          <div class="dnote">▸ ${action}</div>
+        </div>
+      `);
+    });
+  }
+
+  // 2줄 분리: 위 = 세그먼트 (3개), 아래 = 권역 (4개)
+  let html = '';
+  if (segCards.length){
+    html += `<div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--ink-faint);text-transform:uppercase;margin:0 0 8px;font-weight:700">SEGMENT — RM FCST 갭 추이</div>`;
+    html += `<div class="diag-grid" style="grid-template-columns:repeat(${Math.min(segCards.length, 3)}, 1fr)">${segCards.join('')}</div>`;
+  }
+  if (regionCards.length){
+    html += `<div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--ink-faint);text-transform:uppercase;margin:18px 0 8px;font-weight:700">REGION — OTB 달성 진단</div>`;
+    html += `<div class="diag-grid" style="grid-template-columns:repeat(${Math.min(regionCards.length, 4)}, 1fr)">${regionCards.join('')}</div>`;
+  }
+  if (!segCards.length && !regionCards.length) html = '<div class="empty">진단 데이터 없음</div>';
+  host.innerHTML = html;
+}
+
+// === 월별 시즌 배너 (sec-monthly 상단 표시) ===
+function renderSeasonBar(){
+  const host = document.getElementById('season-context-bar');
+  if (!host) return;
+  const m = STATE.month;
+  const ctx = SEASON_CONTEXT[m];
+  if (!ctx){ host.innerHTML = ''; return; }
+  host.innerHTML = `
+    <div class="season-bar">
+      <span class="sb-mon">${m}월</span>
+      <span class="sb-name">${ctx.name}</span>
+      <span class="sb-divider"></span>
+      <div class="sb-traits">
+        ${ctx.traits.map(t => `<span class="sb-trait">${t}</span>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// === Section 3: 월별 차별화 전략 ===
+function renderMonthlyStrategy(){
+  renderSeasonBar();
+  const host = document.getElementById('monthly-strategy-wrap');
+  if (!DATA.otb){ host.innerHTML = '<div class="empty">데이터 없음</div>'; return; }
+  const m = STATE.month;
+  const today = new Date();
+  const curMonth = today.getMonth() + 1;
+  const role = m === curMonth ? 'current' : m === ((curMonth % 12) + 1) ? 'next' : 'far';
+  const summary = getSelectedSummary();
+  if (!summary){ host.innerHTML = '<div class="empty">선택 월 데이터 없음</div>'; return; }
+  const ctxStrategyEl = document.getElementById('ctx-strategy-month');
+  if (ctxStrategyEl) ctxStrategyEl.textContent = m;
+
+  const seasonCtx = SEASON_CONTEXT[m] || { name: '—', traits: [] };
+  const ach = summary.rns_achievement || 0;
+  const fAch = summary.fcst_achievement || 0;
+  const gap = fAch - 100;
+  const adrYoy = summary.adr_yoy;
+  const camps = filteredCampaigns();
+  const liveCount = camps.filter(c => campStatus(c) === 'live').length;
+  const soonCount = camps.filter(c => campStatus(c) === 'soon').length;
+  const monthSnap = (DATA.otb.allMonths || {})[String(m)] || {};
+  const segData = monthSnap.segmentData || {};
+
+  const blocks = [];
+
+  // ── 블록 0: 시즌 특성 기반 액션 (월별 차별화 핵심)
+  if (seasonCtx.traits.length){
+    const priority = (m === 7 || m === 8 || m === 5) ? 'A' : (m === 3 || m === 4 || m === 6 || m === 9 || m === 10 || m === 12) ? 'B' : 'C';
+    const title = `${m}월 시즌 특성 — ${seasonCtx.name} 대응 전략`;
+    const desc = `${m}월은 ${seasonCtx.name} 구간 — ${seasonCtx.traits.slice(0,2).join(' / ')} 특성이 두드러진다. 시즌 컨텍스트 기반 ${priority === 'A' ? '최우선 대응' : priority === 'B' ? '집중 관리' : '효율 운영'} 모드.`;
+    // 액션을 traits에서 매핑 - 각 trait를 1개 액션으로
+    const actionMap = {
+      '신년 연휴 마감': '신년 연휴 잔여 재고 단가 조정 + 직판 채널 마감 push',
+      '설 연휴 대비': '설 연휴(2월) 사전 판매 — 인플루언서/카카오 톡예약 contracting',
+      '주중 공실 최대': '주중 NR 비율 확대 + 단가 인하 시뮬레이션, 비즈니스 타겟 패키지',
+      'NR 비율 확대 검토': '환불불가(NR) 단가 -5~7% 시뮬레이션, 잔여 재고 회전 강화',
+      '설 연휴 집중': '설 연휴 OCC 최대치 — ADR +5% 상향, 익월 대비 가격 차별화',
+      '스키시즌 후반': '스키 시즌 마감 임박 — 비발디/오크밸리 라이브방송 단독 발주',
+      '봄 시즌 사전 편성': '봄 시즌(3~4월) 4주 lead time 채널 발주 — 카카오메이커스/인플루언서',
+      '밸런타인/졸업 패키지': '밸런타인·졸업 시즌 한정 패키지 — G마켓/티딜 단독 노출',
+      '봄 시즌 개막': '봄 시즌 진입 — 벚꽃 패키지 인플루언서 contracting (남부 우선)',
+      '벚꽃/졸업 수요': '벚꽃 지역(여수·진도·경주) 주말 ADR +5% 상향, 평일 보완 기획전',
+      '주말 OCC 상승': '주말 만실 관리 + 평일 라이브방송 push (여기어때·야놀자)',
+      '평일 보완 필요': '평일 NR/Direct booking 강화, 카카오 톡딜·G마켓 평일 단독',
+      '봄 여행 성수기': '봄 여행 성수기 — G-OTA(아고다·트립닷컴) 입찰 +20%, 외국인 유입',
+      '워터파크 개장 준비': '워터파크(비발디/델피노) 개장 사전 판매 — 4주 lead time 인플루언서',
+      '가정의달 사전 판매': '5월 가정의달 사전 판매 — 가족형/키즈 패키지 4주 윈도우 발주',
+      'G-OTA 해외 유입↑': 'G-OTA 키워드 광고 강화 — 아고다/트립닷컴 메인 슬롯 확보',
+      '가정의 달': '가정의달 가족형/키즈/펫 상품 — 카카오쇼핑라이브·인플루언서 push',
+      '연휴/징검다리 수요': '5월 연휴/징검다리 — 단가 +5~10% 상향, 만실 관리',
+      '주말 선점 수요 높음': '주말 선점 — 단가 협상 보수적, 마진 극대화 ADR 정책',
+      '주중 보완 필요': '주중 OCC 보완 — 평일 한정 NR 발주, 톡딜/티딜 평일 단독',
+      '가족형/키즈/워터파크/펫 상품 반응 가능': '가족형/키즈/워터파크/펫 라인업 — 마이리얼트립·놀유니버스 패키지',
+      '여름 성수기 전환 전 구간': '여름 성수기 전환 윈도우 — 7월 워터파크 4주 lead time 발주',
+      '장마 변수': '장마 변수 헤지 — 워터파크 indoor + 액티비티 우천 패키지',
+      '주중·비수기 객실 소진 필요': '주중 객실 소진 — 카카오 톡딜/G마켓 평일 한정 push',
+      '얼리버드/워터파크 연계 필요': '워터파크+숙박 얼리버드 — 마이리얼트립 단독 발주',
+      '본격 성수기': '본격 성수기 — ADR 상한선 활용, 마진 극대화 정책',
+      'ADR 상향 가능': 'ADR +10~15% 상향, 잔여 재고 단가 최적화',
+      '주말 만실 관리': '주말 만실 관리 — 광고 ROAS 모니터링, 효율 채널 집중',
+      'NR 기획전 런칭': 'NR 단독 기획전 — 인플루언서·카카오 톡예약 단독 발주',
+      'OB 관리': 'Overbooking(OB) 관리 — 채널별 capacity 점검, no-show율 모니터링',
+      '8월 중순 이후 비수기 전환': '8월 중순 비수기 전환 — 하위 OCC 사업장 집중 발주',
+      'ADR 하방 관리': 'ADR 하방 관리 — 단가 보호 + Mega channel 의존도 점검',
+      '추석 연박 사전 편성': '추석 연박 패키지 사전 편성 — 9월 인플루언서 contracting',
+      '하위 사업장 집중': '하위 사업장(달성률 70% 미만) 광고 +20% 입찰, 채널 mix 점검',
+      '추석 연휴': '추석 연휴 — 가족형 패키지, ADR 상향, 연박 인센티브',
+      '가을 시즌 시작': '가을 시즌 시작 — 단풍 지역(남부·중부) 패키지 contracting',
+      '단풍 패키지': '단풍 시즌 한정 패키지 — 인플루언서·카카오 메이커스 4주 윈도우',
+      '인바운드 회복 기대': 'Inbound 회복 — 글로벌 여행사 contracting 단가 갱신',
+      '단풍 시즌': '단풍 시즌(10월) — 남부·중부 ADR +5%, 주말 선점 push',
+      '주말 OCC 반등': '주말 OCC 반등 활용 — Mega channel 마감 임박 push',
+      '평일 프로모션 강화': '평일 프로모션 — G마켓 라이브/카카오 톡딜 평일 단독',
+      '겨울 사전 편성': '겨울(12월~1월) 사전 편성 — 스키/연말 인플루언서 contracting',
+      '비수기 진입': '비수기 진입 — NR 비율 확대, 단가 -5~7% 시뮬레이션',
+      '블프 할인': '블랙프라이데이 단독 할인 — G마켓/티딜/와디즈 11월 말 단독',
+      '크리스마스 사전판매': '크리스마스 사전판매 — 마이리얼트립·인플루언서 4주 윈도우',
+      '스키장 개장': '스키장 개장(비발디 등) — 라이브방송·SNS 노출 강화',
+      '크리스마스/연말': '크리스마스/연말 — 단가 +10~15% 상향, 만실 관리',
+      '스키 시즌 본격화': '스키 시즌 — 비발디·오크밸리 단독 기획전, 인플루언서 contracting',
+      '신년 패키지': '신년 패키지 사전 편성 — 1월 인플루언서/카카오메이커스 contracting',
+      '겨울 워터파크': '겨울 워터파크(델피노/비발디) — 실내 leisure 패키지 노출 강화'
+    };
+    const actions = seasonCtx.traits.map(t => `<b>${t}</b> — ${actionMap[t] || t + ' 시즌 특성에 맞춘 채널 mix 점검'}`);
+    blocks.push({priority, title, desc, actions, kpi: [`${seasonCtx.name} 대응 액션 ${actions.length}건 실행`, `시즌 특성 매칭 기획전 ${liveCount + soonCount}건 추적`, `${m}월 OTB 페이스 ${priority==='A'?'95%+':'안정권'}`]});
+  }
+
+  // ── 블록 1: 시기 역할 (current/next/far) 기반 핵심 액션
+  if (role === 'current'){
+    const priority = ach < 70 ? 'A' : ach < 85 ? 'B' : 'C';
+    const title = `${m}월 (당월) — 누적 ${fmt.pct(ach)} 페이스 ${priority === 'A' ? '회복' : priority === 'B' ? '안정' : '관리'} 모드`;
+    const desc = priority === 'A'
+      ? `당월 진행 중, OTB 페이스 부진. 남은 ${30 - today.getDate()}일 내 부킹 윈도우(2~4주 lead time)에 맞춰 단기 전환 채널 집중. 카카오 예약하기 / 톡딜 / G마켓 라이브 등 transactional 채널이 핵심.`
+      : priority === 'B'
+      ? `당월 진행 중, 페이스 안정적이나 FCST 갭 ${fmt.signed(gap)} 점검. 단기 픽업 잘 잡히는 채널 유지 + ADR 최적화.`
+      : `당월 페이스 우수, 추가 노출은 자제하고 단가/믹스 최적화로 Revenue 추가 확보.`;
+    const actions = [];
+    if (gap < -3){
+      actions.push(`<b>OTA 광고 입찰 즉시 +20%</b> — 야놀자/여기어때 진성 트래픽 확대 (OTA = 국내 채널)`);
+      actions.push(`<b>G-OTA 광고 입찰</b> — 아고다/부킹닷컴/트립닷컴 키워드 강화 (G-OTA = 글로벌 OTA)`);
+      actions.push(`<b>카카오 톡예약 + 메이커스</b> 단기 발주 (lead time 7일 내)`);
+      actions.push(`<b>인플루언서 임팩트 채널</b> — @요미맘 등 검증 인플루언서 1주 내 contracting`);
+    } else if (gap >= 0){
+      actions.push(`<b>채널별 ADR 갱신</b> — 잔여 재고 단가 +5~10% 상향 검토`);
+      actions.push(`<b>OTA 광고 ROAS 모니터링</b> — 효율 낮은 키워드 컷, 예산 고효율 채널 재배분`);
+    }
+    actions.push(`현재 진행/예정 기획전 <b>${liveCount}건/${soonCount}건</b> 모니터링 + 일별 픽업 확인`);
+    blocks.push({priority, title, desc, actions, kpi: [`목표 OTB 달성 ${Math.max(95, ach + 10).toFixed(0)}%`, `FCST 갭 ${gap < -3 ? '-3% 이내' : '+5% 이상'}로 마감`, `${liveCount + soonCount}건 → 효율 추적`]});
+  } else if (role === 'next'){
+    const priority = fAch < 95 ? 'A' : fAch < 100 ? 'B' : 'C';
+    const title = `${m}월 (익월) — Pre-launch 윈도우 / FCST 갭 ${fmt.signed(gap)}`;
+    const desc = priority === 'A'
+      ? `익월 FCST 갭 확대 우려. 4~5주 lead time 채널 즉시 발주가 효과적인 시점 — OTA(여기어때·야놀자 라이브방송) + G-OTA(아고다·트립닷컴 키워드 광고) + 카카오메이커스 + 인플루언서 contracting 까지 동시 가동.`
+      : priority === 'B'
+      ? `익월 FCST 안정권 진입 중. 추가 push 보다 단가/믹스 점검 + 사업장별 약점 보강 우선.`
+      : `익월 FCST 안정. 단가 인상 여력 확보, ADR 최적화 집중.`;
+    const actions = [];
+    if (priority !== 'C'){
+      actions.push(`<b>OTA · 여기어때 라이브방송</b> — 발주 후 7일 내 노출, 즉시 협의 (국내 OTA)`);
+      actions.push(`<b>OTA · 야놀자(놀) 슈퍼세일</b> — 단독 기획전 발주, lead time 4~5주`);
+      actions.push(`<b>G-OTA · 아고다/트립닷컴</b> — 키워드 광고 +20% 입찰, 글로벌 트래픽 확보`);
+      actions.push(`<b>카카오메이커스</b> — 4주 lead time, 발주 today`);
+      actions.push(`<b>인플루언서 contracting</b> — @요미맘/@마이아 등 고성과 인플루언서 우선 확보`);
+    } else {
+      actions.push(`<b>단가 인상</b> — 채널별 ADR +5~7% 상향, 잔여 재고 마진 극대화`);
+      actions.push(`<b>OTA 광고 ROAS</b> — 효율 낮은 키워드 컷, 고효율 채널 예산 집중`);
+    }
+    blocks.push({priority, title, desc, actions, kpi: [`FCST 달성 ${Math.max(100, fAch).toFixed(0)}% 진입`, `진행/예정 기획전 ${liveCount + soonCount}건 → 추가 ${priority==='A'?'5건+':'2건+'}`, `lead time 4~6주 채널 확보`]});
+  } else {
+    // far month
+    const priority = camps.length < 5 ? 'A' : camps.length < 10 ? 'B' : 'C';
+    const title = `${m}월 (선행 월) — 채널 contracting + 인플루언서 우선 확보`;
+    const desc = `lead time 8주+ 활용 가능한 시점. 인플루언서 우선계약, 패키지 협의, 항공+레저 결합 상품 기획 적기. 현재 매칭 기획전 ${camps.length}건 — ${priority === 'A' ? '신규 발굴 시급' : priority === 'B' ? '추가 확보' : '추적 모드'}.`;
+    const actions = [
+      `<b>인플루언서 독점 계약</b> — @요미맘(2,540실 실적), @비글리맘(969실), @바이쏨(1,025실) 등 우선`,
+      `<b>여행사 패키지</b> — 마이리얼트립·하나투어 5월 중 contracting`,
+      `<b>OTA 사전 광고</b> — 8주 윈도우 활용해 키워드 선점`,
+      `<b>패키지 상품 기획</b> — 조식+액티비티(전환율 ↑), 멤버스+OTA 블렌딩 검토`
+    ];
+    blocks.push({priority, title, desc, actions, kpi: [`인플루언서 ${priority==='A'?'5명+':'3명+'} 사전 contracting`, `여행사 패키지 ${priority==='A'?'5건+':'2건+'} 발주`, `사전 노출 채널 ${priority==='A'?'10건+':'5건+'} 확보`]});
+  }
+
+  // ── 블록 2: 채널 mix 진단 (segmentData 기반)
+  const segPriority = (() => {
+    const ota = (segData['OTA'] || {}).rns_achievement;
+    const gota = (segData['G-OTA'] || {}).rns_achievement;
+    const inb = (segData['Inbound'] || {}).rns_achievement;
+    const worst = [
+      { name: 'OTA', ach: ota }, { name: 'G-OTA', ach: gota }, { name: 'Inbound', ach: inb }
+    ].filter(x => x.ach != null).sort((a,b) => a.ach - b.ach)[0];
+    return worst;
+  })();
+  if (segPriority){
+    const ach = segPriority.ach;
+    const tier = ach < 70 ? 'A' : ach < 85 ? 'B' : 'C';
+    const title = `${segPriority.name} 세그먼트 우선 보강 — 달성률 ${fmt.pct(ach)}`;
+    // 세그먼트 정의 (회사 기준):
+    //  OTA = 국내 채널 (야놀자, 여기어때, 쿠팡, 인터파크, 티몬, 네이버, 종이비행기 등)
+    //  G-OTA = 글로벌 OTA (아고다, 부킹닷컴, 트립닷컴, 익스피디아, 트립비토즈)
+    //  Inbound = 여행사 물량 (글로벌 여행사 송객, 인바운드 단체)
+    const desc = `${m}월 세그먼트 중 가장 부진. ${segPriority.name === 'OTA' ? '국내 OTA(야놀자·여기어때·쿠팡) 의존도 점검 + Direct 부킹 채널 강화' : segPriority.name === 'G-OTA' ? '글로벌 OTA(아고다·트립닷컴·부킹닷컴) 캠페인 강화' : 'Inbound — 글로벌 여행사 contracting + 인바운드 단체 영업 강화'} 우선.`;
+    const actions = segPriority.name === 'OTA'
+      ? [`<b>야놀자/여기어때 광고</b> 입찰 +15~20% — 국내 OTA 진성 트래픽`, `<b>YH/HW Direct</b> 노출 강화`, `<b>국내 OTA 단가 협상</b> — 수수료 최적화 (쿠팡/인터파크/티몬)`, `<b>취소율 모니터링</b> — high-cancel 국내 OTA 차단`]
+      : segPriority.name === 'G-OTA'
+      ? [`<b>아고다/부킹닷컴 키워드 광고</b> 입찰 +15~20% — 글로벌 트래픽 확대`, `<b>트립닷컴 ESG/B2B 패키지</b> 신규 contracting`, `<b>익스피디아 광고</b> 입찰 강화`, `<b>외국인 전용 패키지</b> — 영문 노출 강화 + 글로벌 OTA 메인 슬롯 확보`]
+      : [`<b>글로벌 여행사 contracting</b> — 일본/대만/동남아 송객 여행사 점검 및 단가 갱신`, `<b>인바운드 단체·MICE 기획전</b> — 영업장별 그룹 inquiry 추적, 단체 quote 회신 SLA 강화`, `<b>여행사 패키지 신규 발주</b> — 마이리얼트립·하나투어·놀유니버스 인바운드 전용 상품`, `<b>외국인 단체 영업</b> — KTO·CIQ·항공사 제휴 송객, 시장별(중국/대만/동남아) 차별화`];
+    blocks.push({priority: tier, title, desc, actions, kpi: [`${segPriority.name} 달성 ${(ach + 10).toFixed(0)}%+ 회복`, `세그먼트 mix 균형 ${fmt.pct(ach)} → ${fmt.pct(ach + 10)}`, `4주 내 효과 측정`]});
+  }
+
+  // ── 블록 3: ADR 액션
+  if (adrYoy != null){
+    const tier = adrYoy < -3 ? 'A' : adrYoy < 0 ? 'B' : 'C';
+    const title = `ADR YoY ${fmt.signed(adrYoy)} — ${tier === 'A' ? '단가 회복' : tier === 'B' ? '단가 점검' : '단가 강화'} 액션`;
+    const desc = adrYoy < -3
+      ? `ADR 하락 ${fmt.signed(adrYoy)}. Mega channel(OTA) 의존도 점검 + 고단가 인플루언서/직판 채널 비중 확대 필수.`
+      : adrYoy < 0
+      ? `ADR 약보합. 채널 mix 점검 + 패키지 단가 +3% 시뮬레이션.`
+      : `ADR 상승세 ${fmt.signed(adrYoy)} 활용 — high-margin 채널(인플루언서·직판·G-OTA 패키지) 비중 확대.`;
+    blocks.push({priority: tier, title, desc, actions: [
+      `<b>채널별 ADR 비교</b> — 평균보다 낮은 채널 우선 단가 협상`,
+      `<b>패키지 ADR</b> — 룸온리 대비 +20% 이상 차별화 유지`,
+      `<b>잔여 재고 단가 시뮬레이션</b> — 마감 임박 일자 ${adrYoy < 0 ? '하향 검토' : '상향 검토'}`,
+      `<b>인플루언서 단가</b> — 룰루미뇽·요미맘 등 검증 인플루언서 단가 +10% 시뮬레이션`
+    ], kpi: [`ADR 회복 +${Math.max(3, Math.abs(adrYoy) + 1).toFixed(0)}% 목표`, `채널 mix high-margin 비중 +5pp`, `Revenue 갭 좁히기`]});
+  }
+
+  // 정렬: priority A → B → C
+  const order = { A: 0, B: 1, C: 2 };
+  blocks.sort((a, b) => order[a.priority] - order[b.priority]);
+
+  host.innerHTML = '<div class="strategy-block">' + blocks.map(b => `
+    <div class="strategy-row priority-${b.priority}">
+      <div class="sh">
+        <span class="sp priority-${b.priority}">${b.priority}</span>
+        <div class="stitle">${b.title}</div>
+        <span class="ssub">${m}월 · ${STATE.prop === 'ALL' ? '전체' : STATE.prop.replace(/^\d+\./,'')}</span>
+      </div>
+      <div class="sdesc">${b.desc}</div>
+      <div class="sactions">
+        ${b.actions.map(a => '<div class="saction">▸ ' + a + '</div>').join('')}
+      </div>
+      <div class="stargets">
+        ${b.kpi.map(k => '<span class="tg"><b>KPI</b> ' + k + '</span>').join('')}
+      </div>
+    </div>
+  `).join('') + '</div>';
+}
+
+// === Section 7: 임박 기획전 제안 ===
+function renderSuggestions(){
+  const host = document.getElementById('sug-grid');
+  if (!DATA.campaigns || !DATA.campAnalysis){
+    host.innerHTML = '<div class="empty" style="grid-column:1/-1">제안 데이터 없음</div>';
+    return;
+  }
+  const m = STATE.month;
+  const suggestions = [];
+
+  // 분석 자료
+  const inf26 = DATA.campaigns.influencer_26 || {};
+  const inf25 = DATA.campaigns.influencer_25 || {};
+  const top = DATA.campAnalysis.top_performers || {};
+  const topInf = top.by_influencer_rns || [];
+  const topOtb = top.by_otb_increase || [];
+  const recs = DATA.campAnalysis.recommendations || [];
+
+  // 현재 진행 중·예정 기획전 set (사업장+채널 키)
+  const existingSet = new Set();
+  (DATA.campaigns.summer_detail || []).forEach(c => {
+    const tStart = parseDate(c['투숙시작']);
+    const tEnd = parseDate(c['투숙종료']);
+    const mStart = new Date(2026, m-1, 1);
+    const mEnd = new Date(2026, m, 0);
+    if (tStart && tEnd && !(tEnd < mStart || tStart > mEnd)){
+      const k = (c['사업장'] || '') + '|' + channelKey(c['채널']);
+      existingSet.add(k);
+    }
+  });
+
+  // 사업장 필터: STATE.prop 매칭
+  const matchProp = (campProp) => {
+    if (STATE.prop === 'ALL'){
+      if (STATE.region === 'ALL') return true;
+      const p = findOtbPropForCampaign(campProp);
+      return p && p.region === STATE.region;
+    }
+    return propertyMatchesCampaign(STATE.prop, campProp);
+  };
+
+  // ── A. 고성과 인플루언서 × 미실시 사업장 매칭
+  // top performers 의 채널·사업장 패턴을 보고, 선택 월에 같은 채널+사업장 기획전이 없으면 제안
+  topInf.slice(0, 8).forEach(t => {
+    const name = t.name || '';
+    const parts = name.split(' - ');
+    const propPart = parts[0] || '';
+    // 사업장 필터
+    if (STATE.prop !== 'ALL' && !propertyMatchesCampaign(STATE.prop, propPart)) return;
+    if (STATE.prop === 'ALL' && STATE.region !== 'ALL'){
+      const op = findOtbPropForCampaign(propPart);
+      if (!op || op.region !== STATE.region) return;
+    }
+    const ch = parts[1] || '인플루언서';
+    const ck = channelKey(ch);
+    const key = propPart + '|' + ck;
+    if (existingSet.has(key)) return; // 이미 있음
+    const inf = t.influencer || '';
+    const rns = t.channel_rns || 0;
+    const cancelRate = t.cancel_rate;
+    const otbProp = findOtbPropForCampaign(propPart);
+    const monthEntry = otbProp ? getMonthPropertyEntry(otbProp.name) : null;
+    const ach = monthEntry ? monthEntry.rns_achievement : null;
+    const isUrgent = ach != null && ach < 70;
+    suggestions.push({
+      tier: isUrgent ? 'A' : (rns >= 1000 ? 'A' : 'B'),
+      score: rns + (isUrgent ? 1500 : 0),
+      title: `${propPart} × ${inf || '인플루언서'} 재계약`,
+      meta: `채널 <b>${ch}</b> · 권장 판매 ${m}월 ${m < 7 ? '중순 · 투숙 ' + (m+1) + '월~' : '초 · 투숙 ' + (m+1) + '월~'}`,
+      rationale: `2025/26 시즌 동일 매칭 실적 ${Math.round(rns).toLocaleString()}실${cancelRate != null ? ' · 취소율 ' + (cancelRate*100).toFixed(1) + '%' : ''}. ${otbProp ? `현재 ${propPart} ${m}월 달성률 ${ach != null ? ach.toFixed(1) + '%' : '—'}` : ''} → 동일 인플루언서 재발주 시 ${Math.round(rns * 0.7).toLocaleString()}~${Math.round(rns).toLocaleString()}실 추가 확보 가능`,
+      kpiTarget: Math.round(rns * 0.85),
+      kpiCancel: cancelRate != null ? (cancelRate * 100).toFixed(1) + '%' : '—',
+      action: '구매 단가 협상 후 2주 내 발주'
+    });
+  });
+
+  // ── B. OTB 증분 큰 채널 — 동일 패턴 재실행
+  topOtb.slice(0, 5).forEach(t => {
+    const name = t.name || '';
+    const parts = name.split(' - ');
+    const propPart = parts[0] || '';
+    if (STATE.prop !== 'ALL' && !propertyMatchesCampaign(STATE.prop, propPart)) return;
+    if (STATE.prop === 'ALL' && STATE.region !== 'ALL'){
+      const op = findOtbPropForCampaign(propPart);
+      if (!op || op.region !== STATE.region) return;
+    }
+    const ch = parts[1] || '';
+    const ck = channelKey(ch);
+    const key = propPart + '|' + ck;
+    if (existingSet.has(key)) return;
+    const otbChange = t.otb_change || 0;
+    const seg = t.segment || 'OTA';
+    suggestions.push({
+      tier: otbChange >= 5000 ? 'A' : 'B',
+      score: otbChange,
+      title: `${propPart} × ${ch} 재실행`,
+      meta: `세그먼트 <b>${seg}</b> · 권장 시기 <b>${m}월 1~2주차</b>`,
+      rationale: `과거 동일 채널 OTB 증분 ${Math.round(otbChange).toLocaleString()}실 (${(t.months || []).join('/')}). 같은 단가/믹스로 재실행 시 유사 효과 기대`,
+      kpiTarget: Math.round(otbChange * 0.7),
+      kpiCancel: '신규 평균 수준',
+      action: '판매 페이지 그대로 재오픈 (개발 0)'
+    });
+  });
+
+  // ── C. recommendations.json — 일반 권고
+  recs.slice(0, 3).forEach((r, i) => {
+    suggestions.push({
+      tier: 'C',
+      score: 0 - i,
+      title: r.title || '제안',
+      meta: '우선순위 #' + (r.priority || (i+1)) + ' · 전체 적용',
+      rationale: r.description || '',
+      kpiTarget: '',
+      kpiCancel: '',
+      action: r.expected_impact || ''
+    });
+  });
+
+  // 정렬 + 상위 12 표시
+  suggestions.sort((a, b) => {
+    const tierOrder = { A: 0, B: 1, C: 2 };
+    if (tierOrder[a.tier] !== tierOrder[b.tier]) return tierOrder[a.tier] - tierOrder[b.tier];
+    return b.score - a.score;
+  });
+  const finalSugs = suggestions.slice(0, 12);
+
+  if (!finalSugs.length){
+    host.innerHTML = '<div class="empty" style="grid-column:1/-1">선택 필터(사업장/권역)에 매칭되는 제안 없음</div>';
+    return;
+  }
+  host.innerHTML = finalSugs.map(s => `
+    <div class="sug-card tier-${s.tier}">
+      <div class="sug-h">
+        <span class="sug-tier tier-${s.tier}">${s.tier}</span>
+        <div class="sug-title">${s.title}</div>
+      </div>
+      <div class="sug-meta">${s.meta}</div>
+      <div class="sug-rationale">${s.rationale}</div>
+      ${s.kpiTarget !== '' ? `<div class="sug-kpi">
+        <div class="blk"><div class="l">목표 RNs</div><div class="v">${typeof s.kpiTarget === 'number' ? s.kpiTarget.toLocaleString() : s.kpiTarget}</div></div>
+        <div class="blk"><div class="l">취소율 가이드</div><div class="v">${s.kpiCancel}</div></div>
+      </div>` : ''}
+      ${s.action ? `<div class="sug-action">▸ ${s.action}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// ─── Executive Summary 자동 생성 ───────────────────────────
+// 종합 판단 = FCST/Budget 달성률 기반 / 이슈·액션 = 데이터 자동 감지
+function buildExecSummary(){
+  const s = getSelectedSummary();
+  const ach = s ? (s.fcst_achievement != null ? s.fcst_achievement : (s.rns_fcst && s.rns_budget ? s.rns_fcst / s.rns_budget * 100 : null)) : null;
+
+  // 1) 종합 판단
+  let verdict, tier;
+  if (ach == null){
+    verdict = '<b>데이터 부족</b> — FCST/목표 데이터 확인 후 판단 가능';
+    tier = 'md';
+  } else if (ach >= 95){
+    verdict = `FCST 기준 목표 대비 <b>${ach.toFixed(1)}%</b> — 목표 달성 궤도, 현행 유지하되 <b>ADR 관리</b>에 집중`;
+    tier = 'hi';
+  } else if (ach >= 85){
+    verdict = `FCST 기준 목표 대비 <b>${ach.toFixed(1)}%</b> 수준 — <b>OTA·GOTA 중심 단기 픽업 강화</b> 필요`;
+    tier = 'md';
+  } else {
+    verdict = `FCST 기준 목표 대비 <b>${ach.toFixed(1)}%</b> — 목표 대비 큰 갭, <b>긴급 프로모션 배분 및 채널 부스팅</b> 필요`;
+    tier = 'lo';
+  }
+
+  // 2) 핵심 이슈 자동 감지
+  const issues = [];
+
+  // (a) 주중 객실 수요 부족 — stayDateDaily 전 세그 합산, 주중(월~목) vs 주말(금~일)
+  try {
+    const ym = '2026' + String(STATE.month).padStart(2,'0');
+    const sdd = (DATA.otb && DATA.otb.stayDateDaily) ? DATA.otb.stayDateDaily[ym] : null;
+    if (sdd && sdd.days && sdd.segments){
+      const days = sdd.days;
+      const dailyTotal = new Array(days.length).fill(0);
+      Object.values(sdd.segments).forEach(seg => {
+        (seg.net_rn || []).forEach((v, i) => { if (i < dailyTotal.length) dailyTotal[i] += v || 0; });
+      });
+      let wdSum=0, wdN=0, weSum=0, weN=0;
+      days.forEach((d, i) => {
+        const dt = new Date(2026, STATE.month - 1, d);
+        const dow = dt.getDay(); // 0=Sun, 5=Fri, 6=Sat
+        const v = dailyTotal[i] || 0;
+        if (dow >= 1 && dow <= 4){ wdSum += v; wdN++; }
+        else if (dow === 5 || dow === 6 || dow === 0){ weSum += v; weN++; }
+      });
+      if (wdN && weN){
+        const wdAvg = wdSum / wdN, weAvg = weSum / weN;
+        if (weAvg > 0 && wdAvg / weAvg < 0.6){
+          issues.push({ key: 'weekday', text: `<b>주중 객실 수요 부족</b> — 주중 평균 ${Math.round(wdAvg)}실 vs 주말 ${Math.round(weAvg)}실 (${(wdAvg/weAvg*100).toFixed(0)}%)` });
+        }
+      }
+    }
+  } catch(e){}
+
+  // (b) FCST 하락 사업장 — rm_fcst_trend 최근 2 snapshot 비교
+  try {
+    if (DATA.fcstTrend && DATA.fcstTrend.snapshots && DATA.fcstTrend.snapshots.length >= 2){
+      const snaps = DATA.fcstTrend.snapshots;
+      const target = '2026-' + String(STATE.month).padStart(2,'0');
+      const last = snaps[snaps.length - 1], prev = snaps[snaps.length - 2];
+      const declined = [];
+      const propRegionMap = {};
+      if (DATA.otb){ (DATA.otb.byProperty || []).forEach(p => { propRegionMap[p.name] = p.region; }); }
+      for (const [pname, pdata] of Object.entries(last.properties || {})){
+        // 사업장 필터 시 해당 사업장만 / 권역 필터 시 해당 권역만
+        if (STATE.prop !== 'ALL' && pname !== STATE.prop) continue;
+        if (STATE.prop === 'ALL' && STATE.region !== 'ALL' && propRegionMap[pname] !== STATE.region) continue;
+        const lastF = (pdata[target] || {}).rm_fcst_rn;
+        const prevP = (prev.properties || {})[pname];
+        const prevF = prevP ? (prevP[target] || {}).rm_fcst_rn : null;
+        if (lastF != null && prevF != null && prevF > 0 && lastF < prevF){
+          declined.push({ name: pname.replace(/^\d+\./, ''), delta: lastF - prevF, pct: (lastF - prevF) / prevF * 100 });
+        }
+      }
+      if (declined.length){
+        declined.sort((a, b) => a.pct - b.pct);
+        const top = declined.slice(0, 2).map(x => `${x.name} (${x.pct.toFixed(1)}%)`).join(', ');
+        const extra = declined.length > 2 ? ` 등 ${declined.length}개` : '';
+        issues.push({ key: 'fcst_drop', text: `<b>${top}${extra}</b> FCST 하락 — 전주 대비 ${declined.reduce((a,x)=>a+x.delta,0).toLocaleString()}실` });
+      }
+    }
+  } catch(e){}
+
+  // (c) 인바운드 전년 동기간 대비 감소
+  try {
+    if (DATA.db && DATA.db.by_segment && DATA.db.by_segment['Inbound']){
+      const ib = DATA.db.by_segment['Inbound'];
+      const ym = '2026' + String(STATE.month).padStart(2,'0');
+      const lyYm = '2025' + String(STATE.month).padStart(2,'0');
+      const cur = ib[ym], ly = ib[lyYm];
+      if (cur && ly && (ly.net_rn || 0) > 0){
+        const yoyPct = ((cur.net_rn || 0) - ly.net_rn) / ly.net_rn * 100;
+        if (yoyPct < -5){
+          issues.push({ key: 'inbound', text: `<b>인바운드 기여도 약화</b> — 전년 동기간 대비 ${yoyPct.toFixed(1)}% (${ly.net_rn.toLocaleString()}→${(cur.net_rn||0).toLocaleString()}실)` });
+        }
+      }
+    }
+  } catch(e){}
+
+  // (d) OTA/GOTA 채널 전년비 -20% 이상 감소 (sales-prop=ALL 일 때만 유의미)
+  try {
+    if (DATA.db && DATA.db.by_channel_segment && DATA.db.by_channel && STATE.prop === 'ALL'){
+      const ym = '2026' + String(STATE.month).padStart(2,'0');
+      const lyYm = '2025' + String(STATE.month).padStart(2,'0');
+      const segMap = DATA.db.by_channel_segment; // ch -> 'OTA'|'G-OTA'|'Inbound'
+      const dropped = [];
+      for (const [ch, mdata] of Object.entries(DATA.db.by_channel)){
+        const seg = segMap[ch];
+        if (seg !== 'OTA' && seg !== 'G-OTA') continue;
+        const cur = mdata[ym], ly = mdata[lyYm];
+        if (!cur || !ly || (ly.net_rn || 0) < 50) continue; // 너무 작은 채널은 무시
+        const yoy = ((cur.net_rn || 0) - ly.net_rn) / ly.net_rn * 100;
+        if (yoy <= -20) dropped.push({ ch, seg, yoy, lyRn: ly.net_rn });
+      }
+      if (dropped.length){
+        dropped.sort((a, b) => a.yoy - b.yoy);
+        const top = dropped[0];
+        issues.push({ key: 'channel_drop', text: `<b>${top.ch}</b> 채널 전년비 ${top.yoy.toFixed(1)}% 큰폭 감소${dropped.length > 1 ? ` (외 ${dropped.length - 1}개 채널)` : ''}` });
+      }
+    }
+  } catch(e){}
+
+  // 최대 3개로 컷
+  const topIssues = issues.slice(0, 3);
+
+  // 3) 즉시 액션 — 이슈 키에 매칭
+  const actionMap = {
+    weekday: '<b>주중 전용 패키지</b> 노출 강화 (주중 1박+조식, 비즈니스 패키지)',
+    fcst_drop: '<b>FCST 갭 사업장</b> 우선 프로모션 배분 — 잔여 객실 OTA 노출 확대',
+    inbound: '<b>인바운드 여행사 타겟 프로모션</b> 검토 — 하나투어/모두투어 단체 발주 협의',
+    channel_drop: '<b>해당 채널 잔여 객실 기획전</b> 확대 — 단기 픽업 부스팅',
+  };
+  const fallbackActions = [
+    '<b>Agoda / Trip.com</b> 잔여 객실 기획전 노출 확대',
+    '<b>채널별 KPI 모니터링</b> 강화 — 주간 픽업/취소율 추적',
+    '<b>RM·세일즈 합동 리뷰</b> — FCST 정확도 보정 및 채널 mix 점검',
+  ];
+  const actions = [];
+  topIssues.forEach(i => { if (actionMap[i.key]) actions.push(actionMap[i.key]); });
+  for (let i = 0; actions.length < Math.max(2, topIssues.length) && i < fallbackActions.length; i++){
+    if (!actions.includes(fallbackActions[i])) actions.push(fallbackActions[i]);
+  }
+  const topActions = actions.slice(0, 3);
+
+  return { verdict, tier, ach, issues: topIssues, actions: topActions };
+}
+
+function renderExecSummary(){
+  const exec = buildExecSummary();
+  const propLabel = STATE.prop === 'ALL'
+    ? (STATE.region !== 'ALL' ? `${STATE.region} 권역` : '전체')
+    : STATE.prop.replace(/^\d+\./, '');
+  document.getElementById('exec-ctx-month').textContent = STATE.month + '월';
+  document.getElementById('exec-ctx-prop').textContent = propLabel;
+
+  const block = document.getElementById('exec-verdict-block');
+  block.className = 'exec-block verdict tier-' + exec.tier;
+  document.getElementById('exec-verdict-text').innerHTML = exec.verdict;
+
+  const achEl = document.getElementById('exec-ach');
+  if (exec.ach != null){
+    achEl.textContent = '달성률 ' + exec.ach.toFixed(1) + '%';
+    achEl.className = 'ach ' + (exec.tier === 'hi' ? 'pos' : exec.tier === 'md' ? 'warn' : 'neg');
+  } else { achEl.textContent = '—'; achEl.className = 'ach'; }
+
+  const issuesEl = document.getElementById('exec-issues');
+  if (exec.issues.length){
+    issuesEl.innerHTML = exec.issues.map((it, i) => `<li data-idx="${i+1}">${it.text}</li>`).join('');
+  } else {
+    issuesEl.innerHTML = '<li class="empty-pos">현재 특이사항 없음 — 현행 운영 안정적</li>';
+  }
+
+  const actionsEl = document.getElementById('exec-actions');
+  if (exec.actions.length){
+    actionsEl.innerHTML = exec.actions.map((a, i) => `<li data-idx="${String.fromCharCode(65 + i)}">${a}</li>`).join('');
+  } else {
+    actionsEl.innerHTML = '<li class="empty-pos">즉시 액션 없음 — 모니터링 유지</li>';
+  }
+}
+
+function render(){
+  renderHeaderContext();
+  renderExecSummary();
+  renderKPI();
+  renderGapPlan();
+  renderTimeline();
+  renderKpiDiagnosis();
+  renderRiskTable();
+  renderMonthlyStrategy();
+  renderCampaignCards();
+  renderPerfTable();
+  renderFcstTrend();
+  renderSuggestions();
+}
+
+// === 탭 전환 (전략 리포트 / 운영·관리) ===
+function setupTabs(){
+  const btns = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+  const anchors = document.querySelectorAll('.anchor-item[data-tab]');
+  function setTab(name){
+    STATE.tab = name;
+    btns.forEach(b => {
+      const active = b.dataset.tab === name;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    panels.forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+    // 사이드바 앵커도 현재 탭만 흐릿하게 처리
+    anchors.forEach(a => {
+      a.style.opacity = (a.dataset.tab === name) ? '1' : '0.45';
+    });
+  }
+  btns.forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
+  // 사이드바 앵커 클릭 시 해당 탭으로 자동 전환
+  anchors.forEach(a => {
+    a.addEventListener('click', () => {
+      const t = a.dataset.tab;
+      if (t && STATE.tab !== t) setTab(t);
+    });
+  });
+  // 초기 상태
+  setTab(STATE.tab || 'strategy');
+}
+
+(async () => {
+  document.getElementById('hdr-date').textContent = todayStr();
+  const [otb, camp, admin, fcstTrend, campAnalysis, db] = await Promise.all([
+    loadJSON('data/otb_data.json'),
+    loadJSON('data/campaign_data.json'),
+    loadJSON('data/admin_input.json'),
+    loadJSON('data/rm_fcst_trend.json'),
+    loadJSON('data/campaign_individual_analysis.json'),
+    loadJSON('data/db_aggregated.json'),
+  ]);
+  DATA.otb = otb;
+  DATA.campaigns = camp;
+  DATA.admin = admin;
+  DATA.fcstTrend = fcstTrend;
+  DATA.campAnalysis = campAnalysis;
+  DATA.db = db;
+  buildMonthChips();
+  buildPropList();          // = buildRegionTree() 호출 (region tree)
+  buildChSegChips();
+  setupAnchorObserver();    // 페이지 앵커 active 하이라이트
+  setupTabs();              // 전략 리포트 / 운영·관리 탭 전환
+  render();
+
+  // ─── strategy-keyin 의 담당자 수정 자동 반영 ───
+  // (a) 다른 탭/창에서 strategy-keyin 저장 시 → storage event 발화
+  window.addEventListener('storage', e => {
+    if (e.key === 'gs_strategy_keyin_v2'){
+      console.log('[strategy-report] keyin 데이터 변경 감지 → 재렌더');
+      render();
+    }
+  });
+  // (b) 사용자가 탭 전환 후 돌아올 때 (visibilitychange)
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') render();
+  });
+  // (c) 창 focus (보조)
+  window.addEventListener('focus', () => render());
+})();
+
+// Initialize dynamic year labels
+document.querySelectorAll('.dy-ly').forEach(function(el) { el.textContent = _LY; });
+</script>
+
+<!-- ============ COPYRIGHT FOOTER ============ -->
+<footer style="background:#0a0a0a;color:rgba(255,255,255,0.5);text-align:center;padding:14px 16px;font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:11px;letter-spacing:0.08em;border-top:1px solid rgba(184,137,63,0.18);margin-top:0;"></footer>
+</body>
+</html>
