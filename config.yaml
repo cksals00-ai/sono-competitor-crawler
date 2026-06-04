@@ -4,12 +4,11 @@
 # 브랜드 체계:
 #   소노캄 (5성급) / 소노벨 (콘도형) / 소노문 (도심/부티크) / 소노펠리체 (프리미엄 콘도)
 #
-# OTA 형식:
+# OTA 형식 (활성 채널: 야놀자 / 네이버호텔 / Trip.com):
 #   야놀자: nol.yanolja.com/stay/domestic/{ID}  (빈 문자열 = 미등록)
-#   여기어때: yeogi.com/domestic-accommodations/{ID}  (빈 문자열 = 미등록)
-#   Booking.com: booking.com 전체 URL  (빈 문자열 = 미등록)
-#   Agoda: agoda.com 전체 URL  (빈 문자열 = 미등록)
+#   네이버호텔: naver_id (hotels.naver.com 내부 숫자 ID, 빈 문자열 = 이름 검색)
 #   Trip.com: tripcom_hotel_id (0 = 미등록), tripcom_city_id (0 = 도시페이지 없음)
+# 제거된 채널: 여기어때·Agoda(Selenium 대부분 실패), 자사홈(로그인 미설정)
 #
 # display_region: 대시보드 지역 필터 표시용 (아시아퍼시픽 / 비발디파크 / 한국중부 / 한국남부)
 
@@ -826,6 +825,22 @@ properties:
     agoda_url: https://www.agoda.com/ko-kr/grand-josun-busan/hotel/busan-kr.html
     naver_id: ''
     tripcom_hotel_id: 67688375
+    tripcom_city_id: 432
+  - name: L7 호텔 부산
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3016610
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/55089
+    booking_url: https://www.booking.com/hotel/kr/l7-haeundae-by-lotte.html
+    agoda_url: https://www.agoda.com/ko-kr/l7-haeundae-by-lotte/hotel/busan-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 27544831
+    tripcom_city_id: 432
+  - name: 신라스테이 부산
+    yanolja_url: https://nol.yanolja.com/stay/domestic/3001229
+    yeogiuh_url: https://www.yeogi.com/domestic-accommodations/7254
+    booking_url: https://www.booking.com/hotel/kr/shilla-stay-haeundae.html
+    agoda_url: https://www.agoda.com/ko-kr/shilla-stay-haeundae/hotel/busan-kr.html
+    naver_id: ''
+    tripcom_hotel_id: 2096651
     tripcom_city_id: 432
   own_urls:
     yanolja_url: https://nol.yanolja.com/stay/domestic/10058110

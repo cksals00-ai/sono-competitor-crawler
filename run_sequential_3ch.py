@@ -30,7 +30,7 @@ import pandas as pd
 import yaml
 
 from crawler import run_crawl
-from export_powerbi import export_all
+from export_powerbi import _save_csv, load_output_config
 
 
 def run_channel(ota_name: str, pkl_path: str) -> pd.DataFrame:
@@ -62,11 +62,16 @@ if __name__ == "__main__":
     df_naver = run_channel("네이버호텔", "/tmp/df_naver.pkl")
     dfs.append(df_naver)
 
-    # 합치기 + 내보내기
+    # 합치기 + CSV 내보내기
     df_all = pd.concat(dfs, ignore_index=True)
     logger.info(f"전체 합계: {len(df_all)}행")
-    export_all(df_all)
-    logger.info("Excel/CSV 내보내기 완료")
+    out_cfg = load_output_config()
+    export_dir = Path(out_cfg.get("export_dir", "./exports"))
+    export_dir.mkdir(parents=True, exist_ok=True)
+    today_str = datetime.today().strftime("%Y%m%d")
+    csv_name = out_cfg.get("csv_filename", "sono_competitor_prices_{date}.csv").format(date=today_str)
+    _save_csv(df_all, export_dir / csv_name)
+    logger.info("CSV 내보내기 완료")
 
     # 대시보드 생성
     try:

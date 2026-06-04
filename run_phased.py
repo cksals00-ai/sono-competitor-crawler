@@ -151,20 +151,16 @@ def _merge_and_save(new_df: pd.DataFrame, ota_filter: list) -> pd.DataFrame:
     # 양쪽 모두 영어 컬럼으로 통일된 상태에서 수직 concat
     combined = pd.concat([existing, new_df], ignore_index=True)
 
-    # 오늘 CSV에 저장 (export_powerbi.export_all 형식과 동일하게)
-    from export_powerbi import _prepare_df, _save_csv, _save_excel, load_output_config
+    # 오늘 CSV에 저장
+    from export_powerbi import _save_csv, load_output_config
     out_cfg = load_output_config()
     export_dir = Path(out_cfg["export_dir"])
     export_dir.mkdir(parents=True, exist_ok=True)
     today = datetime.today().strftime("%Y%m%d")
 
-    csv_name   = out_cfg["csv_filename"].format(date=today)
-    excel_name = out_cfg["excel_filename"].format(date=today)
-    latest_name = out_cfg.get("powerbi_filename", "sono_competitor_prices_latest.xlsx")
+    csv_name = out_cfg["csv_filename"].format(date=today)
 
     _save_csv(combined, export_dir / csv_name)
-    _save_excel(combined, export_dir / excel_name)
-    _save_excel(combined, export_dir / latest_name, sheet_name="최신데이터")
     logger.info(f"병합 저장 완료: {export_dir / csv_name} ({len(combined)} 행)")
 
     return combined
@@ -205,7 +201,7 @@ def _copy_to_icloud(dashboard_path: str):
 
 
 def _git_push(phase_label: str):
-    """docs/index.html + exports/ CSV/XLSX를 git add/commit/push"""
+    """docs/index.html + exports/ CSV를 git add/commit/push"""
     today = datetime.now().strftime("%Y-%m-%d %H:%M")
     today_date = datetime.today().strftime("%Y%m%d")
 
@@ -213,8 +209,6 @@ def _git_push(phase_label: str):
     files_to_add = [
         "docs/index.html",
         f"exports/sono_competitor_prices_{today_date}.csv",
-        f"exports/sono_competitor_prices_{today_date}.xlsx",
-        "exports/sono_competitor_prices_latest.xlsx",
     ]
 
     for f in files_to_add:

@@ -1,6 +1,6 @@
 """
 소노 경쟁사 크롤러 스케줄러
-- 매일 지정 시간에 크롤링 + Excel/CSV 저장을 자동 실행
+- 매일 지정 시간에 크롤링 + CSV 저장을 자동 실행
 - 실행: python scheduler.py
 - 백그라운드 실행: nohup python scheduler.py &
 """
@@ -19,7 +19,7 @@ ICLOUD_DIR  = Path.home() / "Library/Mobile Documents/com~apple~CloudDocs"
 ICLOUD_FILE = ICLOUD_DIR / "소노_경쟁사_대시보드.html"
 
 from crawler import run_crawl
-from export_powerbi import export_all
+from export_powerbi import _save_csv, load_output_config
 
 logging.basicConfig(
     level=logging.INFO,
@@ -35,8 +35,14 @@ def daily_job():
     logger.info("=" * 60)
     try:
         df = run_crawl()
-        export_all(df)
-        logger.info("일일 크롤링 및 내보내기 완료")
+        # CSV만 저장 (XLSX 미사용)
+        out_cfg = load_output_config()
+        export_dir = Path(out_cfg.get("export_dir", "./exports"))
+        export_dir.mkdir(parents=True, exist_ok=True)
+        today = datetime.today().strftime("%Y%m%d")
+        csv_name = out_cfg.get("csv_filename", "sono_competitor_prices_{date}.csv").format(date=today)
+        _save_csv(df, export_dir / csv_name)
+        logger.info("일일 크롤링 및 CSV 내보내기 완료")
     except Exception as e:
         logger.error(f"일일 크롤링 실패: {e}", exc_info=True)
         return

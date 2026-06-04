@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta name="auth-required" content="admin">
+<script src="./js/auth.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>GS 구축 현황 리포트 — SONO GS팀 (관리자 전용)</title>
+<meta name="theme-color" content="#0f1117">
+<meta name="description" content="SONO GS팀 자동화 시스템 구축 현황 — 스케줄러 · 파이프라인 · 리포트 인벤토리 · 자동화 커버리지 (관리자 전용)">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-main:#0f1117; --bg:#1a1d23; --bg-card:#252932; --bg-deep:#14171c;
+  --bg-soft:#2d3138; --bg-hover:#353a44;
+  --ink:#f5f5f7; --ink-soft:#e0e0e3; --ink-muted:#a8acb3; --ink-faint:#7a7e85;
+  --gold:#c9a063; --gold-bright:#e6b970; --gold-dim:rgba(201,160,99,0.12);
+  --positive:#4caf6f; --positive-bg:#1f3a28;
+  --warning:#e8a256; --warning-bg:#3d2e1a;
+  --negative:#e57373; --negative-bg:#3d1f1f;
+  --info:#5a9fc4; --info-bg:#1a2e3d;
+  --rule:rgba(255,255,255,0.10); --rule-strong:rgba(255,255,255,0.18);
+  --sans:'Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'JetBrains Mono',Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg-main);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;word-break:keep-all}
+a{color:inherit;text-decoration:none}
+
+/* ── top admin bar ── */
+.adm-top{background:#0b0f14;border-bottom:1px solid #1e2530;height:44px;display:flex;align-items:center;padding:0 18px;gap:14px;position:sticky;top:0;z-index:300}
+.adm-back{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:linear-gradient(135deg,#c9a063,#e6b970);color:#1a1a2e;font-weight:700;font-size:12px;border-radius:5px;letter-spacing:.03em}
+.adm-tag{font-family:var(--mono);font-size:11px;color:var(--ink-faint);letter-spacing:.08em}
+.adm-locked{margin-left:auto;font-size:11px;color:var(--negative);font-weight:700;letter-spacing:.04em}
+
+/* ── masthead ── */
+.masthead{background:linear-gradient(160deg,#161a21,#0f1117);border-bottom:1px solid var(--rule);padding:26px 32px 22px}
+.masthead-inner{max-width:1180px;margin:0 auto}
+.mh-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;font-weight:700}
+.mh-title{font-size:25px;font-weight:800;margin-top:6px;letter-spacing:-.01em}
+.mh-sub{font-size:13px;color:var(--ink-muted);margin-top:6px}
+.mh-meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--ink-faint)}
+.mh-meta b{color:var(--gold-bright);font-family:var(--mono);font-weight:600}
+
+.wrap{max-width:1180px;margin:0 auto;padding:26px 32px 60px}
+
+/* ── kpi strip ── */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:30px}
+.kpi{background:var(--bg-card);border:1px solid var(--rule);border-radius:10px;padding:16px 18px}
+.kpi .k-lbl{font-size:11px;color:var(--ink-faint);letter-spacing:.05em;font-weight:600}
+.kpi .k-val{font-size:27px;font-weight:800;margin-top:5px;font-family:var(--mono);letter-spacing:-.02em}
+.kpi .k-note{font-size:11px;color:var(--ink-muted);margin-top:3px}
+.kpi.good .k-val{color:var(--positive)}
+.kpi.warn .k-val{color:var(--warning)}
+.kpi.info .k-val{color:var(--info)}
+.kpi.gold .k-val{color:var(--gold-bright)}
+
+/* ── section ── */
+section{margin-bottom:34px}
+.sec-h{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule-strong);padding-bottom:9px;margin-bottom:16px}
+.sec-num{font-family:var(--mono);font-size:13px;font-weight:800;color:#1a1a2e;background:linear-gradient(135deg,#c9a063,#e6b970);width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-t{font-size:17px;font-weight:800}
+.sec-d{font-size:12px;color:var(--ink-faint);margin-left:auto}
+
+/* ── table ── */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:9px;background:var(--bg-deep)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#11141a;color:var(--ink-muted);font-weight:700;text-align:left;padding:9px 11px;white-space:nowrap;border-bottom:1px solid var(--rule-strong);font-size:11px;letter-spacing:.03em}
+td{padding:8px 11px;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(255,255,255,0.025)}
+td.mono,th.c{font-family:var(--mono)}
+.c{text-align:center}
+.mono{font-family:var(--mono);color:var(--ink-soft)}
+.dim{color:var(--ink-faint)}
+
+/* ── status pills ── */
+.pill{display:inline-block;font-size:10px;font-weight:800;font-family:var(--mono);padding:2px 7px;border-radius:4px;letter-spacing:.04em;white-space:nowrap}
+.pill.on{background:var(--positive-bg);color:var(--positive)}
+.pill.off{background:rgba(122,126,133,0.18);color:var(--ink-faint)}
+.pill.done{background:var(--info-bg);color:var(--info)}
+.pill.warn{background:var(--warning-bg);color:var(--warning)}
+.pill.crit{background:var(--negative-bg);color:var(--negative)}
+
+/* ── cards ── */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:13px}
+.card{background:var(--bg-card);border:1px solid var(--rule);border-radius:9px;padding:15px 16px}
+.card.l-pos{border-left:3px solid var(--positive)}
+.card.l-warn{border-left:3px solid var(--warning)}
+.card.l-info{border-left:3px solid var(--info)}
+.card.l-crit{border-left:3px solid var(--negative)}
+.card .c-h{font-size:13px;font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:7px}
+.card .c-b{font-size:12px;color:var(--ink-soft);line-height:1.6}
+.card .c-b code{font-family:var(--mono);color:var(--gold-bright);font-size:11px;background:rgba(201,160,99,0.1);padding:1px 4px;border-radius:3px}
+
+.note{font-size:11.5px;color:var(--ink-faint);margin-top:9px;line-height:1.6}
+.cat-row td{background:#11141a;font-weight:800;color:var(--gold-bright);font-size:11px;letter-spacing:.05em}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--ink-muted);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+
+footer{border-top:1px solid var(--rule);margin-top:40px;padding:20px 0;text-align:center;font-size:11px;color:var(--ink-faint);line-height:1.7}
+
+@media(max-width:780px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .masthead,.wrap{padding-left:18px;padding-right:18px}
+}
+</style>
+</head>
+<body>
+
+<div class="adm-top">
+  <a class="adm-back" href="admin.html">← 관리자</a>
+  <span class="adm-tag">SETUP · BUILD STATUS</span>
+  <span class="adm-locked">🔒 관리자 전용 · 외부 노출 금지</span>
+</div>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="mh-kicker">Automation Infrastructure Report</div>
+    <h1 class="mh-title">GS 구축 현황 리포트</h1>
+    <p class="mh-sub">SONO GS팀 자동화 시스템 — 스케줄러 · 파이프라인 · 리포트 인벤토리 · 자동화 커버리지</p>
+    <div class="mh-meta">
+      <span>기준 시각 <b>2026-05-23 06:08 KST</b></span>
+      <span>갱신 주기 <b>주 1회 (매주 토 06:00)</b></span>
+      <span>생성 <b>weekly-setup-strategy</b></span>
+      <span>저장소 <b>cksals00-ai/gs_daily_trend_news_public_temp</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- KPI STRIP -->
+  <div class="kpis">
+    <div class="kpi good">
+      <div class="k-lbl">활성 스케줄 태스크</div>
+      <div class="k-val">8 / 15</div>
+      <div class="k-note">활성 8 · 비활성 4 · 1회성 완료 3</div>
+    </div>
+    <div class="kpi info">
+      <div class="k-lbl">리포트 페이지</div>
+      <div class="k-val">49</div>
+      <div class="k-note">docs/ HTML · 공개 13 · 권한제한 36</div>
+    </div>
+    <div class="kpi gold">
+      <div class="k-lbl">데이터 파이프라인</div>
+      <div class="k-val">정상</div>
+      <div class="k-note">최근 자동 커밋 2026-05-23 06:05</div>
+    </div>
+    <div class="kpi warn">
+      <div class="k-lbl">자동화 커버리지</div>
+      <div class="k-val">~78%</div>
+      <div class="k-note">수집·파싱·빌드 자동 · 일부 시트연동 수동</div>
+    </div>
+  </div>
+
+  <!-- §1 SCHEDULER -->
+  <section>
+    <div class="sec-h">
+      <span class="sec-num">1</span>
+      <span class="sec-t">스케줄러 현황</span>
+      <span class="sec-d">Cowork 스케줄 태스크 · 총 15건 (활성 8)</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>태스크</th><th>설명</th><th>스케줄</th>
+            <th class="c">상태</th><th>최근 실행 (KST)</th><th>다음 실행 (KST)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="cat-row"><td colspan="6">● 활성 — 일별</td></tr>
+          <tr>
+            <td class="mono">trend-report-regional</td>
+            <td>트렌드리포트 권역별 정보 + 경쟁사 프로모션/인사이트</td>
+            <td class="mono">매일 02:05</td>
+            <td class="c"><span class="pill on">ACTIVE</span></td>
+            <td class="mono">2026-05-23 02:05</td>
+            <td class="mono dim">2026-05-24 02:04</td>
+          </tr>
+          <tr>
+            <td class="mono">competitor-crawling</td>
+            <td>경쟁사 OTA 가격 크롤링 (야놀자·트립닷컴·네이버·골프·브랜드몰)</td>
+            <td class="mono">매일 04:02</td>
+            <td class="c"><span class="pill on">ACTIVE</span></td>
+            <td class="mono">2026-05-23 04:02</td>
+            <td class="mono dim">2026-05-24 04:01</td>
+          </tr>
+          <tr>
+            <td class="mono">rm-fcst-booking-update</td>
+            <td>RM FCST + Daily Booking PDF 최신화 → 전체 리포트 숫자 반영</td>
+            <td class="mono">매일 05:03</td>
+            <td class="c"><span class="pill on">ACTIVE</span></td>
+            <td class="mono">2026-05-23 05:03</td>
+            <td class="mono dim">2026-05-24 05:02</td>
+          </tr>
+          <tr>
+            <td class="mono">action-calendar-sync</td>
+            <td>구글시트 확인 → 액션캘린더 업데이트</td>
+            <td class="mono">매일 06:02</td>
+            <td class="c"><span class="pill on">ACTIVE</span></td>
+            <td class="mono">2026-05-23 06:02</td>
+            <td class="mono dim">2026-05-24 06:02</td>
+          </tr>
+          <tr class="cat-row"><td colspan="6">● 활성 — 주별 / 월별</td></tr>
+          <tr>
+            <td class="mono">weekly-setup-strategy</td>
+            <td>구축리포트 + 전략대시보드/전략리포트 업데이트 <span class="dim">(본 리포트 생성)</span></td>
+            <td class="mono">매주 토 06:03</td>
+            <td class="c"><span class="pill on">ACTIVE</span></td>
+            <td class="mono">2026-05-23 06:04</td>
+            <td class="mono dim">2026-05-30 06:03</td>
+          </tr>
+          <tr>
+            <td class="mono">weekly-report</td>
+            <td>주간리포트 HTML 작성 (실적·인사이트·기획전·60일후 준비)</td>
+            <td class="mono">매주 토 10:07</td>
+            <td class="c"><span class="pill on">ACTIVE</span></td>
+            <td class="mono dim">— (예정)</td>
+            <td class="mono dim">2026-05-23 10:06</td>
+          </tr>
+          <tr>
+            <td class="mono">gs-strategy-summary-refresh</td>
+            <td>운영전략 대시보드 요약 보드 키워드/스토리 카드 리프레시</td>
+            <td class="mono">매주 일 09:06</td>
+            <td class="c"><span class="pill on">ACTIVE</span></td>
+            <td class="mono">2026-05-17 09:06</td>
+            <td class="mono dim">2026-05-24 09:06</td>
+          </tr>
+          <tr>
+            <td class="mono">monthly-closing</td>
+            <td>전달 마감자료 작성 (1·4·7·10월은 분기마감 추가)</td>
+            <td class="mono">매월 1일 00:03</td>
+            <td class="c"><span class="pill on">ACTIVE</span></td>
+            <td class="mono dim">— (예정)</td>
+            <td class="mono dim">2026-06-01 00:03</td>
+          </tr>
+          <tr class="cat-row"><td colspan="6">○ 비활성 — 미사용 / 대체됨</td></tr>
+          <tr>
+            <td class="mono">daily-db-update-build</td>
+            <td>DB 파일 변경 감지 → 파싱 → OTB → 인사이트 → 빌드 → push</td>
+            <td class="mono">매일 06:30</td>
+            <td class="c"><span class="pill off">OFF</span></td>
+            <td class="mono dim">2026-05-20 06:30</td>
+            <td class="dim">—</td>
+          </tr>
+          <tr>
+            <td class="mono">daily-campaign-sync</td>
+            <td>구글시트 기획전 패키지코드 동기화 + 실적 재집계</td>
+            <td class="mono">매일 05:09</td>
+            <td class="c"><span class="pill off">OFF</span></td>
+            <td class="dim">— (미실행)</td>
+            <td class="dim">—</td>
+          </tr>
+          <tr>
+            <td class="mono">daily-work-summary</td>
+            <td>오전 업무 종료 전 업무 정리 알림</td>
+            <td class="mono">평일 11:35</td>
+            <td class="c"><span class="pill off">OFF</span></td>
+            <td class="mono dim">2026-05-20 11:35</td>
+            <td class="dim">—</td>
+          </tr>
+          <tr>
+            <td class="mono">daily-4pm-status-check</td>
+            <td>16시 진행상황 체크 + 퇴근 전 데스크탑 셋팅 안내</td>
+            <td class="mono">평일 16:01</td>
+            <td class="c"><span class="pill off">OFF</span></td>
+            <td class="mono dim">2026-05-20 16:01</td>
+            <td class="dim">—</td>
+          </tr>
+          <tr class="cat-row"><td colspan="6">✓ 1회성 — 실행 완료</td></tr>
+          <tr>
+            <td class="mono">evening-crawl-and-fix</td>
+            <td>Trip.com 파서 머지 + 재크롤링 + 골프 수정 + 대시보드 재생성</td>
+            <td class="mono">1회성</td>
+            <td class="c"><span class="pill done">DONE</span></td>
+            <td class="mono dim">2026-04-20 19:00</td>
+            <td class="dim">—</td>
+          </tr>
+          <tr>
+            <td class="mono">otb-refresh-from-bi</td>
+            <td>Power BI Daily OTB 조회 → weekly_report.json 업데이트 및 push</td>
+            <td class="mono">1회성</td>
+            <td class="c"><span class="pill done">DONE</span></td>
+            <td class="mono dim">2026-04-22 09:00</td>
+            <td class="dim">—</td>
+          </tr>
+          <tr>
+            <td class="mono">onbook-validation-overnight</td>
+            <td>온북 데이터 실적 검증 — CHECK 04 validation 파이프라인</td>
+            <td class="mono">1회성</td>
+            <td class="c"><span class="pill done">DONE</span></td>
+            <td class="mono dim">2026-05-03 00:14</td>
+            <td class="dim">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">
+      활성 일별 체인(02:05 트렌드 → 04:02 경쟁사 → 05:03 RM FCST·Booking → 06:02 액션캘린더)이 정상 가동 중이며 각 태스크가 종료 시 자체 빌드·푸시를 수행한다.
+      <code style="font-family:var(--mono);color:var(--gold-bright)">daily-db-update-build</code> 는 비활성 상태이나, DB 갱신·빌드 기능은 <code style="font-family:var(--mono);color:var(--gold-bright)">rm-fcst-booking-update</code> 및 GitHub Actions 일일 빌드로 대체 커버된다.
+    </p>
+  </section>
+
+  <!-- §2 PIPELINE -->
+  <section>
+    <div class="sec-h">
+      <span class="sec-num">2</span>
+      <span class="sec-t">파이프라인 상태</span>
+      <span class="sec-d">GitHub Actions · 로컬 빌드 · 자동 커밋</span>
+    </div>
+    <div class="cards" style="margin-bottom:16px">
+      <div class="card l-pos">
+        <div class="c-h">🚀 GitHub Actions — <span class="pill on">정상</span></div>
+        <div class="c-b">
+          워크플로 <code>deploy.yml</code> · 트리거: 매일 08:00 KST + 4시간마다 + <code>main</code> push (data/·docs/·scripts/ 변경 시).<br>
+          단계: 뉴스수집 → GS Monitor → Power BI → 인사이트 생성 → SDD → 기획전 실적 → <code>build.py</code> → 자동 커밋 → GitHub Pages 배포.<br>
+          <code>docs/</code> 만 변경 시 Python 스킵(deploy-only), push 3회 재시도 + rebase 안전망 내장.
+        </div>
+      </div>
+      <div class="card l-pos">
+        <div class="c-h">🔁 자동 커밋 체인 — <span class="pill on">정상</span></div>
+        <div class="c-b">
+          최근 자동 커밋: <code>action calendar sync 2026-05-23 06:05</code>.<br>
+          일별 스케줄 태스크가 각자 빌드 후 <code>git push origin main</code> → Actions 가 Pages 재배포.<br>
+          커밋 메시지에 <code>[skip ci]</code> 포함 시 full-build 생략, 배포만 수행.
+        </div>
+      </div>
+      <div class="card l-warn">
+        <div class="c-h">💻 로컬 레거시 파이프라인 — <span class="pill warn">대체됨</span></div>
+        <div class="c-b">
+          <code>_pipeline_status.json</code> 의 마지막 기록은 <code>2026-05-14 17:38 git stage</code> 로, 로컬 <code>run_pipeline.sh</code> 체인은 5/14 이후 미사용.<br>
+          현재 일별 데이터 갱신은 <b>Cowork 스케줄러 + GitHub Actions</b> 가 전담하므로 기능 공백 없음. 레거시 상태 파일은 정리 대상.
+        </div>
+      </div>
+      <div class="card l-info">
+        <div class="c-h">📦 데이터 신선도 — <span class="pill done">최신</span></div>
+        <div class="c-b">
+          <code>otb_data.json</code> 2026-05-23 06:01 · <code>db_aggregated.json</code> 2026-05-23 06:01 · <code>rm_fcst.json</code> 2026-05-22 20:05 PDF 스냅샷.<br>
+          뉴스 <code>news_latest.json</code> 322건 · 경쟁사 모니터링 일 1회 크롤링.
+        </div>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>최근 자동 커밋 (main)</th><th>일시 (KST)</th><th class="c">유형</th></tr></thead>
+        <tbody>
+          <tr><td>action calendar sync 2026-05-23 06:05</td><td class="mono">05-23 06:05</td><td class="c"><span class="pill on">AUTO</span></td></tr>
+          <tr><td>rm-fcst + booking update 2026-05-23 05:09</td><td class="mono">05-23 05:09</td><td class="c"><span class="pill on">AUTO</span></td></tr>
+          <tr><td>trend regional update 2026-05-23 02:11</td><td class="mono">05-23 02:11</td><td class="c"><span class="pill on">AUTO</span></td></tr>
+          <tr><td>애플워치용 KPI 경량 페이지 (gs-watch.html)</td><td class="mono">05-22 13:58</td><td class="c"><span class="pill done">MANUAL</span></td></tr>
+          <tr><td>인플루언서 대시보드(86코드 실적) + 인바운드 거래처 통합</td><td class="mono">05-22 11:01</td><td class="c"><span class="pill done">MANUAL</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">GitHub Actions 빌드 결과 실시간 확인: 저장소 → Actions 탭 → <b>🚀 Auto Build &amp; Deploy</b>. 본 리포트는 로컬 git 로그 기준 스냅샷이며 원격 빌드 로그는 별도 확인 권장.</p>
+  </section>
+
+  <!-- §3 REPORT INVENTORY -->
+  <section>
+    <div class="sec-h">
+      <span class="sec-num">3</span>
+      <span class="sec-t">리포트 목록</span>
+      <span class="sec-d">docs/ HTML · 주요 리포트 데이터 소스 / 갱신 주기</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>파일</th><th>리포트</th><th class="c">권한</th><th>데이터 소스</th><th>갱신 주기</th></tr>
+        </thead>
+        <tbody>
+          <tr class="cat-row"><td colspan="5">공개 / GSN 네비 노출</td></tr>
+          <tr><td class="mono">index.html</td><td>트렌드 리포트</td><td class="c">executive</td><td class="mono">news_latest · otb_data · competitor</td><td>일 4회 (Actions)</td></tr>
+          <tr><td class="mono">otb.html</td><td>GS 실적 리포트 (OTB)</td><td class="c">executive</td><td class="mono">otb_data · db_aggregated</td><td>일 1회+ (빌드)</td></tr>
+          <tr><td class="mono">booking-status.html</td><td>Booking Status</td><td class="c">executive</td><td class="mono">daily_booking · otb_data</td><td>일 1회</td></tr>
+          <tr><td class="mono">fcst-trend.html</td><td>FCST 추이</td><td class="c">executive</td><td class="mono">rm_fcst_trend</td><td>일 1회</td></tr>
+          <tr><td class="mono">action_plan_dashboard.html</td><td>Action Plan</td><td class="c">executive</td><td class="mono">campaign_data (시트연동)</td><td>일 1회 / 수동</td></tr>
+          <tr><td class="mono">gs-closing-report.html</td><td>마감 리포트</td><td class="c">executive</td><td class="mono">otb_data · db_aggregated</td><td>월 1회 (마감)</td></tr>
+          <tr><td class="mono">gs-weekly.html</td><td>주간 리포트</td><td class="c">executive</td><td class="mono">otb_data · db_aggregated</td><td>주 1회 (토)</td></tr>
+          <tr><td class="mono">gs-proposal.html</td><td>품의 자동화</td><td class="c">none</td><td class="mono">요금표 xlsx 업로드</td><td>수동</td></tr>
+          <tr><td class="mono">palatium.html</td><td>팔라티움 현황</td><td class="c">none</td><td class="mono">palatium_room_availability</td><td>일 1회</td></tr>
+          <tr><td class="mono">external-report.html</td><td>외부 리포트 분석</td><td class="c">executive</td><td class="mono">overseas_data · db_aggregated</td><td>일 1회</td></tr>
+          <tr class="cat-row"><td colspan="5">권한 제한 — 임원 / 세일즈</td></tr>
+          <tr><td class="mono">gs-report.html</td><td>GS 종합 리포트</td><td class="c">executive</td><td class="mono">otb_data · db_aggregated</td><td>일 1회</td></tr>
+          <tr><td class="mono">channel.html</td><td>채널 분석</td><td class="c">executive</td><td class="mono">db_yoy_channel</td><td>일 1회</td></tr>
+          <tr><td class="mono">gs-sales-report.html</td><td>세일즈 리포트</td><td class="c">sales</td><td class="mono">otb_data · campaign</td><td>일 1회</td></tr>
+          <tr><td class="mono">stay-date.html</td><td>투숙일 분석</td><td class="c">executive</td><td class="mono">sdd_by_prop</td><td>일 1회</td></tr>
+          <tr><td class="mono">fcst-status.html</td><td>FCST 현황</td><td class="c">executive</td><td class="mono">rm_fcst</td><td>일 1회</td></tr>
+          <tr><td class="mono">overseas.html</td><td>해외/인바운드</td><td class="c">executive</td><td class="mono">overseas_data · inbound_enriched</td><td>일 1회</td></tr>
+          <tr><td class="mono">fcst-admin.html</td><td>FCST 키인 (세일즈)</td><td class="c">sales</td><td class="mono">ai_fcst · strategy_targets</td><td>수동 키인</td></tr>
+          <tr class="cat-row"><td colspan="5">관리자 전용 — GSN 네비 미노출</td></tr>
+          <tr><td class="mono">gs-setup-report.html</td><td>구축 현황 리포트 <span class="pill warn" style="margin-left:4px">본 페이지</span></td><td class="c">admin</td><td class="mono">스케줄러 · git · docs 인벤토리</td><td>주 1회 (토)</td></tr>
+          <tr><td class="mono">gs-strategy.html</td><td>운영전략 대시보드</td><td class="c">admin</td><td class="mono">otb_data · db_aggregated · strategy_targets</td><td>주 1회 (토)</td></tr>
+          <tr><td class="mono">gs-strategy-report.html</td><td>월 전략 리포트</td><td class="c">admin</td><td class="mono">otb_data · campaign · admin_input</td><td>주 1회 (토)</td></tr>
+          <tr><td class="mono">admin.html</td><td>관리자 콘솔</td><td class="c">admin</td><td class="mono">admin_input · admin_suggestions</td><td>수동</td></tr>
+          <tr><td class="mono">gs-map.html</td><td>세일즈 맵</td><td class="c">admin</td><td class="mono">properties · competitors</td><td>주 1회</td></tr>
+          <tr><td class="mono">gs-verify.html</td><td>데이터 검증</td><td class="c">admin</td><td class="mono">daily_analysis_validation</td><td>일 1회</td></tr>
+          <tr><td class="mono">data-check.html</td><td>데이터 점검</td><td class="c">admin</td><td class="mono">data_freshness · 전체 JSON</td><td>일 1회</td></tr>
+          <tr><td class="mono">strategy-keyin.html</td><td>전략 키인</td><td class="c">admin</td><td class="mono">strategy_targets</td><td>수동 키인</td></tr>
+          <tr><td class="mono">gs-influencer.html</td><td>인플루언서 (86코드 실적)</td><td class="c">admin</td><td class="mono">influencer_86code_performance</td><td>주 1회</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">위 표는 운영 핵심 리포트 발췌(약 26/49). 나머지는 보조·아카이브 페이지(monthly·ytd·ly-trend·verification-tracker 등). 관리자 전용 페이지(<code>gs-setup-report</code>·<code>gs-strategy</code>·<code>gs-map</code>·<code>strategy-keyin</code>·전 admin 페이지)는 GSN 공개 네비에 링크하지 않는다.</p>
+  </section>
+
+  <!-- §4 AUTOMATION COVERAGE -->
+  <section>
+    <div class="sec-h">
+      <span class="sec-num">4</span>
+      <span class="sec-t">자동화 커버리지</span>
+      <span class="sec-d">자동화 영역 vs 수동 영역 매핑</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>업무 영역</th><th>처리 방식</th><th class="c">자동화</th><th>담당 (스케줄/스크립트)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>뉴스·트렌드 수집</td><td>Google News RSS → 권역별 분류</td><td class="c"><span class="pill on">자동</span></td><td class="mono">trend-report-regional · collect_news.py</td></tr>
+          <tr><td>경쟁사 OTA 가격</td><td>야놀자·트립닷컴·네이버·골프 크롤링</td><td class="c"><span class="pill on">자동</span></td><td class="mono">competitor-crawling · collect_gs_monitor.py</td></tr>
+          <tr><td>온북 DB 파싱·집계</td><td>raw_db txt → db_aggregated/otb_data</td><td class="c"><span class="pill on">자동</span></td><td class="mono">rm-fcst-booking-update · parse_raw_db.py</td></tr>
+          <tr><td>RM FCST 갱신</td><td>Revenue Meeting PDF → rm_fcst.json</td><td class="c"><span class="pill on">자동</span></td><td class="mono">rm-fcst-booking-update · parse_rm_fcst.py</td></tr>
+          <tr><td>HTML 빌드·배포</td><td>build.py → docs/ → GitHub Pages</td><td class="c"><span class="pill on">자동</span></td><td class="mono">GitHub Actions · deploy.yml</td></tr>
+          <tr><td>액션 캘린더</td><td>구글시트 → 액션캘린더 반영</td><td class="c"><span class="pill on">자동</span></td><td class="mono">action-calendar-sync</td></tr>
+          <tr><td>구축·전략 리포트</td><td>구축현황 + 전략 대시보드/리포트 갱신</td><td class="c"><span class="pill on">자동</span></td><td class="mono">weekly-setup-strategy (주 1회)</td></tr>
+          <tr><td>주간·마감 리포트</td><td>주간리포트 HTML · 월 마감자료</td><td class="c"><span class="pill on">자동</span></td><td class="mono">weekly-report · monthly-closing</td></tr>
+          <tr><td>기획전 패키지코드 매핑</td><td>구글시트 Key시트 → package_codes</td><td class="c"><span class="pill warn">반자동</span></td><td class="mono">시트 입력 수동 · daily-campaign-sync 비활성</td></tr>
+          <tr><td>기획전 실적 집계</td><td>raw_db 27/28 txt → campaign_performance</td><td class="c"><span class="pill warn">반자동</span></td><td class="mono">로컬 txt 필요 · GH 환경선 스킵</td></tr>
+          <tr><td>FCST 키인 (세일즈 목표)</td><td>세일즈팀 직접 입력</td><td class="c"><span class="pill off">수동</span></td><td class="mono">fcst-admin.html · strategy-keyin.html</td></tr>
+          <tr><td>품의서 작성</td><td>요금표 xlsx 업로드 → 시각화/내보내기</td><td class="c"><span class="pill off">수동</span></td><td class="mono">gs-proposal.html (프로토타입)</td></tr>
+          <tr><td>Power BI 수집</td><td>환경변수 의존 · Actions 선택 단계</td><td class="c"><span class="pill off">수동</span></td><td class="mono">collect_powerbi.py (대개 스킵)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span><span class="pill on">자동</span> 스케줄러/Actions 무인 처리</span>
+      <span><span class="pill warn">반자동</span> 일부 수동 입력 필요</span>
+      <span><span class="pill off">수동</span> 사람이 직접 수행</span>
+    </div>
+    <p class="note">
+      <b>커버리지 ~78%</b> — 데이터 수집·파싱·빌드·배포 전 구간이 자동. 잔여 수동 영역은 ① 기획전 패키지코드 시트 입력, ② FCST 세일즈 키인, ③ 품의서 작성으로, 모두 사람의 판단/입력이 필요한 영역이다.
+      개선 후보: <code>daily-campaign-sync</code> 재활성화 시 기획전 매핑 자동화 가능.
+    </p>
+  </section>
+
+  <footer>
+    GS 구축 현황 리포트 · 매주 토요일 06:00 자동 갱신 (weekly-setup-strategy)<br>
+    🔒 관리자 전용 — 외부 대시보드·GSN 공개 네비에 링크 노출 금지<br>
+    © 2026 SONO GS팀
+  </footer>
+
+</div>
+</body>
+</html>

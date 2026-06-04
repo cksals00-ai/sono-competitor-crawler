@@ -3,7 +3,7 @@
 3개 OTA를 병렬 크롤링 후 CSV 병합 → 대시보드 생성 → git push.
 
 각 phase를 별도 subprocess로 실행해 exports/temp_phase{N}_{date}.csv 에 저장.
-모두 완료되면 3개 temp CSV를 병합해 최종 CSV/Excel을 생성한다.
+모두 완료되면 3개 temp CSV를 병합해 최종 CSV를 생성한다.
 
 Usage:
     python run_parallel.py
@@ -90,21 +90,17 @@ def _merge_temp_csvs(today: str) -> pd.DataFrame:
 
 
 def _save_final(combined: pd.DataFrame, today: str):
-    """최종 CSV/Excel 저장."""
+    """최종 CSV 저장."""
     import yaml
-    from export_powerbi import _save_csv, _save_excel, load_output_config
+    from export_powerbi import _save_csv, load_output_config
 
     out_cfg = load_output_config()
     export_dir = PROJECT_DIR / out_cfg["export_dir"]
     export_dir.mkdir(parents=True, exist_ok=True)
 
-    csv_name   = out_cfg["csv_filename"].format(date=today)
-    excel_name = out_cfg["excel_filename"].format(date=today)
-    latest_name = out_cfg.get("powerbi_filename", "sono_competitor_prices_latest.xlsx")
+    csv_name = out_cfg["csv_filename"].format(date=today)
 
     _save_csv(combined, export_dir / csv_name)
-    _save_excel(combined, export_dir / excel_name)
-    _save_excel(combined, export_dir / latest_name, sheet_name="최신데이터")
     logger.info(f"최종 CSV 저장: {export_dir / csv_name} ({len(combined)} 행)")
 
 
@@ -141,8 +137,6 @@ def _git_push(today: str):
     files_to_add = [
         "docs/index.html",
         f"exports/sono_competitor_prices_{today}.csv",
-        f"exports/sono_competitor_prices_{today}.xlsx",
-        "exports/sono_competitor_prices_latest.xlsx",
     ]
     for f in files_to_add:
         if Path(f).exists():
