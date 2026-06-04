@@ -2169,8 +2169,9 @@ def run_crawl(
 ) -> pd.DataFrame:
     """
     test_mode=True: 첫 사업장 첫 경쟁사만, 2일치만 수집 (빠른 검증용)
-    ota_filter: 크롤링할 OTA 목록. None이면 전체.
-                예) ["야놀자"], ["Agoda"], ["여기어때", "Booking.com"]
+    ota_filter: 크롤링할 OTA 목록. None이면 활성 채널 전체.
+                활성 채널: 야놀자 / 네이버호텔 / Trip.com
+                예) ["야놀자"], ["네이버호텔", "Trip.com"]
     각 사업장의 own_urls가 있으면 자사 가격도 함께 수집 (is_own=True)
     """
     cfg = load_config(config_path)
@@ -2182,13 +2183,13 @@ def run_crawl(
         date_pairs = generate_crawl_dates(cfg["crawl"]["days_ahead"], cfg)
     delay = cfg["crawl"]["request_delay"]
 
+    # 활성 채널: 야놀자(RSC, requests) / 네이버호텔(GraphQL) / Trip.com(SSR HTML)
+    # 제거됨: 여기어때·Agoda(Selenium 대부분 실패), 자사홈(로그인 미설정).
+    # 관련 crawl_* 함수는 다른 스크립트 호환을 위해 정의는 남겨두되 호출하지 않는다.
     all_crawlers = [
         (crawl_yanolja,        "야놀자"),
-        (crawl_yeogiuh,        "여기어때"),
-        (crawl_agoda,          "Agoda"),
         (crawl_naver,          "네이버호텔"),
         (crawl_tripcom,        "Trip.com"),
-        (crawl_sono_homepage,  "자사홈"),
     ]
     if ota_filter:
         crawlers = [(fn, name) for fn, name in all_crawlers if name in ota_filter]
@@ -2204,15 +2205,11 @@ def run_crawl(
 
             # ── 자사 가격 수집 ──────────────────────────────────────────────
             own_urls = prop.get("own_urls", {})
-            if any(own_urls.get(k, "") for k in ("yanolja_url", "yeogiuh_url", "booking_url", "agoda_url", "homepage_store_cd")):
+            if any(own_urls.get(k, "") for k in ("yanolja_url", "naver_id", "tripcom_hotel_id")):
                 own_entry = {
                     "name":               prop["name"],
                     "yanolja_url":        own_urls.get("yanolja_url", ""),
-                    "yeogiuh_url":        own_urls.get("yeogiuh_url", ""),
-                    "booking_url":        own_urls.get("booking_url", ""),
-                    "agoda_url":          own_urls.get("agoda_url", ""),
                     "naver_id":           own_urls.get("naver_id", ""),
-                    "homepage_store_cd":  own_urls.get("homepage_store_cd", ""),
                     "tripcom_hotel_id":   own_urls.get("tripcom_hotel_id", 0),
                     "tripcom_city_id":    own_urls.get("tripcom_city_id", 0),
                 }
