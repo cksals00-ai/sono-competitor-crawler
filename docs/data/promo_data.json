@@ -1,0 +1,2874 @@
+{
+  "collected_at": "2026-06-04",
+  "source_file": "sono_competitor_prices_20260604.csv",
+  "properties": {
+    "르네블루 바이 쏠비치": {
+      "competitors": {
+        "켄싱턴리조트 설악비치": {
+          "promotions": [
+            {
+              "name": "스튜디오 마운틴 - 무료 Wi-Fi",
+              "channel": "네이버호텔/Trip.com",
+              "price": 97343,
+              "room_type": "기타",
+              "check_in": "2026-07-01",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660826/booking"
+            },
+            {
+              "name": "21평 디럭스 마운틴뷰 - 비리뉴얼(초강력특가, 취사가능)",
+              "channel": "네이버호텔/야놀자",
+              "price": 101000,
+              "room_type": "디럭스",
+              "check_in": "2026-05-13",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660826/booking"
+            },
+            {
+              "name": "스탠다드 스튜디오",
+              "channel": "네이버호텔/TripBToz",
+              "price": 123264,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-24",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660826/booking"
+            },
+            {
+              "name": "26평 프리미어 오션뷰  - 비리뉴얼",
+              "channel": "야놀자",
+              "price": 159900,
+              "room_type": "프리미어",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001057?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            },
+            {
+              "name": "켄싱턴 로얄 오션뷰 스위트",
+              "channel": "네이버호텔/Agoda",
+              "price": 216713,
+              "room_type": "스위트",
+              "check_in": "2026-06-24",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660826/booking"
+            }
+          ]
+        },
+        "한화리조트 설악 쏘라노": {
+          "promotions": [
+            {
+              "name": "쏘라노 디럭스 온돌",
+              "channel": "Trip.com",
+              "price": 121466,
+              "room_type": "디럭스",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=1015097&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "SINGLE ANNEX ROOM ONLY",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 177264,
+              "room_type": "기타",
+              "check_in": "2026-05-29",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            },
+            {
+              "name": "FAMILY ROOM STANDARD ROOM ONLY",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 179739,
+              "room_type": "패밀리",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            },
+            {
+              "name": "Room STANDARD ROOM ONLY",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 255604,
+              "room_type": "스탠다드",
+              "check_in": "2026-05-29",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            },
+            {
+              "name": "프리미어 스위트 (호텔형) - Room Only",
+              "channel": "네이버호텔/TripBToz",
+              "price": 402780,
+              "room_type": "스위트",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            }
+          ]
+        }
+      }
+    },
+    "소노문 해운대": {
+      "competitors": {
+        "L7 호텔 부산": {
+          "promotions": [
+            {
+              "name": "스탠다드 퀸 타운뷰(라이브특가★)",
+              "channel": "네이버호텔/야놀자",
+              "price": 198000,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-10",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N5305250/booking"
+            },
+            {
+              "name": "❤️Room UP❤️ 스탠다드 퀸 타운뷰 → 슈페리어 퀸 타운오션뷰 (10~19층) - 룸 업그레이드 혜택",
+              "channel": "네이버호텔/TripBToz",
+              "price": 225762,
+              "room_type": "슈페리어",
+              "check_in": "2026-06-10",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N5305250/booking"
+            },
+            {
+              "name": "수페리어 킹룸 - 도시 전망, 10층~19층",
+              "channel": "네이버호텔/Booking.com",
+              "price": 229900,
+              "room_type": "기타",
+              "check_in": "2026-06-10",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N5305250/booking"
+            },
+            {
+              "name": "Standard Town View Family Twin Room 4F-9F",
+              "channel": "네이버호텔/Agoda",
+              "price": 240350,
+              "room_type": "패밀리",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5305250/booking"
+            },
+            {
+              "name": "[3인 전용] 주니어 스위트 패밀리트윈 오션뷰 (온돌) - Room Only",
+              "channel": "네이버호텔/TripBToz",
+              "price": 378070,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5305250/booking"
+            }
+          ]
+        },
+        "그랜드 조선 부산": {
+          "promotions": [
+            {
+              "name": "디럭스 시티 킹",
+              "channel": "야놀자",
+              "price": 225600,
+              "room_type": "디럭스",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/1000110883?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            },
+            {
+              "name": "슈페리어 더블 시티뷰(초강력특가, 레이트 체크아웃 1시간)",
+              "channel": "네이버호텔/야놀자",
+              "price": 239800,
+              "room_type": "슈페리어",
+              "check_in": "2026-05-13",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N5260901/booking"
+            },
+            {
+              "name": "[시크릿특가] 디럭스 시티뷰 패밀리트윈  [네이버 슈퍼세일❤️] 사우나 1인 무료 제공 + 성인 2인 , 어린이 2인 수영장 무료입장",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 240450,
+              "room_type": "패밀리",
+              "check_in": "2026-06-10",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N5260901/booking"
+            },
+            {
+              "name": "키즈 수페리어 트윈룸 - 도시 전망",
+              "channel": "네이버호텔/Booking.com",
+              "price": 374000,
+              "room_type": "기타",
+              "check_in": "2026-06-24",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5260901/booking"
+            },
+            {
+              "name": "프리미어 시티뷰 킹룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 399244,
+              "room_type": "프리미어",
+              "check_in": "2026-07-01",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5260901/booking"
+            },
+            {
+              "name": "코너 시티뷰 트윈 스위트",
+              "channel": "네이버호텔/Agoda",
+              "price": 598866,
+              "room_type": "스위트",
+              "check_in": "2026-07-01",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5260901/booking"
+            }
+          ]
+        },
+        "신라스테이 부산": {
+          "promotions": [
+            {
+              "name": "더블",
+              "channel": "야놀자",
+              "price": 82400,
+              "room_type": "기타",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001229?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            },
+            {
+              "name": "[면세점 패키지] 프리미어 더블룸 - 도시 전망, 롯데면세점 바우처 1회 제공",
+              "channel": "네이버호텔/Agoda",
+              "price": 146630,
+              "room_type": "프리미어",
+              "check_in": "2026-06-17",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N3120461/booking"
+            },
+            {
+              "name": "디럭스 더블 시티뷰",
+              "channel": "네이버호텔/Agoda",
+              "price": 150150,
+              "room_type": "디럭스",
+              "check_in": "2026-06-17",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N3120461/booking"
+            },
+            {
+              "name": "디럭스 패밀리 시티뷰",
+              "channel": "네이버호텔/Agoda",
+              "price": 150150,
+              "room_type": "패밀리",
+              "check_in": "2026-06-17",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N3120461/booking"
+            },
+            {
+              "name": "[STAY X SUBWAY] 스탠다드 트윈룸, 시내 전망 + CHIPS & DRINKS",
+              "channel": "네이버호텔/Hotels.com",
+              "price": 174549,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-24",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N3120461/booking"
+            },
+            {
+              "name": "로얄 스위트",
+              "channel": "야놀자",
+              "price": 180000,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001229?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            }
+          ]
+        },
+        "웨스틴 조선 부산": {
+          "promotions": [
+            {
+              "name": "이그제큐티브룸, 해변전망, 싱글침대 2개",
+              "channel": "Trip.com",
+              "price": 233816,
+              "room_type": "기타",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=992194&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "슈페리어 패밀리 트윈 ⎜ 전망없음 - 룸온니",
+              "channel": "네이버호텔/TripBToz",
+              "price": 283140,
+              "room_type": "패밀리",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1045693/booking"
+            },
+            {
+              "name": "디럭스룸, 공원전망, 킹사이즈침대 1개 - 실내 수영장, 피트니스 센터 무료 입장 (투숙 기준인원 수대로 제공)(1)1 + 투숙객 사우나 50% 할인(1)1",
+              "channel": "네이버호텔/Trip.com",
+              "price": 298870,
+              "room_type": "디럭스",
+              "check_in": "2026-05-13",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1045693/booking"
+            },
+            {
+              "name": "[웨스틴 풀 무제한 이용] 슈페리어 트윈 (전망없음/체크인시 배정)",
+              "channel": "네이버호텔/여기어때",
+              "price": 304920,
+              "room_type": "슈페리어",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1045693/booking"
+            },
+            {
+              "name": "Deluxe Family Ondol Suite, Suite, 1 Queen or 1 Twin, Dongbaek Park view - Flexible Rate",
+              "channel": "네이버호텔/MRO",
+              "price": 520300,
+              "room_type": "스위트",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1045693/booking"
+            }
+          ]
+        },
+        "파라다이스 호텔 부산": {
+          "promotions": [
+            {
+              "name": "이그제큐티브 시티 더블 룸 본관",
+              "channel": "Trip.com",
+              "price": 227026,
+              "room_type": "기타",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=689014&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "메인 빌딩 디럭스 시티뷰 트윈룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 242232,
+              "room_type": "디럭스",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1197229/booking"
+            },
+            {
+              "name": "아넥스 빌딩 프리미엄 디럭스 부분 오션뷰 룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 382473,
+              "room_type": "프리미어",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1197229/booking"
+            },
+            {
+              "name": "메인 빌딩 시티뷰 주니어 스위트",
+              "channel": "네이버호텔/Agoda",
+              "price": 416380,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1197229/booking"
+            }
+          ]
+        }
+      }
+    },
+    "소노벨 델피노": {
+      "competitors": {
+        "켄싱턴리조트 설악밸리": {
+          "promotions": [
+            {
+              "name": "프리미엄 로잔",
+              "channel": "Trip.com",
+              "price": 192038,
+              "room_type": "프리미어",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=51809324&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "로얄스위트 베른(33평)",
+              "channel": "네이버호텔/Hotels.com",
+              "price": 234337,
+              "room_type": "스위트",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4995196/booking"
+            },
+            {
+              "name": "노블리안 루체른 룸 - 36평, 테라스, 정원 전망",
+              "channel": "네이버호텔/Booking.com",
+              "price": 293550,
+              "room_type": "기타",
+              "check_in": "2026-06-10",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N4995196/booking"
+            }
+          ]
+        },
+        "한화리조트 동해": {
+          "promotions": [
+            {
+              "name": "스탠다드 스위트",
+              "channel": "야놀자",
+              "price": 151800,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001429?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            }
+          ]
+        },
+        "한화리조트 설악": {
+          "promotions": [
+            {
+              "name": "쏘라노 디럭스 온돌",
+              "channel": "Trip.com",
+              "price": 121466,
+              "room_type": "디럭스",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=1015097&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "SINGLE ANNEX ROOM ONLY",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 177264,
+              "room_type": "기타",
+              "check_in": "2026-05-29",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            },
+            {
+              "name": "FAMILY ROOM STANDARD ROOM ONLY",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 179739,
+              "room_type": "패밀리",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            },
+            {
+              "name": "프리미어 스위트 (호텔형) - Room Only",
+              "channel": "네이버호텔/TripBToz",
+              "price": 402780,
+              "room_type": "스위트",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            }
+          ]
+        }
+      }
+    },
+    "소노벨 변산": {
+      "competitors": {
+        "더웨스트변산리조트": {
+          "promotions": [
+            {
+              "name": "A-dong one-room type (random assignment)",
+              "channel": "네이버호텔/Agoda",
+              "price": 78670,
+              "room_type": "기타",
+              "check_in": "2026-05-27",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5246361/booking"
+            },
+            {
+              "name": "C-dong single-family home (random assignment)",
+              "channel": "네이버호텔/Agoda",
+              "price": 131865,
+              "room_type": "패밀리",
+              "check_in": "2026-05-27",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5246361/booking"
+            }
+          ]
+        },
+        "변산반도 스테이리조트": {
+          "promotions": [
+            {
+              "name": "A-202(스파)  [체크인]15:00 [체크아웃]11:00",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 104880,
+              "room_type": "기타",
+              "check_in": "2026-05-27",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N3645171/booking"
+            }
+          ]
+        },
+        "스위트 호텔 변산": {
+          "promotions": [
+            {
+              "name": "A동106호",
+              "channel": "야놀자",
+              "price": 90000,
+              "room_type": "기타",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/10050777?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            }
+          ]
+        }
+      }
+    },
+    "소노벨 비발디파크": {
+      "competitors": {
+        "웰리힐리파크": {
+          "promotions": [
+            {
+              "name": "스탠다드 A",
+              "channel": "네이버호텔/Agoda",
+              "price": 54901,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "Room Assigned on Arrival",
+              "channel": "네이버호텔/Agoda",
+              "price": 68400,
+              "room_type": "기타",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "패밀리룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 80907,
+              "room_type": "패밀리",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "스위트 B",
+              "channel": "네이버호텔/Agoda",
+              "price": 94220,
+              "room_type": "스위트",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "일반실 B (온돌)",
+              "channel": "네이버호텔/Agoda",
+              "price": 156537,
+              "room_type": "온돌",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            }
+          ]
+        },
+        "하이원리조트 힐콘도": {
+          "promotions": [
+            {
+              "name": "힐 그랜드 디럭스 35평형",
+              "channel": "Trip.com",
+              "price": 79846,
+              "room_type": "디럭스",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=21857914&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "힐 슈페리어 온돌 (30평형)",
+              "channel": "네이버호텔/Agoda",
+              "price": 81728,
+              "room_type": "슈페리어",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            },
+            {
+              "name": "힐 수페리어룸(30타입) - OA 봄 정규 웰컴(2인) / 힐 30평 / 26년",
+              "channel": "네이버호텔/Agoda",
+              "price": 85621,
+              "room_type": "기타",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            },
+            {
+              "name": "힐 슈피리어 온돌 (OA 봄 레귤러 모래(1인), 힐 30평형, 26년)",
+              "channel": "네이버호텔/Agoda",
+              "price": 95401,
+              "room_type": "온돌",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            },
+            {
+              "name": "Hill Terrace Suite - OA_Spring_Planning_Untan(2 people)_Hill 40 Pyeong_26 Years",
+              "channel": "네이버호텔/Agoda",
+              "price": 101241,
+              "room_type": "스위트",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            }
+          ]
+        },
+        "한화리조트 평창": {
+          "promotions": [
+            {
+              "name": "스위트 더블침대",
+              "channel": "Trip.com",
+              "price": 109704,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=6027694&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "로얄",
+              "channel": "네이버호텔/Agoda",
+              "price": 197894,
+              "room_type": "기타",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660953/booking"
+            }
+          ]
+        },
+        "휘닉스 리조트 평창": {
+          "promotions": [
+            {
+              "name": "[워터파크 2매 포함] 스위트 (30평)",
+              "channel": "Trip.com",
+              "price": 63108,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=689087&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "🔥여행핫딜🔥스탠다드 20평 Room Only 특가!",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 72534,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-10",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "룸 (도착 시 배정)",
+              "channel": "네이버호텔/Agoda",
+              "price": 80557,
+              "room_type": "기타",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "[더블텐데이! 힐링 썸머] 호텔 슈페리어 더블",
+              "channel": "네이버호텔/여기어때",
+              "price": 89000,
+              "room_type": "슈페리어",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "유로빌라 로얄",
+              "channel": "네이버호텔/Agoda",
+              "price": 123659,
+              "room_type": "빌라",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "[더블텐데이! 패밀리 얼리썸머 2인] 호텔 슈페리어 더블",
+              "channel": "네이버호텔/여기어때",
+              "price": 129000,
+              "room_type": "패밀리",
+              "check_in": "2026-06-03",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "로얄 (40평) - [Spring season in 2026]/산전망/2 Bedroom(더블+온돌)",
+              "channel": "네이버호텔/HotelPass",
+              "price": 234000,
+              "room_type": "온돌",
+              "check_in": "2026-05-13",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            }
+          ]
+        }
+      }
+    },
+    "소노벨 양평": {
+      "competitors": {
+        "더스타휴 골프&리조트": {
+          "promotions": [
+            {
+              "name": "슈페리어",
+              "channel": "야놀자",
+              "price": 175000,
+              "room_type": "슈페리어",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3013443?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            },
+            {
+              "name": "스위트 체크인시 현장 배정",
+              "channel": "야놀자",
+              "price": 185000,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3013443?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            },
+            {
+              "name": "스타빌리지 B동",
+              "channel": "야놀자",
+              "price": 490000,
+              "room_type": "기타",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3013443?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            }
+          ]
+        },
+        "블룸비스타 호텔": {
+          "promotions": [
+            {
+              "name": "스탠다드 트윈 마운틴뷰",
+              "channel": "네이버호텔/Agoda",
+              "price": 126936,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367659/booking"
+            },
+            {
+              "name": "또봇 패밀리",
+              "channel": "Trip.com",
+              "price": 137073,
+              "room_type": "패밀리",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=8580755&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "Room Assigned on Arrival",
+              "channel": "네이버호텔/Agoda",
+              "price": 154388,
+              "room_type": "기타",
+              "check_in": "2026-05-30",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367659/booking"
+            },
+            {
+              "name": "디럭스 리버뷰 트윈룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 156059,
+              "room_type": "디럭스",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367659/booking"
+            },
+            {
+              "name": "쥬쥬존 스위트룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 287184,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367659/booking"
+            }
+          ]
+        },
+        "쉐르빌 온천관광호텔": {
+          "promotions": [
+            {
+              "name": "코리안 스타일 온돌룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 82090,
+              "room_type": "온돌",
+              "check_in": "2026-05-27",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4588044/booking"
+            },
+            {
+              "name": "그랜드룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 82090,
+              "room_type": "기타",
+              "check_in": "2026-05-27",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4588044/booking"
+            },
+            {
+              "name": "로열 스위트",
+              "channel": "Trip.com",
+              "price": 85275,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=10718793&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            }
+          ]
+        }
+      }
+    },
+    "소노벨 제주": {
+      "competitors": {
+        "제주 부영호텔&리조트": {
+          "promotions": [
+            {
+              "name": "헐리우드",
+              "channel": "Trip.com",
+              "price": 100951,
+              "room_type": "기타",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=3912580&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "리조트/프리미엄",
+              "channel": "야놀자",
+              "price": 163400,
+              "room_type": "프리미어",
+              "check_in": "2026-06-17",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3016760?checkInDate=2026-06-17&checkOutDate=2026-06-18"
+            },
+            {
+              "name": "리조트/프리미엄 스위트",
+              "channel": "야놀자",
+              "price": 243700,
+              "room_type": "스위트",
+              "check_in": "2026-06-17",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3016760?checkInDate=2026-06-17&checkOutDate=2026-06-18"
+            }
+          ]
+        },
+        "제주 신화월드 호텔앤리조트": {
+          "promotions": [
+            {
+              "name": "디럭스 킹룸",
+              "channel": "Trip.com",
+              "price": 106836,
+              "room_type": "디럭스",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=25673737&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "슈페리어 트윈 + BIG3 이용권+워터파크",
+              "channel": "야놀자",
+              "price": 147715,
+              "room_type": "슈페리어",
+              "check_in": "2026-06-24",
+              "is_promo": true,
+              "url": "https://nol.yanolja.com/stay/domestic/3015955?checkInDate=2026-06-24&checkOutDate=2026-06-25"
+            },
+            {
+              "name": "디럭스 패밀리 트윈",
+              "channel": "야놀자",
+              "price": 235125,
+              "room_type": "패밀리",
+              "check_in": "2026-06-17",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3015955?checkInDate=2026-06-17&checkOutDate=2026-06-18"
+            },
+            {
+              "name": "주니어 스위트",
+              "channel": "야놀자",
+              "price": 271805,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3015955?checkInDate=2026-06-05&checkOutDate=2026-06-06"
+            },
+            {
+              "name": "커넥팅룸",
+              "channel": "야놀자",
+              "price": 329175,
+              "room_type": "기타",
+              "check_in": "2026-06-17",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3015955?checkInDate=2026-06-17&checkOutDate=2026-06-18"
+            }
+          ]
+        },
+        "해비치 호텔앤리조트 제주": {
+          "promotions": [
+            {
+              "name": "슈페리어 트윈 빌리지",
+              "channel": "야놀자",
+              "price": 315569,
+              "room_type": "슈페리어",
+              "check_in": "2026-06-26",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001286?checkInDate=2026-06-26&checkOutDate=2026-06-27"
+            },
+            {
+              "name": "주니어 스위트 트윈 빌리지",
+              "channel": "야놀자",
+              "price": 324100,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001286?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            },
+            {
+              "name": "[호텔] 수페리어 트윈 빌리지",
+              "channel": "Trip.com",
+              "price": 351290,
+              "room_type": "기타",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=988329&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "디럭스 트윈 측면 오션",
+              "channel": "야놀자",
+              "price": 422400,
+              "room_type": "디럭스",
+              "check_in": "2026-07-03",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001286?checkInDate=2026-07-03&checkOutDate=2026-07-04"
+            }
+          ]
+        },
+        "휘닉스 아일랜드 섭지코지": {
+          "promotions": [
+            {
+              "name": "로얄룸 펫객실(34평) + 사계절 온수풀 & 사우나 (4인) + 키즈플레이라운지",
+              "channel": "Trip.com",
+              "price": 228158,
+              "room_type": "기타",
+              "check_in": "2026-06-05",
+              "is_promo": true,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=6475676&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "로얄스위트-54평",
+              "channel": "야놀자",
+              "price": 397720,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001109?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            }
+          ]
+        }
+      }
+    },
+    "소노벨 천안": {
+      "competitors": {
+        "스플라스 리솜 덕산": {
+          "promotions": [
+            {
+              "name": "S20 스테이 콘도",
+              "channel": "야놀자",
+              "price": 134100,
+              "room_type": "기타",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/10054606?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            }
+          ]
+        },
+        "아산 온양관광호텔": {
+          "promotions": [
+            {
+              "name": "수페리어 더블룸 (금연)",
+              "channel": "Trip.com",
+              "price": 61072,
+              "room_type": "기타",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=5894622&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "슈페리어 더블",
+              "channel": "네이버호텔/Agoda",
+              "price": 63632,
+              "room_type": "슈페리어",
+              "check_in": "2026-05-27",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1719595/booking"
+            },
+            {
+              "name": "디럭스 더블",
+              "channel": "네이버호텔/Agoda",
+              "price": 72057,
+              "room_type": "디럭스",
+              "check_in": "2026-05-27",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1719595/booking"
+            },
+            {
+              "name": "스탠다드 더블 - Room only/전망없음/더블",
+              "channel": "네이버호텔/HotelPass",
+              "price": 77000,
+              "room_type": "스탠다드",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1719595/booking"
+            },
+            {
+              "name": "온돌 객실",
+              "channel": "네이버호텔/Agoda",
+              "price": 162857,
+              "room_type": "온돌",
+              "check_in": "2026-05-27",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1719595/booking"
+            }
+          ]
+        },
+        "천안 상록리조트": {
+          "promotions": [
+            {
+              "name": "Room Assigned on Arrival",
+              "channel": "네이버호텔/Agoda",
+              "price": 106982,
+              "room_type": "기타",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5304693/booking"
+            },
+            {
+              "name": "호텔(온돌) 룸온리",
+              "channel": "네이버호텔/야놀자",
+              "price": 113000,
+              "room_type": "온돌",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5304693/booking"
+            },
+            {
+              "name": "호텔 패밀리룸(저상형침대2)(바닥형(저상형 침대)침대 객실로 영유아동반 최적의 가족형 객실) 룸온리",
+              "channel": "네이버호텔/야놀자",
+              "price": 113000,
+              "room_type": "패밀리",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5304693/booking"
+            },
+            {
+              "name": "SUITE 룸온리",
+              "channel": "네이버호텔/야놀자",
+              "price": 210000,
+              "room_type": "스위트",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5304693/booking"
+            }
+          ]
+        }
+      }
+    },
+    "소노벨 청송": {
+      "competitors": {
+        "주왕산 온천관광호텔": {
+          "promotions": [
+            {
+              "name": "스탠다드 더블 A",
+              "channel": "야놀자",
+              "price": 75000,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/10041107?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            },
+            {
+              "name": "양실 스위트",
+              "channel": "야놀자",
+              "price": 140000,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/10041107?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            }
+          ]
+        }
+      }
+    },
+    "소노캄 거제": {
+      "competitors": {
+        "거제 삼성호텔": {
+          "promotions": [
+            {
+              "name": "#굿초이스# 본관 스탠다드 마운틴뷰 (미니바 무료)",
+              "channel": "네이버호텔/여기어때",
+              "price": 107610,
+              "room_type": "스탠다드",
+              "check_in": "2026-05-27",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1658843/booking"
+            },
+            {
+              "name": "패밀리",
+              "channel": "Trip.com",
+              "price": 134903,
+              "room_type": "패밀리",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=3793689&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "체크인 시 배정 (Run of House)",
+              "channel": "네이버호텔/Agoda",
+              "price": 144767,
+              "room_type": "기타",
+              "check_in": "2026-05-27",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1658843/booking"
+            },
+            {
+              "name": "디럭스룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 156963,
+              "room_type": "디럭스",
+              "check_in": "2026-05-15",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1658843/booking"
+            },
+            {
+              "name": "스탠다드(랜덤배정, 피트니스&수영장&사우나2인+미니바 무료) ★단독 특가★프리미엄 베개 1개+케이블카 1인 탑승권+미니바+실내수영장",
+              "channel": "네이버호텔/야놀자",
+              "price": 159900,
+              "room_type": "프리미어",
+              "check_in": "2026-05-13",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1658843/booking"
+            }
+          ]
+        },
+        "라마다 스위츠 거제": {
+          "promotions": [
+            {
+              "name": "킹 프리미어 더블룸(기준2인/최대4인)",
+              "channel": "Trip.com",
+              "price": 77637,
+              "room_type": "프리미어",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=76344870&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "패밀리 프리미어 커넥팅룸(기준3인/최대3인) - 무료 Wi-Fi",
+              "channel": "네이버호텔/Trip.com",
+              "price": 100737,
+              "room_type": "패밀리",
+              "check_in": "2026-05-13",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N4520845/booking"
+            },
+            {
+              "name": "로프트 이그제큐티브 스위트룸(기준4인/최대6인) - 무료 Wi-Fi",
+              "channel": "네이버호텔/Trip.com",
+              "price": 292950,
+              "room_type": "스위트",
+              "check_in": "2026-05-13",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N4520845/booking"
+            }
+          ]
+        },
+        "한화리조트 거제 르씨엘": {
+          "promotions": [
+            {
+              "name": "디럭스룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 173296,
+              "room_type": "디럭스",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4689347/booking"
+            },
+            {
+              "name": "스위트",
+              "channel": "네이버호텔/Agoda",
+              "price": 215192,
+              "room_type": "스위트",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4689347/booking"
+            },
+            {
+              "name": "디럭스 원룸 호텔형 브랜드기획전★패밀리 PICK ALL INCLUSIVE 1박 5월",
+              "channel": "네이버호텔/야놀자",
+              "price": 271000,
+              "room_type": "패밀리",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4689347/booking"
+            },
+            {
+              "name": "로얄 (호텔형) - Room Only",
+              "channel": "네이버호텔/TripBToz",
+              "price": 420420,
+              "room_type": "기타",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4689347/booking"
+            }
+          ]
+        },
+        "한화리조트 거제 벨버디어": {
+          "promotions": [
+            {
+              "name": "디럭스룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 173296,
+              "room_type": "디럭스",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4689347/booking"
+            },
+            {
+              "name": "스위트",
+              "channel": "네이버호텔/Agoda",
+              "price": 215192,
+              "room_type": "스위트",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4689347/booking"
+            },
+            {
+              "name": "디럭스 원룸 호텔형 브랜드기획전★패밀리 PICK ALL INCLUSIVE 1박 5월",
+              "channel": "네이버호텔/야놀자",
+              "price": 271000,
+              "room_type": "패밀리",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4689347/booking"
+            },
+            {
+              "name": "로얄 (호텔형) - Room Only",
+              "channel": "네이버호텔/TripBToz",
+              "price": 420420,
+              "room_type": "기타",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4689347/booking"
+            }
+          ]
+        }
+      }
+    },
+    "소노캄 고양": {
+      "competitors": {
+        "글로스터호텔 킨텍스": {
+          "promotions": [
+            {
+              "name": "패밀리 트윈룸",
+              "channel": "Trip.com",
+              "price": 73965,
+              "room_type": "패밀리",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=74296299&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "스탠다드 더블 + 1시간 레이트 체크아웃",
+              "channel": "야놀자",
+              "price": 75712,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-17",
+              "is_promo": true,
+              "url": "https://nol.yanolja.com/stay/domestic/1000113415?checkInDate=2026-06-17&checkOutDate=2026-06-18"
+            },
+            {
+              "name": "헐리우드 킹",
+              "channel": "야놀자",
+              "price": 119720,
+              "room_type": "기타",
+              "check_in": "2026-07-01",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/1000113415?checkInDate=2026-07-01&checkOutDate=2026-07-02"
+            },
+            {
+              "name": "디럭스 더블",
+              "channel": "야놀자",
+              "price": 139400,
+              "room_type": "디럭스",
+              "check_in": "2026-07-01",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/1000113415?checkInDate=2026-07-01&checkOutDate=2026-07-02"
+            },
+            {
+              "name": "로얄 스위트",
+              "channel": "야놀자",
+              "price": 239440,
+              "room_type": "스위트",
+              "check_in": "2026-07-01",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/1000113415?checkInDate=2026-07-01&checkOutDate=2026-07-02"
+            }
+          ]
+        },
+        "킨텍스 바이 케이트리": {
+          "promotions": [
+            {
+              "name": "[무료 업그레이드 및 12시 레이트 체크아웃] 스탠다드 더블에서 디럭스 더블로 객실 업그레이드",
+              "channel": "네이버호텔/Agoda",
+              "price": 79631,
+              "room_type": "디럭스",
+              "check_in": "2026-06-03",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N5287305/booking"
+            },
+            {
+              "name": "스탠다드 더블",
+              "channel": "네이버호텔/Agoda",
+              "price": 79631,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5287305/booking"
+            },
+            {
+              "name": "[무료 업그레이드 및 12시 레이트 체크아웃] 스탠다드 트윈에서 패밀리 트윈으로 객실 업그레이드",
+              "channel": "네이버호텔/Agoda",
+              "price": 79631,
+              "room_type": "패밀리",
+              "check_in": "2026-06-03",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N5287305/booking"
+            },
+            {
+              "name": "헐리우드 더블룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 87565,
+              "room_type": "기타",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5287305/booking"
+            },
+            {
+              "name": "스탠다드 스위트",
+              "channel": "네이버호텔/Agoda",
+              "price": 183960,
+              "room_type": "스위트",
+              "check_in": "2026-07-01",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5287305/booking"
+            }
+          ]
+        }
+      }
+    },
+    "소노캄 델피노": {
+      "competitors": {
+        "켄싱턴리조트 설악밸리": {
+          "promotions": [
+            {
+              "name": "프리미엄 로잔",
+              "channel": "Trip.com",
+              "price": 192038,
+              "room_type": "프리미어",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=51809324&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "로얄스위트 베른(33평)",
+              "channel": "네이버호텔/Hotels.com",
+              "price": 234337,
+              "room_type": "스위트",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4995196/booking"
+            },
+            {
+              "name": "노블리안 루체른 룸 - 36평, 테라스, 정원 전망",
+              "channel": "네이버호텔/Booking.com",
+              "price": 293550,
+              "room_type": "기타",
+              "check_in": "2026-06-10",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N4995196/booking"
+            }
+          ]
+        },
+        "한화리조트 동해": {
+          "promotions": [
+            {
+              "name": "스탠다드 스위트",
+              "channel": "야놀자",
+              "price": 151800,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001429?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            }
+          ]
+        },
+        "한화리조트 설악": {
+          "promotions": [
+            {
+              "name": "쏘라노 디럭스 온돌",
+              "channel": "Trip.com",
+              "price": 121466,
+              "room_type": "디럭스",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=1015097&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "SINGLE ANNEX ROOM ONLY",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 177264,
+              "room_type": "기타",
+              "check_in": "2026-05-29",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            },
+            {
+              "name": "FAMILY ROOM STANDARD ROOM ONLY",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 179739,
+              "room_type": "패밀리",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            },
+            {
+              "name": "프리미어 스위트 (호텔형) - Room Only",
+              "channel": "네이버호텔/TripBToz",
+              "price": 402780,
+              "room_type": "스위트",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            }
+          ]
+        }
+      }
+    },
+    "소노캄 비발디파크": {
+      "competitors": {
+        "웰리힐리파크": {
+          "promotions": [
+            {
+              "name": "스탠다드 A",
+              "channel": "네이버호텔/Agoda",
+              "price": 54901,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "Room Assigned on Arrival",
+              "channel": "네이버호텔/Agoda",
+              "price": 68271,
+              "room_type": "기타",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "패밀리룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 80907,
+              "room_type": "패밀리",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "스위트 B",
+              "channel": "네이버호텔/Agoda",
+              "price": 94220,
+              "room_type": "스위트",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "일반실 B (온돌)",
+              "channel": "네이버호텔/Agoda",
+              "price": 156801,
+              "room_type": "온돌",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            }
+          ]
+        },
+        "하이원리조트 힐콘도": {
+          "promotions": [
+            {
+              "name": "힐 그랜드 디럭스 35평형",
+              "channel": "Trip.com",
+              "price": 79846,
+              "room_type": "디럭스",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=21857914&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "힐 슈페리어 온돌 (30평형)",
+              "channel": "네이버호텔/Agoda",
+              "price": 81728,
+              "room_type": "슈페리어",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            },
+            {
+              "name": "힐 수페리어룸(30타입) - OA 봄 정규 웰컴(2인) / 힐 30평 / 26년",
+              "channel": "네이버호텔/Agoda",
+              "price": 85621,
+              "room_type": "기타",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            },
+            {
+              "name": "힐 슈피리어 온돌 (OA 봄 레귤러 모래(1인), 힐 30평형, 26년)",
+              "channel": "네이버호텔/Agoda",
+              "price": 95401,
+              "room_type": "온돌",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            },
+            {
+              "name": "Hill Terrace Suite - OA_Spring_Planning_Untan(2 people)_Hill 40 Pyeong_26 Years",
+              "channel": "네이버호텔/Agoda",
+              "price": 101241,
+              "room_type": "스위트",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            }
+          ]
+        },
+        "한화리조트 평창": {
+          "promotions": [
+            {
+              "name": "스위트 더블침대",
+              "channel": "Trip.com",
+              "price": 109704,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=6027694&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "로얄",
+              "channel": "네이버호텔/Agoda",
+              "price": 199160,
+              "room_type": "기타",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660953/booking"
+            }
+          ]
+        },
+        "휘닉스 리조트 평창": {
+          "promotions": [
+            {
+              "name": "[워터파크 2매 포함] 스위트 (30평)",
+              "channel": "Trip.com",
+              "price": 63108,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=689087&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "🔥여행핫딜🔥스탠다드 20평 Room Only 특가!",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 72534,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-10",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "Random Room Assigned",
+              "channel": "네이버호텔/Agoda",
+              "price": 80458,
+              "room_type": "기타",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "[더블텐데이! 힐링 썸머] 호텔 슈페리어 더블",
+              "channel": "네이버호텔/여기어때",
+              "price": 89000,
+              "room_type": "슈페리어",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "유로빌라 로얄",
+              "channel": "네이버호텔/Agoda",
+              "price": 123659,
+              "room_type": "빌라",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "[더블텐데이! 패밀리 얼리썸머 2인] 호텔 슈페리어 더블",
+              "channel": "네이버호텔/여기어때",
+              "price": 129000,
+              "room_type": "패밀리",
+              "check_in": "2026-06-03",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "로얄 (40평) - [Spring season in 2026]/산전망/2 Bedroom(더블+온돌)",
+              "channel": "네이버호텔/HotelPass",
+              "price": 234000,
+              "room_type": "온돌",
+              "check_in": "2026-05-13",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            }
+          ]
+        }
+      }
+    },
+    "소노캄 여수": {
+      "competitors": {
+        "디오션 호텔&리조트": {
+          "promotions": [
+            {
+              "name": "26 오렌지",
+              "channel": "Trip.com",
+              "price": 62924,
+              "room_type": "기타",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=14002719&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "오션 트윈룸 (온돌)",
+              "channel": "네이버호텔/Agoda",
+              "price": 70226,
+              "room_type": "온돌",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367450/booking"
+            },
+            {
+              "name": "스탠다드 트윈룸 - 바다 전망",
+              "channel": "네이버호텔/Agoda",
+              "price": 87920,
+              "room_type": "스탠다드",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367450/booking"
+            },
+            {
+              "name": "패밀리 트윈 - 특별 상품(2인 조식 포함)",
+              "channel": "네이버호텔/Agoda",
+              "price": 97225,
+              "room_type": "패밀리",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367450/booking"
+            }
+          ]
+        },
+        "여수 베네치아 호텔&스위트": {
+          "promotions": [
+            {
+              "name": "슈페리어 더블룸",
+              "channel": "Trip.com",
+              "price": 79448,
+              "room_type": "슈페리어",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=23778487&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "수페리어 트윈룸",
+              "channel": "네이버호텔/Booking.com",
+              "price": 86364,
+              "room_type": "기타",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4223183/booking"
+            },
+            {
+              "name": "슈페리어 트윈룸 오션뷰 - 요트 1+1 쿠폰 제공 (1)1 + 룸업그레이드 (슈페리어 트윈->슈페리어 패밀리 트윈)(1)1 - 무료 Wi-Fi",
+              "channel": "네이버호텔/Trip.com",
+              "price": 88889,
+              "room_type": "패밀리",
+              "check_in": "2026-06-03",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N4223183/booking"
+            },
+            {
+              "name": "[네이버특가]  디럭스 코너(퀸+싱글) 오션뷰 (요트 1인 구매시 1인 무료 쿠폰 제공)",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 116730,
+              "room_type": "디럭스",
+              "check_in": "2026-06-03",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N4223183/booking"
+            },
+            {
+              "name": "[네이버특가] 프리미어 더블 트윈(킹+퀸) 오션뷰 (요트 1인 구매시 1인 무료 쿠폰 제공)",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 128403,
+              "room_type": "프리미어",
+              "check_in": "2026-06-03",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N4223183/booking"
+            },
+            {
+              "name": "키즈 풀 스위트룸",
+              "channel": "네이버호텔/Booking.com",
+              "price": 181818,
+              "room_type": "스위트",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4223183/booking"
+            }
+          ]
+        },
+        "여수 벨메르 한화호텔&리조트": {
+          "promotions": [
+            {
+              "name": "스탠다드룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 121875,
+              "room_type": "스탠다드",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5277860/booking"
+            },
+            {
+              "name": "수페리어 씨 뷰 스위트",
+              "channel": "Trip.com",
+              "price": 127660,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=69189643&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            }
+          ]
+        },
+        "히든베이 호텔": {
+          "promotions": [
+            {
+              "name": "디럭스 더블룸, 바다 전망",
+              "channel": "네이버호텔/Hotels.com",
+              "price": 72667,
+              "room_type": "디럭스",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2031769/booking"
+            },
+            {
+              "name": "프리미엄 더블룸 킹 침대 1개 (사우나 이용권 2인 포함)",
+              "channel": "Trip.com",
+              "price": 80353,
+              "room_type": "프리미어",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=6119754&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "디럭스 패밀리 트윈룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 82903,
+              "room_type": "패밀리",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2031769/booking"
+            },
+            {
+              "name": "룸 (도착 시 배정)",
+              "channel": "네이버호텔/Agoda",
+              "price": 98239,
+              "room_type": "기타",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2031769/booking"
+            },
+            {
+              "name": "스위트, 베이 전망 (Sweet Suite Offer)",
+              "channel": "네이버호텔/Hotels.com",
+              "price": 279276,
+              "room_type": "스위트",
+              "check_in": "2026-06-17",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2031769/booking"
+            }
+          ]
+        }
+      }
+    },
+    "소노캄 제주": {
+      "competitors": {
+        "제주 부영호텔&리조트": {
+          "promotions": [
+            {
+              "name": "헐리우드",
+              "channel": "Trip.com",
+              "price": 100951,
+              "room_type": "기타",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=3912580&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "리조트/프리미엄",
+              "channel": "야놀자",
+              "price": 163400,
+              "room_type": "프리미어",
+              "check_in": "2026-06-17",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3016760?checkInDate=2026-06-17&checkOutDate=2026-06-18"
+            },
+            {
+              "name": "리조트/프리미엄 스위트",
+              "channel": "야놀자",
+              "price": 243700,
+              "room_type": "스위트",
+              "check_in": "2026-06-17",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3016760?checkInDate=2026-06-17&checkOutDate=2026-06-18"
+            }
+          ]
+        },
+        "제주 신화월드 호텔앤리조트": {
+          "promotions": [
+            {
+              "name": "디럭스 킹룸",
+              "channel": "Trip.com",
+              "price": 106836,
+              "room_type": "디럭스",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=25673737&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "슈페리어 트윈 + BIG3 이용권+워터파크",
+              "channel": "야놀자",
+              "price": 147715,
+              "room_type": "슈페리어",
+              "check_in": "2026-06-24",
+              "is_promo": true,
+              "url": "https://nol.yanolja.com/stay/domestic/3015955?checkInDate=2026-06-24&checkOutDate=2026-06-25"
+            },
+            {
+              "name": "디럭스 패밀리 트윈",
+              "channel": "야놀자",
+              "price": 235125,
+              "room_type": "패밀리",
+              "check_in": "2026-06-17",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3015955?checkInDate=2026-06-17&checkOutDate=2026-06-18"
+            },
+            {
+              "name": "주니어 스위트",
+              "channel": "야놀자",
+              "price": 271805,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3015955?checkInDate=2026-06-05&checkOutDate=2026-06-06"
+            },
+            {
+              "name": "커넥팅룸",
+              "channel": "야놀자",
+              "price": 329175,
+              "room_type": "기타",
+              "check_in": "2026-06-17",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3015955?checkInDate=2026-06-17&checkOutDate=2026-06-18"
+            }
+          ]
+        },
+        "해비치 호텔앤리조트 제주": {
+          "promotions": [
+            {
+              "name": "슈페리어 트윈 빌리지",
+              "channel": "야놀자",
+              "price": 315569,
+              "room_type": "슈페리어",
+              "check_in": "2026-06-26",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001286?checkInDate=2026-06-26&checkOutDate=2026-06-27"
+            },
+            {
+              "name": "주니어 스위트 트윈 빌리지",
+              "channel": "야놀자",
+              "price": 324100,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001286?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            },
+            {
+              "name": "[호텔] 수페리어 트윈 빌리지",
+              "channel": "Trip.com",
+              "price": 351290,
+              "room_type": "기타",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=988329&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "디럭스 트윈 측면 오션",
+              "channel": "야놀자",
+              "price": 422400,
+              "room_type": "디럭스",
+              "check_in": "2026-07-03",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001286?checkInDate=2026-07-03&checkOutDate=2026-07-04"
+            }
+          ]
+        },
+        "휘닉스 아일랜드 섭지코지": {
+          "promotions": [
+            {
+              "name": "로얄룸 펫객실(34평) + 사계절 온수풀 & 사우나 (4인) + 키즈플레이라운지",
+              "channel": "Trip.com",
+              "price": 228158,
+              "room_type": "기타",
+              "check_in": "2026-06-05",
+              "is_promo": true,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=6475676&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "로얄스위트-54평",
+              "channel": "야놀자",
+              "price": 397720,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001109?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            }
+          ]
+        }
+      }
+    },
+    "소노펠리체 델피노": {
+      "competitors": {
+        "켄싱턴리조트 설악밸리": {
+          "promotions": [
+            {
+              "name": "프리미엄 로잔",
+              "channel": "Trip.com",
+              "price": 192038,
+              "room_type": "프리미어",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=51809324&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "로얄스위트 베른(33평)",
+              "channel": "네이버호텔/Hotels.com",
+              "price": 234337,
+              "room_type": "스위트",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4995196/booking"
+            },
+            {
+              "name": "노블리안 루체른 룸 - 36평, 테라스, 정원 전망",
+              "channel": "네이버호텔/Booking.com",
+              "price": 293550,
+              "room_type": "기타",
+              "check_in": "2026-06-10",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N4995196/booking"
+            }
+          ]
+        },
+        "한화리조트 동해": {
+          "promotions": [
+            {
+              "name": "스탠다드 스위트",
+              "channel": "야놀자",
+              "price": 151800,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001429?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            }
+          ]
+        },
+        "한화리조트 설악": {
+          "promotions": [
+            {
+              "name": "쏘라노 디럭스 온돌",
+              "channel": "Trip.com",
+              "price": 121466,
+              "room_type": "디럭스",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=1015097&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "SINGLE ANNEX ROOM ONLY",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 177264,
+              "room_type": "기타",
+              "check_in": "2026-05-29",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            },
+            {
+              "name": "FAMILY ROOM STANDARD ROOM ONLY",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 179739,
+              "room_type": "패밀리",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            },
+            {
+              "name": "프리미어 스위트 (호텔형) - Room Only",
+              "channel": "네이버호텔/TripBToz",
+              "price": 402780,
+              "room_type": "스위트",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            }
+          ]
+        }
+      }
+    },
+    "소노펠리체 비발디파크": {
+      "competitors": {
+        "웰리힐리파크": {
+          "promotions": [
+            {
+              "name": "스탠다드 A",
+              "channel": "네이버호텔/Agoda",
+              "price": 54901,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "Room Assigned on Arrival",
+              "channel": "네이버호텔/Agoda",
+              "price": 69142,
+              "room_type": "기타",
+              "check_in": "2026-05-27",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "패밀리룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 80907,
+              "room_type": "패밀리",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "스위트 B",
+              "channel": "네이버호텔/Agoda",
+              "price": 94220,
+              "room_type": "스위트",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "일반실 B (온돌)",
+              "channel": "네이버호텔/Agoda",
+              "price": 156537,
+              "room_type": "온돌",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            }
+          ]
+        },
+        "하이원리조트 힐콘도": {
+          "promotions": [
+            {
+              "name": "힐 그랜드 디럭스 35평형",
+              "channel": "Trip.com",
+              "price": 79846,
+              "room_type": "디럭스",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=21857914&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "힐 슈페리어 온돌 (30평형)",
+              "channel": "네이버호텔/Agoda",
+              "price": 81728,
+              "room_type": "슈페리어",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            },
+            {
+              "name": "힐 수페리어룸(30타입) - OA 봄 정규 웰컴(2인) / 힐 30평 / 26년",
+              "channel": "네이버호텔/Agoda",
+              "price": 85621,
+              "room_type": "기타",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            },
+            {
+              "name": "힐 슈피리어 온돌 (OA 봄 레귤러 모래(1인), 힐 30평형, 26년)",
+              "channel": "네이버호텔/Agoda",
+              "price": 95401,
+              "room_type": "온돌",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            },
+            {
+              "name": "Hill Terrace Suite - OA_Spring_Planning_Untan(2 people)_Hill 40 Pyeong_26 Years",
+              "channel": "네이버호텔/Agoda",
+              "price": 101241,
+              "room_type": "스위트",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            }
+          ]
+        },
+        "한화리조트 평창": {
+          "promotions": [
+            {
+              "name": "스위트 더블침대",
+              "channel": "Trip.com",
+              "price": 109704,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=6027694&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "로얄",
+              "channel": "네이버호텔/Agoda",
+              "price": 197894,
+              "room_type": "기타",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660953/booking"
+            }
+          ]
+        },
+        "휘닉스 리조트 평창": {
+          "promotions": [
+            {
+              "name": "[워터파크 2매 포함] 스위트 (30평)",
+              "channel": "Trip.com",
+              "price": 63108,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=689087&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "🔥여행핫딜🔥스탠다드 20평 Room Only 특가!",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 72534,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-10",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "Random Room Assigned",
+              "channel": "네이버호텔/Agoda",
+              "price": 80515,
+              "room_type": "기타",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "[더블텐데이! 힐링 썸머] 호텔 슈페리어 더블",
+              "channel": "네이버호텔/여기어때",
+              "price": 89000,
+              "room_type": "슈페리어",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "유로빌라 로얄",
+              "channel": "네이버호텔/Agoda",
+              "price": 123659,
+              "room_type": "빌라",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "[더블텐데이! 패밀리 얼리썸머 2인] 호텔 슈페리어 더블",
+              "channel": "네이버호텔/여기어때",
+              "price": 129000,
+              "room_type": "패밀리",
+              "check_in": "2026-06-03",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "로얄 (40평) - [Spring season in 2026]/산전망/2 Bedroom(더블+온돌)",
+              "channel": "네이버호텔/HotelPass",
+              "price": 234000,
+              "room_type": "온돌",
+              "check_in": "2026-05-13",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            }
+          ]
+        }
+      }
+    },
+    "소노펠리체 빌리지 델피노": {
+      "competitors": {
+        "켄싱턴리조트 설악밸리": {
+          "promotions": [
+            {
+              "name": "프리미엄 로잔",
+              "channel": "Trip.com",
+              "price": 192038,
+              "room_type": "프리미어",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=51809324&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "로얄스위트 베른(33평)",
+              "channel": "네이버호텔/Hotels.com",
+              "price": 234337,
+              "room_type": "스위트",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4995196/booking"
+            },
+            {
+              "name": "노블리안 루체른 룸 - 36평, 테라스, 정원 전망",
+              "channel": "네이버호텔/Booking.com",
+              "price": 293550,
+              "room_type": "기타",
+              "check_in": "2026-06-10",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N4995196/booking"
+            }
+          ]
+        },
+        "한화리조트 동해": {
+          "promotions": [
+            {
+              "name": "스탠다드 스위트",
+              "channel": "야놀자",
+              "price": 151800,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3001429?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            }
+          ]
+        },
+        "한화리조트 설악": {
+          "promotions": [
+            {
+              "name": "쏘라노 디럭스 온돌",
+              "channel": "Trip.com",
+              "price": 121466,
+              "room_type": "디럭스",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=1015097&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "SINGLE ANNEX ROOM ONLY",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 177264,
+              "room_type": "기타",
+              "check_in": "2026-05-29",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            },
+            {
+              "name": "FAMILY ROOM STANDARD ROOM ONLY",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 179739,
+              "room_type": "패밀리",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            },
+            {
+              "name": "Room STANDARD ROOM ONLY",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 229929,
+              "room_type": "스탠다드",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            },
+            {
+              "name": "프리미어 스위트 (호텔형) - Room Only",
+              "channel": "네이버호텔/TripBToz",
+              "price": 402780,
+              "room_type": "스위트",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1740975/booking"
+            }
+          ]
+        }
+      }
+    },
+    "소노펠리체 빌리지 비발디파크": {
+      "competitors": {
+        "웰리힐리파크": {
+          "promotions": [
+            {
+              "name": "스탠다드 A",
+              "channel": "네이버호텔/Agoda",
+              "price": 54901,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "Room Assigned on Arrival",
+              "channel": "네이버호텔/Agoda",
+              "price": 69142,
+              "room_type": "기타",
+              "check_in": "2026-05-27",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "패밀리룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 80907,
+              "room_type": "패밀리",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "스위트 B",
+              "channel": "네이버호텔/Agoda",
+              "price": 94220,
+              "room_type": "스위트",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            },
+            {
+              "name": "일반실 B (온돌)",
+              "channel": "네이버호텔/Agoda",
+              "price": 156537,
+              "room_type": "온돌",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N2367597/booking"
+            }
+          ]
+        },
+        "하이원리조트 힐콘도": {
+          "promotions": [
+            {
+              "name": "힐 그랜드 디럭스 35평형",
+              "channel": "Trip.com",
+              "price": 79846,
+              "room_type": "디럭스",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=21857914&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "힐 슈페리어 온돌 (30평형)",
+              "channel": "네이버호텔/Agoda",
+              "price": 81699,
+              "room_type": "슈페리어",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            },
+            {
+              "name": "힐 수페리어룸(30타입) - OA 봄 정규 웰컴(2인) / 힐 30평 / 26년",
+              "channel": "네이버호텔/Agoda",
+              "price": 85591,
+              "room_type": "기타",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            },
+            {
+              "name": "힐 슈피리어 온돌 (OA 봄 레귤러 모래(1인), 힐 30평형, 26년)",
+              "channel": "네이버호텔/Agoda",
+              "price": 95370,
+              "room_type": "온돌",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            },
+            {
+              "name": "힐 갤러리 스위트 (40 m²)",
+              "channel": "네이버호텔/Agoda",
+              "price": 102178,
+              "room_type": "스위트",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK11306257/booking"
+            }
+          ]
+        },
+        "한화리조트 평창": {
+          "promotions": [
+            {
+              "name": "스위트 더블침대",
+              "channel": "Trip.com",
+              "price": 109704,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=6027694&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "로얄",
+              "channel": "네이버호텔/Agoda",
+              "price": 198580,
+              "room_type": "기타",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660953/booking"
+            }
+          ]
+        },
+        "휘닉스 리조트 평창": {
+          "promotions": [
+            {
+              "name": "[워터파크 2매 포함] 스위트 (30평)",
+              "channel": "Trip.com",
+              "price": 63108,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=689087&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "🔥여행핫딜🔥스탠다드 20평 Room Only 특가!",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 72534,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-10",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "룸 (도착 시 배정)",
+              "channel": "네이버호텔/Agoda",
+              "price": 80557,
+              "room_type": "기타",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "[더블텐데이! 힐링 썸머] 호텔 슈페리어 더블",
+              "channel": "네이버호텔/여기어때",
+              "price": 89000,
+              "room_type": "슈페리어",
+              "check_in": "2026-06-03",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "유로빌라 로얄",
+              "channel": "네이버호텔/Agoda",
+              "price": 123659,
+              "room_type": "빌라",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "[더블텐데이! 패밀리 얼리썸머 2인] 호텔 슈페리어 더블",
+              "channel": "네이버호텔/여기어때",
+              "price": 129000,
+              "room_type": "패밀리",
+              "check_in": "2026-06-03",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            },
+            {
+              "name": "로얄 (40평) - [Spring season in 2026]/산전망/2 Bedroom(더블+온돌)",
+              "channel": "네이버호텔/HotelPass",
+              "price": 234000,
+              "room_type": "온돌",
+              "check_in": "2026-05-13",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1660573/booking"
+            }
+          ]
+        }
+      }
+    },
+    "쏠비치 진도": {
+      "competitors": {
+        "오시아노관광호텔": {
+          "promotions": [
+            {
+              "name": "스탠다드 트윈 - 인피니티풀(1)1 - 무료 Wi-Fi",
+              "channel": "네이버호텔/Trip.com",
+              "price": 99000,
+              "room_type": "스탠다드",
+              "check_in": "2026-05-27",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/KYK10387933/booking"
+            },
+            {
+              "name": "핸디캡 트윈(Room Only, 장애인 편의 객실)",
+              "channel": "네이버호텔/야놀자",
+              "price": 110000,
+              "room_type": "기타",
+              "check_in": "2026-05-27",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK10387933/booking"
+            },
+            {
+              "name": "디럭스 더블+싱글 윈도우시트 - 인피니티풀(1)1 - 무료 Wi-Fi",
+              "channel": "네이버호텔/Trip.com",
+              "price": 126000,
+              "room_type": "디럭스",
+              "check_in": "2026-05-27",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/KYK10387933/booking"
+            },
+            {
+              "name": "패밀리 온돌 - Room Only",
+              "channel": "네이버호텔/TripBToz",
+              "price": 196400,
+              "room_type": "패밀리",
+              "check_in": "2026-05-27",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK10387933/booking"
+            },
+            {
+              "name": "패밀리 스위트 - 인피니티풀(1)1 - 무료 Wi-Fi",
+              "channel": "네이버호텔/Trip.com",
+              "price": 223426,
+              "room_type": "스위트",
+              "check_in": "2026-06-03",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/KYK10387933/booking"
+            }
+          ]
+        },
+        "진도 관광호텔": {
+          "promotions": [
+            {
+              "name": "스탠다드 더블",
+              "channel": "야놀자",
+              "price": 50000,
+              "room_type": "스탠다드",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3000709?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            },
+            {
+              "name": "디럭스 트윈",
+              "channel": "야놀자",
+              "price": 60000,
+              "room_type": "디럭스",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/3000709?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            }
+          ]
+        }
+      }
+    },
+    "와이키키 리조트 하와이": {
+      "competitors": {
+        "로열 하와이안 럭셔리 컬렉션 리조트": {
+          "promotions": [
+            {
+              "name": "Historic Two Double Room with Garden View",
+              "channel": "Trip.com",
+              "price": 1026483,
+              "room_type": "기타",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=1395182&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            }
+          ]
+        },
+        "쉐라톤 와이키키": {
+          "promotions": [
+            {
+              "name": "말리아 오션 프론트 스위트",
+              "channel": "Trip.com",
+              "price": 816206,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=1504760&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "하이 오션프론트 더블, 게스트 룸, 2 더블, 오션프론트",
+              "channel": "Trip.com",
+              "price": 816206,
+              "room_type": "기타",
+              "check_in": "2026-06-06",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=1504760&checkin=2026-06-06&checkout=2026-06-07&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            }
+          ]
+        },
+        "아웃리거 와이키키 비치 리조트": {
+          "promotions": [
+            {
+              "name": "시티 뷰 스위트 더블침대 2개",
+              "channel": "Trip.com",
+              "price": 596876,
+              "room_type": "스위트",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=1980254&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            }
+          ]
+        }
+      }
+    },
+    "파나크 영덕 바이 소노벨": {
+      "competitors": {
+        "영덕 시포트리조트": {
+          "promotions": [
+            {
+              "name": "Hotel Double Room / No Kitchen",
+              "channel": "네이버호텔/Agoda",
+              "price": 52358,
+              "room_type": "기타",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK7511775/booking"
+            },
+            {
+              "name": "패밀리 A",
+              "channel": "네이버호텔/Agoda",
+              "price": 88012,
+              "room_type": "패밀리",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK7511775/booking"
+            },
+            {
+              "name": "풀빌라",
+              "channel": "네이버호텔/Agoda",
+              "price": 123704,
+              "room_type": "빌라",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/KYK7511775/booking"
+            }
+          ]
+        },
+        "영덕 힐링턴 리조트": {
+          "promotions": [
+            {
+              "name": "스탠다드 트윈 오션뷰(OTT가능[개인 ID로 접속])",
+              "channel": "네이버호텔/Agoda",
+              "price": 63735,
+              "room_type": "스탠다드",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4011119/booking"
+            },
+            {
+              "name": "룸 (도착 시 배정)",
+              "channel": "네이버호텔/Agoda",
+              "price": 122604,
+              "room_type": "기타",
+              "check_in": "2026-06-12",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4011119/booking"
+            },
+            {
+              "name": "패밀리더블(OTT가능[개인 ID로 접속])",
+              "channel": "네이버호텔/Agoda",
+              "price": 142535,
+              "room_type": "패밀리",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4011119/booking"
+            },
+            {
+              "name": "프리미엄603호 오션뷰(OTT가능[개인 ID로 접속])",
+              "channel": "네이버호텔/Agoda",
+              "price": 286600,
+              "room_type": "프리미어",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N4011119/booking"
+            }
+          ]
+        }
+      }
+    },
+    "팔리티움 해운대 바이 쏠비치": {
+      "competitors": {
+        "그랜드 조선 부산": {
+          "promotions": [
+            {
+              "name": "디럭스 시티 킹",
+              "channel": "야놀자",
+              "price": 225600,
+              "room_type": "디럭스",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://nol.yanolja.com/stay/domestic/1000110883?checkInDate=2026-06-10&checkOutDate=2026-06-11"
+            },
+            {
+              "name": "슈페리어 더블 시티뷰(초강력특가, 레이트 체크아웃 1시간)",
+              "channel": "네이버호텔/야놀자",
+              "price": 239800,
+              "room_type": "슈페리어",
+              "check_in": "2026-05-13",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N5260901/booking"
+            },
+            {
+              "name": "[시크릿특가] 디럭스 시티뷰 패밀리트윈  [네이버 슈퍼세일❤️] 사우나 1인 무료 제공 + 성인 2인 , 어린이 2인 수영장 무료입장",
+              "channel": "네이버호텔/네이버비밀특가",
+              "price": 240450,
+              "room_type": "패밀리",
+              "check_in": "2026-06-10",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N5260901/booking"
+            },
+            {
+              "name": "키즈 수페리어 트윈룸 - 도시 전망",
+              "channel": "네이버호텔/Booking.com",
+              "price": 374000,
+              "room_type": "기타",
+              "check_in": "2026-06-24",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5260901/booking"
+            },
+            {
+              "name": "프리미어 시티뷰 킹룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 399244,
+              "room_type": "프리미어",
+              "check_in": "2026-07-01",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5260901/booking"
+            },
+            {
+              "name": "코너 시티뷰 트윈 스위트",
+              "channel": "네이버호텔/Agoda",
+              "price": 598866,
+              "room_type": "스위트",
+              "check_in": "2026-07-01",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N5260901/booking"
+            }
+          ]
+        },
+        "웨스틴 조선 부산": {
+          "promotions": [
+            {
+              "name": "이그제큐티브룸, 해변전망, 싱글침대 2개",
+              "channel": "Trip.com",
+              "price": 233816,
+              "room_type": "기타",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=992194&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "슈페리어 패밀리 트윈 ⎜ 전망없음 - 룸온니",
+              "channel": "네이버호텔/TripBToz",
+              "price": 283140,
+              "room_type": "패밀리",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1045693/booking"
+            },
+            {
+              "name": "디럭스룸, 공원전망, 킹사이즈침대 1개 - 실내 수영장, 피트니스 센터 무료 입장 (투숙 기준인원 수대로 제공)(1)1 + 투숙객 사우나 50% 할인(1)1",
+              "channel": "네이버호텔/Trip.com",
+              "price": 298870,
+              "room_type": "디럭스",
+              "check_in": "2026-05-13",
+              "is_promo": true,
+              "url": "https://hotels.naver.com/N1045693/booking"
+            },
+            {
+              "name": "[웨스틴 풀 무제한 이용] 슈페리어 트윈 (전망없음/체크인시 배정)",
+              "channel": "네이버호텔/여기어때",
+              "price": 304920,
+              "room_type": "슈페리어",
+              "check_in": "2026-05-20",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1045693/booking"
+            },
+            {
+              "name": "Deluxe Family Ondol Suite, Suite, 1 Queen or 1 Twin, Dongbaek Park view - Flexible Rate",
+              "channel": "네이버호텔/MRO",
+              "price": 520300,
+              "room_type": "스위트",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1045693/booking"
+            }
+          ]
+        },
+        "파라다이스 호텔 부산": {
+          "promotions": [
+            {
+              "name": "이그제큐티브 시티 더블 룸 본관",
+              "channel": "Trip.com",
+              "price": 227026,
+              "room_type": "기타",
+              "check_in": "2026-06-05",
+              "is_promo": false,
+              "url": "https://kr.trip.com/hotels/v2/detail/?hotelId=689014&checkin=2026-06-05&checkout=2026-06-06&adult=2&children=0&rooms=1&curr=KRW&lang=ko-KR"
+            },
+            {
+              "name": "메인 빌딩 디럭스 시티뷰 트윈룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 242232,
+              "room_type": "디럭스",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1197229/booking"
+            },
+            {
+              "name": "아넥스 빌딩 프리미엄 디럭스 부분 오션뷰 룸",
+              "channel": "네이버호텔/Agoda",
+              "price": 382473,
+              "room_type": "프리미어",
+              "check_in": "2026-05-13",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1197229/booking"
+            },
+            {
+              "name": "메인 빌딩 시티뷰 주니어 스위트",
+              "channel": "네이버호텔/Agoda",
+              "price": 416380,
+              "room_type": "스위트",
+              "check_in": "2026-06-10",
+              "is_promo": false,
+              "url": "https://hotels.naver.com/N1197229/booking"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
