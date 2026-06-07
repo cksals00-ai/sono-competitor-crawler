@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-팔라티움 해운대 Excel 파서 — BI Python 스크립트(01_PowerBI_데이터가져오기.py)와 동일 로직
+팔라티움 해운대 바이 소노펠리체 Excel 파서 — BI Python 스크립트(01_PowerBI_데이터가져오기.py)와 동일 로직
 - classify_segment / get_channel_name / classify_fit_channel 함수 동일
 - rows 배열 출력 → HTML 클라이언트 사이드 필터링
 - VAT 1.1 이미 제외 완료 상태 그대로 사용
