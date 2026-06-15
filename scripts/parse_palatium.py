@@ -10,7 +10,12 @@ from datetime import datetime
 import openpyxl
 import pandas as pd
 
-TOTAL_ROOMS = 57
+# 팔라티움 해운대 by sonofelice 정상 운영 객실수 (5월~ 201실)
+FULL_ROOMS = 201
+# 월별 실제 가용 객실박(room-nights) — PMS '사용가능 객실 현황' total 기준.
+# 단계 개관(ramp-up)으로 2~4월은 부분 오픈(2월 107·3월 149·4월 185실/일),
+# 5월부터 201실 정상 운영. 스냅샷 없는 월(1·12월 등)은 FULL_ROOMS×해당 월 일수로 보정.
+AVAIL_RN_OVERRIDE = {2: 2996, 3: 4618, 4: 5554}
 YEAR = 2026
 REV_UPLIFT = 1.01  # 사업계획 매출 × 1.01 = 최종 목표 (수수료 1% 가산)
 DEFAULT_TARGETS = {  # 사업계획 Excel 부재 시 fallback
@@ -241,9 +246,12 @@ def parse(data_dir: str = "data") -> dict:
     repeat_set = set(guest_cnts[guest_cnts > 1].index)
     df["재방문"] = df["투숙객명"].apply(lambda g: 1 if g in repeat_set else 0)
 
-    # 월별 가용 객실수 (57실 × 해당 월 일수)
-    avail_by_month = {str(m): calendar.monthrange(YEAR, m)[1] * TOTAL_ROOMS
-                      for m in range(1, 13)}
+    # 월별 가용 객실박(room-nights) — 실제 인벤토리 기준 (개관 램프업 반영)
+    # 2~4월은 PMS 실측 override, 그 외는 201실 × 해당 월 일수
+    avail_by_month = {
+        str(m): AVAIL_RN_OVERRIDE.get(m, FULL_ROOMS * calendar.monthrange(YEAR, m)[1])
+        for m in range(1, 13)
+    }
 
     # 사업계획 Excel 탐색 → targets / monthly_targets 동적 생성
     plan_path = _find_business_plan(data_dir)
