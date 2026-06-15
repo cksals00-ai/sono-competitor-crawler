@@ -1,0 +1,35 @@
+{
+  "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
+  "_updated_at": "2026-06-15 11:10:43 KST",
+  "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
+  "_auto_collected": true,
+  "competitors": [
+    {
+      "brand": "한화리조트",
+      "title": "[얼리써머] 조식 2+1",
+      "period": "2026.05.18 - 2026.06.21",
+      "discount_pct": 76,
+      "channel": "한화리조트 공식 홈페이지",
+      "detail": "올여름 조식 패키지 최대 76% 할인 · 외 [얼리써머] 워터파크 2+1 · [얼리써머] 룸온리 2박 등 16개 · 📊 OTA 실판매 최저 ₩90,786(네이버호텔/TripBToz·특가 707건)",
+      "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do"
+    },
+    {
+      "brand": "롯데리조트",
+      "title": "NUXE Stress off, Stay Here, Glow on",
+      "period": "2026.04.01 ~ 2026.06.30",
+      "discount_pct": 50,
+      "channel": "롯데리조트 공식 홈페이지",
+      "detail": "객실 + 눅스 슈퍼 세럼& 아이세럼 + 수영장 50% 할인 + 주중 레이트 체크아웃 · 외 [APP 전용] Dear My Kids · Stay longer, Save more! 등 12개",
+      "link": "https://www.lotteresort.com/main/ko/package-event/package/list"
+    },
+    {
+      "brand": "신라호텔",
+      "title": "[서울] Essence Of Korea",
+      "period": "2025-11-24 ~ 2026-06-30",
+      "discount_pct": 0,
+      "channel": "신라호텔 공식 홈페이지",
+      "detail": "821,700원~ · 외 [서울] Urban Retreat · [서울] Early Bird Early Bird 60 Days 등 12개 · 📊 OTA 실판매 최저 ₩184,700(네이버호텔/야놀자·특가 1991건)",
+      "link": "https://www.shilla.net/seoul/offers/pack/listPack.do"
+    }
+  ]
+}

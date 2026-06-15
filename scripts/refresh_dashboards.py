@@ -61,6 +61,12 @@ def run_palatium() -> bool:
     step("[1/2] 팔라티움 리포트 갱신")
     ok = True
 
+    # 경쟁사 프로모션 수집 (B: 공식홈 크롤 + A: 가격 CSV 특가신호) → data/competitors.json
+    # best-effort: 실패해도 기존 competitors.json 유지하고 파이프라인 계속.
+    promo_scr = PALATIUM_DIR / "crawl_competitor_promos.py"
+    if promo_scr.exists():
+        run([sys.executable, str(promo_scr)], cwd=PALATIUM_DIR, check=False)
+
     parse_pl = PALATIUM_SCR / "parse_palatium.py"
     build_pl = PALATIUM_SCR / "build_palatium.py"
 
