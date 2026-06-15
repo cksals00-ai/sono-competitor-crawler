@@ -137,21 +137,42 @@ def _load_single(path):
     return pd.DataFrame(rows[header_idx + 1:], columns=headers)
 
 
+def _snapshot_key(path):
+    """파일의 스냅샷 시점 키(YYYYMMDD) — 파일명 MMDD 우선, 없으면 mtime.
+    여러 스냅샷 합산 시 '최신 스냅샷 우선' dedup 정렬 기준 (mtime은 파일 복사 시
+    뒤바뀔 수 있어 파일명 날짜를 우선)."""
+    digits = "".join(c for c in os.path.basename(path) if c.isdigit())
+    if len(digits) >= 4:
+        mm, dd = int(digits[:2]), int(digits[2:4])
+        if 1 <= mm <= 12 and 1 <= dd <= 31:
+            return f"{YEAR}{mm:02d}{dd:02d}"
+    return datetime.fromtimestamp(os.path.getmtime(path)).strftime("%Y%m%d")
+
+
 def load_df(path):
-    """단일 파일 또는 여러 파일 합산 로드"""
+    """단일 파일 또는 여러 스냅샷 파일 합산 로드.
+
+    마감월(과거 투숙)은 예약정보조회 추출의 롤링 윈도우에서 시간이 지나면 빠지므로,
+    옛 추출 파일을 DB에 함께 두면 합산 시 보존된다. 같은 예약번호가 여러 스냅샷에
+    있으면 '가장 최신 스냅샷' 행만 유지 → 마감월은 옛 파일에서 살리고, 현재·미래월은
+    최신 데이터를 사용."""
     if isinstance(path, list):
         dfs = []
         for p in path:
             df = _load_single(p)
+            df["_snap"] = _snapshot_key(p)
             dfs.append(df)
-            print(f"  로드: {os.path.basename(p)} ({len(df)}행)")
+            print(f"  로드: {os.path.basename(p)} ({len(df)}행, snap={_snapshot_key(p)})")
         combined = pd.concat(dfs, ignore_index=True)
-        # 예약번호 기준 중복 제거
         before = len(combined)
         if "예약번호" in combined.columns:
-            combined = combined.drop_duplicates(subset=["예약번호"], keep="last")
-        print(f"  합산: {before}행 → {len(combined)}행 (중복 {before - len(combined)}건 제거)")
-        return combined
+            # 스냅샷 오름차순 정렬 후 keep='last' → 예약번호별 최신 스냅샷 행 유지
+            combined = (combined.sort_values("_snap", kind="stable")
+                                .drop_duplicates(subset=["예약번호"], keep="last"))
+        combined = combined.drop(columns=["_snap"], errors="ignore")
+        print(f"  합산: {before}행 → {len(combined)}행 "
+              f"(중복 {before - len(combined)}건 제거, 최신 스냅샷 우선)")
+        return combined.reset_index(drop=True)
     return _load_single(path)
 
 
