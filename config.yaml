@@ -801,6 +801,7 @@ properties:
   id: haeundae
   display_region: 한국남부
   region: 부산광역시 해운대구
+  crawl_until: '2026-08-31'   # 부산/해운대: 주차별 분석용 — 8월말까지 투숙일 연장 수집
   competitors:
   - name: 파라다이스 호텔 부산
     yanolja_url: https://nol.yanolja.com/stay/domestic/3001112
@@ -887,6 +888,7 @@ properties:
   id: pallatium_haeundae
   display_region: 한국남부
   region: 부산광역시 해운대구
+  crawl_until: '2026-08-31'   # 부산/해운대: 주차별 분석용 — 8월말까지 투숙일 연장 수집
   competitors:
   - name: 파라다이스 호텔 부산
     yanolja_url: https://nol.yanolja.com/stay/domestic/3001112

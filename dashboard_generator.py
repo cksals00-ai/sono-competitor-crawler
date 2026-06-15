@@ -1518,6 +1518,128 @@ def _render_golf_section(golf_df: pd.DataFrame) -> str:
 </div>"""
 
 
+# 부산/해운대 병합 카드 대상 (소노문 해운대 + 팔라티움 해운대) — config id 기준
+HAEUNDAE_MERGE_IDS = ["haeundae", "pallatium_haeundae"]
+
+
+def _week_label(date_str: str) -> str:
+    """체크인일 → 'N월 M주차' (월내 주차 = (일-1)//7 + 1)."""
+    try:
+        d = datetime.strptime(str(date_str)[:10], "%Y-%m-%d")
+    except (ValueError, TypeError):
+        return ""
+    return f"{d.month}월 {(d.day - 1) // 7 + 1}주차"
+
+
+def _week_sort_key(date_str: str):
+    try:
+        d = datetime.strptime(str(date_str)[:10], "%Y-%m-%d")
+    except (ValueError, TypeError):
+        return (999999, 99)
+    return (d.year * 100 + d.month, (d.day - 1) // 7 + 1)
+
+
+def _render_haeundae_subtable(prop, summaries, prev_per_date, df, review_summary, naver_url_map) -> str:
+    """병합 카드 내부의 사업장 단위 비교 표 (자사행 + 경쟁사행). 주차 패널 안에서 반복."""
+    prop_name   = prop["name"]
+    competitors = prop.get("competitors", [])
+    own_urls    = prop.get("own_urls", {})
+    has_own = any([own_urls.get("yanolja_url", ""), own_urls.get("naver_id", ""), own_urls.get("tripcom_hotel_id", 0)])
+
+    ota_ths = "".join(f'<th class="ota-{OTA_CLASS[ota]}">{OTA_SHORT[ota]}</th>' for ota in OTA_ORDER)
+    rows = []
+    if has_own:
+        own_with_naver = {**own_urls, "naver_url": naver_url_map.get(prop_name, "")}
+        own_cells = "".join(
+            _render_price_cell(prop_name, prop_name, ota, summaries, prev_per_date,
+                               _get_ota_url(own_with_naver, ota), is_own=True, review_summary=review_summary)
+            for ota in OTA_ORDER)
+        rows.append(f'<tr class="own-row"><td class="competitor-name own-label">'
+                    f'<span class="badge-sono">자사</span>{prop_name}</td>{own_cells}</tr>')
+    for comp in competitors:
+        comp_name = comp["name"]
+        comp_with_naver = {**comp, "naver_url": naver_url_map.get(comp_name, "")}
+        cells = "".join(
+            _render_price_cell(prop_name, comp_name, ota, summaries, prev_per_date,
+                               _get_ota_url(comp_with_naver, ota), review_summary=review_summary)
+            for ota in OTA_ORDER)
+        rows.append(f'<tr><td class="competitor-name">{comp_name}</td>{cells}</tr>')
+    rows_html = "\n            ".join(rows)
+    return f"""\
+      <div class="haeundae-sub">
+        <div class="haeundae-sub-title"><span class="badge-sono">자사</span>{prop_name}</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th class="competitor-col">구분</th>{ota_ths}</tr></thead>
+            <tbody>
+            {rows_html}
+            </tbody>
+          </table>
+        </div>
+      </div>"""
+
+
+def _render_haeundae_merged_card(props, df, prev_per_date, review_summary) -> str:
+    """소노문 해운대 + 팔라티움 해운대 → 부산/해운대 병합 카드.
+    주차(N월 M주차) 칩으로 패널 전환, 각 패널 내부는 기존 주중/주말/공휴일 토글이 그대로 동작."""
+    review_summary = review_summary or {}
+    prop_names = [p["name"] for p in props]
+    region_label = _get_display_region(props[0])
+
+    if df is None or df.empty or "property_name" not in df.columns:
+        return ""
+    hae_df = df[df["property_name"].isin(prop_names)].copy()
+    if hae_df.empty:
+        return ""
+    naver_url_map = _build_naver_url_map(df)
+
+    # 체크인일 → 주차 그룹
+    dates = sorted({str(x)[:10] for x in hae_df["checkin_date"].dropna().unique()})
+    weeks: dict = {}
+    for ds in dates:
+        wl = _week_label(ds)
+        if wl:
+            weeks.setdefault(wl, []).append(ds)
+    week_labels = sorted(weeks.keys(), key=lambda w: _week_sort_key(weeks[w][0]))
+
+    ok_count   = int((hae_df["error"].fillna("") == "").sum()) if "error" in hae_df.columns else len(hae_df)
+    uniq_comp  = {c["name"] for p in props for c in p.get("competitors", [])}
+
+    # 기본 활성 주차: 오늘이 속한 주차가 있으면 그 주, 없으면 첫 주차
+    today_wk = _week_label(datetime.now().strftime("%Y-%m-%d"))
+    default_idx = week_labels.index(today_wk) if today_wk in week_labels else 0
+
+    chips = "".join(
+        f'<button class="week-chip{"  active" if i == default_idx else ""}" data-week="{wl}">{wl}</button>'
+        for i, wl in enumerate(week_labels)
+    ) or '<span class="haeundae-empty">수집된 주차 없음</span>'
+
+    panels = []
+    for i, wl in enumerate(week_labels):
+        wk_dates = set(weeks[wl])
+        wk_df = hae_df[hae_df["checkin_date"].astype(str).str[:10].isin(wk_dates)]
+        wk_summaries = {dt: _build_price_summary(wk_df, dt) for dt in DAY_TYPES}
+        subtables = "\n".join(
+            _render_haeundae_subtable(p, wk_summaries, prev_per_date, df, review_summary, naver_url_map)
+            for p in props)
+        active = "  active" if i == default_idx else ""
+        panels.append(f'    <div class="week-panel{active}" data-week="{wl}">\n{subtables}\n    </div>')
+    panels_html = "\n".join(panels)
+
+    return f"""\
+<div class="property-card haeundae-merged" data-region="{region_label}">
+  <div class="property-header">
+    <div>
+      <div class="property-title">부산 / 해운대 <span class="haeundae-merge-tag">소노문 · 팔라티움</span></div>
+      <div class="property-region">부산광역시 해운대구 &middot; 주차별 투숙일 비교 (~8월말)</div>
+    </div>
+    <div class="property-stats">자사 2곳 포함 &middot; {len(uniq_comp)}개 경쟁사&nbsp;&middot;&nbsp;{ok_count:,}건</div>
+  </div>
+  <div class="week-chip-bar">{chips}</div>
+{panels_html}
+</div>"""
+
+
 def _render_html(
     df: pd.DataFrame, cfg: dict,
     summaries: dict, prev_per_date: dict,
@@ -1539,10 +1661,24 @@ def _render_html(
     channel_data = _load_channel_data()
     fit_data     = _load_fit_rates()
 
-    cards_html = "\n\n".join(
-        _render_property_card(p, summaries, prev_per_date, df, review_summary, channel_data, fit_data)
-        for p in properties
-    )
+    # 부산/해운대(소노문 + 팔라티움)는 하나의 병합 카드로, 첫 등장 위치에 삽입
+    hae_props = [p for p in properties if p.get("id") in HAEUNDAE_MERGE_IDS]
+    _cards = []
+    _hae_inserted = False
+    for p in properties:
+        if p.get("id") in HAEUNDAE_MERGE_IDS:
+            if not _hae_inserted and hae_props:
+                merged = _render_haeundae_merged_card(hae_props, df, prev_per_date, review_summary)
+                if merged:
+                    _cards.append(merged)
+                else:
+                    # 데이터 없으면 기존 개별 카드로 폴백
+                    _cards.append(_render_property_card(p, summaries, prev_per_date, df, review_summary, channel_data, fit_data))
+                    continue
+                _hae_inserted = True
+            continue
+        _cards.append(_render_property_card(p, summaries, prev_per_date, df, review_summary, channel_data, fit_data))
+    cards_html = "\n\n".join(_cards)
 
     # 지역 필터 버튼 — display_region 기준, DISPLAY_REGION_ORDER 순서 유지
     prop_regions = [_get_display_region(p) for p in properties]
@@ -2041,6 +2177,38 @@ td.golf-na-cell   { text-align: center; color: var(--muted); vertical-align: mid
 .property-title  { font-size: 14px; font-weight: 700; }
 .property-region { font-size: 11px; color: var(--muted); margin-top: 2px; }
 .property-stats  { font-size: 11px; color: var(--muted); white-space: nowrap; margin-left: 8px; padding-top: 2px; }
+
+/* ── 부산/해운대 병합 카드 ── */
+.haeundae-merged { grid-column: 1 / -1; }
+.haeundae-merge-tag {
+  font-size: 11px; font-weight: 500; color: var(--accent);
+  border: 1px solid rgba(88,166,255,.4); border-radius: 6px;
+  padding: 1px 7px; margin-left: 6px; vertical-align: middle;
+}
+.week-chip-bar {
+  display: flex; gap: 6px; flex-wrap: nowrap; overflow-x: auto;
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,.015); -webkit-overflow-scrolling: touch;
+}
+.week-chip {
+  flex: 0 0 auto; padding: 5px 12px; font-size: 12px; font-weight: 500;
+  border: 1px solid var(--border); border-radius: 16px;
+  background: transparent; color: var(--muted); cursor: pointer;
+  white-space: nowrap; transition: all .15s;
+}
+.week-chip:hover  { border-color: var(--accent); color: var(--accent); }
+.week-chip.active { background: var(--accent); border-color: var(--accent); color: #0d1117; font-weight: 700; }
+.week-panel { display: none; padding: 4px 0; }
+.week-panel.active { display: block; }
+.haeundae-sub { padding: 12px 16px 4px; }
+.haeundae-sub + .haeundae-sub { border-top: 1px dashed var(--border); }
+.haeundae-sub-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+.haeundae-empty { font-size: 12px; color: var(--muted); padding: 4px 2px; }
+@media (min-width: 900px) {
+  .haeundae-merged .week-panel.active { display: flex; gap: 18px; }
+  .haeundae-merged .haeundae-sub { flex: 1 1 0; min-width: 0; padding: 12px 8px 4px; }
+  .haeundae-merged .haeundae-sub + .haeundae-sub { border-top: none; border-left: 1px dashed var(--border); }
+}
 
 /* ── Table ── */
 .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -2769,6 +2937,20 @@ _JS = """
       });
     })(dtBtns[j]);
   }
+
+  // ── 부산/해운대 병합 카드: 주차 칩 토글 (카드 단위) ──────────────────────────
+  toArr(document.querySelectorAll('.haeundae-merged')).forEach(function (card) {
+    var chips  = toArr(card.querySelectorAll('.week-chip'));
+    var panels = toArr(card.querySelectorAll('.week-panel'));
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var wk = chip.getAttribute('data-week');
+        chips.forEach(function (c) { c.classList.toggle('active', c === chip); });
+        panels.forEach(function (p) { p.classList.toggle('active', p.getAttribute('data-week') === wk); });
+      });
+    });
+  });
 
   // ── 채널별 판매객실수 토글 ────────────────────────────────────────────────
   var chToggles = toArr(document.querySelectorAll('.channel-toggle'));

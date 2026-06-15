@@ -2183,6 +2183,26 @@ def run_crawl(
         date_pairs = generate_crawl_dates(cfg["crawl"]["days_ahead"], cfg)
     delay = cfg["crawl"]["request_delay"]
 
+    # 사업장별 확장 날짜 캐시: crawl_until(예: 부산/해운대 8월말)이 있는 사업장은
+    # 같은 주중/주말/공휴일 로직으로 해당 일자까지 체크인을 더 멀리 생성한다.
+    _extended_pairs: dict = {}
+
+    def _pairs_for(prop: dict) -> list:
+        until = prop.get("crawl_until")
+        if test_mode or not until:
+            return date_pairs
+        if until not in _extended_pairs:
+            try:
+                days = (datetime.strptime(until, "%Y-%m-%d").date() - datetime.today().date()).days
+            except ValueError:
+                logger.warning(f"[{prop['name']}] crawl_until 형식 오류({until}) — 기본 날짜 사용")
+                return date_pairs
+            if days <= cfg["crawl"]["days_ahead"]:
+                return date_pairs
+            _extended_pairs[until] = generate_crawl_dates(days, cfg)
+            logger.info(f"[확장] crawl_until={until} → 체크인 {len(_extended_pairs[until])}일 생성")
+        return _extended_pairs[until]
+
     # 활성 채널: 야놀자(RSC, requests) / 네이버호텔(GraphQL) / Trip.com(SSR HTML)
     # 제거됨: 여기어때·Agoda(Selenium 대부분 실패), 자사홈(로그인 미설정).
     # 관련 crawl_* 함수는 다른 스크립트 호환을 위해 정의는 남겨두되 호출하지 않는다.
@@ -2201,7 +2221,8 @@ def run_crawl(
 
     try:
         for prop in properties:
-            logger.info(f"=== [{prop['name']}] 크롤링 시작 ===")
+            prop_pairs = _pairs_for(prop)
+            logger.info(f"=== [{prop['name']}] 크롤링 시작 (체크인 {len(prop_pairs)}일) ===")
 
             # ── 자사 가격 수집 ──────────────────────────────────────────────
             own_urls = prop.get("own_urls", {})
@@ -2214,7 +2235,7 @@ def run_crawl(
                     "tripcom_city_id":    own_urls.get("tripcom_city_id", 0),
                 }
                 logger.info(f"  [자사] {prop['name']}")
-                for checkin, checkout in date_pairs:
+                for checkin, checkout in prop_pairs:
                     for crawl_fn, label in crawlers:
                         try:
                             records = crawl_fn(own_entry, checkin, checkout, cfg)
@@ -2231,7 +2252,7 @@ def run_crawl(
             competitors = prop["competitors"][:1] if test_mode else prop["competitors"]
             for competitor in competitors:
                 logger.info(f"  경쟁사: {competitor['name']}")
-                for checkin, checkout in date_pairs:
+                for checkin, checkout in prop_pairs:
                     for crawl_fn, label in crawlers:
                         try:
                             records = crawl_fn(competitor, checkin, checkout, cfg)
