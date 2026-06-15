@@ -1539,43 +1539,87 @@ def _week_sort_key(date_str: str):
     return (d.year * 100 + d.month, (d.day - 1) // 7 + 1)
 
 
-def _render_haeundae_subtable(prop, summaries, prev_per_date, df, review_summary, naver_url_map) -> str:
-    """병합 카드 내부의 사업장 단위 비교 표 (자사행 + 경쟁사행). 주차 패널 안에서 반복."""
-    prop_name   = prop["name"]
-    competitors = prop.get("competitors", [])
-    own_urls    = prop.get("own_urls", {})
-    has_own = any([own_urls.get("yanolja_url", ""), own_urls.get("naver_id", ""), own_urls.get("tripcom_hotel_id", 0)])
+# 병합 카드는 경쟁사가 권역 공통이므로 property_name 컨텍스트를 합쳐(=호텔명 기준)
+# 중복 경쟁사를 한 번만 노출한다. 아래 합성 prop 키로 _render_price_cell을 재사용.
+MERGED_PROP = "부산/해운대"
+
+
+def _collapse_haeundae_summary(summary: dict) -> dict:
+    """{(prop, comp, ota): info} → {(MERGED_PROP, hotel, ota): info}.
+    같은 호텔이 여러 사업장 컨텍스트로 중복되면 매진 아닌 최저가를 채택."""
+    out: dict = {}
+    for (prop, comp, ota), info in summary.items():
+        key = (MERGED_PROP, comp, ota)
+        cur = out.get(key)
+        if cur is None:
+            out[key] = info
+        elif cur.get("sold_out") and not info.get("sold_out"):
+            out[key] = info
+        elif (not info.get("sold_out")) and info.get("min_price", 1 << 60) < cur.get("min_price", 1 << 60):
+            out[key] = info
+    return out
+
+
+def _collapse_haeundae_prev(prev: dict, names: set) -> dict:
+    """전일 비교 맵도 호텔명 기준으로 합쳐 변동 표시 유지."""
+    out: dict = {}
+    for k, price in prev.items():
+        if len(k) != 4 or k[0] not in names:
+            continue
+        nk = (MERGED_PROP, k[1], k[2], k[3])
+        if nk not in out or price < out[nk]:
+            out[nk] = price
+    return out
+
+
+def _render_haeundae_week_table(props, wk_summaries, prev_per_date, review_summary, naver_url_map) -> str:
+    """병합 카드의 단일 통합 표 (자사 2곳 + 중복 제거된 경쟁사). 주차 패널마다 1개."""
+    # 호텔명 기준 합성 summary / prev
+    names = {p["name"] for p in props}
+    c_summaries = {dt: _collapse_haeundae_summary(wk_summaries.get(dt, {})) for dt in DAY_TYPES}
+    c_prev      = _collapse_haeundae_prev(prev_per_date, names)
+
+    # OTA 링크용 엔티티 맵 (자사 + 경쟁사, 호텔명 기준 1회)
+    entity = {}
+    for p in props:
+        ou = p.get("own_urls", {})
+        entity[p["name"]] = {**ou, "naver_url": naver_url_map.get(p["name"], "")}
+    comp_order = []
+    for p in props:
+        for c in p.get("competitors", []):
+            if c["name"] not in entity:
+                entity[c["name"]] = {**c, "naver_url": naver_url_map.get(c["name"], "")}
+            if c["name"] not in comp_order:
+                comp_order.append(c["name"])
 
     ota_ths = "".join(f'<th class="ota-{OTA_CLASS[ota]}">{OTA_SHORT[ota]}</th>' for ota in OTA_ORDER)
     rows = []
-    if has_own:
-        own_with_naver = {**own_urls, "naver_url": naver_url_map.get(prop_name, "")}
-        own_cells = "".join(
-            _render_price_cell(prop_name, prop_name, ota, summaries, prev_per_date,
-                               _get_ota_url(own_with_naver, ota), is_own=True, review_summary=review_summary)
+    # 자사 행 (소노문, 팔라티움)
+    for p in props:
+        hotel = p["name"]
+        cells = "".join(
+            _render_price_cell(MERGED_PROP, hotel, ota, c_summaries, c_prev,
+                               _get_ota_url(entity[hotel], ota), is_own=True, review_summary=review_summary)
             for ota in OTA_ORDER)
         rows.append(f'<tr class="own-row"><td class="competitor-name own-label">'
-                    f'<span class="badge-sono">자사</span>{prop_name}</td>{own_cells}</tr>')
-    for comp in competitors:
-        comp_name = comp["name"]
-        comp_with_naver = {**comp, "naver_url": naver_url_map.get(comp_name, "")}
+                    f'<span class="badge-sono">자사</span>{hotel}</td>{cells}</tr>')
+    # 경쟁사 행 (중복 제거된 union)
+    for comp_name in comp_order:
         cells = "".join(
-            _render_price_cell(prop_name, comp_name, ota, summaries, prev_per_date,
-                               _get_ota_url(comp_with_naver, ota), review_summary=review_summary)
+            _render_price_cell(MERGED_PROP, comp_name, ota, c_summaries, c_prev,
+                               _get_ota_url(entity[comp_name], ota), review_summary=review_summary)
             for ota in OTA_ORDER)
         rows.append(f'<tr><td class="competitor-name">{comp_name}</td>{cells}</tr>')
+
     rows_html = "\n            ".join(rows)
     return f"""\
-      <div class="haeundae-sub">
-        <div class="haeundae-sub-title"><span class="badge-sono">자사</span>{prop_name}</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th class="competitor-col">구분</th>{ota_ths}</tr></thead>
-            <tbody>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th class="competitor-col">구분</th>{ota_ths}</tr></thead>
+          <tbody>
             {rows_html}
-            </tbody>
-          </table>
-        </div>
+          </tbody>
+        </table>
       </div>"""
 
 
@@ -1603,7 +1647,7 @@ def _render_haeundae_merged_card(props, df, prev_per_date, review_summary) -> st
     week_labels = sorted(weeks.keys(), key=lambda w: _week_sort_key(weeks[w][0]))
 
     ok_count   = int((hae_df["error"].fillna("") == "").sum()) if "error" in hae_df.columns else len(hae_df)
-    uniq_comp  = {c["name"] for p in props for c in p.get("competitors", [])}
+    uniq_comp  = {c["name"] for p in props for c in p.get("competitors", [])}  # 중복 제거된 경쟁사
 
     # 기본 활성 주차: 오늘이 속한 주차가 있으면 그 주, 없으면 첫 주차
     today_wk = _week_label(datetime.now().strftime("%Y-%m-%d"))
@@ -1619,11 +1663,9 @@ def _render_haeundae_merged_card(props, df, prev_per_date, review_summary) -> st
         wk_dates = set(weeks[wl])
         wk_df = hae_df[hae_df["checkin_date"].astype(str).str[:10].isin(wk_dates)]
         wk_summaries = {dt: _build_price_summary(wk_df, dt) for dt in DAY_TYPES}
-        subtables = "\n".join(
-            _render_haeundae_subtable(p, wk_summaries, prev_per_date, df, review_summary, naver_url_map)
-            for p in props)
+        table = _render_haeundae_week_table(props, wk_summaries, prev_per_date, review_summary, naver_url_map)
         active = "  active" if i == default_idx else ""
-        panels.append(f'    <div class="week-panel{active}" data-week="{wl}">\n{subtables}\n    </div>')
+        panels.append(f'    <div class="week-panel{active}" data-week="{wl}">\n{table}\n    </div>')
     panels_html = "\n".join(panels)
 
     return f"""\
