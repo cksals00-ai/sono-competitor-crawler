@@ -172,14 +172,78 @@ def parse_shilla() -> list[dict]:
     return out
 
 
-# 브랜드 정의: (표시명, 공식 프로모션 페이지 링크, 채널명, 파서, CSV 매칭 키워드)
+def parse_high1() -> list[dict]:
+    url = "https://high1.com/www/eventList.do?key=596&searchSe=프로모션"
+    soup = fetch(url)
+    out: list[dict] = []
+    if not soup:
+        return out
+    for it in soup.select("li.p-media"):
+        head = it.select_one(".p-event__heading-text")
+        sub = it.select_one(".p-event__sub-text")
+        info = it.select_one(".p-media__info")
+        title = clean(head.get_text()) if head else ""
+        if not title:
+            continue
+        detail = clean(sub.get_text()) if sub else ""
+        infotxt = clean(info.get_text(" ")) if info else ""
+        pm = re.search(r"이용기간\s*([\d\-]+\s*~\s*[\d\-]+)", infotxt)
+        out.append({
+            "title": title,
+            "detail": detail,
+            "period": clean(pm.group(1)) if pm else "",
+            "price": "",
+            "discount_pct": extract_discount(title, detail),
+        })
+    logger.info(f"  하이원: {len(out)}개 프로모션")
+    return out
+
+
+def parse_kensington() -> list[dict]:
+    url = "https://www.kensington.co.kr/promotion"
+    soup = fetch(url)
+    out: list[dict] = []
+    if not soup:
+        return out
+    for it in soup.select("li.event_item"):
+        tit = it.select_one("div.title")
+        title = clean(tit.get_text()) if tit else ""
+        if not title:
+            continue
+        chain = it.select_one("div.chain")
+        if chain and clean(chain.get_text()):
+            title = f"{clean(chain.get_text())} {title}"
+        desc = it.select_one("div.desc")
+        detail = clean(desc.get_text()) if desc else ""
+        period = ""
+        dw = it.select_one("div.date_wrap")
+        if dw:
+            dwt = clean(dw.get_text(" "))
+            m = re.search(r"투숙기간\s*(\d{4}[.\s]+\d{1,2}[.\s]+\d{1,2}\s*~\s*\d{4}[.\s]+\d{1,2}[.\s]+\d{1,2})", dwt)
+            period = clean(m.group(1)) if m else ""
+        out.append({
+            "title": title[:120],
+            "detail": detail,
+            "period": period,
+            "price": "",
+            "discount_pct": extract_discount(title, detail),
+        })
+    logger.info(f"  켄싱턴: {len(out)}개 프로모션")
+    return out
+
+
+# 브랜드 정의: (표시명, 공식 프로모션 페이지 링크, 채널명, 파서, CSV 매칭 키워드, 권역)
 BRANDS = [
     ("한화리조트", "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-     "한화리조트 공식 홈페이지", parse_hanwha, "한화"),
+     "한화리조트 공식 홈페이지", parse_hanwha, "한화", "vivaldi"),
     ("롯데리조트", "https://www.lotteresort.com/main/ko/package-event/package/list",
-     "롯데리조트 공식 홈페이지", parse_lotte, "롯데"),
+     "롯데리조트 공식 홈페이지", parse_lotte, "롯데", "apac"),
     ("신라호텔", "https://www.shilla.net/seoul/offers/pack/listPack.do",
-     "신라호텔 공식 홈페이지", parse_shilla, "신라"),
+     "신라호텔 공식 홈페이지", parse_shilla, "신라", "apac"),
+    ("하이원리조트", "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
+     "하이원리조트 공식 홈페이지", parse_high1, "하이원", "central"),
+    ("켄싱턴리조트", "https://www.kensington.co.kr/promotion",
+     "켄싱턴리조트 공식 홈페이지", parse_kensington, "켄싱턴", "south"),
 ]
 
 
@@ -234,7 +298,7 @@ def main() -> None:
     sig = price_signal()
     competitors: list[dict] = []
 
-    for brand, link, channel, parser, kw in BRANDS:
+    for brand, link, channel, parser, kw, region in BRANDS:
         try:
             camps = parser()
         except Exception as e:
@@ -264,6 +328,7 @@ def main() -> None:
 
         competitors.append({
             "brand": brand,
+            "region": region,
             "title": head["title"],
             "period": head["period"] or "상시",
             "discount_pct": head["discount_pct"],

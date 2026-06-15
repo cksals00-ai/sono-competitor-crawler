@@ -1,11 +1,12 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-06-15 11:10:43 KST",
+  "_updated_at": "2026-06-15 16:45:52 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
     {
       "brand": "한화리조트",
+      "region": "vivaldi",
       "title": "[얼리써머] 조식 2+1",
       "period": "2026.05.18 - 2026.06.21",
       "discount_pct": 76,
@@ -15,6 +16,7 @@
     },
     {
       "brand": "롯데리조트",
+      "region": "apac",
       "title": "NUXE Stress off, Stay Here, Glow on",
       "period": "2026.04.01 ~ 2026.06.30",
       "discount_pct": 50,
@@ -24,12 +26,33 @@
     },
     {
       "brand": "신라호텔",
+      "region": "apac",
       "title": "[서울] Essence Of Korea",
       "period": "2025-11-24 ~ 2026-06-30",
       "discount_pct": 0,
       "channel": "신라호텔 공식 홈페이지",
       "detail": "821,700원~ · 외 [서울] Urban Retreat · [서울] Early Bird Early Bird 60 Days 등 12개 · 📊 OTA 실판매 최저 ₩184,700(네이버호텔/야놀자·특가 1991건)",
       "link": "https://www.shilla.net/seoul/offers/pack/listPack.do"
+    },
+    {
+      "brand": "하이원리조트",
+      "region": "central",
+      "title": "대한민국 승리 기원 프로모션",
+      "period": "2026-06-12~2026-06-25",
+      "discount_pct": 0,
+      "channel": "하이원리조트 공식 홈페이지",
+      "detail": "하이원에서 시원하게 즐기자~!! · 외 '미식의 축제로 골인(GOAL IN THE BUFFET)' 월드컵 프로모션 · 지역상생&문화관광 활성화 프로젝트 3.0 등 9개 · 📊 OTA 실판매 최저 ₩107,525(네이버호텔/야놀자·특가 108건)",
+      "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션"
+    },
+    {
+      "brand": "켄싱턴리조트",
+      "region": "south",
+      "title": "플레이케이션",
+      "period": "2026. 06. 08 ~ 2026. 08. 31",
+      "discount_pct": 0,
+      "channel": "켄싱턴리조트 공식 홈페이지",
+      "detail": "신나는 경험이 기다리는 여행! 24시간이 모자랄 만큼 즐거운 플레이케이션을 만나보세요. · 외 제주 서머 플렉스 · 켄싱턴리조트 지리산하동 SUMMER PLAYGROUND 등 6개 · 📊 OTA 실판매 최저 ₩97,663(네이버호텔/네이버비밀특가·특가 968건)",
+      "link": "https://www.kensington.co.kr/promotion"
     }
   ]
 }
