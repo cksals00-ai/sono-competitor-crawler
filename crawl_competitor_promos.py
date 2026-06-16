@@ -248,7 +248,8 @@ BRANDS = [
 
 
 # ─────────────────────────────────────────────────────────────
-# A — 가격 CSV 신호 (보조).  브랜드 키워드 → {min_price, count, top_ota}
+# A — 가격 CSV 신호 (보조).  브랜드 키워드 →
+#   {min, max, count, otas:[{ota, count, min, max, sample}, ...]}
 # ─────────────────────────────────────────────────────────────
 def latest_csv() -> Path | None:
     cands = sorted(
@@ -268,7 +269,7 @@ def price_signal() -> dict[str, dict]:
     try:
         import pandas as pd
         df = pd.read_csv(csv, dtype=str, usecols=[
-            "경쟁사명", "OTA", "판매가(원)", "is_own", "is_promo"])
+            "경쟁사명", "OTA", "객실유형", "판매가(원)", "is_own", "is_promo"])
     except Exception as e:
         logger.warning(f"  [A] CSV 읽기 실패: {e}")
         return sig
@@ -277,16 +278,28 @@ def price_signal() -> dict[str, dict]:
     df["price"] = pd.to_numeric(df["판매가(원)"], errors="coerce")
     df = df.dropna(subset=["price"])
     df = df[df["price"] > 0]
-    for _, kw in [(b[0], b[4]) for b in BRANDS]:
+    for kw in [b[4] for b in BRANDS]:
         g = df[df["경쟁사명"].fillna("").str.contains(kw)]
-        if len(g):
-            row = g.loc[g["price"].idxmin()]
-            sig[kw] = {
-                "min_price": int(row["price"]),
-                "count": int(len(g)),
-                "top_ota": clean(str(row["OTA"])),
-            }
-    logger.info(f"  [A] 가격 신호: {csv.name} → { {k: v['min_price'] for k,v in sig.items()} }")
+        if not len(g):
+            continue
+        otas = []
+        for ota, gg in g.groupby("OTA"):
+            samp = gg.loc[gg["price"].idxmin(), "객실유형"]
+            otas.append({
+                "ota": clean(str(ota)),
+                "count": int(len(gg)),
+                "min": int(gg["price"].min()),
+                "max": int(gg["price"].max()),
+                "sample": clean(str(samp))[:34],
+            })
+        otas.sort(key=lambda x: -x["count"])
+        sig[kw] = {
+            "min": int(g["price"].min()),
+            "max": int(g["price"].max()),
+            "count": int(len(g)),
+            "otas": otas[:6],
+        }
+    logger.info(f"  [A] 가격 신호: {csv.name} → { {k: (v['min'], v['count'], len(v['otas'])) for k,v in sig.items()} }")
     return sig
 
 
@@ -312,7 +325,7 @@ def main() -> None:
         camps_sorted = sorted(camps, key=lambda c: c["discount_pct"], reverse=True)
         head = camps_sorted[0]
 
-        # detail = 헤드라인 상세 + 외 N개 + A 가격신호
+        # detail = 헤드라인 상세 + 공식 캠페인 외 N개 (가격/OTA는 구조화 필드로 분리)
         bits = []
         if head["detail"]:
             bits.append(head["detail"])
@@ -322,11 +335,8 @@ def main() -> None:
             others = [c["title"] for c in camps_sorted[1:3] if c["title"] != head["title"]]
             if others:
                 bits.append("외 " + " · ".join(others[:2]) + (f" 등 {len(camps)}개" if len(camps) > 3 else ""))
-        s = sig.get(kw)
-        if s:
-            bits.append(f"📊 OTA 실판매 최저 ₩{s['min_price']:,}({s['top_ota']}·특가 {s['count']}건)")
 
-        competitors.append({
+        comp = {
             "brand": brand,
             "region": region,
             "title": head["title"],
@@ -335,7 +345,16 @@ def main() -> None:
             "channel": channel,
             "detail": " · ".join(bits)[:200],
             "link": link,
-        })
+            "campaign_count": len(camps),
+        }
+        # A — 가격 CSV: 최대-최소 판매가 + OTA 채널별 특가 (뎁스 1단)
+        s = sig.get(kw)
+        if s:
+            comp["price_min"] = s["min"]
+            comp["price_max"] = s["max"]
+            comp["promo_count"] = s["count"]
+            comp["ota_promos"] = s["otas"]
+        competitors.append(comp)
 
     if not competitors:
         logger.warning("⚠ 모든 경쟁사 수집 실패 — 기존 competitors.json 유지")
