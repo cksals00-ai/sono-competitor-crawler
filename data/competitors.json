@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-06-16 14:07:49 KST",
+  "_updated_at": "2026-06-16 15:04:53 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -14,6 +14,88 @@
       "detail": "올여름 조식 패키지 최대 76% 할인 · 외 [얼리써머] 워터파크 2+1 · [얼리써머] 룸온리 2박 등 16개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
       "campaign_count": 16,
+      "campaigns": [
+        {
+          "title": "[얼리써머] 조식 2+1",
+          "period": "2026.05.18 - 2026.06.21",
+          "discount_pct": 76
+        },
+        {
+          "title": "[얼리써머] 워터파크 2+1",
+          "period": "2026.05.18 - 2026.06.21",
+          "discount_pct": 59
+        },
+        {
+          "title": "[얼리써머] 룸온리 2박",
+          "period": "2026.05.18 - 2026.06.21",
+          "discount_pct": 51
+        },
+        {
+          "title": "실속 보양 PKG",
+          "period": "2026.05.21 - 2026.07.16",
+          "discount_pct": 0
+        },
+        {
+          "title": "해운대 웰니스 모먼트",
+          "period": "2026.05.26 - 2026.07.16",
+          "discount_pct": 0
+        },
+        {
+          "title": "워터밤 속초 2박 패키지",
+          "period": "2026.05.21 - 2026.08.23",
+          "discount_pct": 0
+        },
+        {
+          "title": "워터밤 속초 1박 패키지",
+          "period": "2026.05.21 - 2026.08.21",
+          "discount_pct": 0
+        },
+        {
+          "title": "대천 & 여수 트래블로그",
+          "period": "2026.05.20 - 2026.07.16",
+          "discount_pct": 0
+        },
+        {
+          "title": "한라산 윗세오름 힐링 트레킹 패키지",
+          "period": "2026.05.19 - 2026.08.29",
+          "discount_pct": 0
+        },
+        {
+          "title": "해운대 & 거제 트래블로그",
+          "period": "2026.05.07 - 2026.06.29",
+          "discount_pct": 0
+        },
+        {
+          "title": "설악 & 평창 트래블로그",
+          "period": "2026.04.27 - 2026.06.30",
+          "discount_pct": 0
+        },
+        {
+          "title": "산정호수에서 놀아 봄",
+          "period": "2026.04.20 - 2026.06.30",
+          "discount_pct": 0
+        },
+        {
+          "title": "로컬 프로젝트 #2",
+          "period": "2026.04.13 - 2026.06.30",
+          "discount_pct": 0
+        },
+        {
+          "title": "[Stay Plus+] 나이트 체크아웃",
+          "period": "2026.04.13 - 2026.06.30",
+          "discount_pct": 0
+        },
+        {
+          "title": "5-6월 골프 패키지(1박 2일)",
+          "period": "2026.04.08 - 2026.06.30",
+          "discount_pct": 0
+        },
+        {
+          "title": "제주 올인원 트립",
+          "period": "2026.02.13 - 2027.02.27",
+          "discount_pct": 0
+        }
+      ],
       "price_min": 90540,
       "price_max": 349592,
       "promo_count": 933,
@@ -43,7 +125,69 @@
       "channel": "롯데리조트 공식 홈페이지",
       "detail": "객실 + 눅스 슈퍼 세럼& 아이세럼 + 수영장 50% 할인 + 주중 레이트 체크아웃 · 외 [APP 전용] Dear My Kids · Stay longer, Save more! 등 12개",
       "link": "https://www.lotteresort.com/main/ko/package-event/package/list",
-      "campaign_count": 12
+      "campaign_count": 12,
+      "campaigns": [
+        {
+          "title": "NUXE Stress off, Stay Here, Glow on",
+          "period": "2026.04.01 ~ 2026.06.30",
+          "discount_pct": 50
+        },
+        {
+          "title": "[APP 전용] Dear My Kids",
+          "period": "2026.04.01 ~ 2026.12.31",
+          "discount_pct": 50
+        },
+        {
+          "title": "Stay longer, Save more!",
+          "period": "2026.01.01 ~ 2026.12.31",
+          "discount_pct": 22
+        },
+        {
+          "title": "Summer Flex with L.PAY",
+          "period": "2026.06.15 ~ 2026.09.22",
+          "discount_pct": 0
+        },
+        {
+          "title": "ONLY FOR REWARDS",
+          "period": "2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "HAPPY WATERPARK",
+          "period": "2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "HAPPY WATERPARK",
+          "period": "2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "HAPPY WATERPARK",
+          "period": "2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "TASTY HOLIDAY",
+          "period": "2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "TASTY HOLIDAY",
+          "period": "2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "TASTY HOLIDAY",
+          "period": "2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "Happy Together, Family Together",
+          "period": "2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        }
+      ]
     },
     {
       "brand": "신라호텔",
@@ -55,6 +199,68 @@
       "detail": "821,700원~ · 외 [서울] Urban Retreat · [서울] Early Bird Early Bird 60 Days 등 12개",
       "link": "https://www.shilla.net/seoul/offers/pack/listPack.do",
       "campaign_count": 12,
+      "campaigns": [
+        {
+          "title": "[서울] Essence Of Korea",
+          "period": "2025-11-24 ~ 2026-06-30",
+          "discount_pct": 0
+        },
+        {
+          "title": "[서울] Urban Retreat",
+          "period": "2026-03-23 ~ 2026-08-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "[서울] Early Bird Early Bird 60 Days",
+          "period": "2026-01-01 ~ 2026-12-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "[서울] Promotion Best Available Rate",
+          "period": "2026-01-01 ~ 2026-12-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "[서울] Early Bird Early Bird 30 Days",
+          "period": "2026-01-01 ~ 2026-12-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "[서울] Executive Business Package",
+          "period": "2026-05-01 ~ 2026-12-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "[서울] Bed and Breakfast",
+          "period": "2026-01-01 ~ 2026-12-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "[서울] Business Package",
+          "period": "2026-01-01 ~ 2026-12-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "[제주] Jeju Experience with The Shilla",
+          "period": "2026-06-01 ~ 2026-08-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "[제주] Recommended More Nights , More Delights",
+          "period": "2026-06-01 ~ 2026-12-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "[제주] Recommended Feel the Real Jeju",
+          "period": "2026-06-01 ~ 2026-12-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "[제주] Recommended Bed & Breakfast",
+          "period": "2026-06-01 ~ 2027-04-30",
+          "discount_pct": 0
+        }
+      ],
       "price_min": 184700,
       "price_max": 855800,
       "promo_count": 3787,
@@ -99,6 +305,53 @@
       "detail": "하이원에서 시원하게 즐기자~!! · 외 '미식의 축제로 골인(GOAL IN THE BUFFET)' 월드컵 프로모션 · 지역상생&문화관광 활성화 프로젝트 3.0 등 9개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
       "campaign_count": 9,
+      "campaigns": [
+        {
+          "title": "대한민국 승리 기원 프로모션",
+          "period": "2026-06-12~2026-06-25",
+          "discount_pct": 0
+        },
+        {
+          "title": "'미식의 축제로 골인(GOAL IN THE BUFFET)' 월드컵 프로모션",
+          "period": "2026-06-12~2026-06-25",
+          "discount_pct": 0
+        },
+        {
+          "title": "지역상생&문화관광 활성화 프로젝트 3.0",
+          "period": "2026-06-02~2026-11-30",
+          "discount_pct": 0
+        },
+        {
+          "title": "하이원 스파 시그니처 프로모션",
+          "period": "2026-06-01~2026-08-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "마운틴 카페테리아 <스테이크 플래터>",
+          "period": "2026-05-23~2026-07-18",
+          "discount_pct": 0
+        },
+        {
+          "title": "5월, 행복이 온(ON) 가족 뷔페",
+          "period": "2026-05-23~2026-05-25",
+          "discount_pct": 0
+        },
+        {
+          "title": "하이원 그린카드 에코여행 프로모션",
+          "period": "2026-04-01~2026-06-30",
+          "discount_pct": 0
+        },
+        {
+          "title": "카카오톡 친구 이벤트",
+          "period": "2026-02-02~2026-12-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "워터월드 입장권 모바일 앱에서 구매하세요!",
+          "period": "상시",
+          "discount_pct": 0
+        }
+      ],
       "price_min": 82148,
       "price_max": 612950,
       "promo_count": 212,
@@ -129,6 +382,38 @@
       "detail": "신나는 경험이 기다리는 여행! 24시간이 모자랄 만큼 즐거운 플레이케이션을 만나보세요. · 외 제주 서머 플렉스 · 켄싱턴리조트 경주 [다겨미네 X 켄싱턴] 경주 키캉스_애슐리퀸즈 런치 등 6개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 6,
+      "campaigns": [
+        {
+          "title": "플레이케이션",
+          "period": "2026. 06. 08 ~ 2026. 08. 31",
+          "discount_pct": 0
+        },
+        {
+          "title": "제주 서머 플렉스",
+          "period": "2026. 06. 19 ~ 2026. 09. 27",
+          "discount_pct": 0
+        },
+        {
+          "title": "켄싱턴리조트 경주 [다겨미네 X 켄싱턴] 경주 키캉스_애슐리퀸즈 런치",
+          "period": "2026.06.16 ~ 2026.07.04",
+          "discount_pct": 0
+        },
+        {
+          "title": "켄싱턴리조트 지리산하동 SUMMER PLAYGROUND",
+          "period": "2026.06.01 ~ 2026.09.30",
+          "discount_pct": 0
+        },
+        {
+          "title": "켄싱턴리조트 제주중문 제주살이 낭만찾기",
+          "period": "2026.05.01 ~ 2026.09.30",
+          "discount_pct": 0
+        },
+        {
+          "title": "켄싱턴리조트 설악비치 외 9개 리조트 [개인회원전용] 회원예약보장 프로모션",
+          "period": "상시",
+          "discount_pct": 0
+        }
+      ],
       "price_min": 95055,
       "price_max": 521391,
       "promo_count": 1362,

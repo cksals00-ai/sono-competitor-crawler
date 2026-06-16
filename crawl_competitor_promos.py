@@ -346,6 +346,12 @@ def main() -> None:
             "detail": " · ".join(bits)[:200],
             "link": link,
             "campaign_count": len(camps),
+            # 자사몰 프로모션 전체 목록 (대시보드에서 '더보기'로 펼침)
+            "campaigns": [
+                {"title": c["title"], "period": c["period"] or "상시",
+                 "discount_pct": c["discount_pct"]}
+                for c in camps_sorted
+            ],
         }
         # A — 가격 CSV: 최대-최소 판매가 + OTA 채널별 특가 (뎁스 1단)
         s = sig.get(kw)
