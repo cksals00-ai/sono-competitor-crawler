@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-06-16 15:04:53 KST",
+  "_updated_at": "2026-06-17 06:00:08 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -98,18 +98,18 @@
       ],
       "price_min": 90540,
       "price_max": 349592,
-      "promo_count": 933,
+      "promo_count": 1146,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 469,
+          "count": 578,
           "min": 90540,
           "max": 349592,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 464,
+          "count": 568,
           "min": 93000,
           "max": 336000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -120,7 +120,7 @@
       "brand": "롯데리조트",
       "region": "apac",
       "title": "NUXE Stress off, Stay Here, Glow on",
-      "period": "2026.04.01 ~ 2026.06.30",
+      "period": "2026.04.01 ~ 2026.08.31",
       "discount_pct": 50,
       "channel": "롯데리조트 공식 홈페이지",
       "detail": "객실 + 눅스 슈퍼 세럼& 아이세럼 + 수영장 50% 할인 + 주중 레이트 체크아웃 · 외 [APP 전용] Dear My Kids · Stay longer, Save more! 등 12개",
@@ -129,7 +129,7 @@
       "campaigns": [
         {
           "title": "NUXE Stress off, Stay Here, Glow on",
-          "period": "2026.04.01 ~ 2026.06.30",
+          "period": "2026.04.01 ~ 2026.08.31",
           "discount_pct": 50
         },
         {
@@ -263,27 +263,27 @@
       ],
       "price_min": 184700,
       "price_max": 855800,
-      "promo_count": 3787,
+      "promo_count": 5279,
       "ota_promos": [
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 3009,
-          "min": 227040,
+          "count": 4403,
+          "min": 206400,
           "max": 653840,
           "sample": "스탠다드 트윈룸 - 도시 전망"
         },
         {
           "ota": "네이버호텔/야놀자",
-          "count": 697,
+          "count": 762,
           "min": 184700,
           "max": 855800,
           "sample": "스탠다드 → 디럭스 시티뷰 체크인 시 배정(초강력특가★룸 업그"
         },
         {
           "ota": "네이버호텔/Hotels.com",
-          "count": 51,
+          "count": 84,
           "min": 231525,
-          "max": 489216,
+          "max": 515000,
           "sample": "[Voyage To Busan] 디럭스 더블룸, 시내 전망 +"
         },
         {
@@ -416,21 +416,28 @@
       ],
       "price_min": 95055,
       "price_max": 521391,
-      "promo_count": 1362,
+      "promo_count": 1965,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 878,
+          "count": 1145,
           "min": 119900,
           "max": 499900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 484,
+          "count": 640,
           "min": 95055,
           "max": 521391,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
+        },
+        {
+          "ota": "네이버호텔/Booking.com",
+          "count": 180,
+          "min": 218078,
+          "max": 457039,
+          "sample": "프리미어 로잔 룸 - 26평, 정원 전망"
         }
       ]
     }
