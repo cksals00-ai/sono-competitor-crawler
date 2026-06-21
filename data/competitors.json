@@ -1,38 +1,23 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-06-21 06:00:08 KST",
+  "_updated_at": "2026-06-22 06:00:07 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
     {
       "brand": "한화리조트",
       "region": "vivaldi",
-      "title": "[얼리써머] 조식 2+1",
-      "period": "2026.05.18 - 2026.06.21",
-      "discount_pct": 76,
+      "title": "여름 시즌 제주 롱스테이케이션",
+      "period": "2026.06.01 - 2026.07.31",
+      "discount_pct": 51,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "올여름 조식 패키지 최대 76% 할인 · 외 [얼리써머] 워터파크 2+1 · 여름 시즌 제주 롱스테이케이션 등 17개",
+      "detail": "6박 이상 최대 51% 할인 · 외 실속 보양 PKG · 해운대 웰니스 모먼트 등 14개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 17,
+      "campaign_count": 14,
       "campaigns": [
-        {
-          "title": "[얼리써머] 조식 2+1",
-          "period": "2026.05.18 - 2026.06.21",
-          "discount_pct": 76
-        },
-        {
-          "title": "[얼리써머] 워터파크 2+1",
-          "period": "2026.05.18 - 2026.06.21",
-          "discount_pct": 59
-        },
         {
           "title": "여름 시즌 제주 롱스테이케이션",
           "period": "2026.06.01 - 2026.07.31",
-          "discount_pct": 51
-        },
-        {
-          "title": "[얼리써머] 룸온리 2박",
-          "period": "2026.05.18 - 2026.06.21",
           "discount_pct": 51
         },
         {
@@ -103,18 +88,18 @@
       ],
       "price_min": 90540,
       "price_max": 349592,
-      "promo_count": 1989,
+      "promo_count": 2162,
       "ota_promos": [
         {
           "ota": "네이버호텔/여기어때",
-          "count": 1018,
+          "count": 1104,
           "min": 93000,
           "max": 336000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
         },
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 971,
+          "count": 1058,
           "min": 90540,
           "max": 349592,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
@@ -268,54 +253,56 @@
       ],
       "price_min": 180400,
       "price_max": 1034000,
-      "promo_count": 11293,
+      "promo_count": 12825,
       "ota_promos": [
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 9693,
+          "count": 10964,
           "min": 197800,
           "max": 653840,
           "sample": "스탠다드 트윈룸 - 도시 전망"
         },
         {
           "ota": "네이버호텔/야놀자",
-          "count": 1279,
+          "count": 1469,
           "min": 180400,
           "max": 855800,
           "sample": "스탠다드 → 디럭스 시티뷰 체크인 시 배정(초강력특가★룸 업그"
         },
         {
           "ota": "네이버호텔/Hotels.com",
-          "count": 230,
+          "count": 273,
           "min": 231525,
           "max": 1034000,
           "sample": "[Voyage To Busan] 디럭스 더블룸, 시내 전망 +"
         },
         {
           "ota": "네이버호텔/Agoda",
-          "count": 91,
+          "count": 118,
           "min": 248272,
           "max": 819108,
           "sample": "[초강력특가] 스탠다드 시티뷰 체크인시 배정+태양의서커스PKG"
+        },
+        {
+          "ota": "네이버호텔/Trip.com",
+          "count": 1,
+          "min": 326700,
+          "max": 326700,
+          "sample": "스탠다드 패밀리 룸 도시전망 - 쿠팡이츠 최대 1만원 랜덤 할"
         }
       ]
     },
     {
       "brand": "하이원리조트",
       "region": "central",
-      "title": "CJ온스타일X하이원 올인클루시브",
-      "period": "2026-06-18~2026-06-21",
+      "title": "하이원 앱 신규가입 이벤트",
+      "period": "2026-06-17~2027-01-31",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "6월 21일(일) 21:35 하이원 완전정복! · 외 하이원 앱 신규가입 이벤트 · 하이원 플라워 페스타~ 등 9개",
+      "detail": "하이원과 첫만남 선물드려요~ · 외 하이원 플라워 페스타~ · 대한민국 승리 기원 프로모션 등 9개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
       "campaign_count": 9,
       "campaigns": [
-        {
-          "title": "CJ온스타일X하이원 올인클루시브",
-          "period": "2026-06-18~2026-06-21",
-          "discount_pct": 0
-        },
         {
           "title": "하이원 앱 신규가입 이벤트",
           "period": "2026-06-17~2027-01-31",
@@ -355,22 +342,27 @@
           "title": "5월, 행복이 온(ON) 가족 뷔페",
           "period": "2026-05-23~2026-05-25",
           "discount_pct": 0
+        },
+        {
+          "title": "하이원 그린카드 에코여행 프로모션",
+          "period": "2026-04-01~2026-06-30",
+          "discount_pct": 0
         }
       ],
       "price_min": 82148,
       "price_max": 835995,
-      "promo_count": 500,
+      "promo_count": 600,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 313,
+          "count": 365,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 187,
+          "count": 235,
           "min": 82148,
           "max": 835995,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -421,25 +413,25 @@
       ],
       "price_min": 95055,
       "price_max": 521391,
-      "promo_count": 3963,
+      "promo_count": 4385,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 2015,
+          "count": 2200,
           "min": 119900,
           "max": 499900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 1175,
+          "count": 1292,
           "min": 95055,
           "max": 521391,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 773,
+          "count": 893,
           "min": 172636,
           "max": 508987,
           "sample": "Kensington Deluxe Mountain View (C"
