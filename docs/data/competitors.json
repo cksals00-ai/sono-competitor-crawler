@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-06-23 06:00:08 KST",
+  "_updated_at": "2026-06-24 06:00:08 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -103,18 +103,18 @@
       ],
       "price_min": 90540,
       "price_max": 349592,
-      "promo_count": 2306,
+      "promo_count": 2446,
       "ota_promos": [
         {
           "ota": "네이버호텔/여기어때",
-          "count": 1176,
+          "count": 1248,
           "min": 93000,
           "max": 336000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
         },
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 1130,
+          "count": 1198,
           "min": 90540,
           "max": 349592,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
@@ -124,22 +124,22 @@
     {
       "brand": "롯데리조트",
       "region": "apac",
-      "title": "NUXE Stress off, Stay Here, Glow on",
-      "period": "2026.04.01 ~ 2026.08.31",
+      "title": "Dear My Kids",
+      "period": "2026.04.01 ~ 2026.12.31",
       "discount_pct": 50,
       "channel": "롯데리조트 공식 홈페이지",
-      "detail": "객실 + 눅스 슈퍼 세럼& 아이세럼 + 수영장 50% 할인 + 주중 레이트 체크아웃 · 외 [APP 전용] Dear My Kids · Stay longer, Save more! 등 12개",
+      "detail": "[리워즈 회원 전용] 객실 + 조식or워터파크3인(대인2+소인1) + 워터파크/수영장 50%할인 · 외 NUXE Stress off, Stay Here, Glow on · Stay longer, Save more! 등 12개",
       "link": "https://www.lotteresort.com/main/ko/package-event/package/list",
       "campaign_count": 12,
       "campaigns": [
         {
-          "title": "NUXE Stress off, Stay Here, Glow on",
-          "period": "2026.04.01 ~ 2026.08.31",
+          "title": "Dear My Kids",
+          "period": "2026.04.01 ~ 2026.12.31",
           "discount_pct": 50
         },
         {
-          "title": "[APP 전용] Dear My Kids",
-          "period": "2026.04.01 ~ 2026.12.31",
+          "title": "NUXE Stress off, Stay Here, Glow on",
+          "period": "2026.04.01 ~ 2026.08.31",
           "discount_pct": 50
         },
         {
@@ -158,6 +158,11 @@
           "discount_pct": 0
         },
         {
+          "title": "2026 Art Deal",
+          "period": "2026.06.24 ~ 2026.09.30",
+          "discount_pct": 0
+        },
+        {
           "title": "HAPPY WATERPARK",
           "period": "2026.01.01 ~ 2026.12.31",
           "discount_pct": 0
@@ -184,11 +189,6 @@
         },
         {
           "title": "TASTY HOLIDAY",
-          "period": "2026.01.01 ~ 2026.12.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "Happy Together, Family Together",
           "period": "2026.01.01 ~ 2026.12.31",
           "discount_pct": 0
         }
@@ -268,33 +268,33 @@
       ],
       "price_min": 180400,
       "price_max": 1034000,
-      "promo_count": 14267,
+      "promo_count": 15716,
       "ota_promos": [
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 12202,
+          "count": 13416,
           "min": 197800,
           "max": 653840,
           "sample": "스탠다드 트윈룸 - 도시 전망"
         },
         {
           "ota": "네이버호텔/야놀자",
-          "count": 1654,
+          "count": 1839,
           "min": 180400,
           "max": 855800,
           "sample": "스탠다드 → 디럭스 시티뷰 체크인 시 배정(초강력특가★룸 업그"
         },
         {
           "ota": "네이버호텔/Hotels.com",
-          "count": 291,
+          "count": 312,
           "min": 231525,
           "max": 1034000,
           "sample": "[Voyage To Busan] 디럭스 더블룸, 시내 전망 +"
         },
         {
           "ota": "네이버호텔/Agoda",
-          "count": 118,
-          "min": 248272,
+          "count": 147,
+          "min": 242746,
           "max": 819108,
           "sample": "[초강력특가] 스탠다드 시티뷰 체크인시 배정+태양의서커스PKG"
         },
@@ -366,18 +366,18 @@
       ],
       "price_min": 82148,
       "price_max": 835995,
-      "promo_count": 748,
+      "promo_count": 896,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 441,
+          "count": 517,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 307,
+          "count": 379,
           "min": 82148,
           "max": 835995,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -391,7 +391,7 @@
       "period": "2026.06.22 ~ 2026.07.02",
       "discount_pct": 20,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "[임박특가/2실] 프리미어 마운틴 only [일-목] 20% 할인 + [금-토] 10% 할인 · 외 켄싱턴리조트 서귀포 [한정수량] 서머딜 · 플레이케이션 등 5개",
+      "detail": "[임박특가/2실] 프리미어 마운틴 only [일-목] 20% 할인 + [금-토] 10% 할인 · 외 플레이케이션 · 제주 서머 플렉스 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
@@ -399,11 +399,6 @@
           "title": "켄싱턴리조트 서귀포 [한정수량] 임박딜",
           "period": "2026.06.22 ~ 2026.07.02",
           "discount_pct": 20
-        },
-        {
-          "title": "켄싱턴리조트 서귀포 [한정수량] 서머딜",
-          "period": "2026.07.03 ~ 2026.07.31",
-          "discount_pct": 8
         },
         {
           "title": "플레이케이션",
@@ -416,6 +411,11 @@
           "discount_pct": 0
         },
         {
+          "title": "켄싱턴리조트 충주 렛츠 고 스위밍",
+          "period": "2026.07.08 ~ 2026.08.23",
+          "discount_pct": 0
+        },
+        {
           "title": "켄싱턴리조트 제주중문 제주살이 낭만찾기",
           "period": "2026.05.01 ~ 2026.09.30",
           "discount_pct": 0
@@ -423,25 +423,25 @@
       ],
       "price_min": 95055,
       "price_max": 521391,
-      "promo_count": 4881,
+      "promo_count": 5383,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 2415,
+          "count": 2631,
           "min": 119900,
           "max": 499900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 1431,
+          "count": 1573,
           "min": 95055,
           "max": 521391,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 1035,
+          "count": 1179,
           "min": 172636,
           "max": 508987,
           "sample": "Kensington Deluxe Mountain View (C"
