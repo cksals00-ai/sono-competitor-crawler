@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-06-27 06:00:06 KST",
+  "_updated_at": "2026-06-28 06:00:08 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -103,18 +103,18 @@
       ],
       "price_min": 90540,
       "price_max": 356000,
-      "promo_count": 3182,
+      "promo_count": 3382,
       "ota_promos": [
         {
           "ota": "네이버호텔/여기어때",
-          "count": 1622,
+          "count": 1717,
           "min": 93000,
           "max": 336000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
         },
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 1560,
+          "count": 1665,
           "min": 90540,
           "max": 356000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
@@ -268,39 +268,39 @@
       ],
       "price_min": 180400,
       "price_max": 2970220,
-      "promo_count": 19636,
+      "promo_count": 20897,
       "ota_promos": [
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 16697,
+          "count": 17728,
           "min": 197800,
           "max": 2970220,
           "sample": "스탠다드 트윈룸 - 도시 전망"
         },
         {
           "ota": "네이버호텔/야놀자",
-          "count": 2397,
+          "count": 2570,
           "min": 180400,
           "max": 855800,
           "sample": "스탠다드 → 디럭스 시티뷰 체크인 시 배정(초강력특가★룸 업그"
         },
         {
           "ota": "네이버호텔/Hotels.com",
-          "count": 373,
+          "count": 402,
           "min": 230000,
           "max": 1034000,
           "sample": "[Voyage To Busan] 디럭스 더블룸, 시내 전망 +"
         },
         {
           "ota": "네이버호텔/Agoda",
-          "count": 166,
+          "count": 193,
           "min": 242746,
           "max": 819108,
           "sample": "[초강력특가] 스탠다드 시티뷰 체크인시 배정+태양의서커스PKG"
         },
         {
           "ota": "네이버호텔/Trip.com",
-          "count": 3,
+          "count": 4,
           "min": 326700,
           "max": 455400,
           "sample": "스탠다드 패밀리 룸 도시전망 - 쿠팡이츠 최대 1만원 랜덤 할"
@@ -310,19 +310,14 @@
     {
       "brand": "하이원리조트",
       "region": "central",
-      "title": "현대홈쇼핑X하이원 썸머99패키지",
-      "period": "2026-06-26~2026-06-27",
+      "title": "하이원 앱 신규가입 이벤트",
+      "period": "2026-06-17~2027-01-31",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "6월 27일(토) 21:30 방송중 특가 찬스 · 외 하이원 앱 신규가입 이벤트 · 하이원 플라워 페스타~ 등 9개",
+      "detail": "하이원과 첫만남 선물드려요~ · 외 하이원 플라워 페스타~ · 지역상생&문화관광 활성화 프로젝트 3.0 등 9개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
       "campaign_count": 9,
       "campaigns": [
-        {
-          "title": "현대홈쇼핑X하이원 썸머99패키지",
-          "period": "2026-06-26~2026-06-27",
-          "discount_pct": 0
-        },
         {
           "title": "하이원 앱 신규가입 이벤트",
           "period": "2026-06-17~2027-01-31",
@@ -362,22 +357,27 @@
           "title": "카카오톡 친구 이벤트",
           "period": "2026-02-02~2026-12-31",
           "discount_pct": 0
+        },
+        {
+          "title": "워터월드 입장권 모바일 앱에서 구매하세요!",
+          "period": "상시",
+          "discount_pct": 0
         }
       ],
       "price_min": 82148,
       "price_max": 835995,
-      "promo_count": 1322,
+      "promo_count": 1506,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 754,
+          "count": 866,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 568,
+          "count": 640,
           "min": 82148,
           "max": 835995,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -423,25 +423,25 @@
       ],
       "price_min": 95055,
       "price_max": 659900,
-      "promo_count": 6562,
+      "promo_count": 6905,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 3151,
+          "count": 3311,
           "min": 119900,
           "max": 659900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 1900,
+          "count": 1981,
           "min": 95055,
           "max": 658269,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 1511,
+          "count": 1613,
           "min": 172636,
           "max": 508987,
           "sample": "Kensington Deluxe Mountain View (C"
