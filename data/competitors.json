@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-06-30 06:00:09 KST",
+  "_updated_at": "2026-07-01 06:00:09 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.06.22 - 2026.07.31",
       "discount_pct": 62,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "올 여름 휴가는 최대 62% 할인 · 외 [핫앤쿨] 룸온리 2박 · 여름 시즌 제주 롱스테이케이션 등 17개",
+      "detail": "올 여름 휴가는 최대 62% 할인 · 외 [핫앤쿨] 룸온리 2박 · 여름 시즌 제주 롱스테이케이션 등 13개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 17,
+      "campaign_count": 13,
       "campaigns": [
         {
           "title": "[핫앤쿨] ALL-INCLUSIVE 1박",
@@ -71,28 +71,8 @@
           "discount_pct": 0
         },
         {
-          "title": "설악 & 평창 트래블로그",
-          "period": "2026.04.27 - 2026.06.30",
-          "discount_pct": 0
-        },
-        {
-          "title": "산정호수에서 놀아 봄",
-          "period": "2026.04.20 - 2026.06.30",
-          "discount_pct": 0
-        },
-        {
           "title": "로컬 프로젝트 #2",
           "period": "2026.04.13 - 2026.08.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "[Stay Plus+] 나이트 체크아웃",
-          "period": "2026.04.13 - 2026.06.30",
-          "discount_pct": 0
-        },
-        {
-          "title": "5-6월 골프 패키지(1박 2일)",
-          "period": "2026.04.08 - 2026.06.30",
           "discount_pct": 0
         },
         {
@@ -103,21 +83,21 @@
       ],
       "price_min": 90540,
       "price_max": 356000,
-      "promo_count": 3767,
+      "promo_count": 3949,
       "ota_promos": [
         {
-          "ota": "네이버호텔/여기어때",
-          "count": 1890,
-          "min": 93000,
-          "max": 336000,
-          "sample": "[환불불가-라스트미닛 특가] 스위트"
-        },
-        {
           "ota": "네이버호텔/TripBToz",
-          "count": 1877,
+          "count": 1978,
           "min": 90540,
           "max": 356000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
+        },
+        {
+          "ota": "네이버호텔/여기어때",
+          "count": 1971,
+          "min": 93000,
+          "max": 336000,
+          "sample": "[환불불가-라스트미닛 특가] 스위트"
         }
       ]
     },
@@ -197,19 +177,14 @@
     {
       "brand": "신라호텔",
       "region": "apac",
-      "title": "[서울] Essence Of Korea",
-      "period": "2025-11-24 ~ 2026-06-30",
+      "title": "[서울] Urban Retreat",
+      "period": "2026-03-23 ~ 2026-08-31",
       "discount_pct": 0,
       "channel": "신라호텔 공식 홈페이지",
-      "detail": "821,700원~ · 외 [서울] Urban Retreat · [서울] Early Bird Early Bird 60 Days 등 12개",
+      "detail": "605,000원~ · 외 [서울] Early Bird Early Bird 60 Days · [서울] Promotion Best Available Rate 등 11개",
       "link": "https://www.shilla.net/seoul/offers/pack/listPack.do",
-      "campaign_count": 12,
+      "campaign_count": 11,
       "campaigns": [
-        {
-          "title": "[서울] Essence Of Korea",
-          "period": "2025-11-24 ~ 2026-06-30",
-          "discount_pct": 0
-        },
         {
           "title": "[서울] Urban Retreat",
           "period": "2026-03-23 ~ 2026-08-31",
@@ -268,42 +243,42 @@
       ],
       "price_min": 180400,
       "price_max": 2970220,
-      "promo_count": 23375,
+      "promo_count": 24650,
       "ota_promos": [
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 19767,
+          "count": 20807,
           "min": 197800,
           "max": 2970220,
           "sample": "스탠다드 트윈룸 - 도시 전망"
         },
         {
           "ota": "네이버호텔/야놀자",
-          "count": 2919,
+          "count": 3099,
           "min": 180400,
           "max": 855800,
           "sample": "스탠다드 → 디럭스 시티뷰 체크인 시 배정(초강력특가★룸 업그"
         },
         {
           "ota": "네이버호텔/Hotels.com",
-          "count": 442,
+          "count": 467,
           "min": 230000,
           "max": 1034000,
           "sample": "[Voyage To Busan] 디럭스 더블룸, 시내 전망 +"
         },
         {
           "ota": "네이버호텔/Agoda",
-          "count": 242,
+          "count": 270,
           "min": 242746,
           "max": 819108,
           "sample": "[초강력특가] 스탠다드 시티뷰 체크인시 배정+태양의서커스PKG"
         },
         {
           "ota": "네이버호텔/Trip.com",
-          "count": 5,
-          "min": 326700,
+          "count": 7,
+          "min": 297000,
           "max": 455400,
-          "sample": "스탠다드 패밀리 룸 도시전망 - 쿠팡이츠 최대 1만원 랜덤 할"
+          "sample": "스탠다드 더블 룸 바다전망 - 쿠팡이츠 최대 1만원 랜덤 할인"
         }
       ]
     },
@@ -314,9 +289,9 @@
       "period": "2026-06-29~2026-07-12",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "7월 12일까지만 구매 가능해요! · 외 하이원 앱 신규가입 이벤트 · 지역상생&문화관광 활성화 프로젝트 3.0 등 9개",
+      "detail": "7월 12일까지만 구매 가능해요! · 외 하이원 앱 신규가입 이벤트 · 지역상생&문화관광 활성화 프로젝트 3.0 등 8개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
-      "campaign_count": 9,
+      "campaign_count": 8,
       "campaigns": [
         {
           "title": "하이원 초특가 라이브!",
@@ -349,11 +324,6 @@
           "discount_pct": 0
         },
         {
-          "title": "하이원 그린카드 에코여행 프로모션",
-          "period": "2026-04-01~2026-06-30",
-          "discount_pct": 0
-        },
-        {
           "title": "카카오톡 친구 이벤트",
           "period": "2026-02-02~2026-12-31",
           "discount_pct": 0
@@ -366,18 +336,18 @@
       ],
       "price_min": 82148,
       "price_max": 835995,
-      "promo_count": 1555,
+      "promo_count": 1655,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 904,
+          "count": 958,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 651,
+          "count": 697,
           "min": 82148,
           "max": 835995,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -388,7 +358,7 @@
       "brand": "켄싱턴리조트",
       "region": "south",
       "title": "켄싱턴호텔 여의도 [주중 전용] 얼리버드 오퍼",
-      "period": "2026.07.06 ~ 2026.09.30",
+      "period": "2026.07.07 ~ 2026.09.30",
       "discount_pct": 10,
       "channel": "켄싱턴리조트 공식 홈페이지",
       "detail": "객실 10% 할인 + 무제한 디저트&티 2인 + 레이트 체크아웃 12시 + 객실 무료 업그레이드 · 외 슈퍼 서머 위크 · 플레이케이션 등 5개",
@@ -397,7 +367,7 @@
       "campaigns": [
         {
           "title": "켄싱턴호텔 여의도 [주중 전용] 얼리버드 오퍼",
-          "period": "2026.07.06 ~ 2026.09.30",
+          "period": "2026.07.07 ~ 2026.09.30",
           "discount_pct": 10
         },
         {
@@ -411,8 +381,8 @@
           "discount_pct": 0
         },
         {
-          "title": "코럴 오션 리조트 사이판 [PIC 사이판 x 코럴오션리조트] 시그니처 오션 골프",
-          "period": "2026.07.11 ~ 2026.10.24",
+          "title": "켄싱턴리조트 경주 조식 특가 딜",
+          "period": "2026.07.05 ~ 2026.10.31",
           "discount_pct": 0
         },
         {
@@ -423,25 +393,25 @@
       ],
       "price_min": 95055,
       "price_max": 659900,
-      "promo_count": 7606,
+      "promo_count": 7974,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 3634,
+          "count": 3800,
           "min": 119900,
           "max": 659900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 2143,
+          "count": 2237,
           "min": 95055,
           "max": 658269,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 1829,
+          "count": 1937,
           "min": 172636,
           "max": 508987,
           "sample": "Kensington Deluxe Mountain View (C"
