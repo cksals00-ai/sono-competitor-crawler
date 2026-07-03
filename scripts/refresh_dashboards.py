@@ -3,8 +3,8 @@
 refresh_dashboards.py — 매일 06:00 대시보드 전체 자동 갱신
 =============================================================
 파이프라인:
-  [1] 팔라티움 리포트  : parse_palatium.py → build_palatium.py
-  [2] 트렌드 리포트    : parse_raw_db.py → db_to_notes.py → build.py → git push
+  [1] 팔라티움 리포트  : parse_palatium.py → build_palatium.py → git push
+  (트렌드 리포트 갱신은 gs repo host_daily_crawl.sh(05:00)+GitHub Actions가 전담 — 이 잡에서 제거)
 
 LaunchAgent: ~/Library/LaunchAgents/com.sono.dashboard-refresh.plist
 실행 환경: venv python (/Projects/sono-competitor-crawler/venv/bin/python)
@@ -90,38 +90,9 @@ def run_palatium() -> bool:
     return ok
 
 
-# ─────────────────────────────────────────
-# 트렌드 리포트 파이프라인
-# ─────────────────────────────────────────
-def run_trend() -> bool:
-    step("[2/2] 트렌드 리포트 갱신")
-
-    if not TREND_DIR.exists():
-        logger.error(f"트렌드 리포트 레포 없음: {TREND_DIR}")
-        return False
-
-    ok = True
-
-    # parse_raw_db.py — stdlib만 사용, venv python 또는 system python3 모두 가능
-    ok &= run([sys.executable, str(TREND_SCR / "parse_raw_db.py")], cwd=TREND_DIR)
-    if not ok:
-        logger.error("parse_raw_db.py 실패 — 이후 단계 중단")
-        return False
-
-    # db_to_notes.py
-    ok &= run([sys.executable, str(TREND_SCR / "db_to_notes.py")], cwd=TREND_DIR)
-    if not ok:
-        logger.error("db_to_notes.py 실패 — 빌드 중단")
-        return False
-
-    # build.py
-    ok &= run([sys.executable, str(TREND_SCR / "build.py")], cwd=TREND_DIR)
-
-    # git push
-    if ok:
-        ok &= _git_push(TREND_DIR)
-
-    return ok
+# 트렌드 리포트 파이프라인(run_trend)은 제거됨 — gs repo의 host_daily_crawl.sh(05:00)+
+# GitHub Actions가 온북·트렌드 갱신을 전담한다. 과거 이 단계는 db_to_notes.py(→generate_insights.py로
+# 리네임됨) 부재로 매일 실패했고, gs repo로의 이중 push만 유발하는 중복 파이프라인이었다.
 
 
 def _git_push(repo: Path) -> bool:
@@ -162,18 +133,20 @@ def main() -> None:
     logger.info(f"대시보드 자동 갱신 시작  {start.strftime('%Y-%m-%d %H:%M KST')}")
     logger.info("=" * 60)
 
-    pal_ok   = run_palatium()
-    trend_ok = run_trend()
+    pal_ok = run_palatium()
+    # 트렌드 단계는 gs repo의 host_daily_crawl.sh(05:00)+GitHub Actions가 전담하므로 제거.
+    # (과거 db_to_notes.py→generate_insights.py 리네임 이후 이 단계가 매일 실패했고,
+    #  중복 파이프라인이라 gs repo로의 이중 push만 유발했음.)
 
     elapsed = (datetime.now(KST) - start).seconds
     logger.info("")
     logger.info("=" * 60)
     logger.info(f"완료  소요: {elapsed}초")
-    logger.info(f"  팔라티움: {'✓' if pal_ok   else '✗'}")
-    logger.info(f"  트렌드:   {'✓' if trend_ok else '✗'}")
+    logger.info(f"  팔라티움: {'✓' if pal_ok else '✗'}")
+    logger.info("  트렌드:   ⏭ skip (gs host_daily_crawl 전담)")
     logger.info("=" * 60)
 
-    if not (pal_ok and trend_ok):
+    if not pal_ok:
         sys.exit(1)
 
 
