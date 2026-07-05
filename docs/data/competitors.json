@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-07-05 06:00:10 KST",
+  "_updated_at": "2026-07-06 06:00:10 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -98,18 +98,18 @@
       ],
       "price_min": 90540,
       "price_max": 356000,
-      "promo_count": 4745,
+      "promo_count": 4886,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 2414,
+          "count": 2488,
           "min": 90540,
           "max": 356000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 2331,
+          "count": 2398,
           "min": 93000,
           "max": 336000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -192,19 +192,14 @@
     {
       "brand": "하이원리조트",
       "region": "central",
-      "title": "CJ온스타일 올 인클루시브 진행중",
-      "period": "2026-07-03~2026-07-05",
+      "title": "하이원 초특가 라이브!",
+      "period": "2026-06-29~2026-07-12",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "7월 5일 19:25 CJ온스타일 라이브 · 외 하이원 초특가 라이브! · 하이원 앱 신규가입 이벤트 등 9개",
+      "detail": "7월 12일까지만 구매 가능해요! · 외 하이원 앱 신규가입 이벤트 · 지역상생&문화관광 활성화 프로젝트 3.0 등 8개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
-      "campaign_count": 9,
+      "campaign_count": 8,
       "campaigns": [
-        {
-          "title": "CJ온스타일 올 인클루시브 진행중",
-          "period": "2026-07-03~2026-07-05",
-          "discount_pct": 0
-        },
         {
           "title": "하이원 초특가 라이브!",
           "period": "2026-06-29~2026-07-12",
@@ -248,18 +243,18 @@
       ],
       "price_min": 82148,
       "price_max": 835995,
-      "promo_count": 2085,
+      "promo_count": 2149,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 1185,
+          "count": 1217,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 900,
+          "count": 932,
           "min": 82148,
           "max": 835995,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -305,18 +300,18 @@
       ],
       "price_min": 95055,
       "price_max": 669900,
-      "promo_count": 8981,
+      "promo_count": 9167,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 4277,
+          "count": 4393,
           "min": 119900,
           "max": 669900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 2547,
+          "count": 2617,
           "min": 95055,
           "max": 668699,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
