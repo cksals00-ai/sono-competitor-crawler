@@ -31,14 +31,43 @@ OVERSEAS_OTA = {"아고다","익스피디아","트립닷컴","부킹닷컴"}
 DOMESTIC_OTA = {"놀유니버스","여기어때","타이드스퀘어투어비스","웹투어"}
 
 
+def _is_reservation_xlsx(path):
+    """첫 시트 앞부분에 '도착일자' 헤더가 있으면 예약정보조회 export로 판단."""
+    try:
+        wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+        for ws in wb.worksheets:
+            if not (ws.max_row and ws.max_row > 1):
+                continue
+            for row in ws.iter_rows(values_only=True, max_row=6):
+                if row and any(str(c).strip() == "도착일자" for c in row if c is not None):
+                    wb.close(); return True
+            break
+        wb.close()
+    except Exception:
+        pass
+    return False
+
+
 def find_excel(data_dir):
-    """Excel 파일 탐색 — 사업계획 Excel은 제외하고 예약정보조회만 반환 (리스트)"""
-    for pat in [f"{data_dir}/*p_data*.xlsx", f"{data_dir}/*palatium*.xlsx",
-                f"{data_dir}/**/*예약정보조회*.xlsx", f"{data_dir}/*예약정보조회*.xlsx"]:
-        hits = sorted(glob.glob(pat, recursive=True), key=os.path.getmtime, reverse=True)
-        hits = [h for h in hits if "사업계획" not in os.path.basename(h)]
-        if hits:
-            return hits
+    """예약정보조회 export 전체 탐색 (리스트).
+
+    다올비전이 파일명을 날짜/파트(예: 2026010701.xlsx)로 바꿔 내보내도 잡히도록,
+    이름 규칙에 의존하지 않고 '도착일자' 컬럼을 가진 xlsx를 모두 반환한다.
+    사업계획·임시(~$) 파일은 제외."""
+    cands = sorted(set(glob.glob(f"{data_dir}/**/*.xlsx", recursive=True) +
+                       glob.glob(f"{data_dir}/*.xlsx")),
+                   key=os.path.getmtime, reverse=True)
+    # 1차: 이름 힌트(빠름) — 예약정보조회/p_data/palatium
+    named = [f for f in cands
+             if ("사업계획" not in os.path.basename(f) and not os.path.basename(f).startswith("~$")
+                 and any(k in os.path.basename(f).lower() for k in ("예약정보조회", "p_data", "palatium")))]
+    # 2차: 이름과 무관하게 내용으로 판별(개명된 파트 포함)
+    content = [f for f in cands
+               if ("사업계획" not in os.path.basename(f) and not os.path.basename(f).startswith("~$")
+                   and _is_reservation_xlsx(f))]
+    hits = sorted(set(named) | set(content), key=os.path.getmtime, reverse=True)
+    if hits:
+        return hits
     raise FileNotFoundError(f"{data_dir}/ 에서 팔라티움 예약정보조회 Excel 없음")
 
 
