@@ -1,105 +1,114 @@
 #!/usr/bin/env python3
 """
-팔라티움 대시보드 빌드 스크립트
-parse_palatium.py → JSON 생성 → HTML 템플릿에 인라인 삽입 → docs/palatium.html 출력
+팔라티움 해운대 | 매출 성과 대시보드 빌드 (pbix 26_Palatium_dashboard 이식판).
+
+parse_palatium 의 확장 팩트(rows: 요금타입/거래처/객실타입/국적/경로/투숙일·취소일 풀날짜/
+패키지 등) → docs/palatium.html 템플릿의 `const DATA = ...` 에 인라인 주입 →
+  · docs/palatium.html         : 내부용(auth + GSN 네비 포함)
+  · docs/palatium-client.html  : 무로그인 공개판(마커 영역 GSN/auth 제거)
+
+데몬(refresh_dashboards.py)은 인자 없이 호출 → 직전에 parse_palatium 이 써 둔
+data/palatium_data.json(확장 rows) 캐시를 로드해 재빌드한다.
+
+사용법:
+  python3 scripts/build_palatium.py [예약raw_dir] [사업계획_xlsx]
+    - raw_dir 생략 시 data/palatium_data.json 캐시 → 없으면 data/ 파싱
+    - 사업계획 생략 시 raw_dir → data/ → data/palatium_db 순 탐색(NFD/NFC 폴백)
 """
-
-import json
-import sys
-import os
-import re
-
-# 현재 스크립트 디렉토리 기준으로 프로젝트 루트 탐색
+import json, os, re, sys
 SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
-
 sys.path.insert(0, SCRIPT_DIR)
-from parse_palatium import parse, _find_business_plan, _load_business_plan, _build_targets, REV_UPLIFT
+from parse_palatium import parse, _load_business_plan, _build_targets, _find_business_plan
 
-TEMPLATE = os.path.join(PROJECT_DIR, "docs", "palatium.html")
-OUTPUT   = os.path.join(PROJECT_DIR, "docs", "palatium.html")
-DATA_DIR = os.path.join(PROJECT_DIR, "data")
-JSON_OUT = os.path.join(DATA_DIR, "palatium_data.json")
+TEMPLATE  = os.path.join(PROJECT_DIR, "docs", "palatium.html")
+CLIENT    = os.path.join(PROJECT_DIR, "docs", "palatium-client.html")
+JSON_OUT  = os.path.join(PROJECT_DIR, "data", "palatium_data.json")
+
+
+def _find_biz_plan(*dirs):
+    """사업계획 xlsx 탐색 — glob NFD/NFC 불일치 대비 os.walk 폴백 포함."""
+    for d in dirs:
+        if not d or not os.path.isdir(d):
+            continue
+        hit = _find_business_plan(d)
+        if hit:
+            return hit
+        for root, _, files in os.walk(d):
+            for fn in files:
+                if "사업계획" in fn and fn.lower().endswith(".xlsx"):
+                    return os.path.join(root, fn)
+    return None
+
+
+def _apply_plan(data, raw_dir, plan_arg):
+    plan_path = plan_arg or _find_biz_plan(
+        raw_dir, os.path.join(PROJECT_DIR, "data"),
+        os.path.join(PROJECT_DIR, "data", "palatium_db"))
+    if plan_path and os.path.exists(plan_path):
+        try:
+            tgt, mtgt, src = _build_targets(_load_business_plan(plan_path))
+            data["targets"] = tgt
+            data["monthly_targets"] = mtgt
+            data["monthly_rev_target"] = round(tgt["revenue"] / 12)
+            data["business_plan_source"] = src
+            print(f"  ✓ 사업계획 목표 적용: {src}")
+            return
+        except Exception as e:
+            print(f"  ⚠ 사업계획 로드 실패({e}) — 기존 targets 유지")
+    else:
+        print("  ⚠ 사업계획 미발견 — 기존 targets 유지")
+
+
+def _strip_markers(html):
+    """무로그인 공개판 — 마커 영역(GSN 네비/CSS/auth 스크립트) 제거."""
+    html = re.sub(r"<!--__GSN__-->.*?<!--__GSN_END__-->", "", html, flags=re.DOTALL)
+    html = re.sub(r"<!--__AUTH__-->.*?<!--__AUTH_END__-->", "", html, flags=re.DOTALL)
+    html = re.sub(r"/\*__GSN_CSS__\*/.*?/\*__GSN_CSS_END__\*/", "", html, flags=re.DOTALL)
+    return html
 
 
 def build():
-    # 1. 데이터 로딩: argv[1]로 DB 경로 지정 가능, 없으면 기존 JSON 캐시 사용
-    db_dir = sys.argv[1] if len(sys.argv) > 1 else None
-    if db_dir:
-        print(f"→ Excel 파싱 중... ({db_dir})")
-        data = parse(db_dir)
-        with open(JSON_OUT, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
-        print(f"  ✓ JSON 저장: {JSON_OUT}")
+    raw_dir  = sys.argv[1] if len(sys.argv) > 1 else None
+    plan_arg = sys.argv[2] if len(sys.argv) > 2 else None
+
+    if raw_dir:
+        print(f"→ 예약 raw 파싱: {raw_dir}")
+        data = parse(raw_dir)
     elif os.path.exists(JSON_OUT):
-        print(f"→ JSON 캐시 로드: {JSON_OUT}")
-        with open(JSON_OUT, "r", encoding="utf-8") as f:
+        print(f"→ 캐시 로드: {JSON_OUT}")
+        with open(JSON_OUT, encoding="utf-8") as f:
             data = json.load(f)
     else:
-        print("→ Excel 파싱 중... (data/)")
-        data = parse(DATA_DIR)
-        with open(JSON_OUT, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
-        print(f"  ✓ JSON 저장: {JSON_OUT}")
+        print(f"→ data/ 파싱(폴백)")
+        data = parse(os.path.join(PROJECT_DIR, "data"))
 
-    # 사업계획 Excel이 있으면 캐시된 targets/monthly_targets를 갱신 (매출 +1%)
-    plan_path = _find_business_plan(DATA_DIR)
-    if plan_path:
-        plan = _load_business_plan(plan_path)
-        targets, monthly_targets, plan_src = _build_targets(plan)
-        data["targets"]             = targets
-        data["monthly_targets"]     = monthly_targets
-        data["monthly_rev_target"]  = round(targets["revenue"] / 12)
-        data["business_plan_source"] = plan_src
-        with open(JSON_OUT, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
-        print(f"  ✓ 사업계획 목표 반영: {plan_src} (매출 +{(REV_UPLIFT-1)*100:.0f}%)")
+    _apply_plan(data, raw_dir, plan_arg)
+
+    # 캐시 갱신 (다음 무인자 빌드가 이어받음). 페이지는 데이터 인라인이라 docs/data 사본 불필요.
+    with open(JSON_OUT, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
 
     rows = data["rows"]
-    tgt  = data["targets"]
-    valid = [r for r in rows if r["v"]]
-    rev  = sum(r["r"] for r in valid)
-    rn   = sum(r["n"] for r in valid)
-    print(f"  매출: {rev:,}원  ({rev/tgt['revenue']*100:.1f}%)")
-    print(f"  RN:   {rn:,}박      ({rn/tgt['rn']*100:.1f}%)")
-    print(f"  ADR:  {rev//rn if rn else 0:,}원")
+    base = [r for r in rows if r.get("v") and r.get("seg") != "기타"]
+    rev = sum(r["r"] for r in base); rn = sum(r["n"] for r in base)
+    print(f"  KPI base(유효·비기타): {len(base)}행  매출 {rev:,}  RN {rn:,}  ADR {rev//rn if rn else 0:,}")
 
-    # 2. HTML 템플릿 로드
+    # 템플릿 주입 (플레이스홀더 → 데이터, 재빌드 시 const DATA = {...} regex 교체)
     with open(TEMPLATE, "r", encoding="utf-8") as f:
         html = f.read()
-
-    # 3. 플레이스홀더 교체
     json_str = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
-    if "__PALATIUM_DATA__" not in html:
-        print("  ⚠ 플레이스홀더 __PALATIUM_DATA__ 없음 — 이미 빌드된 파일에 재삽입")
-        # 기존 DATA = {...} 라인을 교체
-        html = re.sub(
-            r'const DATA = \{.*?\};',
-            f'const DATA = {json_str};',
-            html, count=1, flags=re.DOTALL
-        )
-    else:
+    if "__PALATIUM_DATA__" in html:
         html = html.replace("__PALATIUM_DATA__", json_str)
-
-    # 4. 출력
-    with open(OUTPUT, "w", encoding="utf-8") as f:
+    else:
+        html = re.sub(r"const DATA = .*?;\n", f"const DATA = {json_str};\n", html, count=1, flags=re.DOTALL)
+    with open(TEMPLATE, "w", encoding="utf-8") as f:
         f.write(html)
-    print(f"  ✓ HTML 빌드 완료: {OUTPUT}")
+    print(f"  ✓ HTML 빌드(내부·auth): {TEMPLATE}")
 
-    # 5. 고객사 전달용 (네비게이터 제거) — palatium-client.html
-    client_html = html
-    # GSN 네비게이터 제거
-    client_html = re.sub(r'<nav class="gsn">.*?</nav>', '', client_html, count=1, flags=re.DOTALL)
-    # GSN CSS 제거
-    client_html = re.sub(r'/\* ── GSN ── \*/.*?(?=\n/\*)', '', client_html, count=1, flags=re.DOTALL)
-    # header sticky top 조정 (42px → 0)
-    client_html = client_html.replace('top:42px', 'top:0', 1) if 'top:42px' in client_html else client_html
-    # 제목 변경
-    client_html = client_html.replace('팔라티움 해운대 바이 소노펠리체 리포트 | SONO GS팀', '팔라티움 해운대 바이 소노펠리체 리포트')
-    client_out = os.path.join(PROJECT_DIR, "docs", "palatium-client.html")
-    with open(client_out, "w", encoding="utf-8") as f:
-        f.write(client_html)
-    print(f"  ✓ 고객사용 빌드 완료: {client_out}")
+    with open(CLIENT, "w", encoding="utf-8") as f:
+        f.write(_strip_markers(html))
+    print(f"  ✓ HTML 빌드(무로그인·공개): {CLIENT}")
 
 
 if __name__ == "__main__":
