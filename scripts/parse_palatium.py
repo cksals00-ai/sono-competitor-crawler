@@ -241,7 +241,15 @@ def parse(data_dir: str = "data") -> dict:
     df["박수"]   = pd.to_numeric(df["박수"],   errors="coerce").fillna(0).astype(int)
     df["객실수"] = pd.to_numeric(df["객실수"], errors="coerce").fillna(1).clip(lower=1).astype(int)
     df["총합계"] = pd.to_numeric(df["총합계"], errors="coerce").fillna(0)
-    for col in ["요금타입","거래처","상태","투숙객명","객실타입"]:
+    # 추가상품료(패키지 판별용) — 원본에 없으면 0
+    if "추가상품료" in df.columns:
+        df["추가상품료"] = pd.to_numeric(df["추가상품료"], errors="coerce").fillna(0)
+    else:
+        df["추가상품료"] = 0
+    # 문자열 차원 정리 (pbix 슬라이서/축이 쓰는 원자 컬럼 포함)
+    for col in ["요금타입","거래처","상태","투숙객명","객실타입","시장","경로","국적"]:
+        if col not in df.columns:
+            df[col] = ""
         df[col] = df[col].fillna("").astype(str).str.strip()
 
     # 파생 컬럼
@@ -251,6 +259,7 @@ def parse(data_dir: str = "data") -> dict:
     df["세그먼트상세"] = df.apply(lambda r: r["FIT채널구분"] if r["FIT채널구분"] else r["세그먼트"], axis=1)
     df["객실대분류"]   = df["객실타입"].apply(classify_room)
     df["뷰타입"]       = df["객실타입"].apply(classify_view)
+    df["패키지여부"]   = (df["추가상품료"] > 0).map({True: "패키지", False: "Room Only"})
     df["RN"]           = df["박수"] * df["객실수"].clip(lower=1)
     df["is_valid"]     = df["상태"].isin(VALID_STATUSES)
     df["is_cancel"]    = df["상태"] == "Cancelled Reservation"
@@ -258,6 +267,9 @@ def parse(data_dir: str = "data") -> dict:
     df["도착일"]       = df["도착일자"].dt.day
     df["예약월"]       = df["등록일시"].dt.month
     df["예약일자"]     = df["등록일시"].dt.date.apply(lambda x: x.isoformat() if pd.notna(x) else None)
+    df["도착년"]       = df["도착일자"].dt.year
+    df["투숙일ISO"]    = df["도착일자"].dt.date.apply(lambda x: x.isoformat() if pd.notna(x) else None)
+    df["취소일ISO"]    = df["취소일자"].dt.date.apply(lambda x: x.isoformat() if pd.notna(x) else None)
     df["리드타임"]     = (df["도착일자"] - df["등록일시"].dt.normalize()).dt.days
     df.loc[df["리드타임"] < 0, "리드타임"] = None
 
@@ -290,6 +302,7 @@ def parse(data_dir: str = "data") -> dict:
             "m":   int(r["도착월"])  if pd.notna(r["도착월"])  else None,
             "d":   int(r["도착일"])  if pd.notna(r["도착일"])  else None,
             "bm":  int(r["예약월"])  if pd.notna(r["예약월"])  else None,
+            "y":   int(r["도착년"])  if pd.notna(r["도착년"])  else None,
             "r":   int(r["총합계"]),
             "n":   int(r["RN"]),
             "seg": r["세그먼트"],
@@ -298,10 +311,20 @@ def parse(data_dir: str = "data") -> dict:
             "v":   int(r["is_valid"]),
             "k":   int(r["is_cancel"]),
             "bd":  r["예약일자"] if pd.notna(r["예약일자"]) else None,
+            "ad":  r["투숙일ISO"] if pd.notna(r["투숙일ISO"]) else None,
+            "cd":  r["취소일ISO"] if pd.notna(r["취소일ISO"]) else None,
             "lead":int(r["리드타임"]) if pd.notna(r["리드타임"]) else None,
             "rt":  r["객실대분류"],
             "vw":  r["뷰타입"],
             "rep": int(r["재방문"]),
+            # pbix 슬라이서·피벗·축이 쓰는 원자 차원
+            "rate": r["요금타입"],
+            "vd":  r["거래처"] or "기타",
+            "rtf": r["객실타입"],
+            "nat": r["국적"] or "미상",
+            "rte": r["경로"] or "미상",
+            "mkt": r["시장"] or "미상",
+            "pkg": r["패키지여부"],
         })
 
     bd_series = df["등록일시"].dropna()
