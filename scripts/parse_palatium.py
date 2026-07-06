@@ -6,7 +6,7 @@
 - VAT 1.1 이미 제외 완료 상태 그대로 사용
 """
 import json, sys, glob, os, calendar
-from datetime import datetime
+from datetime import datetime, timedelta
 import openpyxl
 import pandas as pd
 
@@ -324,29 +324,22 @@ def parse(data_dir: str = "data") -> dict:
     else:
         print(f"  ⚠ 사업계획 Excel 미발견 — 기본 TARGETS 사용")
 
-    # Slim rows 배열 (클라이언트 필터링용)
+    # Slim rows 배열 (클라이언트 필터링용).
+    # ★ 매출/객실수는 '투숙 야간(night)' 단위로 분해해 각 야간을 해당 월/일에 귀속
+    #   (PMS 시장별 실적과 동일한 박 분배 → 월경계 걸친 예약의 월 귀속 정합).
+    #   유효예약은 박수만큼 야간행으로 펼치고(첫 야간 fn=1=예약단위 카운트용),
+    #   취소/무효는 예약 단위 1행으로 도착월에 귀속.
     rows_out = []
     for _, r in df.iterrows():
-        rows_out.append({
-            "m":   int(r["도착월"])  if pd.notna(r["도착월"])  else None,
-            "d":   int(r["도착일"])  if pd.notna(r["도착일"])  else None,
-            "bm":  int(r["예약월"])  if pd.notna(r["예약월"])  else None,
-            "y":   int(r["도착년"])  if pd.notna(r["도착년"])  else None,
-            "r":   int(r["총합계"]),
-            "n":   int(r["RN"]),
+        dims = {
             "seg": r["세그먼트"],
             "fit": r["FIT채널구분"] if pd.notna(r["FIT채널구분"]) else None,
             "ch":  r["채널명"],
-            "v":   int(r["is_valid"]),
-            "k":   int(r["is_cancel"]),
+            "bm":  int(r["예약월"]) if pd.notna(r["예약월"]) else None,
             "bd":  r["예약일자"] if pd.notna(r["예약일자"]) else None,
-            "ad":  r["투숙일ISO"] if pd.notna(r["투숙일ISO"]) else None,
-            "cd":  r["취소일ISO"] if pd.notna(r["취소일ISO"]) else None,
             "lead":int(r["리드타임"]) if pd.notna(r["리드타임"]) else None,
             "rt":  r["객실대분류"],
             "vw":  r["뷰타입"],
-            "rep": int(r["재방문"]),
-            # pbix 슬라이서·피벗·축이 쓰는 원자 차원
             "rate": r["요금타입"],
             "vd":  r["거래처"] or "기타",
             "rtf": r["객실타입"],
@@ -354,7 +347,35 @@ def parse(data_dir: str = "data") -> dict:
             "rte": r["경로"] or "미상",
             "mkt": r["시장"] or "미상",
             "pkg": r["패키지여부"],
-        })
+        }
+        nights = int(r["박수"]) if pd.notna(r["박수"]) else 0
+        rooms  = int(r["객실수"]) if pd.notna(r["객실수"]) else 1
+        total  = int(r["총합계"])
+        arr    = r["도착일자"]
+        if bool(r["is_valid"]) and nights >= 1 and pd.notna(arr):
+            per = int(round(total / nights))
+            for i in range(nights):
+                nd = arr + timedelta(days=i)
+                rows_out.append({
+                    "m": nd.month, "d": nd.day, "y": nd.year,
+                    "ad": nd.date().isoformat(),
+                    "r": per, "n": rooms,
+                    "v": 1, "k": 0, "cd": None,
+                    "fn": 1 if i == 0 else 0,
+                    **dims,
+                })
+        else:
+            rows_out.append({
+                "m":  int(r["도착월"]) if pd.notna(r["도착월"]) else None,
+                "d":  int(r["도착일"]) if pd.notna(r["도착일"]) else None,
+                "y":  int(r["도착년"]) if pd.notna(r["도착년"]) else None,
+                "ad": r["투숙일ISO"] if pd.notna(r["투숙일ISO"]) else None,
+                "r":  total, "n": int(r["RN"]),
+                "v":  int(r["is_valid"]), "k": int(r["is_cancel"]),
+                "cd": r["취소일ISO"] if pd.notna(r["취소일ISO"]) else None,
+                "fn": 1,
+                **dims,
+            })
 
     bd_series = df["등록일시"].dropna()
     return {
