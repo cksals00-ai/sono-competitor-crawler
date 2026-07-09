@@ -288,6 +288,10 @@ def parse(data_dir: str = "data") -> dict:
             df[col] = ""
         df[col] = df[col].fillna("").astype(str).str.strip()
 
+    # HOUSE USE(하우스유즈=호텔 내부사용)는 '판매 객실'이 아니므로 배제
+    # (PMS Sold/Occupied Rooms·OCC 산정과 동일. 매출 0이라 매출엔 영향 없음, RN·OCC만 정정).
+    df = df[~df["시장"].str.contains("HOUSE", case=False, na=False)].copy()
+
     # 파생 컬럼
     df["세그먼트"]     = df.apply(lambda r: classify_segment(r["요금타입"], r["시장"]), axis=1)
     df["FIT채널구분"]  = df.apply(lambda r: classify_fit_channel(r["세그먼트"], r["거래처"]), axis=1)
