@@ -90,7 +90,7 @@ def build():
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
 
     rows = data["rows"]
-    base = [r for r in rows if r.get("v") and r.get("seg") != "기타"]
+    base = [r for r in rows if r.get("v")]
     rev = sum(r["r"] for r in base); rn = sum(r["n"] for r in base)
     print(f"  KPI base(유효·비기타): {len(base)}행  매출 {rev:,}  RN {rn:,}  ADR {rev//rn if rn else 0:,}")
 
