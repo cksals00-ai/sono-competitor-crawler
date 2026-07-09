@@ -206,7 +206,8 @@ def load_df(path):
 
 
 # ── BI 로직 (01_PowerBI_데이터가져오기.py와 동일) ─────────────────────────
-def classify_segment(rt: str) -> str:
+def classify_segment(rt: str, mkt: str = "") -> str:
+    rt = str(rt or ""); mkt = str(mkt or "")
     if "소노회원" in rt:
         return "소노회원"
     if "D-멤버스" in rt:
@@ -214,6 +215,12 @@ def classify_segment(rt: str) -> str:
     if rt == "FIT":
         return "FIT(OTA)"
     if any(k in rt for k in ["팔라티움", "Direct Call", "Walk-In", "Rack Rate"]):
+        return "홈페이지(다이렉트)"
+    # 요금타입 이름만으론 안 잡히는 OTA/여행사 프로모 요금(예: '트립닷컴 동부산 아울렛')은
+    # 시장(해외/국내여행사·FIT)으로 판별해 매출로 정상 분류 (과거 '기타'로 누락되던 버그 교정).
+    if any(k in mkt for k in ["여행사", "Traveler", "Foreign", "OTA"]):
+        return "FIT(OTA)"
+    if "WALK" in mkt:
         return "홈페이지(다이렉트)"
     return "기타"
 
@@ -282,7 +289,7 @@ def parse(data_dir: str = "data") -> dict:
         df[col] = df[col].fillna("").astype(str).str.strip()
 
     # 파생 컬럼
-    df["세그먼트"]     = df["요금타입"].apply(classify_segment)
+    df["세그먼트"]     = df.apply(lambda r: classify_segment(r["요금타입"], r["시장"]), axis=1)
     df["FIT채널구분"]  = df.apply(lambda r: classify_fit_channel(r["세그먼트"], r["거래처"]), axis=1)
     df["채널명"]       = df.apply(lambda r: get_channel_name(r["세그먼트"], r["요금타입"], r["거래처"]), axis=1)
     df["세그먼트상세"] = df.apply(lambda r: r["FIT채널구분"] if r["FIT채널구분"] else r["세그먼트"], axis=1)
