@@ -10,12 +10,12 @@ from datetime import datetime, timedelta
 import openpyxl
 import pandas as pd
 
-# 팔라티움 해운대 by sonofelice 정상 운영 객실수 (5월~ 201실)
-FULL_ROOMS = 201
-# 월별 실제 가용 객실박(room-nights) — PMS '사용가능 객실 현황' total 기준.
-# 단계 개관(ramp-up)으로 2~4월은 부분 오픈(2월 107·3월 149·4월 185실/일),
-# 5월부터 201실 정상 운영. 스냅샷 없는 월(1·12월 등)은 FULL_ROOMS×해당 월 일수로 보정.
-AVAIL_RN_OVERRIDE = {2: 2996, 3: 4618, 4: 5554}
+# 팔라티움 해운대 by sonofelice 완전개관 객실수 (6월~ 약 238실/일)
+FULL_ROOMS = 238
+# 월별 실제 가용 객실박(room-nights) — 다올비전 PMS 월간 실적의 RevPar 역산값(RoomRev/RevPar).
+# 단계 개관(ramp-up): 2월 107·3월 149·4월 185·5월 219·6월 238실/일.
+# 스냅샷 없는 월(1·7~12월 등)은 FULL_ROOMS(238)×해당 월 일수로 보정.
+AVAIL_RN_OVERRIDE = {2: 2996, 3: 4618, 4: 5559, 5: 6802, 6: 7140}
 YEAR = 2026
 REV_UPLIFT = 1.01  # 사업계획 매출 × 1.01 = 최종 목표 (수수료 1% 가산)
 DEFAULT_TARGETS = {  # 사업계획 Excel 부재 시 fallback
