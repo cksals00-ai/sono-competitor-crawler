@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-07-11 06:00:08 KST",
+  "_updated_at": "2026-07-12 06:00:08 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -103,32 +103,32 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 8693,
+      "promo_count": 9287,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 2802,
+          "count": 2841,
           "min": 90540,
           "max": 356000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 2726,
+          "count": 2764,
           "min": 93000,
           "max": 336000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
         },
         {
           "ota": "네이버호텔/야놀자",
-          "count": 1979,
+          "count": 2299,
           "min": 134000,
           "max": 610000,
           "sample": "스위트 베드 라이브특가★룸온리 1박 7-8월"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 1186,
+          "count": 1383,
           "min": 113471,
           "max": 523563,
           "sample": "스위트 베드 라이브특가★룸온리 1박 7-8월 [체크인]15:0"
@@ -324,25 +324,25 @@
       ],
       "price_min": 95055,
       "price_max": 700451,
-      "promo_count": 10333,
+      "promo_count": 10533,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 4901,
+          "count": 4991,
           "min": 119900,
           "max": 679900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 2958,
+          "count": 3016,
           "min": 95055,
           "max": 700451,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 2474,
+          "count": 2526,
           "min": 172636,
           "max": 685610,
           "sample": "Kensington Deluxe Mountain View (C"
