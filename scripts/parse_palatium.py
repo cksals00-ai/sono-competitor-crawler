@@ -29,6 +29,8 @@ BUSINESS_PLAN_PATTERNS = ["*사업계획*.xlsx", "*business_plan*.xlsx", "*Busin
 VALID_STATUSES = {"Checked Out","Reservation","In House","Assigned Room","Holding Check Out"}
 OVERSEAS_OTA = {"아고다","익스피디아","트립닷컴","부킹닷컴"}
 DOMESTIC_OTA = {"놀유니버스","여기어때","타이드스퀘어투어비스","웹투어"}
+# 요금타입 정규화(취합): OTA 프로모 요금명 → 표준 세그먼트 요금타입
+RATE_NORMALIZE = {"트립닷컴 동부산 아울렛": "FIT"}
 
 
 def _is_reservation_xlsx(path):
@@ -291,6 +293,10 @@ def parse(data_dir: str = "data") -> dict:
     # HOUSE USE(하우스유즈=호텔 내부사용)는 '판매 객실'이 아니므로 배제
     # (PMS Sold/Occupied Rooms·OCC 산정과 동일. 매출 0이라 매출엔 영향 없음, RN·OCC만 정정).
     df = df[~df["시장"].str.contains("HOUSE", case=False, na=False)].copy()
+
+    # 요금타입 정규화: OTA 프로모 요금은 FIT 로 취합(세그먼트·피벗·슬라이서 일관).
+    # 예) '트립닷컴 동부산 아울렛' → 'FIT' (거래처 축엔 여전히 '트립닷컴'으로 남아 채널 구분 유지).
+    df["요금타입"] = df["요금타입"].replace(RATE_NORMALIZE)
 
     # 파생 컬럼
     df["세그먼트"]     = df.apply(lambda r: classify_segment(r["요금타입"], r["시장"]), axis=1)

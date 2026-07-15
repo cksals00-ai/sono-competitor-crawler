@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-07-14 06:00:09 KST",
+  "_updated_at": "2026-07-15 10:00:09 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -103,20 +103,20 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 9928,
+      "promo_count": 10198,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 2921,
+          "count": 3056,
           "min": 90540,
-          "max": 356000,
+          "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 2839,
+          "count": 2974,
           "min": 93000,
-          "max": 336000,
+          "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
         },
         {
@@ -262,18 +262,18 @@
       ],
       "price_min": 82148,
       "price_max": 865995,
-      "promo_count": 2911,
+      "promo_count": 2983,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 1598,
+          "count": 1634,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 1313,
+          "count": 1349,
           "min": 82148,
           "max": 865995,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -319,25 +319,25 @@
       ],
       "price_min": 95055,
       "price_max": 700451,
-      "promo_count": 10942,
+      "promo_count": 11219,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 5170,
+          "count": 5284,
           "min": 119900,
           "max": 679900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 3138,
+          "count": 3221,
           "min": 95055,
           "max": 700451,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 2634,
+          "count": 2714,
           "min": 172636,
           "max": 685610,
           "sample": "Kensington Deluxe Mountain View (C"
