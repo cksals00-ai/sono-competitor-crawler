@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-07-15 10:00:09 KST",
+  "_updated_at": "2026-07-16 10:00:15 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -103,18 +103,18 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 10198,
+      "promo_count": 10390,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 3056,
+          "count": 3152,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 2974,
+          "count": 3070,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -188,22 +188,22 @@
         },
         {
           "title": "ONLY FOR REWARDS",
-          "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "ONLY FOR REWARDS",
           "period": "예약기간 : 2026.07.01 ~ 2026.12.31",
           "discount_pct": 0
         },
         {
-          "title": "ONLY FOR REWARDS",
+          "title": "HAPPY WATERPARK",
           "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
           "discount_pct": 0
         },
         {
-          "title": "ONLY FOR REWARDS",
-          "period": "예약기간 : 2026.07.01 ~ 2026.12.31",
+          "title": "HAPPY WATERPARK",
+          "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "HAPPY WATERPARK",
+          "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
           "discount_pct": 0
         }
       ]
@@ -262,18 +262,18 @@
       ],
       "price_min": 82148,
       "price_max": 865995,
-      "promo_count": 2983,
+      "promo_count": 3057,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 1634,
+          "count": 1671,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 1349,
+          "count": 1386,
           "min": 82148,
           "max": 865995,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -318,26 +318,26 @@
         }
       ],
       "price_min": 95055,
-      "price_max": 700451,
-      "promo_count": 11219,
+      "price_max": 719900,
+      "promo_count": 11494,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 5284,
+          "count": 5400,
           "min": 119900,
-          "max": 679900,
+          "max": 719900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 3221,
+          "count": 3304,
           "min": 95055,
           "max": 700451,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 2714,
+          "count": 2790,
           "min": 172636,
           "max": 685610,
           "sample": "Kensington Deluxe Mountain View (C"
