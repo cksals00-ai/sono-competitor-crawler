@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-07-16 10:00:15 KST",
+  "_updated_at": "2026-07-17 10:00:12 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.06.22 - 2026.07.31",
       "discount_pct": 62,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "올 여름 휴가는 최대 62% 할인 · 외 [핫앤쿨] 룸온리 2박 · 여름 시즌 제주 롱스테이케이션 등 17개",
+      "detail": "올 여름 휴가는 최대 62% 할인 · 외 [핫앤쿨] 룸온리 2박 · 여름 시즌 제주 롱스테이케이션 등 13개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 17,
+      "campaign_count": 13,
       "campaigns": [
         {
           "title": "[핫앤쿨] ALL-INCLUSIVE 1박",
@@ -61,16 +61,6 @@
           "discount_pct": 0
         },
         {
-          "title": "실속 보양 PKG",
-          "period": "2026.05.21 - 2026.07.16",
-          "discount_pct": 0
-        },
-        {
-          "title": "해운대 웰니스 모먼트",
-          "period": "2026.05.26 - 2026.07.16",
-          "discount_pct": 0
-        },
-        {
           "title": "워터밤 속초 2박 패키지",
           "period": "2026.05.21 - 2026.08.23",
           "discount_pct": 0
@@ -81,18 +71,8 @@
           "discount_pct": 0
         },
         {
-          "title": "대천 & 여수 트래블로그",
-          "period": "2026.05.20 - 2026.07.16",
-          "discount_pct": 0
-        },
-        {
           "title": "한라산 윗세오름 힐링 트레킹 패키지",
           "period": "2026.05.19 - 2026.08.29",
-          "discount_pct": 0
-        },
-        {
-          "title": "해운대 & 거제 트래블로그",
-          "period": "2026.05.07 - 2026.07.16",
           "discount_pct": 0
         },
         {
@@ -103,18 +83,18 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 10390,
+      "promo_count": 10580,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 3152,
+          "count": 3247,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 3070,
+          "count": 3165,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -262,18 +242,18 @@
       ],
       "price_min": 82148,
       "price_max": 865995,
-      "promo_count": 3057,
+      "promo_count": 3121,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 1671,
+          "count": 1703,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 1386,
+          "count": 1418,
           "min": 82148,
           "max": 865995,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -287,7 +267,7 @@
       "period": "2026. 06. 08 ~ 2026. 08. 31",
       "discount_pct": 0,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "신나는 경험이 기다리는 여행! 24시간이 모자랄 만큼 즐거운 플레이케이션을 만나보세요. · 외 서머 바비큐 · 켄싱턴리조트 가평 [8월 한정] 서머 늦캉스 등 5개",
+      "detail": "신나는 경험이 기다리는 여행! 24시간이 모자랄 만큼 즐거운 플레이케이션을 만나보세요. · 외 서머 바비큐 · 켄싱턴호텔 여의도 한강 불꽃축제 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
@@ -302,13 +282,13 @@
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴리조트 가평 [8월 한정] 서머 늦캉스",
-          "period": "2026.08.17 ~ 2026.08.31",
+          "title": "켄싱턴호텔 여의도 한강 불꽃축제",
+          "period": "2026.09.05 ~ 2026.09.05",
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴리조트 가평 [8월5일 당일] 키즈 원어민 영어놀이 +쿠킹 클래스",
-          "period": "2026.08.05 ~ 2026.08.05",
+          "title": "켄싱턴리조트 가평 [8월 한정] 서머 늦캉스",
+          "period": "2026.08.17 ~ 2026.08.31",
           "discount_pct": 0
         },
         {
@@ -318,26 +298,26 @@
         }
       ],
       "price_min": 95055,
-      "price_max": 719900,
-      "promo_count": 11494,
+      "price_max": 739900,
+      "promo_count": 11715,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 5400,
+          "count": 5492,
           "min": 119900,
-          "max": 719900,
+          "max": 739900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 3304,
+          "count": 3373,
           "min": 95055,
           "max": 700451,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 2790,
+          "count": 2850,
           "min": 172636,
           "max": 685610,
           "sample": "Kensington Deluxe Mountain View (C"
