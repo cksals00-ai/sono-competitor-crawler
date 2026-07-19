@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-07-18 10:00:13 KST",
+  "_updated_at": "2026-07-19 10:00:21 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -83,18 +83,18 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 10770,
+      "promo_count": 10960,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 3342,
+          "count": 3437,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 3260,
+          "count": 3355,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -195,9 +195,9 @@
       "period": "2026-07-24~2026-08-17",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "트로피컬과 지중해 감성이 만난 한 여름 보양 특선 뷔페 · 외 하이원 앱 신규가입 이벤트 · 지역상생&문화관광 활성화 프로젝트 3.0 등 8개",
+      "detail": "트로피컬과 지중해 감성이 만난 한 여름 보양 특선 뷔페 · 외 하이원 앱 신규가입 이벤트 · 지역상생&문화관광 활성화 프로젝트 3.0 등 7개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
-      "campaign_count": 8,
+      "campaign_count": 7,
       "campaigns": [
         {
           "title": "그랜드테이블 한 여름 보양 특선 뷔페 프로모션",
@@ -217,11 +217,6 @@
         {
           "title": "하이원 스파 시그니처 프로모션",
           "period": "2026-06-01~2026-08-31",
-          "discount_pct": 0
-        },
-        {
-          "title": "마운틴 카페테리아 <스테이크 플래터>",
-          "period": "2026-05-23~2026-07-18",
           "discount_pct": 0
         },
         {
@@ -299,25 +294,25 @@
       ],
       "price_min": 95055,
       "price_max": 739900,
-      "promo_count": 11931,
+      "promo_count": 12196,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 5582,
+          "count": 5694,
           "min": 119900,
           "max": 739900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 3439,
+          "count": 3516,
           "min": 95055,
           "max": 700451,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 2910,
+          "count": 2986,
           "min": 172636,
           "max": 685610,
           "sample": "Kensington Deluxe Mountain View (C"
