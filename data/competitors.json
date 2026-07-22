@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-07-21 10:00:11 KST",
+  "_updated_at": "2026-07-23 08:30:08 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.06.22 - 2026.08.16",
       "discount_pct": 62,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "올 여름 휴가는 최대 62% 할인 · 외 [핫앤쿨] 룸온리 2박 · 여름 시즌 제주 롱스테이케이션 등 14개",
+      "detail": "올 여름 휴가는 최대 62% 할인 · 외 [핫앤쿨] 룸온리 2박 · 여름 시즌 제주 롱스테이케이션 등 15개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 14,
+      "campaign_count": 15,
       "campaigns": [
         {
           "title": "[핫앤쿨] ALL-INCLUSIVE 1박",
@@ -41,6 +41,11 @@
           "discount_pct": 32
         },
         {
+          "title": "해운대 & 거제 트래블로그",
+          "period": "2026.07.22 - 2026.09.30",
+          "discount_pct": 0
+        },
+        {
           "title": "해운대 & 거제 웰니스 모먼트",
           "period": "2026.07.20 - 2026.09.30",
           "discount_pct": 0
@@ -62,7 +67,7 @@
         },
         {
           "title": "설악 썸머Pick!",
-          "period": "2026.07.02 - 2026.07.31",
+          "period": "2026.07.02 - 2026.09.19",
           "discount_pct": 0
         },
         {
@@ -88,18 +93,18 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 11332,
+      "promo_count": 11602,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 3623,
+          "count": 3758,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 3541,
+          "count": 3676,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -172,11 +177,6 @@
           "discount_pct": 0
         },
         {
-          "title": "ONLY FOR REWARDS",
-          "period": "예약기간 : 2026.07.01 ~ 2026.12.31",
-          "discount_pct": 0
-        },
-        {
           "title": "HAPPY WATERPARK",
           "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
           "discount_pct": 0
@@ -188,6 +188,11 @@
         },
         {
           "title": "HAPPY WATERPARK",
+          "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "TASTY HOLIDAY",
           "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
           "discount_pct": 0
         }
@@ -196,14 +201,29 @@
     {
       "brand": "하이원리조트",
       "region": "central",
-      "title": "오브 아이스크림 달콤한 여름 이벤트",
-      "period": "2026-07-10~2026-08-09",
+      "title": "하이원CC 야간 라운드 프로모션",
+      "period": "2026-07-24~2026-08-30",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "오브 아이스크림 달콤한 여름 이벤트 · 외 오브 시그니처 베이커리 프로모션 · 행운상점과 함께 \"캠핑가자!\" 등 9개",
+      "detail": "야간라운드 즐기고 닭강정 받자! · 외 블루스카이 OPEN! · 마운틴카페테리아 여름 특선메뉴 산상 스테이크 플래터 등 9개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
       "campaign_count": 9,
       "campaigns": [
+        {
+          "title": "하이원CC 야간 라운드 프로모션",
+          "period": "2026-07-24~2026-08-30",
+          "discount_pct": 0
+        },
+        {
+          "title": "블루스카이 OPEN!",
+          "period": "2026-07-22~2026-08-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "마운틴카페테리아 여름 특선메뉴 산상 스테이크 플래터",
+          "period": "2026-07-24~2026-08-16",
+          "discount_pct": 0
+        },
         {
           "title": "오브 아이스크림 달콤한 여름 이벤트",
           "period": "2026-07-10~2026-08-09",
@@ -233,37 +253,22 @@
           "title": "지역상생&문화관광 활성화 프로젝트 3.0",
           "period": "2026-06-02~2026-11-30",
           "discount_pct": 0
-        },
-        {
-          "title": "하이원 스파 시그니처 프로모션",
-          "period": "2026-06-01~2026-08-31",
-          "discount_pct": 0
-        },
-        {
-          "title": "5월, 행복이 온(ON) 가족 뷔페",
-          "period": "2026-05-23~2026-05-25",
-          "discount_pct": 0
-        },
-        {
-          "title": "카카오톡 친구 이벤트",
-          "period": "2026-02-02~2026-12-31",
-          "discount_pct": 0
         }
       ],
       "price_min": 82148,
       "price_max": 865995,
-      "promo_count": 3411,
+      "promo_count": 3635,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 1848,
+          "count": 1960,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 1563,
+          "count": 1675,
           "min": 82148,
           "max": 865995,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -273,17 +278,17 @@
     {
       "brand": "켄싱턴리조트",
       "region": "south",
-      "title": "LATE SUMMER ESCAPE",
-      "period": "2026. 08. 17 ~ 2026. 09. 30",
+      "title": "서머 플레이 그라운드",
+      "period": "2026. 06. 19 ~ 2026. 09. 30",
       "discount_pct": 0,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "여유와 혜택을 모두 누릴 수 있는 늦캉스를 계획해보세요. · 외 플레이케이션 · 켄싱턴호텔 설악 속초 늦캉스 등 5개",
+      "detail": "올여름, 가장 신나는 휴가는 여기! 켄싱턴 서머 플레이 그라운드에서 물놀이를 마음껏 즐겨보세요. · 외 플레이케이션 · 켄싱턴리조트 충주 늦캉스 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
         {
-          "title": "LATE SUMMER ESCAPE",
-          "period": "2026. 08. 17 ~ 2026. 09. 30",
+          "title": "서머 플레이 그라운드",
+          "period": "2026. 06. 19 ~ 2026. 09. 30",
           "discount_pct": 0
         },
         {
@@ -292,13 +297,13 @@
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴호텔 설악 속초 늦캉스",
-          "period": "2026.07.21 ~ 2026.09.18",
+          "title": "켄싱턴리조트 충주 늦캉스",
+          "period": "2026.07.22 ~ 2026.09.18",
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴호텔 설악 [고유가 지원 50팀 추가] 속초 반값여행",
-          "period": "2026.06.01 ~ 2026.08.31",
+          "title": "켄싱턴리조트 가평 [베리트립 X 가평] 연박 오퍼",
+          "period": "2026.07.21 ~ 2026.10.31",
           "discount_pct": 0
         },
         {
@@ -309,25 +314,25 @@
       ],
       "price_min": 95055,
       "price_max": 739900,
-      "promo_count": 12783,
+      "promo_count": 13461,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 5946,
+          "count": 6238,
           "min": 119900,
           "max": 739900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 3682,
+          "count": 3878,
           "min": 95055,
           "max": 700451,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 3155,
+          "count": 3345,
           "min": 172636,
           "max": 685610,
           "sample": "Kensington Deluxe Mountain View (C"
