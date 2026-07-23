@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-07-23 08:30:08 KST",
+  "_updated_at": "2026-07-24 08:30:15 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -93,18 +93,18 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 11602,
+      "promo_count": 11754,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 3758,
+          "count": 3828,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 3676,
+          "count": 3758,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -201,14 +201,19 @@
     {
       "brand": "하이원리조트",
       "region": "central",
-      "title": "하이원CC 야간 라운드 프로모션",
-      "period": "2026-07-24~2026-08-30",
+      "title": "하이원 초특가 라이브! 본방사수!",
+      "period": "2026-07-23~2026-08-10",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "야간라운드 즐기고 닭강정 받자! · 외 블루스카이 OPEN! · 마운틴카페테리아 여름 특선메뉴 산상 스테이크 플래터 등 9개",
+      "detail": "7월 27일 19시 유튜브 라이브에서 만나요! · 외 하이원CC 야간 라운드 프로모션 · 블루스카이 OPEN! 등 9개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
       "campaign_count": 9,
       "campaigns": [
+        {
+          "title": "하이원 초특가 라이브! 본방사수!",
+          "period": "2026-07-23~2026-08-10",
+          "discount_pct": 0
+        },
         {
           "title": "하이원CC 야간 라운드 프로모션",
           "period": "2026-07-24~2026-08-30",
@@ -247,11 +252,6 @@
         {
           "title": "하이원 앱 신규가입 이벤트",
           "period": "2026-06-17~2027-01-31",
-          "discount_pct": 0
-        },
-        {
-          "title": "지역상생&문화관광 활성화 프로젝트 3.0",
-          "period": "2026-06-02~2026-11-30",
           "discount_pct": 0
         }
       ],
@@ -313,26 +313,26 @@
         }
       ],
       "price_min": 95055,
-      "price_max": 739900,
-      "promo_count": 13461,
+      "price_max": 862296,
+      "promo_count": 13770,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 6238,
+          "count": 6374,
           "min": 119900,
           "max": 739900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 3878,
+          "count": 3974,
           "min": 95055,
-          "max": 700451,
+          "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 3345,
+          "count": 3422,
           "min": 172636,
           "max": 685610,
           "sample": "Kensington Deluxe Mountain View (C"
