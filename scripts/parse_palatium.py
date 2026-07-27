@@ -29,9 +29,10 @@ BUSINESS_PLAN_PATTERNS = ["*사업계획*.xlsx", "*business_plan*.xlsx", "*Busin
 VALID_STATUSES = {"Checked Out","Reservation","In House","Assigned Room","Holding Check Out"}
 OVERSEAS_OTA = {"아고다","익스피디아","트립닷컴","부킹닷컴"}
 DOMESTIC_OTA = {"놀유니버스","여기어때","타이드스퀘어투어비스","웹투어"}
-# 요금타입 정규화: 프로모션 요금은 별도 프로모션명으로 표기(FIT에 흡수하지 않고 분리).
-# 시장=해외여행사라 세그먼트는 FIT(OTA)로 잡히되, 요금타입 축엔 프로모션명으로 노출됨.
-RATE_NORMALIZE = {"트립닷컴 동부산 아울렛": "트립닷컴 동부산아울렛 (프로모션)"}
+# 요금타입 정규화(취합): OTA 프로모 요금은 FIT로 흡수(세그먼트/요금타입 축엔 FIT로 집계).
+RATE_NORMALIZE = {"트립닷컴 동부산 아울렛": "FIT"}
+# 프로모션 태깅: 흡수는 유지하되, 원래 요금명을 promo 필드로 보존 → '프로모션 실적' 별도 섹션에서 집계.
+PROMO_MAP = {"트립닷컴 동부산 아울렛": "트립닷컴 동부산아울렛"}
 
 
 def _is_reservation_xlsx(path):
@@ -323,8 +324,9 @@ def parse(data_dir: str = "data") -> dict:
     # (PMS Sold/Occupied Rooms·OCC 산정과 동일. 매출 0이라 매출엔 영향 없음, RN·OCC만 정정).
     df = df[~df["시장"].str.contains("HOUSE", case=False, na=False)].copy()
 
+    # 프로모션 태깅: 정규화(FIT 흡수) 전에 원래 요금명으로 promo 플래그 보존.
+    df["프로모션"] = df["요금타입"].map(PROMO_MAP)
     # 요금타입 정규화: OTA 프로모 요금은 FIT 로 취합(세그먼트·피벗·슬라이서 일관).
-    # 예) '트립닷컴 동부산 아울렛' → 'FIT' (거래처 축엔 여전히 '트립닷컴'으로 남아 채널 구분 유지).
     df["요금타입"] = df["요금타입"].replace(RATE_NORMALIZE)
 
     # 파생 컬럼
@@ -393,6 +395,7 @@ def parse(data_dir: str = "data") -> dict:
             "rte": r["경로"] or "미상",
             "mkt": r["시장"] or "미상",
             "pkg": r["패키지여부"],
+            "promo": r["프로모션"] if pd.notna(r["프로모션"]) else None,
         }
         nights = int(r["박수"]) if pd.notna(r["박수"]) else 0
         rooms  = int(r["객실수"]) if pd.notna(r["객실수"]) else 1
