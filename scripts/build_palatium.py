@@ -19,7 +19,7 @@ import json, os, re, sys
 SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, SCRIPT_DIR)
-from parse_palatium import parse, _load_business_plan, _build_targets, _find_business_plan
+from parse_palatium import parse, _load_business_plan, _build_targets, _find_business_plan, _load_room_plan
 
 TEMPLATE  = os.path.join(PROJECT_DIR, "docs", "palatium.html")
 CLIENT    = os.path.join(PROJECT_DIR, "docs", "palatium-client.html")
@@ -41,7 +41,50 @@ def _find_biz_plan(*dirs):
     return None
 
 
+def _find_room_plan(*dirs):
+    """(심사) 객실계획 초안 xlsx 탐색 (재귀). 임시(~$) 제외."""
+    for d in dirs:
+        if not d or not os.path.isdir(d):
+            continue
+        for root, _, files in os.walk(d):
+            for fn in files:
+                if "객실계획" in fn and fn.lower().endswith(".xlsx") and not fn.startswith("~$"):
+                    return os.path.join(root, fn)
+    return None
+
+
 def _apply_plan(data, raw_dir, plan_arg):
+    # 1순위: (심사) 객실계획 초안 — 월별 Grand Total(Budget) 기준 목표
+    avail = data.get("avail_by_month", {}) or {}
+    ann_avail = sum(float(v) for v in avail.values()) if avail else 0
+    rp = _find_room_plan(raw_dir, os.path.join(PROJECT_DIR, "data"),
+                         os.path.join(PROJECT_DIR, "data", "palatium_db"))
+    if rp:
+        try:
+            plan = _load_room_plan(rp)
+            a, mm = plan["annual"], plan["monthly"]
+            ann_rn = int(round(float(a["rn"])))
+            ann_rev = round(float(a["rev"]) * 1000)          # 천원 → 원
+            data["targets"] = {
+                "revenue": ann_rev,
+                "rn": ann_rn,
+                "adr": int(round(float(a["adr"]) * 1000)),
+                "occ": round(ann_rn / ann_avail, 4) if ann_avail else 0,
+                "revpar": round(ann_rev / ann_avail) if ann_avail else 0,
+            }
+            data["monthly_targets"] = {
+                str(m): {"rev": round(float(mm[m]["rev"]) * 1000),
+                          "rn": int(round(float(mm[m]["rn"])))}
+                for m in range(1, 13)
+            }
+            data["monthly_rev_target"] = round(ann_rev / 12)
+            data["business_plan_source"] = plan["source"]
+            print(f"  ✓ 객실계획(초안) 목표 적용: {plan['source']} (연 {ann_rev/1e8:.1f}억/RN {ann_rn:,})")
+            return
+        except Exception as e:
+            print(f"  ⚠ 객실계획 로드 실패({e}) — 사업계획 폴백")
+
+    # 2순위(폴백): 기존 사업계획
     plan_path = plan_arg or _find_biz_plan(
         raw_dir, os.path.join(PROJECT_DIR, "data"),
         os.path.join(PROJECT_DIR, "data", "palatium_db"))

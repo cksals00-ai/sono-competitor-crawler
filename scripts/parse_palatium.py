@@ -29,8 +29,9 @@ BUSINESS_PLAN_PATTERNS = ["*사업계획*.xlsx", "*business_plan*.xlsx", "*Busin
 VALID_STATUSES = {"Checked Out","Reservation","In House","Assigned Room","Holding Check Out"}
 OVERSEAS_OTA = {"아고다","익스피디아","트립닷컴","부킹닷컴"}
 DOMESTIC_OTA = {"놀유니버스","여기어때","타이드스퀘어투어비스","웹투어"}
-# 요금타입 정규화(취합): OTA 프로모 요금명 → 표준 세그먼트 요금타입
-RATE_NORMALIZE = {"트립닷컴 동부산 아울렛": "FIT"}
+# 요금타입 정규화: 프로모션 요금은 별도 프로모션명으로 표기(FIT에 흡수하지 않고 분리).
+# 시장=해외여행사라 세그먼트는 FIT(OTA)로 잡히되, 요금타입 축엔 프로모션명으로 노출됨.
+RATE_NORMALIZE = {"트립닷컴 동부산 아울렛": "트립닷컴 동부산아울렛 (프로모션)"}
 
 
 def _is_reservation_xlsx(path):
@@ -84,6 +85,34 @@ def _find_business_plan(data_dir: str):
         if hits:
             return hits[0]
     return None
+
+
+def _load_room_plan(path: str) -> dict:
+    """(심사) 객실계획 초안 — 첫 시트(팔라티움 해운대)의 월별/연간 Grand Total(2026 Budget) 파싱.
+    컬럼(0-idx): RN=5, ADR=7(천원), Revenue=9(천원). 월 라벨=col2 'N월', 연간='년 간'.
+    반환 rev/adr 단위 = 천원 (build 측에서 ×1000 환산)."""
+    import re
+    wb = openpyxl.load_workbook(path, data_only=True, read_only=True)
+    ws = wb.worksheets[0]
+    monthly, annual, last = {}, None, None
+    for r in ws.iter_rows(values_only=True):
+        if not r:
+            continue
+        c2 = str(r[2]).strip() if len(r) > 2 and r[2] else ""
+        c3 = str(r[3]).strip() if len(r) > 3 and r[3] else ""
+        if c2:
+            last = c2
+        if c3 == "Grand Total" and len(r) > 9:
+            rec = {"rn": r[5], "adr": r[7], "rev": r[9]}
+            mm = re.match(r"^(\d{1,2})\s*월$", last or "")
+            if mm:
+                monthly[int(mm.group(1))] = rec
+            elif last and last.replace(" ", "").startswith("년"):  # '년 간'
+                annual = rec
+    wb.close()
+    if len(monthly) < 12 or not annual:
+        raise ValueError(f"{path}: 객실계획 파싱 불완전(months={len(monthly)}, annual={bool(annual)})")
+    return {"annual": annual, "monthly": monthly, "source": os.path.basename(path)}
 
 
 def _load_business_plan(path: str) -> dict:
