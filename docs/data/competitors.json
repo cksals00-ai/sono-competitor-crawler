@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-07-29 08:30:17 KST",
+  "_updated_at": "2026-07-30 08:30:14 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.06.22 - 2026.08.16",
       "discount_pct": 62,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "올 여름 휴가는 최대 62% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · [핫앤쿨] 룸온리 2박 등 15개",
+      "detail": "올 여름 휴가는 최대 62% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · [핫앤쿨] 룸온리 2박 등 18개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 15,
+      "campaign_count": 18,
       "campaigns": [
         {
           "title": "[핫앤쿨] ALL-INCLUSIVE 1박",
@@ -31,6 +31,11 @@
           "discount_pct": 51
         },
         {
+          "title": "여수 시그니처 스테이",
+          "period": "2026.07.29 - 2026.09.30",
+          "discount_pct": 45
+        },
+        {
           "title": "한여름 밤의 BBQ",
           "period": "2026.06.22 - 2026.08.31",
           "discount_pct": 35
@@ -39,6 +44,16 @@
           "title": "우리 가족 여름 놀이터",
           "period": "2026.07.06 - 2026.08.31",
           "discount_pct": 32
+        },
+        {
+          "title": "8-9월 제주 골프 패키지",
+          "period": "2026.08.01 - 2026.09.30",
+          "discount_pct": 0
+        },
+        {
+          "title": "오시리아 어드벤처 패키지",
+          "period": "2026.07.29 - 2026.12.31",
+          "discount_pct": 0
         },
         {
           "title": "해운대 & 거제 트래블로그",
@@ -56,8 +71,8 @@
           "discount_pct": 0
         },
         {
-          "title": "7-8월 골프 패키지",
-          "period": "2026.07.02 - 2026.08.31",
+          "title": "7월 골프 패키지",
+          "period": "2026.07.02 - 2026.07.31",
           "discount_pct": 0
         },
         {
@@ -93,18 +108,18 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 11943,
+      "promo_count": 12113,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 3925,
+          "count": 4007,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 3850,
+          "count": 3938,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -314,25 +329,25 @@
       ],
       "price_min": 95055,
       "price_max": 862296,
-      "promo_count": 14959,
+      "promo_count": 15320,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 6899,
+          "count": 7053,
           "min": 119900,
           "max": 739900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 4362,
+          "count": 4469,
           "min": 95055,
           "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 3698,
+          "count": 3798,
           "min": 172636,
           "max": 696000,
           "sample": "Kensington Deluxe Mountain View (C"
