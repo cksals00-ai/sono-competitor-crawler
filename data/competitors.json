@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-08-06 08:30:18 KST",
+  "_updated_at": "2026-08-07 08:30:13 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.08.04 - 2026.08.31",
       "discount_pct": 81,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 [핫앤쿨] ALL-INCLUSIVE 1박 · 여름 & 가을 시즌 제주 롱스테이케이션 등 18개",
+      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 [핫앤쿨] ALL-INCLUSIVE 1박 · 여름 & 가을 시즌 제주 롱스테이케이션 등 19개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 18,
+      "campaign_count": 19,
       "campaigns": [
         {
           "title": "[추(秋)캉스] 룸온리 2박",
@@ -49,6 +49,11 @@
           "title": "한여름 밤의 BBQ",
           "period": "2026.06.22 - 2026.08.31",
           "discount_pct": 35
+        },
+        {
+          "title": "평창 트래블로그",
+          "period": "2026.08.06 - 2026.10.31",
+          "discount_pct": 0
         },
         {
           "title": "8-9월 제주 골프 패키지",
@@ -108,18 +113,18 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 12755,
+      "promo_count": 12831,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 4337,
+          "count": 4352,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 4250,
+          "count": 4311,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -272,18 +277,18 @@
       ],
       "price_min": 82148,
       "price_max": 881322,
-      "promo_count": 4389,
+      "promo_count": 4449,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 2337,
+          "count": 2367,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 2052,
+          "count": 2082,
           "min": 82148,
           "max": 881322,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -293,19 +298,14 @@
     {
       "brand": "켄싱턴리조트",
       "region": "south",
-      "title": "켄싱턴호텔 평창 프리미어 다이닝 스테이",
-      "period": "2026.08.04 ~ 2026.09.30",
-      "discount_pct": 10,
+      "title": "상반기 베스트 '시그니처 PICK'",
+      "period": "2026. 08. 01 ~ 2026. 12. 31",
+      "discount_pct": 0,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "객실 + 시그니처 디너 뷔페 2인 + 실내풀&사우나 3인+ 월정사 입장권 + 조식/디너 10%할인 · 외 상반기 베스트 '시그니처 PICK' · 미리 만나는 그랜드 켄싱턴 등 5개",
+      "detail": "상반기 가장 사랑받은 켄싱턴 인기 상품을 특별 혜택과 함께 만나보세요 · 외 미리 만나는 그랜드 켄싱턴 · 켄싱턴호텔 여의도 [임직원 전용] 평일 특권 'Weekday Special' 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
-        {
-          "title": "켄싱턴호텔 평창 프리미어 다이닝 스테이",
-          "period": "2026.08.04 ~ 2026.09.30",
-          "discount_pct": 10
-        },
         {
           "title": "상반기 베스트 '시그니처 PICK'",
           "period": "2026. 08. 01 ~ 2026. 12. 31",
@@ -314,6 +314,11 @@
         {
           "title": "미리 만나는 그랜드 켄싱턴",
           "period": "2026. 07. 29 ~ 2026. 11. 30",
+          "discount_pct": 0
+        },
+        {
+          "title": "켄싱턴호텔 여의도 [임직원 전용] 평일 특권 'Weekday Special'",
+          "period": "2026.08.18 ~ 2027.01.31",
           "discount_pct": 0
         },
         {
@@ -329,25 +334,25 @@
       ],
       "price_min": 95055,
       "price_max": 862296,
-      "promo_count": 17602,
+      "promo_count": 17968,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 8047,
+          "count": 8214,
           "min": 119900,
           "max": 739900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 5146,
+          "count": 5249,
           "min": 95055,
           "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 4409,
+          "count": 4505,
           "min": 172636,
           "max": 696000,
           "sample": "Kensington Deluxe Mountain View (C"
