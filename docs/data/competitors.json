@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-08-08 08:30:16 KST",
+  "_updated_at": "2026-08-09 08:30:14 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -113,18 +113,18 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 12938,
+      "promo_count": 13028,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 4408,
+          "count": 4453,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 4362,
+          "count": 4407,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -277,18 +277,18 @@
       ],
       "price_min": 82148,
       "price_max": 881322,
-      "promo_count": 4505,
+      "promo_count": 4609,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 2395,
+          "count": 2447,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 2110,
+          "count": 2162,
           "min": 82148,
           "max": 881322,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -334,25 +334,25 @@
       ],
       "price_min": 95055,
       "price_max": 862296,
-      "promo_count": 18357,
+      "promo_count": 18748,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 8386,
+          "count": 8560,
           "min": 119900,
           "max": 739900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 5358,
+          "count": 5467,
           "min": 95055,
           "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 4613,
+          "count": 4721,
           "min": 172636,
           "max": 696000,
           "sample": "Kensington Deluxe Mountain View (C"
