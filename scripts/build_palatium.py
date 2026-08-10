@@ -136,6 +136,11 @@ def build():
     base = [r for r in rows if r.get("v")]
     rev = sum(r["r"] for r in base); rn = sum(r["n"] for r in base)
     print(f"  KPI base(유효·비기타): {len(base)}행  매출 {rev:,}  RN {rn:,}  ADR {rev//rn if rn else 0:,}")
+    _nr = data.get("new_rates") or []
+    if _nr:
+        print(f"  ⚠ 신규 미검토 요금타입 {len(_nr)}건 — 스킬 palatium-promo-review 로 표준/프로모 확정 필요:")
+        for _x in _nr:
+            print(f"      · {_x}")
 
     # 템플릿 주입 (플레이스홀더 → 데이터, 재빌드 시 const DATA = {...} regex 교체)
     with open(TEMPLATE, "r", encoding="utf-8") as f:

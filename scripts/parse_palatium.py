@@ -29,10 +29,30 @@ BUSINESS_PLAN_PATTERNS = ["*사업계획*.xlsx", "*business_plan*.xlsx", "*Busin
 VALID_STATUSES = {"Checked Out","Reservation","In House","Assigned Room","Holding Check Out"}
 OVERSEAS_OTA = {"아고다","익스피디아","트립닷컴","부킹닷컴"}
 DOMESTIC_OTA = {"놀유니버스","여기어때","타이드스퀘어투어비스","웹투어"}
-# 요금타입 정규화(취합): OTA 프로모 요금은 FIT로 흡수(세그먼트/요금타입 축엔 FIT로 집계).
-RATE_NORMALIZE = {"트립닷컴 동부산 아울렛": "FIT"}
-# 프로모션 태깅: 흡수는 유지하되, 원래 요금명을 promo 필드로 보존 → '프로모션 실적' 별도 섹션에서 집계.
-PROMO_MAP = {"트립닷컴 동부산 아울렛": "트립닷컴 동부산아울렛"}
+# ── 요금타입 프로모션 자동 판별 (allowlist 방식) ──────────────────────────
+# 표준(비프로모) 요금 화이트리스트. 여기에 없는 유효 요금타입은 "프로모션"으로 자동 판정하여
+#   ① 요금타입을 FIT로 흡수(세그먼트/피벗 집계)  ② 원래 요금명을 promo 필드로 보존('프로모션 실적' 별도 집계)
+# 새 프로모(익스피디아 캠페인·트립닷컴 아울렛 등)가 등장해도 하드코딩 없이 자동 처리된다.
+# 신규 요금타입은 parse 결과 `_new_rates`로 표시 → 스킬(palatium-promo-review)로 표준/프로모 확정.
+STANDARD_RATES = {
+    "FIT", "소노회원(분양)", "D-멤버스(온라인)", "회원COMP", "Complimentary",
+    "Walk-In", "팔라티움(분양회원)", "Direct Call", "House Use", "Rack Rate",
+    "팔라티움(임직원)", "소노(임직원)", "기업제휴", "소노기업제휴",
+}
+# 확정 프로모(검토 완료). 여기에도 표준에도 없는 요금 = 미검토 신규 → _new_rates 알림.
+KNOWN_PROMOS = {
+    "트립닷컴 동부산 아울렛", "트립비토즈 (8%할인 프로모션)", "익스피다아 visa 캠페인 Room Only 10%",
+}
+# 프로모션 표시명 정리(선택). 없으면 원래 요금명 그대로 사용.
+PROMO_LABEL = {"트립닷컴 동부산 아울렛": "트립닷컴 동부산아울렛"}
+
+
+def is_promo_rate(rt) -> bool:
+    """표준 요금 화이트리스트에 없는 유효 요금타입 = 프로모션."""
+    s = str(rt or "").strip()
+    if not s or s.lower() == "nan":
+        return False
+    return s not in STANDARD_RATES
 
 
 def _is_reservation_xlsx(path):
@@ -324,10 +344,14 @@ def parse(data_dir: str = "data") -> dict:
     # (PMS Sold/Occupied Rooms·OCC 산정과 동일. 매출 0이라 매출엔 영향 없음, RN·OCC만 정정).
     df = df[~df["시장"].str.contains("HOUSE", case=False, na=False)].copy()
 
-    # 프로모션 태깅: 정규화(FIT 흡수) 전에 원래 요금명으로 promo 플래그 보존.
-    df["프로모션"] = df["요금타입"].map(PROMO_MAP)
-    # 요금타입 정규화: OTA 프로모 요금은 FIT 로 취합(세그먼트·피벗·슬라이서 일관).
-    df["요금타입"] = df["요금타입"].replace(RATE_NORMALIZE)
+    # 프로모션 자동 판별: 표준 요금이 아니면 프로모로 태깅(원래명 보존) 후 요금타입을 FIT로 흡수.
+    _promo_mask = df["요금타입"].apply(is_promo_rate)
+    df["프로모션"] = df["요금타입"].where(_promo_mask).apply(
+        lambda rt: (PROMO_LABEL.get(str(rt).strip(), str(rt).strip()) if pd.notna(rt) else None))
+    # 미검토 신규 요금(표준·확정프로모 어디에도 없음) → 스킬 검토 대상으로 수집
+    _new_rates = sorted({str(rt).strip() for rt, m in zip(df["요금타입"], _promo_mask)
+                         if m and str(rt).strip() not in KNOWN_PROMOS})
+    df.loc[_promo_mask, "요금타입"] = "FIT"   # FIT 실적에 흡수
 
     # 파생 컬럼
     df["세그먼트"]     = df.apply(lambda r: classify_segment(r["요금타입"], r["시장"]), axis=1)
@@ -443,6 +467,7 @@ def parse(data_dir: str = "data") -> dict:
         "monthly_targets": monthly_targets,
         "business_plan_source": plan_src,
         "avail_by_month": avail_by_month,
+        "new_rates":      _new_rates,   # 미검토 신규 요금타입(스킬 검토 대상)
         "rows":           rows_out,
     }
 
