@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-08-14 08:30:15 KST",
+  "_updated_at": "2026-08-15 08:30:18 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.08.04 - 2026.08.31",
       "discount_pct": 81,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 [핫앤쿨] ALL-INCLUSIVE 1박 · 여름 & 가을 시즌 제주 롱스테이케이션 등 18개",
+      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 [핫앤쿨] ALL-INCLUSIVE 1박 · 여름 & 가을 시즌 제주 롱스테이케이션 등 19개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 18,
+      "campaign_count": 19,
       "campaigns": [
         {
           "title": "[추(秋)캉스] 룸온리 2박",
@@ -39,6 +39,11 @@
           "title": "우리 가족 여름 놀이터",
           "period": "2026.07.06 - 2026.08.31",
           "discount_pct": 48
+        },
+        {
+          "title": "BBQ 나이트",
+          "period": "2026.08.14 - 2026.10.29",
+          "discount_pct": 45
         },
         {
           "title": "여수 시그니처 스테이",
@@ -108,18 +113,18 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 13651,
+      "promo_count": 13941,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 4768,
+          "count": 4913,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 4715,
+          "count": 4860,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -241,7 +246,7 @@
         },
         {
           "title": "마운틴카페테리아 여름 특선메뉴 산상 스테이크 플래터",
-          "period": "2026-07-24~2026-08-16",
+          "period": "2026-07-24~2026-08-22",
           "discount_pct": 0
         },
         {
@@ -272,18 +277,18 @@
       ],
       "price_min": 82148,
       "price_max": 881322,
-      "promo_count": 5006,
+      "promo_count": 5222,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 2651,
+          "count": 2763,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 2355,
+          "count": 2459,
           "min": 82148,
           "max": 881322,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -329,25 +334,25 @@
       ],
       "price_min": 95055,
       "price_max": 862296,
-      "promo_count": 21031,
+      "promo_count": 21522,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 9603,
+          "count": 9828,
           "min": 119900,
           "max": 739900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 6055,
+          "count": 6178,
           "min": 95055,
           "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 5373,
+          "count": 5516,
           "min": 172636,
           "max": 696000,
           "sample": "Kensington Deluxe Mountain View (C"
