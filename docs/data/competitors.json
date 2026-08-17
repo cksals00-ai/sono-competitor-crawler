@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-08-17 08:30:17 KST",
+  "_updated_at": "2026-08-18 08:30:18 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -103,18 +103,18 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 14513,
+      "promo_count": 14789,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 5199,
+          "count": 5337,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 5146,
+          "count": 5284,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -240,18 +240,8 @@
           "discount_pct": 0
         },
         {
-          "title": "오브 시그니처 베이커리 프로모션",
-          "period": "2026-07-10~2026-08-17",
-          "discount_pct": 0
-        },
-        {
           "title": "행운상점과 함께 \"캠핑가자!\"",
           "period": "2026-07-10~2026-08-31",
-          "discount_pct": 0
-        },
-        {
-          "title": "그랜드테이블 한 여름 보양 특선 뷔페 프로모션",
-          "period": "2026-07-24~2026-08-17",
           "discount_pct": 0
         },
         {
@@ -263,22 +253,32 @@
           "title": "지역상생&문화관광 활성화 프로젝트 3.0",
           "period": "2026-06-02~2026-11-30",
           "discount_pct": 0
+        },
+        {
+          "title": "하이원 스파 시그니처 프로모션",
+          "period": "2026-06-01~2026-08-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "5월, 행복이 온(ON) 가족 뷔페",
+          "period": "2026-05-23~2026-05-25",
+          "discount_pct": 0
         }
       ],
       "price_min": 82148,
       "price_max": 881322,
-      "promo_count": 5486,
+      "promo_count": 5690,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 2901,
+          "count": 3009,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 2585,
+          "count": 2681,
           "min": 82148,
           "max": 881322,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -292,7 +292,7 @@
       "period": "2026. 08. 01 ~ 2026. 12. 31",
       "discount_pct": 0,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "상반기 가장 사랑받은 켄싱턴 인기 상품을 특별 혜택과 함께 만나보세요 · 외 미리 만나는 그랜드 켄싱턴 · 켄싱턴리조트 경주 [후다닥맘 X 켄싱턴] 경주 키캉스_애슐리퀸즈 런치 등 5개",
+      "detail": "상반기 가장 사랑받은 켄싱턴 인기 상품을 특별 혜택과 함께 만나보세요 · 외 미리 만나는 그랜드 켄싱턴 · 켄싱턴호텔 여의도 켄싱턴데이 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
@@ -307,13 +307,13 @@
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴리조트 경주 [후다닥맘 X 켄싱턴] 경주 키캉스_애슐리퀸즈 런치",
-          "period": "2026.08.17 ~ 2026.12.18",
+          "title": "켄싱턴호텔 여의도 켄싱턴데이",
+          "period": "2026.09.01 ~ 2026.11.30",
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴리조트 경주 [후다닥맘 X 켄싱턴] 경주 키캉스",
-          "period": "2026.08.17 ~ 2026.12.18",
+          "title": "PIC 사이판 [반짝마미xPIC사이판]",
+          "period": "2026.08.19 ~ 2027.01.09",
           "discount_pct": 0
         },
         {
@@ -324,25 +324,25 @@
       ],
       "price_min": 95055,
       "price_max": 862296,
-      "promo_count": 22433,
+      "promo_count": 22976,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 10243,
+          "count": 10487,
           "min": 119900,
           "max": 739900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 6410,
+          "count": 6549,
           "min": 95055,
           "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 5780,
+          "count": 5940,
           "min": 172636,
           "max": 696000,
           "sample": "Kensington Deluxe Mountain View (C"
