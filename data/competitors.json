@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-08-19 08:30:14 KST",
+  "_updated_at": "2026-08-20 08:30:31 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.08.04 - 2026.08.31",
       "discount_pct": 81,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · 우리 가족 여름 놀이터 등 18개",
+      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · 우리 가족 여름 놀이터 등 19개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 18,
+      "campaign_count": 19,
       "campaigns": [
         {
           "title": "[추(秋)캉스] 룸온리 2박",
@@ -39,6 +39,11 @@
           "title": "여수 시그니처 스테이",
           "period": "2026.07.29 - 2026.10.31",
           "discount_pct": 45
+        },
+        {
+          "title": "브리드호텔 양양 오닐 패키지",
+          "period": "2026.08.19 - 2026.10.31",
+          "discount_pct": 0
         },
         {
           "title": "리틀 트래블러 with 마이크로",
@@ -108,18 +113,18 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 15057,
+      "promo_count": 15226,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 5471,
+          "count": 5555,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 5418,
+          "count": 5503,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -137,79 +142,6 @@
           "min": 113471,
           "max": 523563,
           "sample": "스위트 베드 라이브특가★룸온리 1박 7-8월 [체크인]15:0"
-        }
-      ]
-    },
-    {
-      "brand": "롯데리조트",
-      "region": "apac",
-      "title": "NUXE Stress off, Stay Here, Glow on",
-      "period": "예약기간 : 2026.04.01 ~ 2026.08.31",
-      "discount_pct": 50,
-      "channel": "롯데리조트 공식 홈페이지",
-      "detail": "객실 + 눅스 슈퍼세럼&아이세럼 + 워터파크 50% 할인 · 외 Resort Re:New 등 12개",
-      "link": "https://www.lotteresort.com/main/ko/package-event/package/list",
-      "campaign_count": 12,
-      "campaigns": [
-        {
-          "title": "NUXE Stress off, Stay Here, Glow on",
-          "period": "예약기간 : 2026.04.01 ~ 2026.08.31",
-          "discount_pct": 50
-        },
-        {
-          "title": "NUXE Stress off, Stay Here, Glow on",
-          "period": "예약기간 : 2026.04.01 ~ 2026.08.31",
-          "discount_pct": 50
-        },
-        {
-          "title": "Resort Re:New",
-          "period": "예약기간 : 2026.07.13 ~ 2026.08.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "Resort Re:New",
-          "period": "예약기간 : 2026.07.13 ~ 2026.08.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "Resort Re:New",
-          "period": "예약기간 : 2026.07.13 ~ 2026.08.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "Resort Re:New",
-          "period": "예약기간 : 2026.07.13 ~ 2026.08.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "Smart Choice",
-          "period": "예약기간 : 2026.08.12 ~ 2026.12.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "Smart Choice",
-          "period": "예약기간 : 2026.08.12 ~ 2026.12.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "Smart Choice",
-          "period": "예약기간 : 2026.08.12 ~ 2026.12.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "Sunset check-in",
-          "period": "예약기간 : 2026.07.27 ~ 2026.11.30",
-          "discount_pct": 0
-        },
-        {
-          "title": "Welcome to SOKCHO",
-          "period": "예약기간 : 2026.07.03 ~ 2026.08.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "2026 와박사의 하루 ver.4",
-          "period": "예약기간 : 2026.08.11 ~ 2026.09.19",
-          "discount_pct": 0
         }
       ]
     },
@@ -272,18 +204,18 @@
       ],
       "price_min": 82148,
       "price_max": 881322,
-      "promo_count": 5690,
+      "promo_count": 5702,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 3009,
+          "count": 3015,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 2681,
+          "count": 2687,
           "min": 82148,
           "max": 881322,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -329,25 +261,25 @@
       ],
       "price_min": 95055,
       "price_max": 862296,
-      "promo_count": 23576,
+      "promo_count": 24165,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 10753,
+          "count": 11016,
           "min": 119900,
           "max": 739900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 6708,
+          "count": 6871,
           "min": 95055,
           "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 6115,
+          "count": 6278,
           "min": 172636,
           "max": 696000,
           "sample": "Kensington Deluxe Mountain View (C"
