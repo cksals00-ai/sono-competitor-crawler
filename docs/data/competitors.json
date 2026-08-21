@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-08-21 08:30:18 KST",
+  "_updated_at": "2026-08-22 08:30:15 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.08.04 - 2026.08.31",
       "discount_pct": 81,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · 우리 가족 여름 놀이터 등 21개",
+      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · 우리 가족 여름 놀이터 등 22개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 21,
+      "campaign_count": 22,
       "campaigns": [
         {
           "title": "[추(秋)캉스] 룸온리 2박",
@@ -41,6 +41,11 @@
           "discount_pct": 45
         },
         {
+          "title": "로컬 프로젝트 #3",
+          "period": "2026.08.21 - 2026.11.30",
+          "discount_pct": 0
+        },
+        {
           "title": "가을 미식 STAY",
           "period": "2026.08.20 - 2026.11.30",
           "discount_pct": 0
@@ -48,6 +53,11 @@
         {
           "title": "[추(秋)캉스] ALL-INCLUSIVE 1박",
           "period": "2026.08.20 - 2026.09.30",
+          "discount_pct": 0
+        },
+        {
+          "title": "Yeosu : 섬 그리고 바다",
+          "period": "2026.08.21 - 2026.09.11",
           "discount_pct": 0
         },
         {
@@ -106,11 +116,6 @@
           "discount_pct": 0
         },
         {
-          "title": "워터밤 속초 1박 패키지",
-          "period": "2026.05.21 - 2026.08.21",
-          "discount_pct": 0
-        },
-        {
           "title": "한라산 윗세오름 힐링 트레킹 패키지",
           "period": "2026.05.19 - 2026.09.11",
           "discount_pct": 0
@@ -123,18 +128,18 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 15382,
+      "promo_count": 15471,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 5633,
+          "count": 5676,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 5581,
+          "count": 5627,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
@@ -312,7 +317,7 @@
       "period": "2026. 09. 01 ~ 2026. 11. 30",
       "discount_pct": 0,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "시즌 최대 혜택이 열리는 날! 가을 여행의 모든 순간을 선점할 수 있는 골든 타임이 시작되었습니다. · 외 상반기 베스트 '시그니처 PICK' · 켄싱턴리조트 설악비치 속초 단풍 트립 등 5개",
+      "detail": "시즌 최대 혜택이 열리는 날! 가을 여행의 모든 순간을 선점할 수 있는 골든 타임이 시작되었습니다. · 외 상반기 베스트 '시그니처 PICK' · 켄싱턴호텔 설악 설악산 뷰캉스 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
@@ -327,13 +332,13 @@
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴리조트 설악비치 속초 단풍 트립",
-          "period": "2026.10.01 ~ 2026.12.18",
+          "title": "켄싱턴호텔 설악 설악산 뷰캉스",
+          "period": "2026.08.22 ~ 2026.09.30",
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴호텔 설악 켄싱턴데이",
-          "period": "2026.09.01 ~ 2026.11.30",
+          "title": "켄싱턴리조트 설악비치 속초 단풍 트립",
+          "period": "2026.10.01 ~ 2026.12.18",
           "discount_pct": 0
         },
         {
@@ -344,25 +349,25 @@
       ],
       "price_min": 95055,
       "price_max": 862296,
-      "promo_count": 24752,
+      "promo_count": 25281,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 11276,
+          "count": 11515,
           "min": 119900,
           "max": 739900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 7038,
+          "count": 7184,
           "min": 95055,
           "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 6438,
+          "count": 6582,
           "min": 172636,
           "max": 696000,
           "sample": "Kensington Deluxe Mountain View (C"
