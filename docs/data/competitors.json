@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-08-22 08:30:15 KST",
+  "_updated_at": "2026-08-23 08:30:14 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -260,11 +260,6 @@
           "discount_pct": 0
         },
         {
-          "title": "마운틴카페테리아 여름 특선메뉴 산상 스테이크 플래터",
-          "period": "2026-07-24~2026-08-22",
-          "discount_pct": 0
-        },
-        {
           "title": "행운상점과 함께 \"캠핑가자!\"",
           "period": "2026-07-10~2026-08-31",
           "discount_pct": 0
@@ -287,6 +282,11 @@
         {
           "title": "5월, 행복이 온(ON) 가족 뷔페",
           "period": "2026-05-23~2026-05-25",
+          "discount_pct": 0
+        },
+        {
+          "title": "카카오톡 친구 이벤트",
+          "period": "2026-02-02~2026-12-31",
           "discount_pct": 0
         }
       ],
@@ -349,25 +349,25 @@
       ],
       "price_min": 95055,
       "price_max": 862296,
-      "promo_count": 25281,
+      "promo_count": 25804,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 11515,
-          "min": 119900,
+          "count": 11749,
+          "min": 114855,
           "max": 739900,
-          "sample": "체크인 시 배정(★단독특가상품★룸온니)"
+          "sample": "21평 디럭스 마운틴뷰 - 비리뉴얼(초강력특가, 취사가능)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 7184,
+          "count": 7329,
           "min": 95055,
           "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 6582,
+          "count": 6726,
           "min": 172636,
           "max": 696000,
           "sample": "Kensington Deluxe Mountain View (C"
