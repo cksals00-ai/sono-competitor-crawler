@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-08-29 08:30:13 KST",
+  "_updated_at": "2026-08-30 08:30:14 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -344,25 +344,25 @@
       ],
       "price_min": 95055,
       "price_max": 862296,
-      "promo_count": 28836,
+      "promo_count": 29283,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 13137,
+          "count": 13345,
           "min": 109250,
           "max": 739900,
           "sample": "21평 디럭스 마운틴뷰 - 비리뉴얼(초강력특가, 취사가능)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 8188,
+          "count": 8314,
           "min": 95055,
           "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 7511,
+          "count": 7624,
           "min": 172636,
           "max": 696000,
           "sample": "Kensington Deluxe Mountain View (C"
