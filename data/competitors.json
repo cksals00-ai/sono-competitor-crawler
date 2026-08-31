@@ -1,34 +1,24 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-08-31 08:30:25 KST",
+  "_updated_at": "2026-09-01 08:30:18 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
     {
       "brand": "한화리조트",
       "region": "vivaldi",
-      "title": "[추(秋)캉스] 룸온리 2박",
-      "period": "2026.08.04 - 2026.08.31",
-      "discount_pct": 81,
+      "title": "여름 & 가을 시즌 제주 롱스테이케이션",
+      "period": "2026.07.20 - 2026.11.30",
+      "discount_pct": 51,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · 우리 가족 여름 놀이터 등 21개",
+      "detail": "6박 이상 최대 51% 할인 · 외 BBQ 나이트 · 여수 시그니처 스테이 등 18개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 21,
+      "campaign_count": 18,
       "campaigns": [
-        {
-          "title": "[추(秋)캉스] 룸온리 2박",
-          "period": "2026.08.04 - 2026.08.31",
-          "discount_pct": 81
-        },
         {
           "title": "여름 & 가을 시즌 제주 롱스테이케이션",
           "period": "2026.07.20 - 2026.11.30",
           "discount_pct": 51
-        },
-        {
-          "title": "우리 가족 여름 놀이터",
-          "period": "2026.07.06 - 2026.08.31",
-          "discount_pct": 48
         },
         {
           "title": "BBQ 나이트",
@@ -114,11 +104,6 @@
           "title": "한라산 윗세오름 힐링 트레킹 패키지",
           "period": "2026.05.19 - 2026.09.11",
           "discount_pct": 0
-        },
-        {
-          "title": "로컬 프로젝트 #2",
-          "period": "2026.04.13 - 2026.08.31",
-          "discount_pct": 0
         }
       ],
       "price_min": 90540,
@@ -158,44 +143,14 @@
     {
       "brand": "롯데리조트",
       "region": "apac",
-      "title": "NUXE Stress off, Stay Here, Glow on",
-      "period": "예약기간 : 2026.04.01 ~ 2026.08.31",
-      "discount_pct": 50,
+      "title": "Smart Choice",
+      "period": "예약기간 : 2026.08.12 ~ 2026.12.31",
+      "discount_pct": 0,
       "channel": "롯데리조트 공식 홈페이지",
-      "detail": "객실 + 눅스 슈퍼세럼&아이세럼 + 워터파크 50% 할인 · 외 Resort Re:New 등 12개",
+      "detail": "[선결제 전용] 홈페이지 특별 요금",
       "link": "https://www.lotteresort.com/main/ko/package-event/package/list",
       "campaign_count": 12,
       "campaigns": [
-        {
-          "title": "NUXE Stress off, Stay Here, Glow on",
-          "period": "예약기간 : 2026.04.01 ~ 2026.08.31",
-          "discount_pct": 50
-        },
-        {
-          "title": "NUXE Stress off, Stay Here, Glow on",
-          "period": "예약기간 : 2026.04.01 ~ 2026.08.31",
-          "discount_pct": 50
-        },
-        {
-          "title": "Resort Re:New",
-          "period": "예약기간 : 2026.07.13 ~ 2026.08.31",
-          "discount_pct": 15
-        },
-        {
-          "title": "Resort Re:New",
-          "period": "예약기간 : 2026.07.13 ~ 2026.08.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "Resort Re:New",
-          "period": "예약기간 : 2026.07.13 ~ 2026.08.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "Resort Re:New",
-          "period": "예약기간 : 2026.07.13 ~ 2026.08.31",
-          "discount_pct": 0
-        },
         {
           "title": "Smart Choice",
           "period": "예약기간 : 2026.08.12 ~ 2026.12.31",
@@ -217,13 +172,43 @@
           "discount_pct": 0
         },
         {
-          "title": "Welcome to SOKCHO",
-          "period": "예약기간 : 2026.07.03 ~ 2026.08.31",
+          "title": "2026 와박사의 하루 ver.4",
+          "period": "예약기간 : 2026.08.11 ~ 2026.09.19",
           "discount_pct": 0
         },
         {
-          "title": "2026 와박사의 하루 ver.4",
-          "period": "예약기간 : 2026.08.11 ~ 2026.09.19",
+          "title": "ONLY FOR REWARDS",
+          "period": "예약기간 : 2026.07.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "HAPPY WATERPARK",
+          "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "HAPPY WATERPARK",
+          "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "TASTY HOLIDAY",
+          "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "TASTY HOLIDAY",
+          "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "TASTY HOLIDAY",
+          "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "Dear My Kids",
+          "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
           "discount_pct": 0
         }
       ]
@@ -235,9 +220,9 @@
       "period": "2026-08-29~2026-10-31",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "샐러드바 및 생맥주 무제한 제공 · 외 2026/27 시즌 하이원 스키 프리미엄 상품 출시 · 영수증 할인이벤트 등 9개",
+      "detail": "샐러드바 및 생맥주 무제한 제공 · 외 2026/27 시즌 하이원 스키 프리미엄 상품 출시 · 영수증 할인이벤트 등 8개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
-      "campaign_count": 9,
+      "campaign_count": 8,
       "campaigns": [
         {
           "title": "마운틴콘도 추계 바비큐 스테이크 플래터",
@@ -255,16 +240,6 @@
           "discount_pct": 0
         },
         {
-          "title": "블루스카이 OPEN!",
-          "period": "2026-07-22~2026-08-31",
-          "discount_pct": 0
-        },
-        {
-          "title": "행운상점과 함께 \"캠핑가자!\"",
-          "period": "2026-07-10~2026-08-31",
-          "discount_pct": 0
-        },
-        {
           "title": "하이원 앱 신규가입 이벤트",
           "period": "2026-06-17~2027-01-31",
           "discount_pct": 0
@@ -275,30 +250,35 @@
           "discount_pct": 0
         },
         {
-          "title": "하이원 스파 시그니처 프로모션",
-          "period": "2026-06-01~2026-08-31",
+          "title": "5월, 행복이 온(ON) 가족 뷔페",
+          "period": "2026-05-23~2026-05-25",
           "discount_pct": 0
         },
         {
-          "title": "5월, 행복이 온(ON) 가족 뷔페",
-          "period": "2026-05-23~2026-05-25",
+          "title": "카카오톡 친구 이벤트",
+          "period": "2026-02-02~2026-12-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "워터월드 입장권 모바일 앱에서 구매하세요!",
+          "period": "상시",
           "discount_pct": 0
         }
       ],
       "price_min": 82148,
       "price_max": 881322,
-      "promo_count": 5903,
+      "promo_count": 6051,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 3119,
+          "count": 3201,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 2784,
+          "count": 2850,
           "min": 82148,
           "max": 881322,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -312,7 +292,7 @@
       "period": "2026. 09. 01 ~ 2026. 11. 30",
       "discount_pct": 0,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "자연이 물들인 아름다운 색을 따라 떠나는 가을여행 · 외 미리 만나는 그랜드 켄싱턴 · 켄싱턴호텔 설악 [일 3팀 한정] 어텀 테라스 BBQ 등 5개",
+      "detail": "자연이 물들인 아름다운 색을 따라 떠나는 가을여행 · 외 어텀 BBQ · 켄싱턴리조트 서귀포 어텀 BBQ 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
@@ -322,18 +302,18 @@
           "discount_pct": 0
         },
         {
-          "title": "미리 만나는 그랜드 켄싱턴",
-          "period": "2026. 07. 29 ~ 2026. 11. 30",
+          "title": "어텀 BBQ",
+          "period": "2026. 09. 01 ~ 2026. 11. 30",
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴호텔 설악 [일 3팀 한정] 어텀 테라스 BBQ",
-          "period": "2026.09.01 ~ 2026.10.31",
+          "title": "켄싱턴리조트 서귀포 어텀 BBQ",
+          "period": "2026.09.01 ~ 2027.01.31",
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴호텔 설악 컬러풀 어텀",
-          "period": "2026.09.01 ~ 2026.11.30",
+          "title": "켄싱턴리조트 가평 [일~목] 9월 셀프 BBQ 프로모션",
+          "period": "2026.08.31 ~ 2026.09.30",
           "discount_pct": 0
         },
         {
@@ -344,25 +324,25 @@
       ],
       "price_min": 95055,
       "price_max": 862296,
-      "promo_count": 29719,
+      "promo_count": 30312,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 13546,
+          "count": 13826,
           "min": 109250,
           "max": 739900,
           "sample": "21평 디럭스 마운틴뷰 - 비리뉴얼(초강력특가, 취사가능)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 8437,
+          "count": 8601,
           "min": 95055,
           "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 7736,
+          "count": 7885,
           "min": 172636,
           "max": 696000,
           "sample": "Kensington Deluxe Mountain View (C"
