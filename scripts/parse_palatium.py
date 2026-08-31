@@ -42,7 +42,6 @@ STANDARD_RATES = {
 # 확정 프로모(검토 완료). 여기에도 표준에도 없는 요금 = 미검토 신규 → _new_rates 알림.
 KNOWN_PROMOS = {
     "트립닷컴 동부산 아울렛", "트립비토즈 (8%할인 프로모션)", "익스피다아 visa 캠페인 Room Only 10%",
-    "인바운드(전략 여행사)",  # 여행사 인바운드 채널 → FIT 흡수 + 프로모션 실적 명칭노출(검토완료 2026-08)
 }
 # 프로모션 표시명 정리(선택). 없으면 원래 요금명 그대로 사용.
 PROMO_LABEL = {"트립닷컴 동부산 아울렛": "트립닷컴 동부산아울렛"}
@@ -52,6 +51,9 @@ def is_promo_rate(rt) -> bool:
     """표준 요금 화이트리스트에 없는 유효 요금타입 = 프로모션."""
     s = str(rt or "").strip()
     if not s or s.lower() == "nan":
+        return False
+    # 인바운드(전략/일반 여행사)는 프로모션이 아니라 독립 '인바운드' 세그먼트 → FIT 흡수 금지
+    if "인바운드" in s:
         return False
     return s not in STANDARD_RATES
 
@@ -265,6 +267,9 @@ def classify_segment(rt: str, mkt: str = "") -> str:
         return "소노회원"
     if "D-멤버스" in rt:
         return "D-멤버스"
+    # 인바운드(전략/일반 여행사) = 여행사 인바운드 채널 → 독립 세그먼트
+    if "인바운드" in rt:
+        return "인바운드"
     if rt == "FIT":
         return "FIT(OTA)"
     if any(k in rt for k in ["팔라티움", "Direct Call", "Walk-In", "Rack Rate"]):
@@ -289,7 +294,7 @@ def classify_fit_channel(seg: str, vendor: str) -> str | None:
 
 
 def get_channel_name(seg: str, rt: str, vendor: str) -> str:
-    if seg in ("소노회원", "D-멤버스"):
+    if seg in ("소노회원", "D-멤버스", "인바운드"):
         return seg
     if seg == "FIT(OTA)":
         return vendor if vendor else "기타"
