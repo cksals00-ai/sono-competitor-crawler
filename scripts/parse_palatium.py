@@ -251,8 +251,20 @@ def load_df(path):
         before = len(combined)
         if "예약번호" in combined.columns:
             # 스냅샷 오름차순 정렬 후 keep='last' → 예약번호별 최신 스냅샷 행 유지
-            combined = (combined.sort_values("_snap", kind="stable")
-                                .drop_duplicates(subset=["예약번호"], keep="last"))
+            combined = combined.sort_values("_snap", kind="stable")
+            _key = combined["예약번호"].astype(str).str.strip()
+            _has_key = combined["예약번호"].notna() & (_key != "") & (_key.str.lower() != "none")
+            # ⚠ 예약번호 공란(단체/블럭 요청 등 — 개별 예약번호 미부여)은 서로 다른 예약이므로
+            #   예약번호로 뭉개면 안 된다(과거 인바운드 단체 119→52 유실 버그). 공란 행은
+            #   라인 식별 컬럼 조합으로 '스냅샷 중복'만 제거하고 각 블럭은 보존한다.
+            keyed = combined[_has_key].drop_duplicates(subset=["예약번호"], keep="last")
+            unkeyed = combined[~_has_key]
+            _line = [c for c in ["도착일자", "출발일자", "요금타입", "거래처", "객실타입",
+                                 "투숙객명", "상태", "객실수", "박수", "총합계", "시장"]
+                     if c in unkeyed.columns]
+            if _line:
+                unkeyed = unkeyed.drop_duplicates(subset=_line, keep="last")
+            combined = pd.concat([keyed, unkeyed], ignore_index=True)
         combined = combined.drop(columns=["_snap"], errors="ignore")
         print(f"  합산: {before}행 → {len(combined)}행 "
               f"(중복 {before - len(combined)}건 제거, 최신 스냅샷 우선)")
