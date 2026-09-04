@@ -345,12 +345,6 @@ def parse(data_dir: str = "data") -> dict:
     for col in ["도착일자","출발일자","등록일시","취소일자"]:
         df[col] = pd.to_datetime(df[col], errors="coerce")
     df["박수"]   = pd.to_numeric(df["박수"],   errors="coerce").fillna(0).astype(int)
-    # 비객실 관리행 제외 → 야간분해 팬텀 RN(매출0/저가)으로 ADR 왜곡 방지.
-    #   ① '취소수수료방' 등 취소수수료 관리행(객실수 공란·매출0인데 장기 박수로 팬텀 RN 생성)
-    #   ② 원본 객실수가 명시적으로 0인 행(판매객실 아님)
-    _rooms_raw = pd.to_numeric(df["객실수"], errors="coerce")
-    _admin = df["투숙객명"].astype(str).str.contains("취소수수료", na=False)
-    df = df[(~_admin) & (_rooms_raw.fillna(1) > 0)].copy()
     df["객실수"] = pd.to_numeric(df["객실수"], errors="coerce").fillna(1).clip(lower=1).astype(int)
     df["총합계"] = pd.to_numeric(df["총합계"], errors="coerce").fillna(0)
     # 추가상품료(패키지 판별용) — 원본에 없으면 0
