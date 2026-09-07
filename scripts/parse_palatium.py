@@ -358,6 +358,36 @@ def parse(data_dir: str = "data") -> dict:
             df[col] = ""
         df[col] = df[col].fillna("").astype(str).str.strip()
 
+    # ── 단체 요약행 중복 제거 + 수기입력(예약번호 공란) 판별 ────────────────────
+    # 예약정보조회는 단체예약을 [예약번호 공란 '요약행' 1 + 예약번호 있는 '상세행' N]로
+    # 내보내며 요약행 객실수·매출 = 상세행 합산본. 둘 다 세면 이중계상(인바운드 9월
+    # 176 vs 실제 ~100). 그룹(투숙객명+도착+출발) 단위로 정리:
+    #   · 요약 매출 ≈ 상세 매출 → 요약행은 순수 중복 → 제거(상세 유지)
+    #   · 요약 매출 > 상세 매출 → 요약이 블록 총계(상세는 일부) → 상세 제거, 요약 유지
+    #   · 상세 없음 → 순수 수기 홀드 → 요약 유지
+    # 살아남은 예약번호 공란 행 = '수기입력'(예약번호 없이 수기 등록)으로 라벨 분리.
+    df = df.reset_index(drop=True)
+    if "예약번호" in df.columns:
+        _rsv = df["예약번호"].astype(str).str.strip()
+        df["_blank_rsv"] = df["예약번호"].isna() | _rsv.isin(["", "None", "nan"])
+        df["_gk"] = list(zip(df["투숙객명"].astype(str),
+                             df["도착일자"].astype(str), df["출발일자"].astype(str)))
+        _drop = set()
+        for _, g in df.groupby("_gk"):
+            summ = g[g["_blank_rsv"]]; det = g[~g["_blank_rsv"]]
+            if len(summ) == 0:
+                continue
+            if len(det) > 0:
+                if abs(summ["총합계"].sum() - det["총합계"].sum()) < 1000:
+                    _drop |= set(summ.index)   # 순수 중복 → 요약 제거(상세 유지)
+                else:
+                    _drop |= set(det.index)    # 요약=블록총계 → 상세 제거(요약 유지)
+        if _drop:
+            df = df.drop(index=_drop).reset_index(drop=True)
+        df.drop(columns=["_gk"], errors="ignore", inplace=True)
+    else:
+        df["_blank_rsv"] = False
+
     # HOUSE USE(하우스유즈=호텔 내부사용)는 '판매 객실'이 아니므로 배제
     # (PMS Sold/Occupied Rooms·OCC 산정과 동일. 매출 0이라 매출엔 영향 없음, RN·OCC만 정정).
     df = df[~df["시장"].str.contains("HOUSE", case=False, na=False)].copy()
@@ -378,6 +408,12 @@ def parse(data_dir: str = "data") -> dict:
     df["세그먼트상세"] = df.apply(lambda r: r["FIT채널구분"] if r["FIT채널구분"] else r["세그먼트"], axis=1)
     df["객실대분류"]   = df["객실타입"].apply(classify_room)
     df["뷰타입"]       = df["객실타입"].apply(classify_view)
+    # 수기입력(예약번호 공란 홀드/블록) → 객실타입 라벨 분리 (메인 집계엔 포함, '(기타)' 대신 '수기입력')
+    if "_blank_rsv" in df.columns:
+        _mm = df["_blank_rsv"].fillna(False).astype(bool)
+        df.loc[_mm, "객실타입"]   = "수기입력"
+        df.loc[_mm, "객실대분류"] = "수기입력"
+        df.loc[_mm, "뷰타입"]     = "수기입력"
     df["패키지여부"]   = (df["추가상품료"] > 0).map({True: "패키지", False: "Room Only"})
     df["RN"]           = df["박수"] * df["객실수"].clip(lower=1)
     df["is_valid"]     = df["상태"].isin(VALID_STATUSES)
