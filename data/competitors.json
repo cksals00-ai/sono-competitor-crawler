@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-09-08 08:30:18 KST",
+  "_updated_at": "2026-09-09 08:30:17 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -118,7 +118,7 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 17391,
+      "promo_count": 18969,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
@@ -136,14 +136,14 @@
         },
         {
           "ota": "네이버호텔/야놀자",
-          "count": 3595,
+          "count": 4694,
           "min": 134000,
           "max": 610000,
           "sample": "스위트 베드 라이브특가★룸온리 1박 7-8월"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 2022,
+          "count": 2501,
           "min": 113471,
           "max": 525704,
           "sample": "스위트 베드 라이브특가★룸온리 1박 7-8월 [체크인]15:0"
@@ -217,7 +217,7 @@
           "discount_pct": 0
         },
         {
-          "title": "HAPPY WATERPARK",
+          "title": "Happy Waterpark",
           "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
           "discount_pct": 0
         }
@@ -270,30 +270,30 @@
           "discount_pct": 0
         },
         {
-          "title": "5월, 행복이 온(ON) 가족 뷔페",
-          "period": "2026-05-23~2026-05-25",
+          "title": "카카오톡 친구 이벤트",
+          "period": "2026-02-02~2026-12-31",
           "discount_pct": 0
         },
         {
-          "title": "카카오톡 친구 이벤트",
-          "period": "2026-02-02~2026-12-31",
+          "title": "워터월드 입장권 모바일 앱에서 구매하세요!",
+          "period": "상시",
           "discount_pct": 0
         }
       ],
       "price_min": 82148,
       "price_max": 881322,
-      "promo_count": 6575,
+      "promo_count": 6713,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 3529,
+          "count": 3613,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 3046,
+          "count": 3100,
           "min": 82148,
           "max": 881322,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -307,7 +307,7 @@
       "period": "2026.09.08 ~ 2026.11.30",
       "discount_pct": 10,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "객실 1박 + 모닝 뷔페 2인 + 실내풀&사우나 2인 + 가을 관광지 입장권 2인 1매 [★9월 - 11월 예약 특전] 주중(일-목 체크인) 예약 시, 즉시 10% 할인 (공휴일,대체휴일 제외) · 외 LATE SUMMER ESCAPE · YES, KIDS 등 5개",
+      "detail": "객실 1박 + 모닝 뷔페 2인 + 실내풀&사우나 2인 + 가을 관광지 입장권 2인 1매 [★9월 - 11월 예약 특전] 주중(일-목 체크인) 예약 시, 즉시 10% 할인 (공휴일,대체휴일 제외) · 외 LATE SUMMER ESCAPE · 켄싱턴 시그니처 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
@@ -322,8 +322,8 @@
           "discount_pct": 0
         },
         {
-          "title": "YES, KIDS",
-          "period": "2026. 09. 02 ~ 2026. 11. 30",
+          "title": "켄싱턴 시그니처",
+          "period": "2026. 09. 01 ~ 2027. 01. 31",
           "discount_pct": 0
         },
         {
@@ -339,25 +339,25 @@
       ],
       "price_min": 95055,
       "price_max": 862296,
-      "promo_count": 33266,
+      "promo_count": 33693,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 15451,
+          "count": 15717,
           "min": 109250,
           "max": 739900,
           "sample": "21평 디럭스 마운틴뷰 - 비리뉴얼(초강력특가, 취사가능)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 9062,
+          "count": 9104,
           "min": 95055,
           "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 8753,
+          "count": 8872,
           "min": 172636,
           "max": 696000,
           "sample": "Kensington Deluxe Mountain View (C"
