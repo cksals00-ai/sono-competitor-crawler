@@ -49,7 +49,8 @@ def main():
         sys.exit(1)
     files = [f for f in glob.glob(os.path.join(folder, "*예약정보조회*.xlsx"))
              if not os.path.basename(f).startswith("~$")
-             and "사업계획" not in f and "객실계획" not in f]
+             and "사업계획" not in f and "객실계획" not in f
+             and "양식" not in os.path.basename(f)]   # 빈 양식(템플릿)은 건드리지 않음
     if not files:
         print(f"⚠ 처리할 예약정보조회 파일 없음: {folder}")
         return
