@@ -416,6 +416,7 @@ def parse(data_dir: str = "data") -> dict:
     df["세그먼트상세"] = df.apply(lambda r: r["FIT채널구분"] if r["FIT채널구분"] else r["세그먼트"], axis=1)
     df["객실대분류"]   = df["객실타입"].apply(classify_room)
     df["뷰타입"]       = df["객실타입"].apply(classify_view)
+    df["객실타입원본"] = df["객실타입"]   # 매출0 홀드 표기용 원본 보존(수기입력 덮어쓰기 전)
     # 수기입력(예약번호 공란 홀드/블록) → 객실타입 라벨 분리 (메인 집계엔 포함, '(기타)' 대신 '수기입력')
     if "_blank_rsv" in df.columns:
         _mm = df["_blank_rsv"].fillna(False).astype(bool)
@@ -463,6 +464,30 @@ def parse(data_dir: str = "data") -> dict:
     #   (PMS 시장별 실적과 동일한 박 분배 → 월경계 걸친 예약의 월 귀속 정합).
     #   유효예약은 박수만큼 야간행으로 펼치고(첫 야간 fn=1=예약단위 카운트용),
     #   취소/무효는 예약 단위 1행으로 도착월에 귀속.
+    # ── 매출 0 객실(홀드·컴프·수기 블록) 분리 ─────────────────────────────────
+    # ADR = 매출 ÷ RN 인데, '매출 0'짜리 홀드/컴프/수기 블록(예: 박수13×객실수500=
+    # RN 6,500 짜리 더미)이 RN 분모를 오염시켜 워크인 ADR을 25천원까지 끌어내렸다.
+    # 호텔 ADR 표준(판매객실 = 매출 발생 객실, 컴프/하우스/홀드 제외)에 맞춰 유효+
+    # 총합계 0 행은 매출/RN/ADR/OCC 집계에서 제외하고, 여기 별도 리스트로만 남겨
+    # '채널·객실수·내용'을 표기한다(사용자 요청). 취소행(is_valid=False)은 취소분석용
+    # 으로 rows_out 에 그대로 유지.
+    zero_mask = df["is_valid"] & (df["총합계"] == 0)
+    zero_holds = []
+    for _, r in df[zero_mask].sort_values("RN", ascending=False).iterrows():
+        zero_holds.append({
+            "seg":    r["세그먼트"],
+            "ch":     r["채널명"],
+            "gn":     (r["투숙객명"] or "(미상)"),
+            "rtf":    (r["객실타입원본"] or "(공란)"),
+            "st":     r["상태"],
+            "rooms":  int(r["객실수"]),
+            "nights": int(r["박수"]),
+            "rn":     int(r["RN"]),
+            "m":      int(r["도착월"]) if pd.notna(r["도착월"]) else None,
+            "ad":     r["투숙일ISO"] if pd.notna(r["투숙일ISO"]) else None,
+        })
+    df = df[~zero_mask].copy()   # 매출0 유효행 → 메인 집계(rows_out)에서 제외
+
     rows_out = []
     for _, r in df.iterrows():
         dims = {
@@ -530,6 +555,7 @@ def parse(data_dir: str = "data") -> dict:
         "business_plan_source": plan_src,
         "avail_by_month": avail_by_month,
         "new_rates":      _new_rates,   # 미검토 신규 요금타입(스킬 검토 대상)
+        "zero_rev_holds": zero_holds,   # 매출0 홀드/컴프/수기(집계 제외·표기용)
         "rows":           rows_out,
     }
 
