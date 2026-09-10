@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>경쟁사 가격 대시보드 | SONO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+.gsn{background:#0b0f14;border-bottom:1px solid #1e2530;font-size:13px;position:sticky;top:0;z-index:200}
+.gsn-wrap{max-width:1500px;margin:0 auto;padding:0 20px;height:42px;display:flex;align-items:center}
+.gsn-brand{color:#7a8794;text-decoration:none;font-weight:600;font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;margin-right:24px;padding-right:24px;border-right:1px solid #1e2530}
+.gsn-brand:hover{color:#c9d1d9}.gsn-brand-dot{color:#58a6ff}
+.gsn-links{display:flex;align-items:center;gap:2px;flex:1;overflow-x:auto}
+.gsn-item{color:#7d8590;text-decoration:none;padding:4px 12px;border-radius:6px;white-space:nowrap;font-size:13px;transition:background .15s,color .15s}
+.gsn-item:hover{background:#1a2232;color:#c9d1d9}.gsn-item.active{background:#1c2d3f;color:#58a6ff;font-weight:600}
+.gsn-toggle{display:none;background:none;border:none;color:#7d8590;cursor:pointer;padding:5px;border-radius:4px;margin-left:auto}
+@media(max-width:900px){.gsn-links{display:none;flex-direction:column;position:absolute;top:42px;left:0;right:0;background:#0b0f14;border-bottom:1px solid #1e2530;padding:8px 12px;gap:3px;z-index:300}.gsn-links.open{display:flex}.gsn-item{padding:8px 12px}.gsn-toggle{display:flex;align-items:center;justify-content:center}}
+
+:root{
+  --bg:#0d1117; --card-bg:#161b22; --card-head:#1c222b; --border:#30363d;
+  --text:#e6edf3; --muted:#7d8590; --dim:#484f58;
+  --accent:#58a6ff; --green:#3fb950; --red:#f85149; --yellow:#e3b341; --orange:#f0883e; --purple:#bc8cff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pretendard Variable',Pretendard,-apple-system,"Apple SD Gothic Neo",sans-serif;
+  -webkit-font-smoothing:antialiased;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+.wrap{max-width:1500px;margin:0 auto;padding:20px}
+
+/* header */
+.hd{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.hd h1{font-size:22px;font-weight:700;letter-spacing:-.02em}
+.hd .sub{color:var(--muted);font-size:12.5px;margin-top:4px}
+.hd .meta{text-align:right;color:var(--muted);font-size:12px;line-height:1.7}
+.hd .meta b{color:var(--text);font-weight:600}
+
+/* controls */
+.ctl{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;
+  display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:16px}
+.f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.f label{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+.f select{background:#0d1117;color:var(--text);border:1px solid var(--border);border-radius:7px;
+  padding:7px 10px;font-size:13px;font-family:inherit;min-width:150px;cursor:pointer}
+.f select:focus{outline:none;border-color:var(--accent)}
+.seg{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden}
+.seg button{background:#0d1117;color:var(--muted);border:none;padding:7px 12px;font-size:12.5px;
+  font-family:inherit;cursor:pointer;border-right:1px solid var(--border)}
+.seg button:last-child{border-right:none}
+.seg button.on{background:#1c2d3f;color:var(--accent);font-weight:600}
+.ctl .spacer{flex:1}
+
+/* banner */
+.banner{border-radius:9px;padding:11px 14px;margin-bottom:14px;font-size:13px;display:flex;gap:10px;align-items:flex-start}
+.banner .ic{flex-shrink:0;font-size:14px;line-height:1.35}
+.banner.warn{background:rgba(227,179,65,.09);border:1px solid rgba(227,179,65,.32);color:#f2d98b}
+.banner.info{background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.28);color:#a9cdf7}
+.banner b{font-weight:700}
+
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:16px}
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.card .k{font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:7px}
+.card .v{font-size:23px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.card .d{font-size:11.5px;color:var(--muted);margin-top:5px}
+.pos{color:var(--red)}.neg{color:var(--green)}.nul{color:var(--dim)}
+
+/* panels */
+.panel{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden}
+.panel>h2{background:var(--card-head);border-bottom:1px solid var(--border);padding:11px 16px;
+  font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.panel>h2 .note{font-weight:400;color:var(--muted);font-size:11.5px}
+.panel .body{padding:16px}
+.chartbox{position:relative;height:340px}
+.chartbox.sm{height:270px}
+
+/* tabs */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);background:var(--card-head);padding:0 10px;overflow-x:auto}
+.tabs button{background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);
+  padding:10px 13px;font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap}
+.tabs button:hover{color:var(--text)}
+.tabs button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+
+/* table */
+.tbl-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:8px 11px;text-align:right;border-bottom:1px solid #22282f;white-space:nowrap}
+th{color:var(--muted);font-weight:600;font-size:11.5px;text-align:right;position:sticky;top:0;background:var(--card-bg)}
+th:first-child,td:first-child{text-align:left}
+th:nth-child(2),td:nth-child(2){text-align:left}
+tbody tr:hover{background:#1b212a}
+td.num{font-variant-numeric:tabular-nums}
+.rowlink{cursor:pointer}
+
+/* badges */
+.bd{display:inline-block;padding:1.5px 7px;border-radius:20px;font-size:10.5px;font-weight:600;line-height:1.55}
+.bd.same{background:rgba(63,185,80,.14);color:#7ee787}
+.bd.up{background:rgba(240,136,62,.14);color:#ffa657}
+.bd.down{background:rgba(88,166,255,.14);color:#79c0ff}
+.bd.thin{background:rgba(125,133,144,.14);color:var(--muted)}
+.bd.alert{background:rgba(248,81,73,.14);color:#ff7b72}
+.bd.gray{background:#21262d;color:var(--muted)}
+
+/* alerts */
+.alist{max-height:520px;overflow-y:auto}
+.ai{display:grid;grid-template-columns:78px 92px 1fr auto;gap:11px;align-items:center;
+  padding:9px 16px;border-bottom:1px solid #22282f;font-size:12.5px}
+.ai:hover{background:#1b212a}
+.ai .dt{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums}
+.ai .tx{color:var(--muted)}
+.ai .tx b{color:var(--text);font-weight:600}
+.ai .sv{font-variant-numeric:tabular-nums;font-weight:700}
+.empty{padding:30px;text-align:center;color:var(--dim);font-size:13px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);padding:0 16px 12px}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:11px;height:3px;border-radius:2px;display:inline-block}
+.foot{color:var(--dim);font-size:11.5px;line-height:1.9;padding:6px 2px 30px}
+@media(max-width:640px){
+  .ai{grid-template-columns:1fr;gap:3px}
+  .hd .meta{text-align:left}
+}
+</style>
+</head>
+<body>
+
+<nav class="gsn"><div class="gsn-wrap">
+  <a class="gsn-brand" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/"><span class="gsn-brand-dot">◈</span> SONO GS팀</a>
+  <div class="gsn-links" id="gsn-links">
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/">트렌드 리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/gs-strategy-report.html">전략 리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/otb.html">GS 실적 리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/">경쟁사 모니터링</a>
+    <a class="gsn-item active" href="https://cksals00-ai.github.io/sono-competitor-crawler/competitor-dashboard/">가격 대시보드</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/palatium.html">팔라티움 현황 리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/external-report.html">외부 리포트 분석</a>
+  </div>
+  <button class="gsn-toggle" onclick="document.getElementById('gsn-links').classList.toggle('open')" aria-label="메뉴">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</div></nav>
+
+<div class="wrap">
+  <div class="hd">
+    <div>
+      <h1>경쟁사 가격 대시보드</h1>
+      <div class="sub">지역·사업장·채널을 골라 가격 변화와 소노 vs 경쟁사 격차를 본다</div>
+    </div>
+    <div class="meta" id="hdMeta">불러오는 중…</div>
+  </div>
+
+  <div class="ctl">
+    <div class="f"><label>권역</label><select id="selRegion"></select></div>
+    <div class="f"><label>사업장</label><select id="selProp"></select></div>
+    <div class="f"><label>채널 (OTA)</label><select id="selChannel"></select></div>
+    <div class="f"><label>기간</label><select id="selRange">
+      <option value="30">최근 30일</option>
+      <option value="60">최근 60일</option>
+      <option value="90" selected>최근 90일</option>
+      <option value="0">전체 기간</option>
+    </select></div>
+    <div class="f"><label>비교 대상</label>
+      <div class="seg" id="segBasis">
+        <button data-v="default" class="on">동급 경쟁사</button>
+        <button data-v="all">전체 경쟁사</button>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="f"><label>화면</label>
+      <div class="seg" id="segMode">
+        <button data-v="hotel" class="on">호텔</button>
+        <button data-v="golf">골프</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="banners"></div>
+  <div id="viewHotel">
+    <div class="cards" id="cards"></div>
+
+    <div class="panel">
+      <h2 id="mainTitle">가격 추이 <span class="note"></span></h2>
+      <div class="body"><div class="chartbox"><canvas id="chMain"></canvas></div></div>
+    </div>
+
+    <div class="panel">
+      <div class="tabs" id="tabs">
+        <button data-t="channel" class="on">채널별</button>
+        <button data-t="competitor">경쟁사별</button>
+        <button data-t="category">객실 카테고리별</button>
+        <button data-t="checkin">투숙일별</button>
+        <button data-t="ranking">사업장 랭킹</button>
+      </div>
+      <div class="body" id="tabBody">
+        <div class="chartbox sm"><canvas id="chSub"></canvas></div>
+        <div id="subExtra"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>인사이트 · 급등락 알림 <span class="note" id="alertNote"></span></h2>
+      <div class="legend" id="alertLegend"></div>
+      <div class="alist" id="alerts"></div>
+    </div>
+  </div>
+
+  <div id="viewGolf" hidden>
+    <div class="cards" id="golfCards"></div>
+    <div class="panel">
+      <h2>골프 그린피 추이 <span class="note">몽키트래블 · AGL · KKday 수집</span></h2>
+      <div class="body"><div class="chartbox"><canvas id="chGolf"></canvas></div></div>
+    </div>
+    <div class="panel">
+      <h2>골프장별 경쟁사 비교</h2>
+      <div class="body"><div class="chartbox sm"><canvas id="chGolfComp"></canvas></div></div>
+    </div>
+  </div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const B='../data/cd/';
+const S={meta:null,overview:null,gap:null,alerts:null,golf:null,props:{},
+         region:'',prop:'',channel:'__all__',range:90,basis:'default',mode:'hotel',tab:'channel'};
+const CH={};
+const PAL=['#58a6ff','#f0883e','#3fb950','#bc8cff','#e3b341','#ff7b72','#79c0ff','#7ee787',
+           '#ffa657','#d2a8ff','#f2cc60','#ff9492','#a5d6ff','#56d364','#e3b341'];
+const fmt=n=>n==null?'—':n.toLocaleString('ko-KR');
+const pct=n=>n==null?'—':(n>0?'+':'')+n.toFixed(1)+'%';
+const cls=n=>n==null?'nul':(n>0?'pos':'neg');
+
+async function j(p){const r=await fetch(B+p);if(!r.ok)throw new Error(p+' '+r.status);return r.json();}
+
+/* ── 공통: 날짜 범위 슬라이스 ── */
+function sliceIdx(dates){
+  if(!S.range||S.range<=0)return [0,dates.length];
+  const st=Math.max(0,dates.length-S.range);
+  return [st,dates.length];
+}
+const cut=(arr,a,b)=>Array.isArray(arr)?arr.slice(a,b):[];
+const avg=a=>{const v=a.filter(x=>x!=null);return v.length?v.reduce((s,x)=>s+x,0)/v.length:null;};
+
+/* ── 차트 ── */
+function draw(id,labels,sets,opt={}){
+  if(CH[id]){CH[id].destroy();delete CH[id];}
+  const el=document.getElementById(id); if(!el)return;
+  const live=sets.filter(s=>s.data.some(v=>v!=null));
+  if(!live.length){
+    const c=el.getContext('2d');c.clearRect(0,0,el.width,el.height);
+    el.parentElement.setAttribute('data-empty','1');
+    if(!el.parentElement.querySelector('.empty')){
+      const d=document.createElement('div');d.className='empty';d.textContent='선택한 조건에 해당하는 데이터가 없습니다.';
+      el.parentElement.appendChild(d);}
+    return;
+  }
+  const ex=el.parentElement.querySelector('.empty'); if(ex)ex.remove();
+  CH[id]=new Chart(el,{type:'line',data:{labels,datasets:live.map((s,i)=>({
+      label:s.label,data:s.data,borderColor:s.color||PAL[i%PAL.length],
+      backgroundColor:(s.color||PAL[i%PAL.length])+'22',
+      borderWidth:s.w||2,pointRadius:0,pointHoverRadius:4,tension:.25,spanGaps:true,
+      borderDash:s.dash||[],fill:s.fill||false,yAxisID:s.axis||'y'}))},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:'#adbac7',boxWidth:12,boxHeight:3,font:{size:11.5},usePointStyle:false},
+                       position:'bottom'},
+        tooltip:{backgroundColor:'#1c222b',borderColor:'#30363d',borderWidth:1,titleColor:'#e6edf3',
+          bodyColor:'#adbac7',padding:10,
+          callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y==null?'—':
+            (opt.unit==='pct'?c.parsed.y.toFixed(1)+'%':c.parsed.y.toLocaleString('ko-KR')+'원')}`}}},
+      scales:{x:{grid:{color:'#21262d'},ticks:{color:'#6e7681',font:{size:10.5},maxTicksLimit:12}},
+        y:{grid:{color:'#21262d'},ticks:{color:'#6e7681',font:{size:10.5},
+          callback:v=>opt.unit==='pct'?v+'%':(v>=10000?(v/10000).toFixed(0)+'만':v)}},
+        ...(opt.y2?{y2:{position:'right',grid:{drawOnChartArea:false},
+          ticks:{color:'#6e7681',font:{size:10.5},callback:v=>v+'%'}}}:{})}}});
+}
+
+/* ── 초기 로드 ── */
+async function boot(){
+  try{
+    [S.meta,S.overview,S.gap,S.alerts]=await Promise.all(
+      [j('meta.json'),j('overview.json'),j('gap.json'),j('alerts.json')]);
+    try{S.golf=await j('golf.json');}catch(e){S.golf=null;}
+  }catch(e){
+    document.getElementById('hdMeta').textContent='데이터 로드 실패: '+e.message;return;
+  }
+  const p=S.meta.period;
+  document.getElementById('hdMeta').innerHTML=
+    `수집 <b>${p.start} ~ ${p.end}</b> · <b>${p.days_present}일</b>` +
+    (p.missing_dates.length?` (결측 ${p.missing_dates.length}일)`:'') +
+    `<br>사업장 <b>${S.meta.properties.length}개</b> · 채널 <b>${S.meta.channels.length}종</b>` +
+    `<br>생성 ${S.meta.generated_at}`;
+
+  buildRegion(); buildProp(); buildChannel(); bindings(); render();
+
+  document.getElementById('foot').innerHTML=
+    `데이터 출처: <code>${S.meta.source.hotel}</code>` +
+    (S.meta.source.golf?` · <code>${S.meta.source.golf}</code>`:'') + `<br>` +
+    `체급 기준: ${S.meta.tier_rule.basis} — 동급 ${S.meta.tier_rule['동급']}, 상위 ${S.meta.tier_rule['상위']}, 하위 ${S.meta.tier_rule['하위']}<br>` +
+    `${S.meta.channel_note}<br>` +
+    (p.missing_dates.length?`수집 결측일: ${p.missing_dates.join(', ')}`:'');
+}
+
+function buildRegion(){
+  const s=document.getElementById('selRegion');
+  s.innerHTML='<option value="">전체 권역</option>'+
+    S.meta.regions.map(r=>`<option value="${r.region}">${r.region} (${r.properties.length})</option>`).join('');
+}
+function buildProp(){
+  const s=document.getElementById('selProp');
+  const list=S.meta.properties.filter(p=>!S.region||p.region===S.region);
+  s.innerHTML='<option value="">전체 사업장 (권역 요약)</option>'+
+    list.map(p=>`<option value="${p.property_id}">${p.property_name}${p.no_same_tier?' ⚠':''}</option>`).join('');
+  if(S.prop&&!list.some(p=>p.property_id===S.prop))S.prop='';
+  s.value=S.prop;
+}
+function buildChannel(){
+  const s=document.getElementById('selChannel');
+  let chans=S.meta.channels;
+  const pd=S.prop?S.props[S.prop]:null;
+  if(pd)chans=pd.channels;
+  s.innerHTML='<option value="__all__">전체 채널 통합</option>'+
+    chans.map(c=>`<option value="${c}">${c}</option>`).join('');
+  if(S.channel!=='__all__'&&!chans.includes(S.channel))S.channel='__all__';
+  s.value=S.channel;
+}
+
+function bindings(){
+  document.getElementById('selRegion').onchange=e=>{S.region=e.target.value;S.prop='';buildProp();render();};
+  document.getElementById('selProp').onchange=async e=>{
+    S.prop=e.target.value;
+    if(S.prop&&!S.props[S.prop]){
+      try{S.props[S.prop]=await j('prop/'+S.prop+'.json');}
+      catch(err){S.props[S.prop]=null;}
+    }
+    buildChannel();render();
+  };
+  document.getElementById('selChannel').onchange=e=>{S.channel=e.target.value;render();};
+  document.getElementById('selRange').onchange=e=>{S.range=+e.target.value;render();};
+  document.querySelectorAll('#segBasis button').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#segBasis button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');S.basis=b.dataset.v;render();});
+  document.querySelectorAll('#segMode button').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#segMode button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');S.mode=b.dataset.v;
+    document.getElementById('viewHotel').hidden=S.mode!=='hotel';
+    document.getElementById('viewGolf').hidden=S.mode!=='golf';
+    render();});
+  document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#tabs button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');S.tab=b.dataset.t;renderTab();});
+}
+
+/* ── 배너 ── */
+function banners(){
+  const out=[];
+  if(S.prop){
+    const pm=S.meta.properties.find(p=>p.property_id===S.prop);
+    const w=(S.meta.quality_warnings||[]).find(x=>x.property_id===S.prop);
+    if(w)out.push(`<div class="banner warn"><span class="ic">⚠</span><div><b>동급 경쟁사가 없습니다.</b> ${w.detail||w.issue}<br>
+      <span style="opacity:.8">'동급 경쟁사' 기준 격차는 이 대체 대상 1곳과의 비교입니다. 체급이 다른 비교라는 점을 감안하세요.</span></div></div>`);
+    if(pm&&pm.low_data)out.push(`<div class="banner warn"><span class="ic">⚠</span><div><b>데이터 부족</b> — 수집일 ${pm.days}일에 불과합니다.</div></div>`);
+  }
+  if(S.channel!=='__all__'&&S.channel.startsWith('네이버호텔/'))
+    out.push(`<div class="banner info"><span class="ic">ℹ</span><div><b>${S.channel}</b> 은 해당 OTA의 직판가가 아니라 네이버호텔 메타서치에 노출된 판매가입니다.</div></div>`);
+  document.getElementById('banners').innerHTML=out.join('');
+}
+
+/* ── 렌더 ── */
+function render(){
+  banners();
+  if(S.mode==='golf'){renderGolf();return;}
+  S.prop?renderProp():renderOverview();
+  renderAlerts();
+}
+
+/* 사업장 미선택 → 권역/전사 요약 */
+function renderOverview(){
+  const ov=S.overview,[a,b]=sliceIdx(ov.dates),labels=cut(ov.dates,a,b);
+  const blocks=S.region?{[S.region]:ov.by_region[S.region]}:ov.by_region;
+  const src=S.region?ov.by_region[S.region]:ov.total;
+  const own=cut(src.own,a,b),comp=cut(src.comp,a,b),gap=cut(src.gap_pct,a,b);
+  const ao=avg(own),ac=avg(comp),ag=avg(gap);
+
+  document.getElementById('cards').innerHTML=`
+    ${card('소노 평균가',ao==null?'—':fmt(Math.round(ao))+'원',(S.region||'전체 권역')+' · 전 채널')}
+    ${card('경쟁사 평균가',ac==null?'—':fmt(Math.round(ac))+'원','설정된 경쟁세트 전체')}
+    ${card('평균 격차',pct(ag),'+면 소노가 비쌈',cls(ag))}
+    ${card('알림',fmtAlertCount()+'건','선택 범위 내')}`;
+
+  document.getElementById('mainTitle').innerHTML=
+    `${S.region||'전체'} 가격 추이 <span class="note">권역 롤업 · 전 채널 통합 · 사업장을 고르면 상세로 내려갑니다</span>`;
+
+  const sets=[{label:'소노',data:own,color:'#58a6ff',w:2.4},
+              {label:'경쟁사',data:comp,color:'#f0883e',w:2.4},
+              {label:'격차(%)',data:gap,color:'#7d8590',w:1.4,dash:[4,3],axis:'y2'}];
+  draw('chMain',labels,sets,{y2:true});
+  renderTab();
+}
+
+/* 사업장 선택 */
+function renderProp(){
+  const d=S.props[S.prop];
+  if(!d){document.getElementById('cards').innerHTML=
+    `<div class="card"><div class="k">오류</div><div class="v">—</div><div class="d">사업장 데이터를 불러오지 못했습니다.</div></div>`;return;}
+  const g=S.gap[S.prop];
+  const [a,b]=sliceIdx(d.dates),labels=cut(d.dates,a,b);
+
+  let own,comp,glabel;
+  if(S.channel==='__all__'){own=cut(d.daily.own.avg,a,b);comp=cut(d.daily.comp_all.avg,a,b);}
+  else{
+    own=cut((d.by_channel.own[S.channel]||{}).avg,a,b);
+    comp=cut((d.by_channel.comp[S.channel]||{}).avg,a,b);
+  }
+  // 격차: 비교 기준(동급/전체)은 전 채널 통합 기준 산출값을 사용
+  const gi=g?sliceIdx(g.dates):[0,0];
+  const gapArr=g?cut(S.basis==='default'?g.gap_default_pct:g.gap_all_pct,gi[0],gi[1]):[];
+  const compBasis=g?cut(S.basis==='default'?g.comp_default:g.comp_all,gi[0],gi[1]):[];
+  glabel=S.basis==='default'?(g&&g.default_competitors.length?g.default_competitors.join(', '):'동급 경쟁사'):'전체 경쟁사';
+
+  const ao=avg(own),ac=avg(comp),ag=avg(gapArr);
+  const last=[...gapArr].reverse().find(x=>x!=null);
+  document.getElementById('cards').innerHTML=`
+    ${card('소노 평균가',ao==null?'—':fmt(Math.round(ao))+'원',S.channel==='__all__'?'전 채널 통합':S.channel)}
+    ${card('경쟁사 평균가',ac==null?'—':fmt(Math.round(ac))+'원','전체 경쟁사 · '+(S.channel==='__all__'?'전 채널':S.channel))}
+    ${card('평균 격차',pct(ag),glabel+' 기준',cls(ag))}
+    ${card('최근 격차',pct(last),last==null?'데이터 없음':(last>0?'소노가 더 비쌈':'소노가 더 쌈'),cls(last))}`;
+
+  document.getElementById('mainTitle').innerHTML=
+    `${d.property_name} 가격 추이 <span class="note">${d.region} · ${S.channel==='__all__'?'전 채널 통합':S.channel} · 격차 기준: ${glabel}</span>`;
+
+  draw('chMain',labels,[
+    {label:'소노',data:own,color:'#58a6ff',w:2.4},
+    {label:'경쟁사 (전체)',data:comp,color:'#f0883e',w:2.4},
+    {label:'경쟁사 ('+(S.basis==='default'?'동급':'전체')+')',data:compBasis,color:'#bc8cff',w:1.6,dash:[5,3]},
+    {label:'격차(%)',data:gapArr,color:'#7d8590',w:1.4,dash:[4,3],axis:'y2'}
+  ],{y2:true});
+  renderTab();
+}
+
+function card(k,v,d,c){return `<div class="card"><div class="k">${k}</div>
+  <div class="v ${c||''}">${v}</div><div class="d">${d}</div></div>`;}
+
+/* ── 드릴다운 탭 ── */
+function renderTab(){
+  const extra=document.getElementById('subExtra');extra.innerHTML='';
+  const canvas=document.getElementById('chSub');
+  canvas.parentElement.style.display='';
+
+  if(S.tab==='ranking'){canvas.parentElement.style.display='none';renderRanking(extra);return;}
+  if(!S.prop){
+    canvas.parentElement.style.display='none';
+    extra.innerHTML=`<div class="empty">사업장을 선택하면 채널·경쟁사·객실·투숙일 드릴다운을 볼 수 있습니다.<br>
+      지금은 <b>사업장 랭킹</b> 탭에서 전체를 비교해 보세요.</div>`;
+    return;
+  }
+  const d=S.props[S.prop];if(!d)return;
+  const [a,b]=sliceIdx(d.dates),labels=cut(d.dates,a,b);
+
+  if(S.tab==='channel'){
+    const sets=Object.keys(d.by_channel.own).map((ota,i)=>(
+      {label:ota,data:cut(d.by_channel.own[ota].avg,a,b),color:PAL[i%PAL.length],w:1.7}));
+    draw('chSub',labels,sets);
+    extra.innerHTML=`<div class="banner info" style="margin:14px 0 0">
+      <span class="ic">ℹ</span><div>자사 상품이 채널마다 다른 가격으로 노출되는지 보는 화면입니다(rate parity).
+      선이 벌어질수록 채널 간 가격이 어긋나 있습니다. 구체적 건은 아래 인사이트의 <b>채널가격불일치</b> 항목을 보세요.</div></div>`;
+  }
+  else if(S.tab==='competitor'){
+    const keys=Object.keys(d.by_competitor);
+    const tierOf=n=>(d.competitors.find(c=>c.name===n)||{}).tier||'';
+    const sets=[{label:'소노',data:cut(d.daily.own.avg,a,b),color:'#58a6ff',w:2.6}]
+      .concat(keys.map((c,i)=>({label:c+(tierOf(c)?` [${tierOf(c)}]`:''),
+        data:cut(d.by_competitor[c].avg,a,b),color:PAL[(i+1)%PAL.length],w:1.6})));
+    draw('chSub',labels,sets);
+    extra.innerHTML=`<div class="tbl-scroll" style="margin-top:14px"><table>
+      <thead><tr><th>경쟁사</th><th>체급</th><th>자사 대비</th><th>중앙가</th><th>표본</th></tr></thead>
+      <tbody>${d.competitors.map(c=>`<tr>
+        <td>${c.name}</td><td>${tierBadge(c.tier)}</td>
+        <td class="num">${c.ratio==null?'—':'×'+c.ratio.toFixed(2)}</td>
+        <td class="num">${fmt(c.median)}</td><td class="num">${fmt(c.n)}</td></tr>`).join('')}</tbody></table>
+      <div style="color:var(--muted);font-size:11.5px;padding:10px 2px">
+        자사 중앙가 <b>${fmt(d.own_median)}원</b> 대비 배수. 체급은 브랜드 등급이 아니라 관측된 가격대 기준입니다.
+      </div></div>`;
+  }
+  else if(S.tab==='category'){
+    const keys=Object.keys(d.by_category.own);
+    if(!keys.length){draw('chSub',labels,[]);}
+    else{
+      const sets=keys.map((c,i)=>({label:'소노 '+c,data:cut(d.by_category.own[c].avg,a,b),
+        color:PAL[i%PAL.length],w:1.8}));
+      draw('chSub',labels,sets);
+    }
+    extra.innerHTML=`<div style="color:var(--muted);font-size:11.5px;padding:12px 2px 0">
+      원본에 객실 카테고리가 비어 있는 행이 존재합니다. 카테고리 합계는 사업장 전체 합계와 일치하지 않을 수 있습니다.</div>`;
+  }
+  else if(S.tab==='checkin'){
+    const ci=d.by_checkin;
+    if(!ci){draw('chSub',[],[]);return;}
+    draw('chSub',ci.checkin_dates,[
+      {label:'소노',data:ci.own,color:'#58a6ff',w:2.4},
+      {label:'경쟁사 (전체)',data:ci.comp_all,color:'#f0883e',w:2.4}
+    ]);
+    extra.innerHTML=`<div style="color:var(--muted);font-size:11.5px;padding:12px 2px 0">
+      <b>${ci.as_of}</b> 수집분 기준, 투숙일(체크인)별 가격입니다. 앞으로 어느 날짜가 비싼지 보는 화면입니다.</div>`;
+  }
+}
+
+function tierBadge(t){
+  const m={'동급':'same','상위':'up','하위':'down','표본부족':'thin','표본없음':'thin'};
+  return `<span class="bd ${m[t]||'gray'}">${t||'—'}</span>`;
+}
+
+/* 사업장 랭킹 */
+function renderRanking(el){
+  const rows=[];
+  for(const pid in S.gap){
+    const g=S.gap[pid];
+    if(S.region&&g.region!==S.region)continue;
+    const [a,b]=sliceIdx(g.dates);
+    const gp=avg(cut(S.basis==='default'?g.gap_default_pct:g.gap_all_pct,a,b));
+    const o=avg(cut(g.own,a,b)),c=avg(cut(S.basis==='default'?g.comp_default:g.comp_all,a,b));
+    const arr=cut(S.basis==='default'?g.gap_default_pct:g.gap_all_pct,a,b).filter(x=>x!=null);
+    rows.push({pid,name:g.property_name,region:g.region,gap:gp,own:o,comp:c,n:arr.length,
+      warn:g.no_same_tier,cmp:(g.default_competitors||[]).join(', ')});
+  }
+  rows.sort((x,y)=>(y.gap??-1e9)-(x.gap??-1e9));
+  el.innerHTML=`<div class="tbl-scroll"><table>
+    <thead><tr><th>사업장</th><th>권역</th><th>소노 평균</th><th>경쟁사 평균</th><th>격차</th><th>비교일수</th><th>비교 대상</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr class="rowlink" data-pid="${r.pid}">
+      <td>${r.name}${r.warn?' <span class="bd alert">동급없음</span>':''}</td>
+      <td style="color:var(--muted)">${r.region}</td>
+      <td class="num">${r.own==null?'—':fmt(Math.round(r.own))}</td>
+      <td class="num">${r.comp==null?'—':fmt(Math.round(r.comp))}</td>
+      <td class="num ${cls(r.gap)}" style="font-weight:700">${pct(r.gap)}</td>
+      <td class="num" style="color:var(--muted)">${r.n}</td>
+      <td style="color:var(--muted);font-size:11.5px">${r.cmp||'—'}</td></tr>`).join('')}</tbody></table>
+    <div style="color:var(--muted);font-size:11.5px;padding:10px 2px">
+      격차 = (소노 − 경쟁사) ÷ 경쟁사. <b>+면 소노가 비싸다</b>는 뜻입니다.
+      기준은 상단 '비교 대상' 토글(현재 ${S.basis==='default'?'동급 경쟁사':'전체 경쟁사'})을 따릅니다. 행을 누르면 해당 사업장으로 들어갑니다.</div></div>`;
+  el.querySelectorAll('.rowlink').forEach(tr=>tr.onclick=async()=>{
+    S.prop=tr.dataset.pid;
+    if(!S.props[S.prop]){try{S.props[S.prop]=await j('prop/'+S.prop+'.json');}catch(e){S.props[S.prop]=null;}}
+    document.getElementById('selProp').value=S.prop;buildChannel();render();
+  });
+}
+
+/* ── 알림 ── */
+const AC={'급등락':'#f0883e','격차전환':'#bc8cff','격차급변':'#e3b341','채널가격불일치':'#79c0ff'};
+function alertPool(){
+  let it=S.alerts.items;
+  if(S.prop)it=it.filter(x=>x.property_id===S.prop);
+  else if(S.region)it=it.filter(x=>x.region===S.region);
+  if(S.range>0){
+    const ds=S.overview.dates,from=ds[Math.max(0,ds.length-S.range)];
+    it=it.filter(x=>!x.date||x.date>=from);
+  }
+  return it;
+}
+function fmtAlertCount(){return alertPool().length.toLocaleString('ko-KR');}
+function renderAlerts(){
+  const it=alertPool();
+  document.getElementById('alertNote').textContent=
+    `${it.length.toLocaleString('ko-KR')}건 · ${S.prop?S.props[S.prop]?.property_name||'':S.region||'전체'}`;
+  document.getElementById('alertLegend').innerHTML=Object.entries(AC)
+    .map(([k,v])=>`<span><i style="background:${v}"></i>${k}</span>`).join('')+
+    `<span style="margin-left:auto">${S.alerts.rules['급등락']}</span>`;
+  const el=document.getElementById('alerts');
+  if(!it.length){el.innerHTML='<div class="empty">선택한 범위에 알림이 없습니다.</div>';return;}
+  el.innerHTML=it.slice(0,400).map(x=>{
+    let tx='',sv='';
+    if(x.type==='급등락'){
+      tx=`<b>${x.property_name}</b> ${x.side} ${fmt(x.price)}원 · 전일 ${pct(x.dod_pct)}` +
+         (x.vs_med7_pct!=null?` · 7일중앙 대비 ${pct(x.vs_med7_pct)}`:'');
+      sv=pct(x.dod_pct);
+    }else if(x.type==='채널가격불일치'){
+      tx=`<b>${x.property_name}</b> ${x.checkin_date} ${x.room_category||''} · ` +
+         `${fmt(x.min)}원(${x.min_channel}) ~ ${fmt(x.max)}원(${x.max_channel})`;
+      sv='+'+x.gap_pct.toFixed(1)+'%';
+    }else{
+      tx=`<b>${x.property_name}</b> 격차 ${pct(x.from_pct)} → ${pct(x.to_pct)} · ${x.detail}`;
+      sv=pct(x.to_pct);
+    }
+    return `<div class="ai"><span class="dt">${x.date||''}</span>
+      <span><span class="bd" style="background:${AC[x.type]}22;color:${AC[x.type]}">${x.type}</span></span>
+      <span class="tx">${tx}</span>
+      <span class="sv ${x.type==='채널가격불일치'?'pos':cls(x.type==='급등락'?x.dod_pct:x.to_pct)}">${sv}</span></div>`;
+  }).join('')+(it.length>400?`<div class="empty">상위 400건만 표시 (총 ${it.length.toLocaleString('ko-KR')}건)</div>`:'');
+}
+
+/* ── 골프 ── */
+function renderGolf(){
+  const g=S.golf;
+  if(!g){document.getElementById('golfCards').innerHTML=
+    '<div class="card"><div class="k">골프</div><div class="v">—</div><div class="d">골프 데이터가 없습니다.</div></div>';return;}
+  const [a,b]=sliceIdx(g.dates),labels=cut(g.dates,a,b);
+  const ids=Object.keys(g.properties);
+
+  document.getElementById('golfCards').innerHTML=ids.map((pid,i)=>{
+    const p=g.properties[pid];
+    const o=avg(cut(p.own.avg,a,b)),c=avg(cut(p.comp_all.avg,a,b));
+    const gp=(o!=null&&c!=null&&c!==0)?(o-c)/c*100:null;
+    return card(p.property_name,o==null?'—':fmt(Math.round(o))+'원',
+      `경쟁사 ${c==null?'—':fmt(Math.round(c))+'원'} · 격차 ${pct(gp)}`,cls(gp));
+  }).join('');
+
+  const sets=[];
+  ids.forEach((pid,i)=>{
+    const p=g.properties[pid];
+    sets.push({label:p.property_name+' (자사)',data:cut(p.own.avg,a,b),color:PAL[i%PAL.length],w:2.3});
+    sets.push({label:p.property_name+' (경쟁사)',data:cut(p.comp_all.avg,a,b),
+      color:PAL[i%PAL.length],w:1.5,dash:[5,3]});
+  });
+  draw('chGolf',labels,sets);
+
+  const cs=[];let k=0;
+  ids.forEach(pid=>{
+    const p=g.properties[pid];
+    for(const c in p.by_competitor)
+      cs.push({label:c,data:cut(p.by_competitor[c].avg,a,b),color:PAL[k++%PAL.length],w:1.7});
+  });
+  draw('chGolfComp',labels,cs);
+}
+
+boot();
+</script>
+</body>
+</html>

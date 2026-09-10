@@ -35,3 +35,7 @@ logs/
 *.swo
 .claude/
 analytics/hotel_trends.csv
+
+# 경쟁사 가격 대시보드 중간 산출물 (재생성 가능, 대용량)
+data/daily_extract/
+analytics/hotel_trends_full.csv
