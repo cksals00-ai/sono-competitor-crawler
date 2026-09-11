@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-09-11 08:30:28 KST",
+  "_updated_at": "2026-09-12 08:30:21 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.08.04 - 2026.09.30",
       "discount_pct": 81,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · BBQ 나이트 등 20개",
+      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · BBQ 나이트 등 18개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 20,
+      "campaign_count": 18,
       "campaigns": [
         {
           "title": "[추(秋)캉스] 룸온리 2박",
@@ -53,11 +53,6 @@
         {
           "title": "[추(秋)캉스] ALL-INCLUSIVE 1박",
           "period": "2026.08.20 - 2026.09.30",
-          "discount_pct": 0
-        },
-        {
-          "title": "Yeosu : 섬 그리고 바다",
-          "period": "2026.08.21 - 2026.09.11",
           "discount_pct": 0
         },
         {
@@ -109,41 +104,36 @@
           "title": "설악 썸머Pick!",
           "period": "2026.07.02 - 2026.09.19",
           "discount_pct": 0
-        },
-        {
-          "title": "한라산 윗세오름 힐링 트레킹 패키지",
-          "period": "2026.05.19 - 2026.09.11",
-          "discount_pct": 0
         }
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 22409,
+      "promo_count": 24224,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 6784,
+          "count": 7784,
           "min": 134000,
           "max": 610000,
           "sample": "스위트 베드 라이브특가★룸온리 1박 7-8월"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 6107,
+          "count": 6274,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
         },
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 6074,
+          "count": 6241,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 3444,
+          "count": 3925,
           "min": 113471,
           "max": 525704,
           "sample": "스위트 베드 라이브특가★룸온리 1박 7-8월 [체크인]15:0"
@@ -207,8 +197,8 @@
           "discount_pct": 0
         },
         {
-          "title": "와박사의 하루",
-          "period": "예약기간 : 2026.08.11 ~ 2026.09.19",
+          "title": "2026 박물관이 살아있다 ver.5",
+          "period": "예약기간 : 2026.09.09 ~ 2026.10.10",
           "discount_pct": 0
         },
         {
@@ -282,21 +272,85 @@
       ],
       "price_min": 82148,
       "price_max": 881322,
-      "promo_count": 6757,
+      "promo_count": 6809,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 3641,
+          "count": 3675,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 3116,
+          "count": 3134,
           "min": 82148,
           "max": 881322,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
+        }
+      ]
+    },
+    {
+      "brand": "켄싱턴리조트",
+      "region": "south",
+      "title": "LATE SUMMER ESCAPE",
+      "period": "2026. 08. 16 ~ 2026. 09. 30",
+      "discount_pct": 0,
+      "channel": "켄싱턴리조트 공식 홈페이지",
+      "detail": "여유와 혜택을 모두 누릴 수 있는 늦캉스를 계획해보세요. · 외 켄싱턴 시그니처 · 켄싱턴리조트 가평 [주중 전용] 얼리버드 객실 등 5개",
+      "link": "https://www.kensington.co.kr/promotion",
+      "campaign_count": 5,
+      "campaigns": [
+        {
+          "title": "LATE SUMMER ESCAPE",
+          "period": "2026. 08. 16 ~ 2026. 09. 30",
+          "discount_pct": 0
+        },
+        {
+          "title": "켄싱턴 시그니처",
+          "period": "2026. 09. 01 ~ 2027. 01. 31",
+          "discount_pct": 0
+        },
+        {
+          "title": "켄싱턴리조트 가평 [주중 전용] 얼리버드 객실",
+          "period": "2026.09.27 ~ 2026.11.30",
+          "discount_pct": 0
+        },
+        {
+          "title": "켄싱턴리조트 가평 [10월 17일 당일 한정] 이랜드 축구단과 함께하는 어린이 축구왕",
+          "period": "2026.10.17 ~ 2026.10.17",
+          "discount_pct": 0
+        },
+        {
+          "title": "켄싱턴리조트 제주중문 제주살이 낭만찾기",
+          "period": "2026.05.01 ~ 2026.11.30",
+          "discount_pct": 0
+        }
+      ],
+      "price_min": 95055,
+      "price_max": 862296,
+      "promo_count": 34726,
+      "ota_promos": [
+        {
+          "ota": "네이버호텔/야놀자",
+          "count": 16374,
+          "min": 109250,
+          "max": 739900,
+          "sample": "21평 디럭스 마운틴뷰 - 비리뉴얼(초강력특가, 취사가능)"
+        },
+        {
+          "ota": "네이버호텔/네이버비밀특가",
+          "count": 9211,
+          "min": 95055,
+          "max": 862296,
+          "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
+        },
+        {
+          "ota": "네이버호텔/Booking.com",
+          "count": 9141,
+          "min": 172636,
+          "max": 696000,
+          "sample": "Kensington Deluxe Mountain View (C"
         }
       ]
     }
