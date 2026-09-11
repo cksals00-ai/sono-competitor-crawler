@@ -664,7 +664,8 @@ def main():
             "hotel": str(HOTEL_SRC.relative_to(ROOT)),
             "golf": str(GOLF_SRC.relative_to(ROOT)) if GOLF_SRC.exists() else None,
             "config": "config.yaml",
-            "external_archive_used": False,
+            # hotel_trends_full.csv 는 외장 아카이브에서 복원한 일자별 원본으로 만든 집계본이다.
+            "external_archive_used": HOTEL_SRC == _FULL,
         },
         "period": {"start": d_min, "end": d_max,
                    "days_present": len(dates_all),
