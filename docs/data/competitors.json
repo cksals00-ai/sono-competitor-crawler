@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-09-12 08:30:21 KST",
+  "_updated_at": "2026-09-13 08:30:20 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -108,32 +108,32 @@
       ],
       "price_min": 90540,
       "price_max": 610000,
-      "promo_count": 24224,
+      "promo_count": 25870,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 7784,
+          "count": 8720,
           "min": 134000,
           "max": 610000,
           "sample": "스위트 베드 라이브특가★룸온리 1박 7-8월"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 6274,
+          "count": 6409,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
         },
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 6241,
+          "count": 6376,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 3925,
+          "count": 4365,
           "min": 113471,
           "max": 525704,
           "sample": "스위트 베드 라이브특가★룸온리 1박 7-8월 [체크인]15:0"
@@ -220,7 +220,7 @@
       "period": "2026-09-09~2026-09-24",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "한가위 선물 상품 판매 · 외 26/27 X6+ 시즌패스 1차 사전판매 OPEN! · 하이원으로 떠날 시간, CJ온스타일 라이브! 등 9개",
+      "detail": "한가위 선물 상품 판매 · 외 26/27 X6+ 시즌패스 1차 사전판매 OPEN! · 2026 FALL SEASON RITUAL PROMOTION 등 9개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
       "campaign_count": 9,
       "campaigns": [
@@ -232,11 +232,6 @@
         {
           "title": "26/27 X6+ 시즌패스 1차 사전판매 OPEN!",
           "period": "2026-09-09~2026-09-27",
-          "discount_pct": 0
-        },
-        {
-          "title": "하이원으로 떠날 시간, CJ온스타일 라이브!",
-          "period": "2026-09-09~2026-09-12",
           "discount_pct": 0
         },
         {
@@ -268,22 +263,27 @@
           "title": "지역상생&문화관광 활성화 프로젝트 3.0",
           "period": "2026-06-02~2026-11-30",
           "discount_pct": 0
+        },
+        {
+          "title": "카카오톡 친구 이벤트",
+          "period": "2026-02-02~2026-12-31",
+          "discount_pct": 0
         }
       ],
       "price_min": 82148,
       "price_max": 881322,
-      "promo_count": 6809,
+      "promo_count": 6873,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 3675,
+          "count": 3715,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 3134,
+          "count": 3158,
           "min": 82148,
           "max": 881322,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -329,25 +329,25 @@
       ],
       "price_min": 95055,
       "price_max": 862296,
-      "promo_count": 34726,
+      "promo_count": 35046,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 16374,
+          "count": 16576,
           "min": 109250,
           "max": 739900,
           "sample": "21평 디럭스 마운틴뷰 - 비리뉴얼(초강력특가, 취사가능)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 9211,
+          "count": 9248,
           "min": 95055,
           "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 9141,
+          "count": 9222,
           "min": 172636,
           "max": 696000,
           "sample": "Kensington Deluxe Mountain View (C"
