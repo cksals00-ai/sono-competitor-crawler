@@ -55,13 +55,24 @@ PROMO_LABEL = {
 }
 
 
+def is_inbound_rate(rt) -> bool:
+    """인바운드(전략/일반 여행사) 계약 요금타입 판별.
+    · '인바운드' 접두어가 있으면 인바운드(전략/일반 여행사 모두).
+    · 접두어가 빠져도 '전략 여행사'/'일반 여행사' 계약명은 인바운드로 취급.
+    · 단 국내/해외/온라인여행사(OTA·FIT 시장)는 전략/일반 문구가 없어 여기 안 걸림 → FIT 유지."""
+    s = str(rt or "")
+    if "인바운드" in s:
+        return True
+    return ("여행사" in s) and (("전략" in s) or ("일반" in s))
+
+
 def is_promo_rate(rt) -> bool:
     """표준 요금 화이트리스트에 없는 유효 요금타입 = 프로모션."""
     s = str(rt or "").strip()
     if not s or s.lower() == "nan":
         return False
     # 인바운드(전략/일반 여행사)는 프로모션이 아니라 독립 '인바운드' 세그먼트 → FIT 흡수 금지
-    if "인바운드" in s:
+    if is_inbound_rate(s):
         return False
     return s not in STANDARD_RATES
 
@@ -288,7 +299,7 @@ def classify_segment(rt: str, mkt: str = "") -> str:
     if "D-멤버스" in rt:
         return "D-멤버스"
     # 인바운드(전략/일반 여행사) = 여행사 인바운드 채널 → 독립 세그먼트
-    if "인바운드" in rt:
+    if is_inbound_rate(rt):
         return "인바운드"
     if rt == "FIT":
         return "FIT(OTA)"
