@@ -34,10 +34,16 @@ DOMESTIC_OTA = {"놀유니버스","여기어때","타이드스퀘어투어비스
 #   ① 요금타입을 FIT로 흡수(세그먼트/피벗 집계)  ② 원래 요금명을 promo 필드로 보존('프로모션 실적' 별도 집계)
 # 새 프로모(익스피디아 캠페인·트립닷컴 아울렛 등)가 등장해도 하드코딩 없이 자동 처리된다.
 # 신규 요금타입은 parse 결과 `_new_rates`로 표시 → 스킬(palatium-promo-review)로 표준/프로모 확정.
+# 박당 유효단가 하한(원). 정상 판매 최저가 ~85천원(0.1%ile)이라 5만 미만 = 컴프·명목
+# 행사블럭(부산국제영화제·방송사 블럭 등)으로 보고 매출/RN/ADR 집계에서 제외.
+NOMINAL_RATE_FLOOR = 50_000
+
 STANDARD_RATES = {
     "FIT", "소노회원(분양)", "D-멤버스(온라인)", "회원COMP", "Complimentary",
     "Walk-In", "팔라티움(분양회원)", "Direct Call", "House Use", "Rack Rate",
     "팔라티움(임직원)", "소노(임직원)", "기업제휴", "소노기업제휴",
+    # 검토완료 2026-09: 직접 그룹블럭(거래처=팔라티움 자체·정상가 181,818원) → 프로모 아님, 표준
+    "단체(블럭)",
 }
 # 확정 프로모(검토 완료). 여기에도 표준에도 없는 요금 = 미검토 신규 → _new_rates 알림.
 KNOWN_PROMOS = {
@@ -45,6 +51,8 @@ KNOWN_PROMOS = {
     # 검토완료 2026-09: OTA 조식패키지·캠페인(전부 해외OTA 프로모 → FIT 흡수 + 프로모션 실적 별도)
     "아고다 조식 PKG", "트립닷컴 조식 PGK", "트립비토즈 조식 PKG",
     "익스피디아 visa 캠페인 Room Only 10%",
+    # 검토완료 2026-09-14: 해외여행사 OTA 프로모(디다트래블 할인기획전·트립토파즈 조식패키지)
+    "디다트래블 배너기획전 Room Only 5-10% 적용", "트립토파즈 조식 PKG",
 }
 # 프로모션 표시명 정리(선택). 없으면 원래 요금명 그대로 사용.
 PROMO_LABEL = {
@@ -52,6 +60,7 @@ PROMO_LABEL = {
     "트립닷컴 조식 PGK": "트립닷컴 조식 PKG",      # 소스 오타(PGK) 표시 정정
     "익스피다아 visa 캠페인 Room Only 10%": "익스피디아 visa 캠페인 RO10%",  # 소스 오타(익스피다아) 정정
     "익스피디아 visa 캠페인 Room Only 10%": "익스피디아 visa 캠페인 RO10%",
+    "디다트래블 배너기획전 Room Only 5-10% 적용": "디다트래블 배너기획전 RO5-10%",
 }
 
 
@@ -303,7 +312,7 @@ def classify_segment(rt: str, mkt: str = "") -> str:
         return "인바운드"
     if rt == "FIT":
         return "FIT(OTA)"
-    if any(k in rt for k in ["팔라티움", "Direct Call", "Walk-In", "Rack Rate"]):
+    if any(k in rt for k in ["팔라티움", "Direct Call", "Walk-In", "Rack Rate", "단체"]):
         return "홈페이지(다이렉트)"
     # 요금타입 이름만으론 안 잡히는 OTA/여행사 프로모 요금(예: '트립닷컴 동부산 아울렛')은
     # 시장(해외/국내여행사·FIT)으로 판별해 매출로 정상 분류 (과거 '기타'로 누락되던 버그 교정).
@@ -334,6 +343,8 @@ def get_channel_name(seg: str, rt: str, vendor: str) -> str:
             return "전화예약"
         if "Walk-In" in rt:
             return "워크인"
+        if "단체" in rt:
+            return "단체블럭"
         return "팔라티움자체"
     return "기타"
 
@@ -475,29 +486,38 @@ def parse(data_dir: str = "data") -> dict:
     #   (PMS 시장별 실적과 동일한 박 분배 → 월경계 걸친 예약의 월 귀속 정합).
     #   유효예약은 박수만큼 야간행으로 펼치고(첫 야간 fn=1=예약단위 카운트용),
     #   취소/무효는 예약 단위 1행으로 도착월에 귀속.
-    # ── 매출 0 객실(홀드·컴프·수기 블록) 분리 ─────────────────────────────────
-    # ADR = 매출 ÷ RN 인데, '매출 0'짜리 홀드/컴프/수기 블록(예: 박수13×객실수500=
-    # RN 6,500 짜리 더미)이 RN 분모를 오염시켜 워크인 ADR을 25천원까지 끌어내렸다.
-    # 호텔 ADR 표준(판매객실 = 매출 발생 객실, 컴프/하우스/홀드 제외)에 맞춰 유효+
-    # 총합계 0 행은 매출/RN/ADR/OCC 집계에서 제외하고, 여기 별도 리스트로만 남겨
-    # '채널·객실수·내용'을 표기한다(사용자 요청). 취소행(is_valid=False)은 취소분석용
-    # 으로 rows_out 에 그대로 유지.
-    zero_mask = df["is_valid"] & (df["총합계"] == 0)
+    # ── 매출0·명목단가 객실(홀드·컴프·행사블럭) 분리 ────────────────────────────
+    # ADR = 매출 ÷ RN 인데 아래 두 부류가 RN 분모를 오염시켜 워크인 ADR을 16~25천원
+    # 까지 끌어내렸다:
+    #   ① 매출 0 홀드/수기 블록 (예: 박수13×객실수500 = RN 6,500 더미)
+    #   ② 매출은 있으나 '박당 단가'가 비정상적으로 낮은 명목/행사 블럭
+    #      (예: 부산국제영화제 객실수1,152×14박 = RN 16,128 인데 박당 5,344원)
+    # 정상 판매의 최저 박당단가는 ~85천원(0.1%ile)이라, 50천원 미만 = 컴프·명목블럭.
+    # 호텔 ADR 표준(판매객실 = 정상 매출 발생 객실)에 맞춰 유효+ (매출0 또는 박당<5만)
+    # 행을 매출/RN/ADR/OCC 집계에서 제외하고, 별도 리스트로만 남겨 '채널·객실수·내용·
+    # 단가'를 표기한다. 취소행(is_valid=False)은 취소분석용으로 rows_out 에 그대로 유지.
+    _nightly = df["총합계"] / df["박수"].clip(lower=1) / df["객실수"].clip(lower=1)
+    zero_mask = df["is_valid"] & ((df["총합계"] == 0) | (_nightly < NOMINAL_RATE_FLOOR))
     zero_holds = []
     for _, r in df[zero_mask].sort_values("RN", ascending=False).iterrows():
+        _rooms = int(r["객실수"]); _nights = int(r["박수"])
+        _ngt = int(round(float(r["총합계"]) / max(_nights, 1) / max(_rooms, 1)))
         zero_holds.append({
             "seg":    r["세그먼트"],
             "ch":     r["채널명"],
             "gn":     (r["투숙객명"] or "(미상)"),
             "rtf":    (r["객실타입원본"] or "(공란)"),
             "st":     r["상태"],
-            "rooms":  int(r["객실수"]),
-            "nights": int(r["박수"]),
+            "rooms":  _rooms,
+            "nights": _nights,
             "rn":     int(r["RN"]),
+            "rev":    int(r["총합계"]),
+            "ngt":    _ngt,                                      # 박당 단가(원)
+            "why":    ("매출0" if r["총합계"] == 0 else "명목단가"),
             "m":      int(r["도착월"]) if pd.notna(r["도착월"]) else None,
             "ad":     r["투숙일ISO"] if pd.notna(r["투숙일ISO"]) else None,
         })
-    df = df[~zero_mask].copy()   # 매출0 유효행 → 메인 집계(rows_out)에서 제외
+    df = df[~zero_mask].copy()   # 매출0·명목단가 유효행 → 메인 집계(rows_out)에서 제외
 
     rows_out = []
     for _, r in df.iterrows():
