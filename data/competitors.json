@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-09-15 08:30:23 KST",
+  "_updated_at": "2026-09-16 08:30:23 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.08.04 - 2026.09.30",
       "discount_pct": 81,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · BBQ 나이트 등 19개",
+      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · BBQ 나이트 등 20개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 19,
+      "campaign_count": 20,
       "campaigns": [
         {
           "title": "[추(秋)캉스] 룸온리 2박",
@@ -58,6 +58,11 @@
         {
           "title": "[추(秋)캉스] ALL-INCLUSIVE 1박",
           "period": "2026.08.20 - 2026.09.30",
+          "discount_pct": 0
+        },
+        {
+          "title": "Yeosu : 섬 그리고 바다",
+          "period": "2026.08.21 - 2026.09.30",
           "discount_pct": 0
         },
         {
@@ -113,7 +118,7 @@
       ],
       "price_min": 90540,
       "price_max": 686418,
-      "promo_count": 27790,
+      "promo_count": 28070,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
@@ -124,14 +129,14 @@
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 6684,
+          "count": 6824,
           "min": 93000,
           "max": 469000,
           "sample": "[환불불가-라스트미닛 특가] 스위트"
         },
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 6651,
+          "count": 6791,
           "min": 90540,
           "max": 469000,
           "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
@@ -148,20 +153,15 @@
     {
       "brand": "롯데리조트",
       "region": "apac",
-      "title": "2026 Art Deal",
-      "period": "예약기간 : 2026.09.02 ~ 2026.09.15",
-      "discount_pct": 32,
+      "title": "Weekday Delight with L.PAY",
+      "period": "예약기간 : 2026.09.14 ~ 2026.10.05",
+      "discount_pct": 0,
       "channel": "롯데리조트 공식 홈페이지",
-      "detail": "객실 최대 32% 할인부터 연박 투숙 혜택까지! · 외 Weekday Delight with L.PAY · Weekday Delight with L.PAY 등 12개",
+      "detail": "주중 객실 무료 업그레이드 + 조식 할인권 + 엘페이·엘포인트 결제 혜택",
       "link": "https://www.lotteresort.com/main/ko/package-event/package/list",
       "campaign_count": 12,
       "campaigns": [
         {
-          "title": "2026 Art Deal",
-          "period": "예약기간 : 2026.09.02 ~ 2026.09.15",
-          "discount_pct": 32
-        },
-        {
           "title": "Weekday Delight with L.PAY",
           "period": "예약기간 : 2026.09.14 ~ 2026.10.05",
           "discount_pct": 0
@@ -194,6 +194,11 @@
         {
           "title": "[OPEN RUN] First Winter",
           "period": "예약기간 : 2026.09.16 ~ 2026.09.18",
+          "discount_pct": 0
+        },
+        {
+          "title": "Fall in ARTVILLAS (밤티)",
+          "period": "예약기간 : 2026.09.16 ~ 2026.10.31",
           "discount_pct": 0
         },
         {
@@ -221,14 +226,19 @@
     {
       "brand": "하이원리조트",
       "region": "central",
-      "title": "한가위 고객감사 프로모션",
+      "title": "정태영삼 지역특산품점 한가위 행사 프로모션",
       "period": "2026-09-18~2026-09-27",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "하이원 프리미엄 스토어 추석맞이 고객감사 프로모션 · 외 한가위 선물 상품 판매 · 26/27 X6+ 시즌패스 1차 사전판매 OPEN! 등 9개",
+      "detail": "풍성한 한가위, 정태영삼의 정성을 선물하세요. · 외 한가위 고객감사 프로모션 · 한가위 선물 상품 판매 등 9개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
       "campaign_count": 9,
       "campaigns": [
+        {
+          "title": "정태영삼 지역특산품점 한가위 행사 프로모션",
+          "period": "2026-09-18~2026-09-27",
+          "discount_pct": 0
+        },
         {
           "title": "한가위 고객감사 프로모션",
           "period": "2026-09-18~2026-09-27",
@@ -268,27 +278,22 @@
           "title": "하이원 앱 신규가입 이벤트",
           "period": "2026-06-17~2027-01-31",
           "discount_pct": 0
-        },
-        {
-          "title": "지역상생&문화관광 활성화 프로젝트 3.0",
-          "period": "2026-06-02~2026-11-30",
-          "discount_pct": 0
         }
       ],
       "price_min": 82148,
       "price_max": 881322,
-      "promo_count": 7153,
+      "promo_count": 7199,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 3887,
+          "count": 3917,
           "min": 107525,
           "max": 830300,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 3266,
+          "count": 3282,
           "min": 82148,
           "max": 881322,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
@@ -334,25 +339,25 @@
       ],
       "price_min": 95055,
       "price_max": 862296,
-      "promo_count": 35782,
+      "promo_count": 36210,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 17034,
+          "count": 17293,
           "min": 109250,
           "max": 739900,
           "sample": "21평 디럭스 마운틴뷰 - 비리뉴얼(초강력특가, 취사가능)"
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 9396,
+          "count": 9494,
           "min": 172636,
           "max": 696000,
           "sample": "Kensington Deluxe Mountain View (C"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 9352,
+          "count": 9423,
           "min": 95055,
           "max": 862296,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
