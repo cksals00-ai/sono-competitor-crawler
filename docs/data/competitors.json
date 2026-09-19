@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-09-17 08:30:26 KST",
+  "_updated_at": "2026-09-20 08:30:09 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -34,6 +34,11 @@
           "title": "여수 시그니처 스테이",
           "period": "2026.07.29 - 2026.10.31",
           "discount_pct": 45
+        },
+        {
+          "title": "리얼 힐링 트립",
+          "period": "2026.09.18 - 2026.10.11",
+          "discount_pct": 0
         },
         {
           "title": "10-11월 제주 골프 패키지",
@@ -109,44 +114,25 @@
           "title": "썸머 in 제주",
           "period": "2026.06.22 - 2026.09.29",
           "discount_pct": 0
-        },
-        {
-          "title": "설악 썸머Pick!",
-          "period": "2026.07.02 - 2026.09.19",
-          "discount_pct": 0
         }
       ],
-      "price_min": 90540,
-      "price_max": 686418,
-      "promo_count": 28690,
+      "price_min": 120540,
+      "price_max": 412000,
+      "promo_count": 460,
       "ota_promos": [
         {
-          "ota": "네이버호텔/야놀자",
-          "count": 9649,
-          "min": 134000,
-          "max": 610000,
-          "sample": "스위트 베드 라이브특가★룸온리 1박 7-8월"
+          "ota": "네이버호텔/TripBToz",
+          "count": 256,
+          "min": 120540,
+          "max": 403760,
+          "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 7134,
-          "min": 93000,
-          "max": 469000,
-          "sample": "[환불불가-라스트미닛 특가] 스위트"
-        },
-        {
-          "ota": "네이버호텔/TripBToz",
-          "count": 7101,
-          "min": 90540,
-          "max": 469000,
-          "sample": "💚라스트미닛💚 스위트 - [환불불가] 룸온리 특가"
-        },
-        {
-          "ota": "네이버호텔/네이버비밀특가",
-          "count": 4806,
-          "min": 113471,
-          "max": 686418,
-          "sample": "스위트 베드 라이브특가★룸온리 1박 7-8월 [체크인]15:0"
+          "count": 204,
+          "min": 123000,
+          "max": 412000,
+          "sample": "스위트 [환불불가-라스트미닛 특가]"
         }
       ]
     },
@@ -182,21 +168,6 @@
           "discount_pct": 0
         },
         {
-          "title": "[OPEN RUN] First Winter",
-          "period": "예약기간 : 2026.09.16 ~ 2026.09.18",
-          "discount_pct": 0
-        },
-        {
-          "title": "[OPEN RUN] First Winter",
-          "period": "예약기간 : 2026.09.16 ~ 2026.09.18",
-          "discount_pct": 0
-        },
-        {
-          "title": "[OPEN RUN] First Winter",
-          "period": "예약기간 : 2026.09.16 ~ 2026.09.18",
-          "discount_pct": 0
-        },
-        {
           "title": "Fall in ARTVILLAS (밤티)",
           "period": "예약기간 : 2026.09.16 ~ 2026.10.31",
           "discount_pct": 0
@@ -220,43 +191,43 @@
           "title": "Smart Choice",
           "period": "예약기간 : 2026.08.12 ~ 2026.12.31",
           "discount_pct": 0
+        },
+        {
+          "title": "Smart Choice",
+          "period": "예약기간 : 2026.08.12 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "ONLY FOR REWARDS",
+          "period": "예약기간 : 2026.07.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "Enjoyful Penthouse",
+          "period": "예약기간 : 2026.09.17 ~ 2026.09.30",
+          "discount_pct": 0
         }
       ]
     },
     {
       "brand": "하이원리조트",
       "region": "central",
-      "title": "2026 하이원 추석 페스타",
-      "period": "2026-09-24~2026-09-27",
+      "title": "추석 연휴기간 즐길거리 안내",
+      "period": "상시",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "하이원에서 준비한 프로그램 안내 · 외 정태영삼 지역특산품점 한가위 행사 프로모션 · 한가위 고객감사 프로모션 등 9개",
+      "detail": "하이원에서 준비한 프로그램과 함께 즐거운 추석 연휴 보내세요. · 외 하이원과 함께 골든위크 · 2026 FALL SEASON RITUAL PROMOTION 등 9개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
       "campaign_count": 9,
       "campaigns": [
         {
-          "title": "2026 하이원 추석 페스타",
-          "period": "2026-09-24~2026-09-27",
+          "title": "추석 연휴기간 즐길거리 안내",
+          "period": "상시",
           "discount_pct": 0
         },
         {
-          "title": "정태영삼 지역특산품점 한가위 행사 프로모션",
-          "period": "2026-09-18~2026-09-27",
-          "discount_pct": 0
-        },
-        {
-          "title": "한가위 고객감사 프로모션",
-          "period": "2026-09-18~2026-09-27",
-          "discount_pct": 0
-        },
-        {
-          "title": "한가위 선물 상품 판매",
-          "period": "2026-09-09~2026-09-24",
-          "discount_pct": 0
-        },
-        {
-          "title": "26/27 X6+ 시즌패스 1차 사전판매 OPEN!",
-          "period": "2026-09-09~2026-09-27",
+          "title": "하이원과 함께 골든위크",
+          "period": "2026-09-19~2026-10-04",
           "discount_pct": 0
         },
         {
@@ -271,32 +242,47 @@
         },
         {
           "title": "2026/27 시즌 하이원 스키 프리미엄 상품 출시",
-          "period": "2026-09-01~2026-09-30",
+          "period": "2026-09-01~2026-10-31",
           "discount_pct": 0
         },
         {
           "title": "영수증 할인이벤트",
           "period": "2026-07-28~2026-12-31",
           "discount_pct": 0
+        },
+        {
+          "title": "하이원 앱 신규가입 이벤트",
+          "period": "2026-06-17~2027-01-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "지역상생&문화관광 활성화 프로젝트 3.0",
+          "period": "2026-06-02~2026-11-30",
+          "discount_pct": 0
+        },
+        {
+          "title": "5월, 행복이 온(ON) 가족 뷔페",
+          "period": "2026-05-23~2026-05-25",
+          "discount_pct": 0
         }
       ],
-      "price_min": 82148,
-      "price_max": 881322,
-      "promo_count": 7301,
+      "price_min": 110055,
+      "price_max": 417971,
+      "promo_count": 162,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 3977,
-          "min": 107525,
-          "max": 830300,
-          "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
+          "count": 102,
+          "min": 110055,
+          "max": 337525,
+          "sample": "마운틴콘도 그랜드 디럭스 MGD 단독특가★추계 운탄고도 케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 3324,
-          "min": 82148,
-          "max": 881322,
-          "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★춘계 운탄고도케이블"
+          "count": 60,
+          "min": 116818,
+          "max": 417971,
+          "sample": "마운틴콘도 그랜드 디럭스 MGD 단독특가★추계 운탄고도 케이블"
         }
       ]
     },
@@ -307,7 +293,7 @@
       "period": "2026.09.27 ~ 2026.12.18",
       "discount_pct": 20,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "단 3박 이상 예약으로! 켄싱턴 설악비치·설악밸리·켄싱턴 호텔 설악에서 쏟아지는 특별 혜택 [3박 이상] 객실 15% 할인(교차투숙 객실 20% 할인) + 7가지 혜택 1회 · 외 LATE SUMMER ESCAPE · 켄싱턴 시그니처 등 5개",
+      "detail": "단 3박 이상 예약으로! 켄싱턴 설악비치·설악밸리·켄싱턴 호텔 설악에서 쏟아지는 특별 혜택 [3박 이상] 객실 15% 할인(교차투숙 객실 20% 할인) + 7가지 혜택 1회 · 외 켄싱턴 시그니처 · YES, KIDS 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
@@ -317,13 +303,13 @@
           "discount_pct": 20
         },
         {
-          "title": "LATE SUMMER ESCAPE",
-          "period": "2026. 08. 16 ~ 2026. 09. 30",
+          "title": "켄싱턴 시그니처",
+          "period": "2026. 09. 01 ~ 2027. 01. 31",
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴 시그니처",
-          "period": "2026. 09. 01 ~ 2027. 01. 31",
+          "title": "YES, KIDS",
+          "period": "2026. 09. 02 ~ 2026. 11. 30",
           "discount_pct": 0
         },
         {
@@ -337,30 +323,30 @@
           "discount_pct": 0
         }
       ],
-      "price_min": 95055,
-      "price_max": 862296,
-      "promo_count": 36572,
+      "price_min": 134454,
+      "price_max": 712989,
+      "promo_count": 312,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 17514,
-          "min": 109250,
-          "max": 739900,
-          "sample": "21평 디럭스 마운틴뷰 - 비리뉴얼(초강력특가, 취사가능)"
-        },
-        {
-          "ota": "네이버호텔/Booking.com",
-          "count": 9561,
-          "min": 172636,
-          "max": 696000,
-          "sample": "Kensington Deluxe Mountain View (C"
+          "count": 200,
+          "min": 139900,
+          "max": 629900,
+          "sample": "21평 디럭스 마운틴뷰 - 비리뉴얼(★단독특가★룸온니, 취사가"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 9497,
-          "min": 95055,
-          "max": 862296,
-          "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
+          "count": 57,
+          "min": 134454,
+          "max": 712989,
+          "sample": "스튜디오 마운틴뷰 - 비리뉴얼(취사가능) [반짝특가] [체크인"
+        },
+        {
+          "ota": "네이버호텔/Booking.com",
+          "count": 55,
+          "min": 190818,
+          "max": 623273,
+          "sample": "Kensington Deluxe Mountain View (C"
         }
       ]
     }
