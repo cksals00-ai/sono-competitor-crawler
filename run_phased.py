@@ -96,33 +96,26 @@ def _today_csv_path() -> Path:
 
 
 def _load_existing_df() -> pd.DataFrame:
-    """오늘 기존 CSV가 있으면 로드, 없으면 어제 CSV에서 fallback.
+    """오늘자 CSV만 로드(같은 날 여러 phase 가 순차적으로 append 하기 위함).
 
-    단일 phase만 실행할 때 다른 OTA 데이터가 누락되지 않도록
-    어제 CSV를 기본 데이터로 사용한다.
+    [2026-09 구조 변경 · 비누적화]
+      과거엔 오늘 파일이 없으면 '어제 CSV 전체'를 base 로 불러와 오늘 크롤분과
+      병합·재저장했다. 이 때문에 매일 전체 히스토리가 통째로 복제되어 일자별
+      파일이 2GB+ 로 비대해졌다(누적본 → 64GB). 이제 각 일자 파일은 '그 날
+      크롤분'만 담는 비누적 구조다(하루 ~30MB).
+      · 같은 날 phase 재실행/이어실행: 오늘 파일이 이미 있으므로 그대로 이어받아
+        _merge_and_save 가 해당 OTA만 교체 → 다른 OTA 유실 없음.
+      · 전일 대비 비교: dashboard 의 load_previous_df(어제 파일 별도 로드)가 담당
+        하므로 오늘 파일에 어제 데이터를 섞을 필요가 없다.
     """
     path = _today_csv_path()
     if path.exists():
         try:
             df = pd.read_csv(path, encoding="utf-8-sig", low_memory=False)
-            logger.info(f"기존 CSV 로드: {path} ({len(df)} 행)")
+            logger.info(f"오늘 CSV 로드(같은 날 phase 병합용): {path} ({len(df)} 행)")
             return df
         except Exception as e:
-            logger.warning(f"기존 CSV 로드 실패 (무시): {e}")
-
-    # 오늘 CSV가 없으면 어제 CSV에서 fallback
-    with open("config.yaml", encoding="utf-8") as f:
-        cfg = yaml.safe_load(f)
-    export_dir = Path(cfg["output"]["export_dir"])
-    yesterday = (datetime.today() - timedelta(days=1)).strftime("%Y%m%d")
-    yesterday_csv = export_dir / cfg["output"]["csv_filename"].format(date=yesterday)
-    if yesterday_csv.exists():
-        try:
-            df = pd.read_csv(yesterday_csv, encoding="utf-8-sig", low_memory=False)
-            logger.info(f"어제 CSV fallback 로드: {yesterday_csv} ({len(df)} 행)")
-            return df
-        except Exception as e:
-            logger.warning(f"어제 CSV 로드 실패 (무시): {e}")
+            logger.warning(f"오늘 CSV 로드 실패 (무시): {e}")
 
     return pd.DataFrame()
 
