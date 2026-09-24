@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-09-24 08:30:16 KST",
+  "_updated_at": "2026-09-25 08:30:10 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -116,23 +116,23 @@
           "discount_pct": 0
         }
       ],
-      "price_min": 90540,
+      "price_min": 78000,
       "price_max": 442000,
-      "promo_count": 1345,
+      "promo_count": 613,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 673,
+          "count": 333,
           "min": 90540,
           "max": 412000,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 672,
-          "min": 123000,
+          "count": 280,
+          "min": 78000,
           "max": 442000,
-          "sample": "스위트 [환불불가-라스트미닛 특가]"
+          "sample": "스탠다드 트윈 [환불불가-라스트미닛 특가]"
         }
       ]
     },
@@ -268,18 +268,18 @@
       ],
       "price_min": 110055,
       "price_max": 630775,
-      "promo_count": 176,
+      "promo_count": 112,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 114,
+          "count": 72,
           "min": 110055,
           "max": 630775,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 단독특가★추계 운탄고도 케이블"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 62,
+          "count": 40,
           "min": 116818,
           "max": 358266,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 단독특가★추계 운탄고도 케이블"
@@ -324,26 +324,26 @@
         }
       ],
       "price_min": 127268,
-      "price_max": 727085,
-      "promo_count": 598,
+      "price_max": 793861,
+      "promo_count": 283,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 441,
+          "count": 204,
           "min": 139900,
           "max": 629900,
           "sample": "21평 디럭스 마운틴뷰 - 비리뉴얼(★단독특가★룸온니, 취사가"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 89,
+          "count": 45,
           "min": 127268,
-          "max": 727085,
+          "max": 793861,
           "sample": "스튜디오 마운틴뷰 - 비리뉴얼(취사가능) [반짝특가] [체크인"
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 68,
+          "count": 34,
           "min": 190818,
           "max": 592104,
           "sample": "Kensington Deluxe Mountain View (C"
