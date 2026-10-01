@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-10-01 08:30:15 KST",
+  "_updated_at": "2026-10-02 08:30:07 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -178,14 +178,19 @@
     {
       "brand": "하이원리조트",
       "region": "central",
-      "title": "2026/27 동계시즌로커 판매",
-      "period": "2026-09-30~2026-11-08",
+      "title": "놓치면 아쉬운, X6+ 시즌패스 1차 앵콜 판매",
+      "period": "2026-10-01~2026-10-07",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "2026/27 동계시즌로커 판매 · 외 하이원 초특가 라이브! 본방사수! · [그랜드테이블] 강원을 품은 풍요 미식 등 9개",
+      "detail": "한 번 더 찾아온 구매 찬스, 원하는 겨울을 지금 선점하세요 · 외 2026/27 동계시즌로커 판매 · 하이원 초특가 라이브! 본방사수! 등 9개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
       "campaign_count": 9,
       "campaigns": [
+        {
+          "title": "놓치면 아쉬운, X6+ 시즌패스 1차 앵콜 판매",
+          "period": "2026-10-01~2026-10-07",
+          "discount_pct": 0
+        },
         {
           "title": "2026/27 동계시즌로커 판매",
           "period": "2026-09-30~2026-11-08",
@@ -224,11 +229,6 @@
         {
           "title": "2026/27 시즌 하이원 스키 프리미엄 상품 출시",
           "period": "2026-09-01~2026-10-31",
-          "discount_pct": 0
-        },
-        {
-          "title": "영수증 할인이벤트",
-          "period": "2026-07-28~2026-12-31",
           "discount_pct": 0
         }
       ]
