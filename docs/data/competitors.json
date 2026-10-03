@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-10-03 08:30:08 KST",
+  "_updated_at": "2026-10-04 08:30:11 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -102,36 +102,29 @@
         }
       ],
       "price_min": 95440,
-      "price_max": 526059,
-      "promo_count": 921,
+      "price_max": 442000,
+      "promo_count": 840,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 346,
+          "count": 311,
           "min": 95440,
           "max": 412000,
           "sample": "⚡라스트미닛⚡스탠다드 트윈 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 323,
+          "count": 286,
           "min": 123000,
           "max": 442000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 250,
+          "count": 243,
           "min": 138260,
           "max": 439519,
           "sample": "스위트 트립토파즈 번쩍특가_룸온리 1박_리조트 10~11월"
-        },
-        {
-          "ota": "네이버호텔/Agoda",
-          "count": 2,
-          "min": 516136,
-          "max": 526059,
-          "sample": "슈페리어 스위트 오션뷰(라이브특가★6월)"
         }
       ]
     },
@@ -177,11 +170,6 @@
           "discount_pct": 0
         },
         {
-          "title": "2026 박물관이 살아있다 vol.5",
-          "period": "예약기간 : 2026.09.09 ~ 2026.10.10",
-          "discount_pct": 0
-        },
-        {
           "title": "Smart Choice",
           "period": "예약기간 : 2026.08.12 ~ 2026.12.31",
           "discount_pct": 0
@@ -199,6 +187,11 @@
         {
           "title": "ONLY FOR REWARDS",
           "period": "예약기간 : 2026.07.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "Happy Waterpark",
+          "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
           "discount_pct": 0
         },
         {
@@ -267,18 +260,18 @@
       ],
       "price_min": 110055,
       "price_max": 450427,
-      "promo_count": 132,
+      "promo_count": 88,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 78,
+          "count": 52,
           "min": 110055,
           "max": 424350,
           "sample": "마운틴콘도 그랜드 디럭스 MGD ★라이브특가★추계 운탄고도 케"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 54,
+          "count": 36,
           "min": 116818,
           "max": 450427,
           "sample": "마운틴콘도 그랜드 디럭스 MGD ★라이브특가★추계 운탄고도 케"
@@ -324,18 +317,18 @@
       ],
       "price_min": 127268,
       "price_max": 966352,
-      "promo_count": 236,
+      "promo_count": 220,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 196,
+          "count": 182,
           "min": 139900,
           "max": 629900,
           "sample": "21평 디럭스 마운틴뷰 - 비리뉴얼(★단독특가★룸온니, 취사가"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 40,
+          "count": 38,
           "min": 127268,
           "max": 966352,
           "sample": "스튜디오 마운틴뷰 - 비리뉴얼(취사가능) [반짝특가] [체크인"
