@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-10-09 08:30:09 KST",
+  "_updated_at": "2026-10-10 08:30:11 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -108,18 +108,18 @@
       ],
       "price_min": 120540,
       "price_max": 442000,
-      "promo_count": 349,
+      "promo_count": 311,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 188,
+          "count": 164,
           "min": 120540,
           "max": 412000,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 161,
+          "count": 147,
           "min": 123000,
           "max": 442000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
@@ -296,11 +296,11 @@
       ],
       "price_min": 127268,
       "price_max": 429900,
-      "promo_count": 239,
+      "promo_count": 217,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 193,
+          "count": 171,
           "min": 129900,
           "max": 429900,
           "sample": "21평 디럭스 마운틴뷰 - 비리뉴얼(★단독특가★룸온니, 취사가"
