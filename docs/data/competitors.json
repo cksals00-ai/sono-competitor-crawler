@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-10-11 08:30:11 KST",
+  "_updated_at": "2026-10-12 08:30:09 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.08.04 - 2026.11.30",
       "discount_pct": 81,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · BBQ 나이트 등 18개",
+      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · BBQ 나이트 등 17개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 18,
+      "campaign_count": 17,
       "campaigns": [
         {
           "title": "[추(秋)캉스] 룸온리 2박",
@@ -34,11 +34,6 @@
           "title": "여수 시그니처 스테이",
           "period": "2026.07.29 - 2026.10.31",
           "discount_pct": 45
-        },
-        {
-          "title": "리얼 힐링 트립",
-          "period": "2026.09.18 - 2026.10.11",
-          "discount_pct": 0
         },
         {
           "title": "10-11월 제주 골프 패키지",
@@ -107,22 +102,22 @@
         }
       ],
       "price_min": 120540,
-      "price_max": 360000,
-      "promo_count": 269,
+      "price_max": 320000,
+      "promo_count": 259,
       "ota_promos": [
         {
-          "ota": "네이버호텔/여기어때",
-          "count": 136,
-          "min": 123000,
-          "max": 360000,
-          "sample": "스위트 [환불불가-라스트미닛 특가]"
+          "ota": "네이버호텔/TripBToz",
+          "count": 135,
+          "min": 120540,
+          "max": 290080,
+          "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
-          "ota": "네이버호텔/TripBToz",
-          "count": 133,
-          "min": 120540,
-          "max": 330000,
-          "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
+          "ota": "네이버호텔/여기어때",
+          "count": 124,
+          "min": 123000,
+          "max": 320000,
+          "sample": "스위트 [환불불가-라스트미닛 특가]"
         }
       ]
     },
@@ -206,7 +201,7 @@
       "period": "2026-10-02~2026-10-31",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "M650 박물관 그랜드 오픈 기념 무료입장 이벤트 · 외 2026/27 동계시즌로커 판매 · 하이원 초특가 라이브! 본방사수! 등 9개",
+      "detail": "M650 박물관 그랜드 오픈 기념 무료입장 이벤트 · 외 2026/27 동계시즌로커 판매 · 추석 연휴기간 즐길거리 안내 등 9개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
       "campaign_count": 9,
       "campaigns": [
@@ -218,16 +213,6 @@
         {
           "title": "2026/27 동계시즌로커 판매",
           "period": "2026-09-30~2026-11-08",
-          "discount_pct": 0
-        },
-        {
-          "title": "하이원 초특가 라이브! 본방사수!",
-          "period": "2026-09-28~2026-10-11",
-          "discount_pct": 0
-        },
-        {
-          "title": "[그랜드테이블] 강원을 품은 풍요 미식",
-          "period": "2026-09-19~2026-10-11",
           "discount_pct": 0
         },
         {
@@ -253,6 +238,16 @@
         {
           "title": "영수증 할인이벤트",
           "period": "2026-07-28~2026-12-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "하이원 앱 신규가입 이벤트",
+          "period": "2026-06-17~2027-01-31",
+          "discount_pct": 0
+        },
+        {
+          "title": "지역상생&문화관광 활성화 프로젝트 3.0",
+          "period": "2026-06-02~2026-11-30",
           "discount_pct": 0
         }
       ]
@@ -296,11 +291,11 @@
       ],
       "price_min": 127268,
       "price_max": 429900,
-      "promo_count": 221,
+      "promo_count": 213,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 175,
+          "count": 167,
           "min": 129900,
           "max": 429900,
           "sample": "21평 디럭스 마운틴뷰 - 비리뉴얼(★단독특가★룸온니, 취사가"
