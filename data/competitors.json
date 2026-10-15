@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-10-15 08:30:09 KST",
+  "_updated_at": "2026-10-16 08:30:11 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -112,21 +112,21 @@
         }
       ],
       "price_min": 120540,
-      "price_max": 296000,
-      "promo_count": 572,
+      "price_max": 330000,
+      "promo_count": 581,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 289,
+          "count": 298,
           "min": 120540,
-          "max": 290080,
+          "max": 330000,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
           "count": 283,
           "min": 123000,
-          "max": 296000,
+          "max": 320000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
         }
       ]
@@ -207,14 +207,24 @@
     {
       "brand": "하이원리조트",
       "region": "central",
-      "title": "M650 박물관 그랜드 오픈 이벤트",
-      "period": "2026-10-02~2026-10-31",
+      "title": "뜨거운 성원에 힘입어, 26/27 X6+시즌패스 2차 판매 OPEN!",
+      "period": "2026-10-12~2026-11-19",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "M650 박물관 그랜드 오픈 기념 무료입장 이벤트 · 외 2026/27 동계시즌로커 판매 · 추석 연휴기간 즐길거리 안내 등 9개",
+      "detail": "판매 차수가 올라갈수록 달라지는 가격, 지금의 기회를 놓치지 마세요. · 외 제2회 운탄고도 소원의길 트레킹 · M650 박물관 그랜드 오픈 이벤트 등 9개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
       "campaign_count": 9,
       "campaigns": [
+        {
+          "title": "뜨거운 성원에 힘입어, 26/27 X6+시즌패스 2차 판매 OPEN!",
+          "period": "2026-10-12~2026-11-19",
+          "discount_pct": 0
+        },
+        {
+          "title": "제2회 운탄고도 소원의길 트레킹",
+          "period": "2026-10-15~2026-10-30",
+          "discount_pct": 0
+        },
         {
           "title": "M650 박물관 그랜드 오픈 이벤트",
           "period": "2026-10-02~2026-10-31",
@@ -249,16 +259,6 @@
           "title": "영수증 할인이벤트",
           "period": "2026-07-28~2026-12-31",
           "discount_pct": 0
-        },
-        {
-          "title": "하이원 앱 신규가입 이벤트",
-          "period": "2026-06-17~2027-01-31",
-          "discount_pct": 0
-        },
-        {
-          "title": "지역상생&문화관광 활성화 프로젝트 3.0",
-          "period": "2026-06-02~2026-11-30",
-          "discount_pct": 0
         }
       ]
     },
@@ -289,7 +289,7 @@
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴호텔 평창 [리워즈 전용] 2026 소비자의 선택",
+          "title": "켄싱턴리조트 제주한림 ThanksFULL",
           "period": "2026.10.15 ~ 2027.02.28",
           "discount_pct": 0
         },
@@ -299,22 +299,29 @@
           "discount_pct": 0
         }
       ],
-      "price_min": 127268,
-      "price_max": 479900,
-      "promo_count": 238,
+      "price_min": 124988,
+      "price_max": 459900,
+      "promo_count": 353,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 195,
+          "count": 213,
           "min": 129900,
-          "max": 479900,
+          "max": 459900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
+          "ota": "네이버호텔/Booking.com",
+          "count": 96,
+          "min": 243409,
+          "max": 447955,
+          "sample": "프리미어 로잔 룸 - 26평, 정원 전망"
+        },
+        {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 43,
-          "min": 127268,
-          "max": 371375,
+          "count": 44,
+          "min": 124988,
+          "max": 424448,
           "sample": "스튜디오 마운틴뷰 - 비리뉴얼(취사가능) [반짝특가] [체크인"
         }
       ]
