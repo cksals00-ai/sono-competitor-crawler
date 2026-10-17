@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-10-17 08:30:10 KST",
+  "_updated_at": "2026-10-18 08:30:12 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -113,18 +113,18 @@
       ],
       "price_min": 120540,
       "price_max": 296000,
-      "promo_count": 468,
+      "promo_count": 451,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 237,
+          "count": 228,
           "min": 120540,
-          "max": 264600,
+          "max": 290080,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 231,
+          "count": 223,
           "min": 123000,
           "max": 296000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
@@ -301,18 +301,18 @@
       ],
       "price_min": 127268,
       "price_max": 557129,
-      "promo_count": 337,
+      "promo_count": 327,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 203,
+          "count": 197,
           "min": 129900,
           "max": 429900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 92,
+          "count": 88,
           "min": 243409,
           "max": 389513,
           "sample": "프리미어 로잔 룸 - 26평, 정원 전망"
