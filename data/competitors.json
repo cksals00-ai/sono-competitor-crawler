@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-10-19 08:30:10 KST",
+  "_updated_at": "2026-10-20 08:30:13 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -112,22 +112,22 @@
         }
       ],
       "price_min": 120540,
-      "price_max": 360000,
-      "promo_count": 454,
+      "price_max": 449000,
+      "promo_count": 512,
       "ota_promos": [
         {
+          "ota": "네이버호텔/TripBToz",
+          "count": 288,
+          "min": 120540,
+          "max": 449000,
+          "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
+        },
+        {
           "ota": "네이버호텔/여기어때",
-          "count": 230,
+          "count": 224,
           "min": 123000,
           "max": 360000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
-        },
-        {
-          "ota": "네이버호텔/TripBToz",
-          "count": 224,
-          "min": 120540,
-          "max": 330000,
-          "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         }
       ]
     },
@@ -158,13 +158,18 @@
           "discount_pct": 0
         },
         {
-          "title": "Fall in ARTVILLAS (밤티)",
+          "title": "Fall in ARTVILLAS",
           "period": "예약기간 : 2026.09.16 ~ 2026.10.31",
           "discount_pct": 0
         },
         {
           "title": "Sunset check-in",
           "period": "예약기간 : 2026.07.27 ~ 2026.11.30",
+          "discount_pct": 0
+        },
+        {
+          "title": "Kids Stay Free",
+          "period": "예약기간 : 2026.10.19 ~ 2026.10.23",
           "discount_pct": 0
         },
         {
@@ -185,11 +190,6 @@
         {
           "title": "Smart Choice",
           "period": "예약기간 : 2026.10.17 ~ 2026.12.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "ONLY FOR REWARDS",
-          "period": "예약기간 : 2026.07.01 ~ 2026.12.31",
           "discount_pct": 0
         },
         {
@@ -301,25 +301,25 @@
       ],
       "price_min": 127268,
       "price_max": 429900,
-      "promo_count": 316,
+      "promo_count": 401,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 192,
+          "count": 239,
           "min": 129900,
           "max": 429900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 84,
+          "count": 120,
           "min": 243409,
           "max": 389513,
           "sample": "프리미어 로잔 룸 - 26평, 정원 전망"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 40,
+          "count": 42,
           "min": 127268,
           "max": 424448,
           "sample": "스튜디오 마운틴뷰 - 비리뉴얼(취사가능) [반짝특가] [체크인"
