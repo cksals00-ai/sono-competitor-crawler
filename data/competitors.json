@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-10-20 08:30:13 KST",
+  "_updated_at": "2026-10-21 08:30:10 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.08.04 - 2026.11.30",
       "discount_pct": 81,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · BBQ 나이트 등 19개",
+      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · BBQ 나이트 등 20개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 19,
+      "campaign_count": 20,
       "campaigns": [
         {
           "title": "[추(秋)캉스] 룸온리 2박",
@@ -34,6 +34,11 @@
           "title": "여수 시그니처 스테이",
           "period": "2026.07.29 - 2026.10.31",
           "discount_pct": 45
+        },
+        {
+          "title": "대천 트래블로그",
+          "period": "2026.10.20 - 2026.12.31",
+          "discount_pct": 0
         },
         {
           "title": "가을 힐링 트립",
@@ -112,21 +117,21 @@
         }
       ],
       "price_min": 120540,
-      "price_max": 449000,
-      "promo_count": 512,
+      "price_max": 440020,
+      "promo_count": 492,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 288,
+          "count": 282,
           "min": 120540,
-          "max": 449000,
+          "max": 440020,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 224,
+          "count": 210,
           "min": 123000,
-          "max": 360000,
+          "max": 296000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
         }
       ]
@@ -134,28 +139,18 @@
     {
       "brand": "롯데리조트",
       "region": "apac",
-      "title": "[OPEN RUN] Winter Family Trip",
-      "period": "예약기간 : 2026.10.16 ~ 2026.10.20",
-      "discount_pct": 0,
+      "title": "2026 Early Winter",
+      "period": "예약기간 : 2026.10.19 ~ 2026.11.01",
+      "discount_pct": 28,
       "channel": "롯데리조트 공식 홈페이지",
-      "detail": "새해 첫 가족여행을 위한 가장 특별한 예약",
+      "detail": "객실 최대 28%의 할인 혜택 · 외 Fall in ARTVILLAS · Sunset check-in 등 12개",
       "link": "https://www.lotteresort.com/main/ko/package-event/package/list",
       "campaign_count": 12,
       "campaigns": [
         {
-          "title": "[OPEN RUN] Winter Family Trip",
-          "period": "예약기간 : 2026.10.16 ~ 2026.10.20",
-          "discount_pct": 0
-        },
-        {
-          "title": "[OPEN RUN] Winter Family Trip",
-          "period": "예약기간 : 2026.10.16 ~ 2026.10.20",
-          "discount_pct": 0
-        },
-        {
-          "title": "[OPEN RUN] Winter Family Trip",
-          "period": "예약기간 : 2026.10.16 ~ 2026.10.20",
-          "discount_pct": 0
+          "title": "2026 Early Winter",
+          "period": "예약기간 : 2026.10.19 ~ 2026.11.01",
+          "discount_pct": 28
         },
         {
           "title": "Fall in ARTVILLAS",
@@ -199,6 +194,16 @@
         },
         {
           "title": "Happy Waterpark",
+          "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "Tasty Holiday",
+          "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "Tasty Holiday",
           "period": "예약기간 : 2026.01.01 ~ 2026.12.31",
           "discount_pct": 0
         }
@@ -300,28 +305,28 @@
         }
       ],
       "price_min": 127268,
-      "price_max": 429900,
-      "promo_count": 401,
+      "price_max": 437716,
+      "promo_count": 397,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 239,
+          "count": 237,
           "min": 129900,
           "max": 429900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 120,
+          "count": 119,
           "min": 243409,
           "max": 389513,
           "sample": "프리미어 로잔 룸 - 26평, 정원 전망"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 42,
+          "count": 41,
           "min": 127268,
-          "max": 424448,
+          "max": 437716,
           "sample": "스튜디오 마운틴뷰 - 비리뉴얼(취사가능) [반짝특가] [체크인"
         }
       ]
