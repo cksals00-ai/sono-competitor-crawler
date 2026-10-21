@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-10-21 08:30:10 KST",
+  "_updated_at": "2026-10-22 08:30:08 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -118,20 +118,20 @@
       ],
       "price_min": 120540,
       "price_max": 440020,
-      "promo_count": 492,
+      "promo_count": 407,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 282,
+          "count": 236,
           "min": 120540,
           "max": 440020,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 210,
+          "count": 171,
           "min": 123000,
-          "max": 296000,
+          "max": 360000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
         }
       ]
@@ -304,29 +304,29 @@
           "discount_pct": 0
         }
       ],
-      "price_min": 127268,
-      "price_max": 437716,
-      "promo_count": 397,
+      "price_min": 124988,
+      "price_max": 449900,
+      "promo_count": 445,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 237,
+          "count": 306,
           "min": 129900,
-          "max": 429900,
+          "max": 449900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 119,
+          "count": 96,
           "min": 243409,
           "max": 389513,
           "sample": "프리미어 로잔 룸 - 26평, 정원 전망"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 41,
-          "min": 127268,
-          "max": 437716,
+          "count": 43,
+          "min": 124988,
+          "max": 382016,
           "sample": "스튜디오 마운틴뷰 - 비리뉴얼(취사가능) [반짝특가] [체크인"
         }
       ]
