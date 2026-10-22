@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-10-22 08:30:08 KST",
+  "_updated_at": "2026-10-23 08:30:13 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -117,19 +117,19 @@
         }
       ],
       "price_min": 120540,
-      "price_max": 440020,
-      "promo_count": 407,
+      "price_max": 449000,
+      "promo_count": 367,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 236,
+          "count": 216,
           "min": 120540,
-          "max": 440020,
+          "max": 449000,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 171,
+          "count": 151,
           "min": 123000,
           "max": 360000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
@@ -274,7 +274,7 @@
       "period": "2026. 10. 15 ~ 2027. 02. 28",
       "discount_pct": 0,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "9년 연속 ‘소비자의 선택’ 수상, 감사의 마음을 가득 담은 특별한 혜택을 준비했습니다. 켄싱턴과 함께 축하해주세요. · 외 뭉쳐야 간다 · 남원예촌 가족愛한옥 등 5개",
+      "detail": "9년 연속 ‘소비자의 선택’ 수상, 감사의 마음을 가득 담은 특별한 혜택을 준비했습니다. 켄싱턴과 함께 축하해주세요. · 외 뭉쳐야 간다 · 켄싱턴리조트 가평 아이랑 호캉스 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
@@ -289,13 +289,13 @@
           "discount_pct": 0
         },
         {
-          "title": "남원예촌 가족愛한옥",
-          "period": "2027.01.01 ~ 2027.12.31",
+          "title": "켄싱턴리조트 가평 아이랑 호캉스",
+          "period": "2026.10.22 ~ 2026.11.30",
           "discount_pct": 0
         },
         {
-          "title": "남원예촌 명품 한옥 힐링",
-          "period": "2027.01.01 ~ 2027.12.31",
+          "title": "켄싱턴리조트 가평 [11월 한정] 플래시 세일",
+          "period": "2026.11.01 ~ 2026.11.30",
           "discount_pct": 0
         },
         {
@@ -304,28 +304,28 @@
           "discount_pct": 0
         }
       ],
-      "price_min": 124988,
+      "price_min": 127268,
       "price_max": 449900,
-      "promo_count": 445,
+      "promo_count": 424,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 306,
+          "count": 274,
           "min": 129900,
           "max": 449900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 96,
+          "count": 104,
           "min": 243409,
-          "max": 389513,
+          "max": 399253,
           "sample": "프리미어 로잔 룸 - 26평, 정원 전망"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 43,
-          "min": 124988,
+          "count": 46,
+          "min": 127268,
           "max": 382016,
           "sample": "스튜디오 마운틴뷰 - 비리뉴얼(취사가능) [반짝특가] [체크인"
         }
