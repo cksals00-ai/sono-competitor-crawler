@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-10-27 08:30:07 KST",
+  "_updated_at": "2026-10-28 08:30:09 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.08.04 - 2026.11.30",
       "discount_pct": 81,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · BBQ 나이트 등 20개",
+      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 여름 & 가을 시즌 제주 롱스테이케이션 · BBQ 나이트 등 22개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 20,
+      "campaign_count": 22,
       "campaigns": [
         {
           "title": "[추(秋)캉스] 룸온리 2박",
@@ -34,6 +34,16 @@
           "title": "여수 시그니처 스테이",
           "period": "2026.07.29 - 2026.10.31",
           "discount_pct": 45
+        },
+        {
+          "title": "전복 정식 Breakfast",
+          "period": "2026.10.27 - 2026.11.29",
+          "discount_pct": 0
+        },
+        {
+          "title": "2박 같은 1박",
+          "period": "2026.10.27 - 2026.11.30",
+          "discount_pct": 0
         },
         {
           "title": "대천 트래블로그",
@@ -118,21 +128,28 @@
       ],
       "price_min": 120540,
       "price_max": 440020,
-      "promo_count": 572,
+      "promo_count": 623,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 314,
+          "count": 378,
           "min": 120540,
           "max": 440020,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 258,
+          "count": 241,
           "min": 123000,
           "max": 360000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
+        },
+        {
+          "ota": "네이버호텔/Agoda",
+          "count": 4,
+          "min": 170674,
+          "max": 186832,
+          "sample": "스탠다드 쿼드(라이브특가★5월)"
         }
       ]
     },
@@ -305,26 +322,26 @@
         }
       ],
       "price_min": 127268,
-      "price_max": 499900,
-      "promo_count": 470,
+      "price_max": 498776,
+      "promo_count": 445,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 300,
+          "count": 282,
           "min": 129900,
-          "max": 499900,
+          "max": 479900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 120,
+          "count": 110,
           "min": 243409,
-          "max": 486916,
+          "max": 389513,
           "sample": "프리미어 로잔 룸 - 26평, 정원 전망"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 50,
+          "count": 53,
           "min": 127268,
           "max": 498776,
           "sample": "스튜디오 마운틴뷰 - 비리뉴얼(취사가능) [반짝특가] [체크인"
