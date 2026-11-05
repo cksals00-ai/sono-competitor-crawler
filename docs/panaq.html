@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>파나크 영덕 | 매출 성과 대시보드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<!--__AUTH__--><script src="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/js/auth.js"></script><!--__AUTH_END__-->
+<style>
+:root{
+  --bg:#0a0e1a; --card:#161b27; --slicer:#1a2035; --bd:#2a3045;
+  --tx:#e8eaf0; --mu:#9aa3b8; --dim:#6b7488;
+  --c1:#4e9de8; --c2:#4ecb8d; --c3:#f5a623; --c4:#a78bfa; --c5:#f472b6;
+  --c6:#f87171; --c7:#4ade80; --c8:#60a5fa; --c9:#fbbf24; --c10:#c084fc;
+  --good:#4ade80; --bad:#f87171; --neutral:#f5a623;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--tx);
+  font-family:'Noto Sans KR',-apple-system,'Apple SD Gothic Neo',sans-serif;
+  font-size:13px;line-height:1.45;-webkit-font-smoothing:antialiased}
+.mono{font-family:'Space Grotesk','Noto Sans KR',monospace;font-variant-numeric:tabular-nums}
+.canvas{max-width:1280px;margin:0 auto;padding:0 16px 60px}
+/*__GSN_CSS__*/
+.gsn{background:#0b0f14;border-bottom:1px solid #1e2530;font-family:'Noto Sans KR',-apple-system,sans-serif;font-size:13px;position:relative;z-index:200}
+.gsn-wrap{max-width:1400px;margin:0 auto;padding:0 20px;height:42px;display:flex;align-items:center}
+.gsn-brand{color:#7a8794;text-decoration:none;font-weight:600;font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;margin-right:24px;padding-right:24px;border-right:1px solid #1e2530}
+.gsn-brand:hover{color:#c9d1d9}.gsn-brand-dot{color:#58a6ff}
+.gsn-links{display:flex;align-items:center;gap:2px;flex:1}
+.gsn-item{color:#8b949e;text-decoration:none;padding:4px 12px;border-radius:6px;white-space:nowrap;font-size:13px;transition:background .15s,color .15s;display:flex;align-items:center;gap:6px}
+.gsn-item:hover{background:#1a2232;color:#c9d1d9}.gsn-item.active{background:#1c2d3f;color:#58a6ff;font-weight:600}
+.gsn-item[style*="display:none"]{display:none!important}
+.gsn-toggle{display:none;background:none;border:none;color:#8b949e;cursor:pointer;padding:5px;border-radius:4px;margin-left:auto}
+@media(max-width:640px){
+  .gsn-links{display:none;flex-direction:column;position:absolute;top:42px;left:0;right:0;background:#0b0f14;border-bottom:1px solid #1e2530;padding:8px 12px;gap:3px;z-index:300}
+  .gsn-links.open{display:flex}.gsn-item{padding:8px 12px}
+  .gsn-toggle{display:flex;align-items:center;justify-content:center}
+}
+/*__GSN_CSS_END__*/
+
+.hdr{position:relative;padding:18px 4px 10px;border-bottom:2px solid var(--bd);margin-bottom:14px}
+.hdr h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
+.hdr h1 .bar{color:var(--c4);margin:0 8px;font-weight:400}
+.copyr{position:absolute;top:6px;right:6px;font-size:10px;color:var(--dim)}
+.pagenav{display:flex;gap:6px;margin-top:12px}
+.pagenav button{background:var(--slicer);border:1px solid var(--bd);color:var(--mu);
+  padding:7px 16px;border-radius:8px;font-size:12.5px;font-weight:500;cursor:pointer;transition:.15s}
+.pagenav button.on{background:linear-gradient(135deg,var(--c1),var(--c8));color:#fff;border-color:transparent}
+.pagenav button:not(.on):hover{border-color:var(--c1);color:var(--tx)}
+
+.filterbar{background:var(--card);border:1px solid var(--bd);border-radius:12px;
+  padding:12px 14px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:12px 14px;align-items:flex-end}
+.fgroup{display:flex;flex-direction:column;gap:4px}
+.fgroup>label{font-size:10.5px;color:var(--mu);font-weight:500;letter-spacing:.3px}
+.slc{position:relative}
+.slc-btn{background:var(--slicer);border:1px solid var(--bd);color:var(--tx);border-radius:8px;
+  padding:7px 12px;min-width:96px;font-size:12px;cursor:pointer;display:flex;justify-content:space-between;
+  align-items:center;gap:8px;white-space:nowrap}
+.slc-btn:hover{border-color:var(--c1)}
+.slc-btn .cnt{color:var(--c1);font-weight:600}
+.slc-btn .arw{color:var(--dim);font-size:10px}
+.slc-panel{display:none;position:absolute;z-index:40;top:calc(100% + 4px);left:0;min-width:100%;
+  max-height:280px;overflow:auto;background:#10162a;border:1px solid var(--bd);border-radius:8px;
+  padding:6px;box-shadow:0 12px 32px rgba(0,0,0,.5)}
+.slc-panel.open{display:block}
+.slc-opt{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:12px;white-space:nowrap}
+.slc-opt:hover{background:var(--slicer)}
+.slc-opt.sel{color:var(--c1)}
+.slc-opt .box{width:14px;height:14px;border:1.5px solid var(--dim);border-radius:4px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:10px}
+.slc-opt.sel .box{background:var(--c1);border-color:var(--c1);color:#04101f}
+.dateinp{background:var(--slicer);border:1px solid var(--bd);color:var(--tx);border-radius:8px;
+  padding:6px 8px;font-size:11.5px;font-family:inherit;color-scheme:dark}
+.freset{background:transparent;border:1px solid var(--bad);color:var(--bad);border-radius:8px;
+  padding:7px 14px;font-size:12px;cursor:pointer;font-weight:500;height:33px}
+.freset:hover{background:var(--bad);color:#fff}
+.fhint{font-size:10px;color:var(--dim);margin-left:auto;align-self:center}
+.crossbar{margin:-6px 0 14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.crossbar:empty{display:none}
+.crosschip{background:rgba(78,157,232,.14);border:1px solid var(--c1);color:var(--c1);border-radius:20px;
+  padding:3px 10px 3px 12px;font-size:11.5px;display:flex;gap:7px;align-items:center;cursor:pointer}
+.crosschip b{font-weight:600} .crosschip .x{color:var(--c1);font-weight:700}
+.crosschip:hover{background:rgba(78,157,232,.25)}
+
+.stitle{font-size:14px;font-weight:700;margin:22px 2px 10px;color:var(--tx);
+  border-left:3px solid var(--c4);padding-left:9px;display:flex;align-items:baseline;gap:10px}
+.stitle .unit{font-size:10.5px;color:var(--mu);font-weight:400}
+
+.kpirow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.kpi{position:relative;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px 16px 14px;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc)}
+.kpi .lab{font-size:11.5px;color:var(--mu);font-weight:500;display:flex;align-items:center;gap:6px}
+.kpi .lab .dot{width:7px;height:7px;border-radius:50%;background:var(--kc)}
+.kpi .val{font-size:26px;font-weight:700;margin-top:8px;letter-spacing:-.5px;color:var(--tx)}
+.kpi .val .u{font-size:13px;color:var(--mu);font-weight:500;margin-left:2px}
+.kpi .sub{font-size:11px;color:var(--dim);margin-top:6px;display:flex;justify-content:space-between}
+.kpi .sub .ach{font-weight:600}
+.kpi .sub .ach.up{color:var(--good)} .kpi .sub .ach.dn{color:var(--bad)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px}
+.panel h3{font-size:12.5px;font-weight:600;color:var(--mu);margin-bottom:10px}
+.chartbox{position:relative;width:100%}
+.chartbox.h300{height:300px} .chartbox.h260{height:260px} .chartbox.h240{height:240px}
+
+table.pivot{width:100%;border-collapse:collapse;font-size:12px}
+.pivot th,.pivot td{padding:7px 9px;text-align:right;border-bottom:1px solid var(--bd)}
+.pivot th{color:var(--mu);font-weight:600;font-size:11px;background:var(--slicer);position:sticky;top:0}
+.pivot th:first-child,.pivot td:first-child{text-align:left}
+.pivot tbody tr{cursor:pointer;transition:.1s}
+.pivot tbody tr:hover{background:var(--slicer)}
+.pivot tbody tr.sel{background:rgba(78,157,232,.16)}
+.pivot tbody tr.sel td:first-child{color:var(--c1);font-weight:600}
+.pivot tfoot td{font-weight:700;border-top:2px solid var(--bd);border-bottom:none;color:var(--tx)}
+.pivot .barcell{position:relative}
+.pivot .barcell .bar{position:absolute;left:0;top:0;bottom:0;background:rgba(78,157,232,.16);z-index:0}
+.pivot .barcell span{position:relative;z-index:1}
+.pivot .dimname{display:flex;align-items:center;gap:7px}
+.pivot .dimname .sw{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+
+.basisbar{display:flex;gap:6px;align-items:center;margin:4px 2px 12px}
+.basisbar .lb{font-size:11px;color:var(--mu);margin-right:4px}
+.basisbar button{background:var(--slicer);border:1px solid var(--bd);color:var(--mu);border-radius:7px;
+  padding:5px 13px;font-size:12px;cursor:pointer}
+.basisbar button.on{background:var(--c1);border-color:var(--c1);color:#04101f;font-weight:600}
+
+.insights{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ins{background:var(--card);border:1px solid var(--bd);border-left:3px solid var(--kc,var(--c3));
+  border-radius:10px;padding:14px 16px}
+.ins .t{font-size:11px;color:var(--mu);margin-bottom:6px}
+.ins .b{font-size:13.5px;font-weight:600;line-height:1.5}
+
+.page{display:none} .page.on{display:block}
+.foot{margin-top:26px;padding-top:14px;border-top:1px solid var(--bd);font-size:10.5px;color:var(--dim);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media(max-width:900px){.kpirow{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.insights{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<!--__GSN__-->
+<nav class="gsn"><div class="gsn-wrap">
+  <a class="gsn-brand" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/"><span class="gsn-brand-dot">◈</span> SONO GS팀</a>
+  <div class="gsn-links" id="gsn-links">
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/" data-gsn="trend">트렌드 리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/gs-strategy-report.html" data-gsn="strategy">전략 리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/otb.html" data-gsn="otb">GS 실적 리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/booking-status.html" data-gsn="booking">Booking Status</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/fcst-trend.html" data-gsn="fcst-trend">FCST 추이</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/action_plan_dashboard.html" data-gsn="action">Action Plan</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/gs-weekly.html" data-gsn="weekly">주간 리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/gs-closing-report.html" data-gsn="closing">마감리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/" data-gsn="monitor">경쟁사 모니터링</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/palatium.html" data-gsn="palatium">팔라티움 현황 리포트</a>
+    <a class="gsn-item active" href="https://cksals00-ai.github.io/sono-competitor-crawler/panaq.html" data-gsn="panaq">파나크 영덕 현황 리포트</a>
+    <a class="gsn-item" href="https://cksals00-ai.github.io/sono-competitor-crawler/external-report.html" data-gsn="external-report">외부 리포트 분석</a>
+  </div>
+  <button class="gsn-toggle" onclick="document.getElementById('gsn-links').classList.toggle('open')" aria-label="메뉴"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+</div></nav>
+<script>(function(){var h=location.href;document.querySelectorAll('.gsn-item[data-gsn]').forEach(function(a){var k=a.getAttribute('data-gsn'),hit=false;if(k==='strategy')hit=h.indexOf('gs-strategy-report.html')!==-1;else if(k==='otb')hit=h.indexOf('otb.html')!==-1;else if(k==='booking')hit=h.indexOf('booking-status.html')!==-1;else if(k==='fcst-trend')hit=h.indexOf('fcst-trend.html')!==-1;else if(k==='action')hit=h.indexOf('action_plan')!==-1;else if(k==='closing')hit=h.indexOf('gs-closing-report.html')!==-1;else if(k==='monitor')hit=h.indexOf('sono-competitor-crawler')!==-1&&h.indexOf('palatium')===-1&&h.indexOf('panaq')===-1&&h.indexOf('external-report')===-1;else if(k==='palatium')hit=h.indexOf('palatium.html')!==-1;else if(k==='panaq')hit=h.indexOf('panaq.html')!==-1;else if(k==='palatium-bi')hit=h.indexOf('palatium-bi.html')!==-1;else if(k==='external-report')hit=h.indexOf('external-report.html')!==-1;if(hit){document.querySelectorAll('.gsn-item.active').forEach(function(x){x.classList.remove('active')});a.classList.add('active');}});})();</script>
+<!--__GSN_END__-->
+<div class="canvas">
+
+  <div class="hdr">
+    <div class="copyr">Copyright © 2026 KIM, CHO and Park. All rights reserved.</div>
+    <h1>파나크 영덕<span class="bar">|</span>매출 성과 대시보드</h1>
+    <div class="pagenav" id="pagenav">
+      <button class="on" data-pg="overview">개요</button>
+      <button data-pg="segment">세그먼트별 상세</button>
+      <button data-pg="etc">기타 상세</button>
+    </div>
+  </div>
+
+  <div class="filterbar" id="filterbar">
+    <div class="fgroup"><label>연도</label><div class="slc" data-dim="y"></div></div>
+    <div class="fgroup"><label>월</label><div class="slc" data-dim="m"></div></div>
+    <div class="fgroup"><label>세그먼트 (요금타입)</label><div class="slc" data-dim="rate"></div></div>
+    <div class="fgroup"><label>채널 (거래처)</label><div class="slc" data-dim="vd"></div></div>
+    <div class="fgroup"><label>객실 (객실타입)</label><div class="slc" data-dim="rtf"></div></div>
+    <div class="fgroup"><label>예약기간</label>
+      <div style="display:flex;gap:5px;align-items:center">
+        <input type="date" class="dateinp" id="bkFrom"><span style="color:var(--dim)">~</span>
+        <input type="date" class="dateinp" id="bkTo">
+      </div>
+    </div>
+    <button class="freset" id="freset">초기화</button>
+    <div class="fhint">** 다중 선택 가능 · 차트/표 클릭 시 상호 필터</div>
+  </div>
+  <div class="crossbar" id="crossbar"></div>
+
+  <!-- 공유 KPI -->
+  <div class="stitle">핵심 성과 지표 (KPI)</div>
+  <div class="kpirow">
+    <div class="kpi" id="k-rn"  style="--kc:var(--c1)"><div class="lab"><span class="dot"></span>판매 RN (룸나이트)</div><div class="val">–</div><div class="sub"></div></div>
+    <div class="kpi" id="k-rev" style="--kc:var(--c2)"><div class="lab"><span class="dot"></span>총 매출</div><div class="val">–</div><div class="sub"></div></div>
+    <div class="kpi" id="k-adr" style="--kc:var(--c3)"><div class="lab"><span class="dot"></span>ADR</div><div class="val">–</div><div class="sub"></div></div>
+    <div class="kpi" id="k-occ" style="--kc:var(--c4)"><div class="lab"><span class="dot"></span>OCC</div><div class="val">–</div><div class="sub"></div></div>
+    <div class="kpi" id="k-rvp" style="--kc:var(--c5)"><div class="lab"><span class="dot"></span>RevPAR</div><div class="val">–</div><div class="sub"></div></div>
+  </div>
+
+  <!-- ══════════ PAGE 1: 개요 ══════════ -->
+  <div class="page on" id="pg-overview">
+    <div class="grid2" style="margin-top:8px">
+      <div>
+        <div class="stitle">세그먼트별 실적 <span class="unit">[RN_실 / 객실수_실 / ADR_천원 / REV_백만원 · VAT 제외]</span></div>
+        <div class="panel"><div style="max-height:264px;overflow:auto"><table class="pivot" id="pv-rate"></table></div></div>
+      </div>
+      <div>
+        <div class="stitle">거래처 실적 <span class="unit">[RN_실 / 객실수_실 / ADR_천원 / REV_백만원]</span></div>
+        <div class="panel"><div style="max-height:264px;overflow:auto"><table class="pivot" id="pv-vd"></table></div></div>
+      </div>
+    </div>
+    <div class="stitle">객실 타입별 실적 <span class="unit">[RN_실 / 객실수_실 / ADR_천원 / REV_백만원 · VAT 제외] · 행 클릭 시 상호 필터</span></div>
+    <div class="panel"><div style="max-height:340px;overflow:auto"><table class="pivot" id="pv-room"></table></div></div>
+    <div class="stitle">프로모션 실적 <span class="unit">[RN_실 / ADR_천원 / REV_백만원] · FIT에 포함된 프로모션 건을 별도 집계</span></div>
+    <div class="panel" id="promo-wrap"><table class="pivot" id="pv-promo"></table></div>
+    <div class="stitle">일자별 예약 현황 <span class="unit">예약일(등록일) 기준 · 판매 객실수</span></div>
+    <div class="panel"><div class="chartbox h300"><canvas id="c-daily"></canvas></div></div>
+    <div class="stitle">투숙일별 예약 현황 <span class="unit">Comp 제외 · RN(막대) + OCC·ADR(선)</span></div>
+    <div class="panel"><div class="chartbox h300"><canvas id="c-stay"></canvas></div></div>
+    <div class="stitle">Insight <span class="unit">유효·비기타 기준 자동 산출</span></div>
+    <div class="insights" id="insights"></div>
+  </div>
+
+  <!-- ══════════ PAGE 2: 세그먼트별 상세 ══════════ -->
+  <div class="page" id="pg-segment">
+    <div class="basisbar"><span class="lb">표시 기준</span>
+      <button class="on" data-basis="rn">판매 RN</button>
+      <button data-basis="room">객실수</button>
+      <button data-basis="rev">매출</button>
+      <button data-basis="cnt">예약건수</button>
+    </div>
+    <div class="grid2">
+      <div><div class="stitle">요금타입 구성</div><div class="panel"><div class="chartbox h260"><canvas id="c-dn-rate"></canvas></div></div></div>
+      <div><div class="stitle">거래처 구성</div><div class="panel"><div class="chartbox h260"><canvas id="c-dn-vd"></canvas></div></div></div>
+    </div>
+    <div class="stitle">월별 요금타입 추이 <span class="unit">누적 막대 + OCC(선)</span></div>
+    <div class="panel"><div class="chartbox h300"><canvas id="c-mo-rate"></canvas></div></div>
+    <div class="grid2">
+      <div><div class="stitle">객실 대분류 × 요금타입</div><div class="panel"><div class="chartbox h260"><canvas id="c-room-rate"></canvas></div></div></div>
+      <div><div class="stitle">월별 거래처 추이</div><div class="panel"><div class="chartbox h260"><canvas id="c-mo-vd"></canvas></div></div></div>
+    </div>
+    <div class="stitle">거래처별 실적 & 취소율 <span class="unit">막대=기준값 · 선=취소율</span></div>
+    <div class="panel"><div class="chartbox h300"><canvas id="c-vd-cxl"></canvas></div></div>
+  </div>
+
+  <!-- ══════════ PAGE 3: 기타 상세 ══════════ -->
+  <div class="page" id="pg-etc">
+    <div class="basisbar"><span class="lb">표시 기준</span>
+      <button class="on" data-basis="rn">판매 RN</button>
+      <button data-basis="room">객실수</button>
+      <button data-basis="rev">매출</button>
+      <button data-basis="cnt">예약건수</button>
+    </div>
+    <div class="grid2">
+      <div><div class="stitle">국적별 실적 <span class="unit">상위 8개국</span></div><div class="panel"><div class="chartbox h260"><canvas id="c-nat"></canvas></div></div></div>
+      <div><div class="stitle">예약 경로 구성</div><div class="panel"><div class="chartbox h260"><canvas id="c-rte"></canvas></div></div></div>
+    </div>
+    <div class="grid2">
+      <div><div class="stitle">리드타임 구간별 <span class="unit">예약→입실 일수</span></div><div class="panel"><div class="chartbox h260"><canvas id="c-lead"></canvas></div></div></div>
+      <div><div class="stitle">뷰타입 × 요금타입</div><div class="panel"><div class="chartbox h260"><canvas id="c-view"></canvas></div></div></div>
+    </div>
+    <div class="stitle">월별 취소 분석 <span class="unit">막대=취소 건수 · 선=취소율</span></div>
+    <div class="panel"><div class="chartbox h300"><canvas id="c-cxl-mo"></canvas></div></div>
+    <div class="stitle">월별 취소 리드타임 <span class="unit">취소 예약의 평균 예약→입실 일수</span></div>
+    <div class="panel"><div class="chartbox h260"><canvas id="c-cxl-lead"></canvas></div></div>
+
+    <div class="stitle">매출0·명목단가 객실 (홀드·컴프·행사블럭) <span class="unit">채널·객실수·내용·단가 표기 · 매출/RN/ADR/OCC 집계에서는 제외 (매출0 또는 박당 5만원 미만 = 컴프·행사블럭, 호텔 ADR 표준)</span></div>
+    <div class="panel"><div id="holds-note" style="font-size:11px;color:var(--dim);margin-bottom:8px"></div><table class="pivot" id="pv-holds-sum"></table></div>
+    <div class="stitle" style="font-size:12.5px;margin-top:8px">상세 <span class="unit">객실수·RN 상위 200건 · 월 필터 연동</span></div>
+    <div class="panel"><div style="max-height:340px;overflow:auto"><table class="pivot" id="pv-holds"></table></div></div>
+  </div>
+
+  <div class="foot">
+    <span id="foot-src"></span>
+    <span>대외비 · 관리자용 — pbix 3페이지 이식판 · Chart.js 렌더</span>
+  </div>
+</div>
+
+<script>
+/* ═══════════ 데이터 (build_palatium_bi.py 주입) ═══════════ */
+let DATA = {rows:[],avail_by_month:{},targets:{},monthly_targets:{},date_range:{}};  // ./data/panaq_data.json.gz 에서 비동기 로드(아래 boot)
+
+/* ═══════════ 유틸 ═══════════ */
+const Q = s => document.querySelector(s);
+let AVAIL = DATA.avail_by_month || {};
+let TGT = DATA.targets || {};
+let MTGT = DATA.monthly_targets || {};
+const DIM_LABEL = {y:'연도', m:'월', rate:'요금타입', vd:'거래처', rtf:'객실타입', nat:'국적', rte:'경로', vw:'뷰타입', rt:'객실대분류', promo:'프로모션'};
+const SW = ['#4e9de8','#4ecb8d','#f5a623','#a78bfa','#f472b6','#f87171','#4ade80','#60a5fa','#fbbf24','#c084fc','#5eead4','#fca5a5'];
+const fmtInt = n => Math.round(n).toLocaleString('ko-KR');
+const daysInMonth = m => new Date(2026, m, 0).getDate();
+const GRID='#232a3f', TICK='#8a93aa';
+
+/* ═══════════ 상태 ═══════════ */
+const F = { y:new Set(), m:new Set(), rate:new Set(), vd:new Set(), rtf:new Set(), bkFrom:null, bkTo:null };
+let CROSS = null;              // {dim, val}
+let PAGE = 'overview';
+let BASIS = 'rn';              // rn | rev | cnt  (기준선택)
+
+/* ═══════════ 필터 ═══════════ */
+function passSlicers(r){
+  if(F.y.size    && !F.y.has(r.y))       return false;
+  if(F.m.size    && !F.m.has(r.m))       return false;
+  if(F.rate.size && !F.rate.has(r.rate)) return false;
+  if(F.vd.size   && !F.vd.has(r.vd))     return false;
+  if(F.rtf.size  && !F.rtf.has(r.rtf))   return false;
+  if(F.bkFrom && (!r.bd || r.bd < F.bkFrom)) return false;
+  if(F.bkTo   && (!r.bd || r.bd > F.bkTo))   return false;
+  return true;
+}
+function passCross(r){ return !CROSS || r[CROSS.dim] === CROSS.val; }
+function filtered(){ return DATA.rows.filter(r => passSlicers(r) && passCross(r)); }
+
+/* ═══════════ 측정값 (DAX 02 이식) ═══════════ */
+const kpiBase = rows => rows.filter(r => r.v);   // 판매(유효) = PMS Sold Rooms 기준(HOUSE USE·매출0 홀드/컴프는 파서에서 제외 → ADR 정합; 매출 발생 MICE·임직원·프로모는 포함)
+const sumRev = rows => rows.reduce((s,r)=>s+r.r,0);
+const sumRN  = rows => rows.reduce((s,r)=>s+r.n,0);
+const sumRC  = rows => rows.reduce((s,r)=>s+(r.fn?r.n:0),0);   // 객실수(예약단위 실수 = PMS 총합계 객실수 개념)
+const ADR    = rows => { const rn=sumRN(rows); return rn? sumRev(rows)/rn : 0; };
+function availRN(){
+  const months = F.m.size ? [...F.m] : [...new Set(DATA.rows.map(r=>r.m).filter(Boolean))];
+  return months.reduce((s,m)=> s + (AVAIL[String(m)]||0), 0);
+}
+const OCC    = rows => { const a=availRN(); return a? sumRN(rows)/a : 0; };
+const RevPAR = rows => { const a=availRN(); return a? sumRev(rows)/a : 0; };
+function scopedTarget(key){
+  if(F.m.size){
+    if(key==='revenue') return [...F.m].reduce((s,m)=>s+(MTGT[String(m)]?.rev||0),0);
+    if(key==='rn')      return [...F.m].reduce((s,m)=>s+(MTGT[String(m)]?.rn ||0),0);
+  }
+  return TGT[key]||0;
+}
+// 기준선택: rows → 선택 기준 스칼라
+const rowMetric = r => BASIS==='rev'? r.r : BASIS==='cnt'? (r.fn||0) : BASIS==='room'? (r.fn?r.n:0) : r.n;
+const basisVal = rows => rows.reduce((s,r)=>s+rowMetric(r),0);
+const BASIS_LABEL = () => BASIS==='rev'?'매출':BASIS==='cnt'?'예약건수':BASIS==='room'?'객실수':'판매 RN';
+
+/* ═══════════ 슬라이서 ═══════════ */
+function distinctVals(dim){
+  const s=new Set(DATA.rows.map(r=>r[dim]).filter(v=>v!==null&&v!==undefined&&v!==''));
+  let arr=[...s];
+  if(dim==='y'||dim==='m') arr.sort((a,b)=>a-b);
+  else { const rev={}; DATA.rows.forEach(r=>{if(r.v)rev[r[dim]]=(rev[r[dim]]||0)+r.r;});
+         arr.sort((a,b)=>(rev[b]||0)-(rev[a]||0)); }
+  return arr;
+}
+function buildSlicer(el){
+  const dim=el.dataset.dim, vals=distinctVals(dim);
+  const btn=document.createElement('div'); btn.className='slc-btn';
+  btn.innerHTML='<span class="txt">전체</span><span class="arw">▼</span>';
+  const panel=document.createElement('div'); panel.className='slc-panel';
+  const conv=v=>(dim==='y'||dim==='m')?Number(v):v;
+  // 전체 선택 토글 (맨 위) — 전체 채움 ↔ 해제. "전체 누르고 하나만 빼기" UX용.
+  const allOpt=document.createElement('div'); allOpt.className='slc-opt slc-all';
+  allOpt.style.borderBottom='1px solid var(--bd)';
+  allOpt.innerHTML='<span class="box"></span><span style="font-weight:600">전체 선택</span>';
+  allOpt.onclick=e=>{ e.stopPropagation();
+    if(F[dim].size>=vals.length){ F[dim].clear(); }
+    else { F[dim].clear(); vals.forEach(v=>F[dim].add(conv(v))); }
+    syncSlicer(el); render(); };
+  panel.appendChild(allOpt);
+  vals.forEach(v=>{ const o=document.createElement('div'); o.className='slc-opt'; o.dataset.v=v;
+    o.innerHTML=`<span class="box"></span><span>${dim==='m'?v+'월':v}</span>`;
+    o.onclick=e=>{ e.stopPropagation(); const k=(dim==='y'||dim==='m')?Number(v):v;
+      F[dim].has(k)?F[dim].delete(k):F[dim].add(k); syncSlicer(el); render(); };
+    panel.appendChild(o); });
+  btn.onclick=e=>{ e.stopPropagation();
+    document.querySelectorAll('.slc-panel.open').forEach(p=>{if(p!==panel)p.classList.remove('open')});
+    panel.classList.toggle('open'); };
+  el.appendChild(btn); el.appendChild(panel); syncSlicer(el);
+}
+function syncSlicer(el){
+  const dim=el.dataset.dim, set=F[dim];
+  const opts=el.querySelectorAll('.slc-opt:not(.slc-all)');
+  opts.forEach(o=>{ const k=(dim==='y'||dim==='m')?Number(o.dataset.v):o.dataset.v;
+    const on=set.has(k); o.classList.toggle('sel',on); o.querySelector('.box').textContent=on?'✓':''; });
+  const allEl=el.querySelector('.slc-all');
+  if(allEl){ const isAll=opts.length>0 && set.size>=opts.length;
+    allEl.classList.toggle('sel',isAll); allEl.querySelector('.box').textContent=isAll?'✓':''; }
+  const t=el.querySelector('.slc-btn .txt');
+  t.innerHTML = set.size===0?'전체':(set.size===1?[...set][0]+(dim==='m'?'월':''):`<span class="cnt">${set.size}</span> 선택`);
+}
+
+/* ═══════════ 크로스필터 ═══════════ */
+function renderCross(){ const bar=Q('#crossbar'); bar.innerHTML='';
+  if(!CROSS) return;
+  const chip=document.createElement('div'); chip.className='crosschip';
+  chip.innerHTML=`<span>${DIM_LABEL[CROSS.dim]||CROSS.dim}: <b>${CROSS.val}</b></span><span class="x">✕</span>`;
+  chip.onclick=()=>{ CROSS=null; render(); }; bar.appendChild(chip); }
+function setCross(dim,val){ CROSS=(CROSS&&CROSS.dim===dim&&CROSS.val===val)?null:{dim,val}; render(); }
+
+/* ═══════════ 차트 레지스트리 ═══════════ */
+const CH={};
+function draw(id,cfg){ if(CH[id])CH[id].destroy(); CH[id]=new Chart(Q('#'+id),cfg); }
+const baseOpts=(extra={})=>({responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{labels:{color:'#cfd5e6',boxWidth:12,font:{size:10.5}}},...(extra.plugins||{})},
+  ...extra});
+const xAxis=(o={})=>({grid:{color:GRID},ticks:{color:TICK,font:{size:10},...o},...(o.stacked!==undefined?{stacked:o.stacked}:{})});
+const yAxis=(o={})=>({grid:{color:GRID},ticks:{color:TICK,font:{size:10}},beginAtZero:true,...o});
+
+/* ═══════════ 공통 집계 ═══════════ */
+function aggDim(rows,dim,topN){
+  const m={}; rows.forEach(r=>{ const k=r[dim]||'(기타)'; m[k]=(m[k]||0)+rowMetric(r); });
+  let arr=Object.entries(m).map(([k,v])=>({k,v})).sort((a,b)=>b.v-a.v);
+  if(topN && arr.length>topN){ const head=arr.slice(0,topN); const tail=arr.slice(topN);
+    head.push({k:'기타',v:tail.reduce((s,x)=>s+x.v,0),_agg:true}); arr=head; }
+  return arr;
+}
+const monthsPresent = () => [...new Set(DATA.rows.map(r=>r.m).filter(Boolean))].sort((a,b)=>a-b);
+
+/* ═══════════ KPI (공유) ═══════════ */
+function renderKPI(){
+  const base=kpiBase(filtered());
+  const rn=sumRN(base),rev=sumRev(base),adr=ADR(base),occ=OCC(base),rvp=RevPAR(base),rc=sumRC(base);
+  setKPI('k-rn', fmtInt(rn),'실',`${fmtInt(scopedTarget('rn'))}`, rn/(scopedTarget('rn')||1), scopedTarget('rn')>0);
+  Q('#k-rn .sub').insertAdjacentHTML('beforeend',
+    `<span style="margin-left:8px;padding:1px 6px;border-radius:4px;background:rgba(78,157,232,.14);color:var(--c1);font-size:11px">객실수 ${fmtInt(rc)}실</span>`);
+  setKPI('k-rev',fmtInt(rev/1e6),'백만',`${fmtInt(scopedTarget('revenue')/1e6)}`, rev/(scopedTarget('revenue')||1), scopedTarget('revenue')>0);
+  setKPI('k-adr',fmtInt(adr/1e3),'천원',`${fmtInt((TGT.adr||0)/1e3)}`, adr/(TGT.adr||1), (TGT.adr||0)>0);
+  setKPI('k-occ',(occ*100).toFixed(1),'%',`${((TGT.occ||0)*100).toFixed(0)}%`, occ/(TGT.occ||1), (TGT.occ||0)>0);
+  setKPI('k-rvp',fmtInt(rvp/1e3),'천원',`${fmtInt((TGT.revpar||0)/1e3)}`, rvp/(TGT.revpar||1), (TGT.revpar||0)>0);
+}
+function setKPI(id,valStr,unit,tgtStr,ach,hasTgt){
+  const c=Q('#'+id); c.querySelector('.val').innerHTML=valStr+(unit?`<span class="u">${unit}</span>`:'');
+  if(hasTgt===false){ c.querySelector('.sub').innerHTML=`<span style="color:var(--mu)">목표 미설정</span>`; return; }
+  const pct=ach*100;
+  c.querySelector('.sub').innerHTML=`<span>목표 ${tgtStr}</span><span class="ach ${pct>=100?'up':'dn'}">달성 ${pct.toFixed(0)}%</span>`;
+}
+
+/* ═══════════ PAGE 1 ═══════════ */
+function renderPromo(){
+  // 프로모션 실적 별도 집계: rate는 FIT로 흡수돼 있지만 promo 필드로 원래 프로모션 건만 뽑아 표기
+  const rows=kpiBase(filtered()).filter(r=>r.promo);
+  const agg={};
+  rows.forEach(r=>{const k=r.promo; (agg[k]=agg[k]||{rn:0,rev:0}); agg[k].rn+=r.n; agg[k].rev+=r.r;});
+  const arr=Object.entries(agg).map(([k,v])=>({k,rn:v.rn,rev:v.rev,adr:v.rn?v.rev/v.rn:0})).sort((a,b)=>b.rev-a.rev);
+  const tbl=Q('#pv-promo');
+  if(!arr.length){ tbl.innerHTML='<tbody><tr><td style="color:var(--dim);padding:14px 6px">해당 조건에 프로모션 실적 없음</td></tr></tbody>'; return; }
+  const T={rn:0,rev:0}; arr.forEach(a=>{T.rn+=a.rn;T.rev+=a.rev});
+  let h='<thead><tr><th>프로모션</th><th>RN</th><th>ADR</th><th>REV</th></tr></thead><tbody>';
+  arr.forEach((a,i)=>{ const sel=(CROSS&&CROSS.dim==='promo'&&CROSS.val===a.k)?' class="sel"':'';
+    h+=`<tr${sel} data-v="${encodeURIComponent(a.k)}"><td><div class="dimname"><span class="sw" style="background:${SW[i%SW.length]}"></span>${a.k} <span class="badge-category" style="background:rgba(245,166,35,.18);color:var(--c3)">PROMO</span></div></td>`
+     +`<td class="mono">${fmtInt(a.rn)}</td><td class="mono">${fmtInt(a.adr/1e3)}</td><td class="mono">${fmtInt(a.rev/1e6)}</td></tr>`; });
+  h+=`</tbody><tfoot><tr><td>합계</td><td class="mono">${fmtInt(T.rn)}</td><td class="mono">${fmtInt((T.rn?T.rev/T.rn:0)/1e3)}</td><td class="mono">${fmtInt(T.rev/1e6)}</td></tr></tfoot>`;
+  tbl.innerHTML=h;
+  tbl.querySelectorAll('tbody tr[data-v]').forEach(tr=>tr.onclick=()=>setCross('promo',decodeURIComponent(tr.dataset.v)));
+}
+function renderPivot(tblId,dim){
+  const rows=kpiBase(filtered()), agg={};
+  rows.forEach(r=>{ const k=r[dim]||'(기타)'; (agg[k]=agg[k]||{rn:0,rev:0,rc:0}); agg[k].rn+=r.n; agg[k].rev+=r.r; agg[k].rc+=(r.fn?r.n:0); });
+  const arr=Object.entries(agg).map(([k,v])=>({k,rn:v.rn,rc:v.rc,rev:v.rev,adr:v.rn?v.rev/v.rn:0})).sort((a,b)=>b.rev-a.rev);
+  const maxRev=Math.max(1,...arr.map(a=>a.rev)); const T={rn:0,rev:0,rc:0}; arr.forEach(a=>{T.rn+=a.rn;T.rev+=a.rev;T.rc+=a.rc});
+  let h=`<thead><tr><th>${DIM_LABEL[dim]}</th><th>RN</th><th>객실수</th><th>ADR</th><th>REV</th></tr></thead><tbody>`;
+  arr.forEach((a,i)=>{ const sel=(CROSS&&CROSS.dim===dim&&CROSS.val===a.k)?' class="sel"':'';
+    h+=`<tr${sel} data-v="${encodeURIComponent(a.k)}"><td><div class="dimname"><span class="sw" style="background:${SW[i%SW.length]}"></span>${a.k}</div></td>`
+     +`<td class="mono">${fmtInt(a.rn)}</td><td class="mono">${fmtInt(a.rc)}</td><td class="mono">${fmtInt(a.adr/1e3)}</td>`
+     +`<td class="barcell"><span class="bar" style="width:${a.rev/maxRev*100}%"></span><span class="mono">${fmtInt(a.rev/1e6)}</span></td></tr>`; });
+  h+=`</tbody><tfoot><tr><td>합계</td><td class="mono">${fmtInt(T.rn)}</td><td class="mono">${fmtInt(T.rc)}</td><td class="mono">${fmtInt((T.rn?T.rev/T.rn:0)/1e3)}</td><td class="mono">${fmtInt(T.rev/1e6)}</td></tr></tfoot>`;
+  const tbl=Q('#'+tblId); tbl.innerHTML=h;
+  tbl.querySelectorAll('tbody tr').forEach(tr=>tr.onclick=()=>setCross(dim,decodeURIComponent(tr.dataset.v)));
+}
+function renderDailyLine(){
+  const rows=kpiBase(filtered()).filter(r=>r.bd), agg={};
+  rows.forEach(r=>agg[r.bd]=(agg[r.bd]||0)+r.n);
+  const labels=Object.keys(agg).sort(), vals=labels.map(d=>agg[d]);
+  draw('c-daily',{type:'line',data:{labels,datasets:[{label:'판매 객실수(RN)',data:vals,
+    borderColor:'#4e9de8',backgroundColor:'rgba(78,157,232,.15)',fill:true,tension:.25,pointRadius:0,borderWidth:2}]},
+    options:baseOpts({scales:{x:xAxis({maxTicksLimit:14}),y:yAxis()}})});
+}
+function renderStayCombo(){
+  const rows=kpiBase(filtered()).filter(r=>r.ad), aggN={},aggR={};
+  rows.forEach(r=>{aggN[r.ad]=(aggN[r.ad]||0)+r.n;aggR[r.ad]=(aggR[r.ad]||0)+r.r;});
+  const labels=Object.keys(aggN).sort();
+  const rn=labels.map(d=>aggN[d]);
+  const occ=labels.map(d=>{const m=Number(d.slice(5,7));const cap=(AVAIL[String(m)]||0)/daysInMonth(m);return cap?aggN[d]/cap*100:0;});
+  const adr=labels.map(d=>aggN[d]?(aggR[d]/aggN[d])/1e3:0);
+  draw('c-stay',{data:{labels,datasets:[
+    {type:'bar',label:'RN',data:rn,backgroundColor:'rgba(78,157,232,.55)',borderColor:'#4e9de8',borderWidth:1,yAxisID:'y',order:3},
+    {type:'line',label:'OCC(%)',data:occ,borderColor:'#4ecb8d',tension:.3,pointRadius:0,borderWidth:2,yAxisID:'y1',order:1},
+    {type:'line',label:'ADR(천원)',data:adr,borderColor:'#f5a623',tension:.3,pointRadius:0,borderWidth:2,borderDash:[5,3],yAxisID:'y2',order:2}]},
+    options:baseOpts({scales:{x:xAxis({maxTicksLimit:16}),
+      y:yAxis({position:'left',title:{display:true,text:'RN',color:TICK,font:{size:10}}}),
+      y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#4ecb8d',font:{size:10},callback:v=>v+'%'},beginAtZero:true},
+      y2:{position:'right',display:false,beginAtZero:true}}})});
+}
+function renderInsights(){
+  const base=kpiBase(filtered()); const box=Q('#insights');
+  const byCh={}; base.forEach(r=>{(byCh[r.ch]=byCh[r.ch]||{rev:0,rn:0});byCh[r.ch].rev+=r.r;byCh[r.ch].rn+=r.n;});
+  let topAdr={ch:'–',adr:0}; Object.entries(byCh).forEach(([ch,v])=>{const a=v.rn?v.rev/v.rn:0; if(v.rn>=10&&a>topAdr.adr)topAdr={ch,adr:a};});
+  const all=filtered(); const cx={};
+  all.forEach(r=>{(cx[r.ch]=cx[r.ch]||{c:0,t:0});cx[r.ch].t+=(r.fn||0);if(r.k)cx[r.ch].c+=(r.fn||0);});
+  let topCxl={ch:'–',rate:0}; Object.entries(cx).forEach(([ch,v])=>{if(v.t>=20){const rt=v.c/v.t;if(rt>topCxl.rate)topCxl={ch,rate:rt};}});
+  // 평균 리드타임 (예약→입실, 날짜 기반). 예약 단위(fn) 집계. ※재방문율은 투숙객명 매칭 불확실로 제외.
+  const leadRows=base.filter(r=>r.lead!=null&&r.fn); const avgLead=leadRows.length?leadRows.reduce((s,r)=>s+r.lead,0)/leadRows.length:0;
+  box.innerHTML=`
+    <div class="ins" style="--kc:var(--c1)"><div class="t">최고 ADR 채널 (RN 10+)</div><div class="b">${topAdr.ch}<br>ADR ₩${fmtInt(topAdr.adr)}</div></div>
+    <div class="ins" style="--kc:var(--bad)"><div class="t">최고 취소율 채널 (예약 20건+)</div><div class="b">${topCxl.ch}<br>취소율 ${(topCxl.rate*100).toFixed(1)}% — 모니터링 필요</div></div>
+    <div class="ins" style="--kc:var(--c2)"><div class="t">평균 리드타임</div><div class="b">${avgLead.toFixed(0)}일<br>예약→입실 평균 · ${fmtInt(leadRows.length)}건 기준</div></div>`;
+}
+
+/* ═══════════ PAGE 2: 세그먼트별 상세 ═══════════ */
+function donut(id,dim,topN){
+  const rows=kpiBase(filtered()); const arr=aggDim(rows,dim,topN); const tot=arr.reduce((s,a)=>s+a.v,0)||1;
+  draw(id,{type:'doughnut',data:{labels:arr.map(a=>a.k),datasets:[{data:arr.map(a=>a.v),
+    backgroundColor:arr.map((a,i)=>SW[i%SW.length]),borderColor:'#161b27',borderWidth:2}]},
+    options:baseOpts({cutout:'55%',plugins:{legend:{position:'right',labels:{color:'#cfd5e6',boxWidth:11,font:{size:10.5}}},
+      tooltip:{callbacks:{label:c=>` ${c.label}: ${fmtInt(c.parsed)} (${(c.parsed/tot*100).toFixed(1)}%)`}}},
+      onClick:(e,el)=>{if(el[0]){const a=arr[el[0].index]; if(!a._agg)setCross(dim,a.k);}}})});
+}
+function monthStack(id,dim,topN,withOCC){
+  const rows=kpiBase(filtered()); const months=monthsPresent();
+  const top=aggDim(rows,dim,topN).map(a=>a.k); const hasEtc=top.includes('기타');
+  const cell={}; rows.forEach(r=>{ let kk=r[dim]||'(기타)'; if(!top.includes(kk)) kk=hasEtc?'기타':null; if(kk===null)return;
+    cell[r.m]=cell[r.m]||{}; cell[r.m][kk]=(cell[r.m][kk]||0)+rowMetric(r); });
+  const datasets=top.map((k,i)=>({type:'bar',label:k,stack:'s',backgroundColor:SW[i%SW.length],borderWidth:0,
+    data:months.map(m=>(cell[m]&&cell[m][k])||0)}));
+  if(withOCC){ datasets.push({type:'line',label:'OCC(%)',yAxisID:'y1',borderColor:'#e8eaf0',borderWidth:2,tension:.3,pointRadius:2,
+    data:months.map(m=>{ const rn=rows.filter(r=>r.m===m).reduce((s,r)=>s+r.n,0); const a=AVAIL[String(m)]||0; return a?rn/a*100:0; })}); }
+  const scales={x:{grid:{color:GRID},ticks:{color:TICK,font:{size:10}},stacked:true},
+    y:yAxis({stacked:true,title:{display:true,text:BASIS_LABEL(),color:TICK,font:{size:10}}})};
+  if(withOCC) scales.y1={position:'right',grid:{drawOnChartArea:false},ticks:{color:'#e8eaf0',font:{size:10},callback:v=>v+'%'},beginAtZero:true};
+  draw(id,{data:{labels:months.map(m=>m+'월'),datasets},options:baseOpts({scales})});
+}
+function catSeriesBar(id,catDim,catOrder,seriDim,seriTopN){
+  const rows=kpiBase(filtered());
+  const series=aggDim(rows,seriDim,seriTopN).map(a=>a.k); const hasEtc=series.includes('기타');
+  const cats=catOrder;
+  const cell={}; rows.forEach(r=>{ const c=r[catDim]||'(기타)'; if(!cats.includes(c))return;
+    let s=r[seriDim]||'(기타)'; if(!series.includes(s)) s=hasEtc?'기타':null; if(s===null)return;
+    cell[c]=cell[c]||{}; cell[c][s]=(cell[c][s]||0)+rowMetric(r); });
+  const datasets=series.map((s,i)=>({label:s,stack:'s',backgroundColor:SW[i%SW.length],data:cats.map(c=>(cell[c]&&cell[c][s])||0)}));
+  draw(id,{type:'bar',data:{labels:cats,datasets},options:baseOpts({scales:{
+    x:{grid:{color:GRID},ticks:{color:TICK,font:{size:10}},stacked:true},y:yAxis({stacked:true})}})});
+}
+function dimWithCancel(id,dim,topN){
+  const base=kpiBase(filtered()), all=filtered();
+  const arr=aggDim(base,dim,topN);
+  const cxl=arr.map(a=>{ const grp=all.filter(r=>(r[dim]||'(기타)')===a.k); const t=grp.reduce((s,r)=>s+(r.fn||0),0),c=grp.reduce((s,r)=>s+(r.k?(r.fn||0):0),0); return t?c/t*100:0; });
+  draw(id,{data:{labels:arr.map(a=>a.k),datasets:[
+    {type:'bar',label:BASIS_LABEL(),data:arr.map(a=>a.v),backgroundColor:'rgba(78,157,232,.55)',borderColor:'#4e9de8',borderWidth:1,yAxisID:'y'},
+    {type:'line',label:'취소율(%)',data:cxl,borderColor:'#f87171',tension:.3,pointRadius:3,borderWidth:2,yAxisID:'y1'}]},
+    options:baseOpts({onClick:(e,el)=>{if(el.length){const a=arr[el[0].index];if(!a._agg)setCross(dim,a.k);}},
+      scales:{x:xAxis(),y:yAxis({title:{display:true,text:BASIS_LABEL(),color:TICK,font:{size:10}}}),
+      y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#f87171',font:{size:10},callback:v=>v+'%'},beginAtZero:true}}})});
+}
+function renderSegment(){
+  donut('c-dn-rate','rate',9);
+  donut('c-dn-vd','vd',9);
+  monthStack('c-mo-rate','rate',6,true);
+  catSeriesBar('c-room-rate','rt',['슈페리어','디럭스','프리미어','프레스티지','프레지덴셜','기타'],'rate',5);
+  monthStack('c-mo-vd','vd',6,false);
+  dimWithCancel('c-vd-cxl','vd',8);
+}
+
+/* ═══════════ PAGE 3: 기타 상세 ═══════════ */
+function simpleBar(id,dim,topN){
+  const rows=kpiBase(filtered()); const arr=aggDim(rows,dim,topN);
+  draw(id,{type:'bar',data:{labels:arr.map(a=>a.k),datasets:[{label:BASIS_LABEL(),data:arr.map(a=>a.v),
+    backgroundColor:arr.map((a,i)=>SW[i%SW.length]),borderWidth:0}]},
+    options:baseOpts({plugins:{legend:{display:false}},
+      onClick:(e,el)=>{if(el.length){const a=arr[el[0].index];if(!a._agg)setCross(dim,a.k);}},
+      scales:{x:xAxis(),y:yAxis()}})});
+}
+function leadBuckets(){
+  const rows=kpiBase(filtered()).filter(r=>r.lead!=null);
+  const B=[['0~7',0,7],['8~30',8,30],['31~90',31,90],['91일+',91,99999]];
+  const vals=B.map(([_,lo,hi])=>rows.filter(r=>r.lead>=lo&&r.lead<=hi).reduce((s,r)=>s+rowMetric(r),0));
+  draw('c-lead',{type:'bar',data:{labels:B.map(b=>b[0]),datasets:[{label:BASIS_LABEL(),data:vals,
+    backgroundColor:['#4e9de8','#4ecb8d','#f5a623','#f472b6'],borderWidth:0}]},
+    options:baseOpts({plugins:{legend:{display:false}},scales:{x:xAxis(),y:yAxis()}})});
+}
+function cancelMonth(){
+  const all=filtered(); const months=monthsPresent();
+  const c=months.map(m=>all.filter(r=>r.m===m&&r.k).reduce((s,r)=>s+(r.fn||0),0));
+  const rate=months.map(m=>{const g=all.filter(r=>r.m===m);const t=g.reduce((s,r)=>s+(r.fn||0),0),cc=g.reduce((s,r)=>s+(r.k?(r.fn||0):0),0);return t?cc/t*100:0;});
+  draw('c-cxl-mo',{data:{labels:months.map(m=>m+'월'),datasets:[
+    {type:'bar',label:'취소 건수',data:c,backgroundColor:'rgba(248,113,113,.55)',borderColor:'#f87171',borderWidth:1,yAxisID:'y'},
+    {type:'line',label:'취소율(%)',data:rate,borderColor:'#fbbf24',tension:.3,pointRadius:3,borderWidth:2,yAxisID:'y1'}]},
+    options:baseOpts({scales:{x:xAxis(),y:yAxis(),
+      y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#fbbf24',font:{size:10},callback:v=>v+'%'},beginAtZero:true}}})});
+}
+function cancelLead(){
+  const all=filtered().filter(r=>r.k&&r.lead!=null); const months=monthsPresent();
+  const avg=months.map(m=>{const g=all.filter(r=>r.m===m);return g.length?g.reduce((s,r)=>s+r.lead,0)/g.length:0;});
+  draw('c-cxl-lead',{type:'bar',data:{labels:months.map(m=>m+'월'),datasets:[{label:'평균 취소 리드타임(일)',data:avg,
+    backgroundColor:'#a78bfa',borderWidth:0}]},options:baseOpts({plugins:{legend:{display:false}},scales:{x:xAxis(),y:yAxis()}})});
+}
+function renderHolds(){
+  const sumEl=Q('#pv-holds-sum'), detEl=Q('#pv-holds'), note=Q('#holds-note');
+  if(!sumEl||!detEl) return;
+  let hs=(DATA.zero_rev_holds||[]);
+  if(F.m.size) hs=hs.filter(h=>F.m.has(h.m));
+  if(!hs.length){
+    note.textContent='';
+    sumEl.innerHTML='<tbody><tr><td style="color:var(--dim);padding:12px 6px">해당 조건에 매출 0 객실 없음</td></tr></tbody>';
+    detEl.innerHTML=''; return;
+  }
+  // 채널별 요약 (건수 / 객실수 / RN참고)
+  const g={}; hs.forEach(h=>{ (g[h.ch]=g[h.ch]||{c:0,rooms:0,rn:0}); g[h.ch].c++; g[h.ch].rooms+=h.rooms; g[h.ch].rn+=h.rn; });
+  const gs=Object.entries(g).map(([k,v])=>({k,...v})).sort((a,b)=>b.rn-a.rn);
+  const TT={c:0,rooms:0,rn:0}; gs.forEach(x=>{TT.c+=x.c;TT.rooms+=x.rooms;TT.rn+=x.rn;});
+  note.innerHTML=`총 <b>${fmtInt(TT.c)}</b>건 · 객실수 <b>${fmtInt(TT.rooms)}</b>실 · 점유참고 RN <b>${fmtInt(TT.rn)}</b> — 매출0 또는 박당단가 5만원 미만(컴프·명목 행사블럭)이라 ADR 왜곡 방지 위해 <b>집계에서 제외</b>됨.`;
+  let sh='<thead><tr><th>채널</th><th>건수</th><th>객실수</th><th>RN(참고)</th></tr></thead><tbody>';
+  gs.forEach((x,i)=>{ sh+=`<tr><td><div class="dimname"><span class="sw" style="background:${SW[i%SW.length]}"></span>${x.k}</div></td>`
+    +`<td class="mono">${fmtInt(x.c)}</td><td class="mono">${fmtInt(x.rooms)}</td><td class="mono">${fmtInt(x.rn)}</td></tr>`; });
+  sh+=`</tbody><tfoot><tr><td>합계</td><td class="mono">${fmtInt(TT.c)}</td><td class="mono">${fmtInt(TT.rooms)}</td><td class="mono">${fmtInt(TT.rn)}</td></tr></tfoot>`;
+  sumEl.innerHTML=sh;
+  // 상세 (객실수·RN 큰 순 상위 200)
+  const det=[...hs].sort((a,b)=>(b.rn-a.rn)||(b.rooms-a.rooms)).slice(0,200);
+  let dh='<thead><tr><th>세그</th><th>채널</th><th>객실타입/내용</th><th>투숙객명</th><th>상태</th><th>사유</th><th>박수</th><th>객실수</th><th>RN</th><th>단가(천원)</th><th>투숙일</th></tr></thead><tbody>';
+  det.forEach(x=>{ const wc=x.why==='매출0'?'var(--dim)':'var(--c3)';
+    dh+=`<tr><td>${x.seg}</td><td>${x.ch}</td><td>${x.rtf}</td><td>${x.gn}</td><td>${x.st}</td>`
+    +`<td style="color:${wc}">${x.why||''}</td>`
+    +`<td class="mono">${fmtInt(x.nights)}</td><td class="mono">${fmtInt(x.rooms)}</td><td class="mono">${fmtInt(x.rn)}</td><td class="mono">${fmtInt((x.ngt||0)/1e3)}</td><td class="mono">${x.ad||'—'}</td></tr>`; });
+  if(hs.length>200) dh+=`<tr><td colspan="11" style="color:var(--dim)">… 외 ${fmtInt(hs.length-200)}건 (객실수·RN 상위 200건만 표시)</td></tr>`;
+  dh+='</tbody>'; detEl.innerHTML=dh;
+}
+function renderEtc(){
+  simpleBar('c-nat','nat',8);
+  donut('c-rte','rte',6);
+  leadBuckets();
+  catSeriesBar('c-view','vw',['오션뷰','밸리/포레스트뷰','기타'],'rate',5);
+  cancelMonth();
+  cancelLead();
+  renderHolds();
+}
+
+/* ═══════════ 렌더 디스패치 ═══════════ */
+function render(){
+  renderKPI(); renderCross();
+  if(PAGE==='overview'){ renderPivot('pv-rate','rate'); renderPivot('pv-vd','vd'); renderPivot('pv-room','rtf'); renderPromo(); renderDailyLine(); renderStayCombo(); renderInsights(); }
+  else if(PAGE==='segment') renderSegment();
+  else if(PAGE==='etc') renderEtc();
+}
+function switchPage(pg){
+  PAGE=pg;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  Q('#pg-'+pg).classList.add('on');
+  document.querySelectorAll('#pagenav button').forEach(b=>b.classList.toggle('on',b.dataset.pg===pg));
+  render();
+}
+
+/* ═══════════ 초기화 ═══════════ */
+function init(){
+  document.querySelectorAll('.slc[data-dim]').forEach(buildSlicer);
+  Q('#bkFrom').onchange=e=>{F.bkFrom=e.target.value||null;render();};
+  Q('#bkTo').onchange=e=>{F.bkTo=e.target.value||null;render();};
+  const bk=DATA.book_date_range||{};
+  if(bk.min){Q('#bkFrom').min=bk.min;Q('#bkTo').min=bk.min;} if(bk.max){Q('#bkFrom').max=bk.max;Q('#bkTo').max=bk.max;}
+  Q('#freset').onclick=()=>{['y','m','rate','vd','rtf'].forEach(d=>F[d].clear());F.bkFrom=F.bkTo=null;CROSS=null;
+    Q('#bkFrom').value='';Q('#bkTo').value='';document.querySelectorAll('.slc[data-dim]').forEach(syncSlicer);render();};
+  document.querySelectorAll('#pagenav button').forEach(b=>b.onclick=()=>switchPage(b.dataset.pg));
+  document.querySelectorAll('.basisbar button').forEach(b=>b.onclick=()=>{
+    BASIS=b.dataset.basis; document.querySelectorAll('.basisbar button').forEach(x=>x.classList.toggle('on',x.dataset.basis===BASIS)); render();});
+  document.addEventListener('click',()=>document.querySelectorAll('.slc-panel.open').forEach(p=>p.classList.remove('open')));
+  const dr=DATA.date_range||{};
+  Q('#foot-src').textContent=`투숙 ${dr.min||''}~${dr.max||''} · 생성 ${DATA.generated_at||''}`+(DATA.business_plan_source?` · 목표: ${DATA.business_plan_source}`:'');
+  render();
+}
+// 데이터는 ./data/panaq_data.json.gz(gzip)에서 비동기 로드 후 초기화 — 69MB 인라인 대신 2.5MB gz fetch.
+(async function boot(){
+  try{
+    const res = await fetch('./data/panaq_data.json.gz?t='+Date.now(), {cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const ds = res.body.pipeThrough(new DecompressionStream('gzip'));
+    DATA = JSON.parse(await new Response(ds).text());
+  }catch(e){ console.error('panaq 데이터 로드 실패:', e);
+    const el=document.getElementById('foot-src'); if(el) el.textContent='데이터 로드 실패: '+e.message; }
+  AVAIL = DATA.avail_by_month||{}; TGT = DATA.targets||{}; MTGT = DATA.monthly_targets||{};
+  init();
+  // 다년(24/25/26) — 기본 연도는 최근 연도. (전체 선택 시 가용이 단년 월합산 기준이라 OCC 과다 표기)
+  try{ const yrs=[...new Set(DATA.rows.map(r=>r.y).filter(Boolean))].sort((a,b)=>a-b);
+    if(yrs.length){ F.y=new Set([yrs[yrs.length-1]]);
+      document.querySelectorAll('.slc[data-dim="y"]').forEach(syncSlicer); render(); } }catch(e){}
+})();
+</script>
+</body>
+</html>
