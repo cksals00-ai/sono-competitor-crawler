@@ -670,7 +670,10 @@ function init(){
   init();
   // 다년(24/25/26) — 기본 연도는 최근 연도. (전체 선택 시 가용이 단년 월합산 기준이라 OCC 과다 표기)
   try{ const yrs=[...new Set(DATA.rows.map(r=>r.y).filter(Boolean))].sort((a,b)=>a-b);
-    if(yrs.length){ F.y=new Set([yrs[yrs.length-1]]);
+    // 기본 연도 = 오늘(현재 달력연도) 이하 최신. 미래 예약(2027 도착)·장기블록이 있어도 빈 해로 안 빠지게.
+    const curY=new Date().getFullYear();
+    const def=yrs.filter(y=>y<=curY).pop() || yrs[yrs.length-1];
+    if(def){ F.y=new Set([def]);
       document.querySelectorAll('.slc[data-dim="y"]').forEach(syncSlicer); render(); } }catch(e){}
 })();
 </script>
