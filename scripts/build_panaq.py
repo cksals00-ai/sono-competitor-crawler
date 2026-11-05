@@ -98,11 +98,28 @@ def load_panaq_targets(data):
     def _f(v):
         try: return float(v or 0)
         except (TypeError, ValueError): return 0.0
+    def _cell(ri, ci):
+        r = rows[ri - 1] if 0 < ri <= len(rows) else ()
+        return _f(r[ci]) if len(r) > ci else 0.0
+    # Grand Total 기준 세그 행 오프셋(RN=col5·REV=col9 千원):
+    #   Membership Total=-12 · Group Total=-8 · FIT Homepage=-7 · FIT Total=-2  (COMP 제외)
+    #   파나크 대시보드 세그 매핑: 회원=Membership · 인바운드=Group · 홈페이지(다이렉트)=FIT Homepage
+    #                            · FIT(OTA)=FIT Total − Homepage(=OTA+G-OTA+제휴+기타)
+    SEG_MAP = {  # 표시세그: (RN식, REV식)  식 = (총합offset, 차감offset or None)
+        "회원":            (-12, None),
+        "인바운드":         (-8,  None),
+        "홈페이지(다이렉트)":  (-7,  None),
+        "FIT(OTA)":        (-2,  -7),      # FIT Total − Homepage
+    }
     m_rn, m_rev = [], []
+    seg_m = {s: [] for s in SEG_MAP}        # 세그별 월 [ {rn,rev}, … 12 ]
     for ri in _GT_ROWS:
-        r = rows[ri - 1] if ri - 1 < len(rows) else ()
-        m_rn.append(_f(r[5]) if len(r) > 5 else 0.0)
-        m_rev.append(_f(r[9]) if len(r) > 9 else 0.0)   # 千원
+        m_rn.append(_cell(ri, 5))
+        m_rev.append(_cell(ri, 9))          # 千원
+        for s, (o1, o2) in SEG_MAP.items():
+            rn = _cell(ri + o1, 5) - (_cell(ri + o2, 5) if o2 is not None else 0)
+            rv = _cell(ri + o1, 9) - (_cell(ri + o2, 9) if o2 is not None else 0)
+            seg_m[s].append({"rn": int(round(rn)), "rev": round(rv * 1000)})   # 원
     ann_rn = int(round(sum(m_rn)))
     ann_rev = round(sum(m_rev) * 1000)                   # 원
     if ann_rn <= 0 or ann_rev <= 0:
@@ -118,6 +135,9 @@ def load_panaq_targets(data):
     }
     mtgt = {str(i + 1): {"rev": round(m_rev[i] * 1000), "rn": int(round(m_rn[i]))}
             for i in range(12)}
+    # 세그 월별 목표 {세그: {"1":{rn,rev}, …}}
+    seg_tgt = {s: {str(i + 1): seg_m[s][i] for i in range(12)} for s in SEG_MAP}
+    data["seg_targets"] = seg_tgt
     return tgt, mtgt, f"{os.path.basename(path)} · 파나크 영덕"
 
 
@@ -196,6 +216,9 @@ def build():
     plan_arg = sys.argv[2] if len(sys.argv) > 2 else None
 
     if raw_dir:
+        # ⚠ PII 스크럽 안 함: 투숙객명은 단체예약 요약/상세 dedup(_gk)에 필요 —
+        #   비우면 같은 날짜 예약이 한 그룹으로 뭉쳐 대량 유실(-19% RN). 원본은 이름 유지하되
+        #   gs repo panaq_db는 gitignore로 공개 차단 + 출력(rows/zero_holds)은 이름 미포함.
         print(f"→ 예약 raw 파싱: {raw_dir}")
         data = parse(raw_dir)
     elif os.path.exists(JSON_OUT):

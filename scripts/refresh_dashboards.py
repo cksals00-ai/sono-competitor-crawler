@@ -30,6 +30,11 @@ KST = timezone(timedelta(hours=9))
 PALATIUM_DIR  = Path(__file__).resolve().parent.parent          # sono-competitor-crawler/
 PALATIUM_SCR  = PALATIUM_DIR / "scripts"
 PALATIUM_DB   = Path("/Users/chanminpark/Desktop/gs_daily_trend_news_public_temp/data/palatium_db")
+# 파나크 예약현황(매일 재export) — Desktop/Projects 체크아웃 중 존재하는 쪽
+PANAQ_DB      = next((p for p in [
+    Path("/Users/chanminpark/Desktop/gs_daily_trend_news_public_temp/data/panaq_db"),
+    Path("/Users/chanminpark/Projects/gs_daily_trend_news_public_temp/data/panaq_db"),
+] if p.exists()), Path("/Users/chanminpark/Projects/gs_daily_trend_news_public_temp/data/panaq_db"))
 
 TREND_DIR     = Path("/Users/chanminpark/Desktop/gs_daily_trend_news_public_temp")
 TREND_SCR     = TREND_DIR / "scripts"
@@ -90,6 +95,22 @@ def run_palatium() -> bool:
     return ok
 
 
+def run_panaq() -> bool:
+    step("[1b/2] 파나크 영덕 리포트 갱신")
+    build_pq = PALATIUM_SCR / "build_panaq.py"
+    if not PANAQ_DB.exists():
+        logger.warning(f"파나크 DB 디렉터리 없음: {PANAQ_DB} — 스킵")
+        return True   # 데이터 없으면 스킵(실패 아님)
+    if not build_pq.exists():
+        logger.warning(f"build_panaq.py 없음: {build_pq}")
+        return False
+    # build_panaq이 PII 스크럽→parse→gz/HTML 빌드까지 수행(인자=raw_dir)
+    ok = run([sys.executable, str(build_pq), str(PANAQ_DB)], cwd=PALATIUM_DIR)
+    if ok:
+        ok &= _git_push(PALATIUM_DIR)
+    return ok
+
+
 # 트렌드 리포트 파이프라인(run_trend)은 제거됨 — gs repo의 host_daily_crawl.sh(05:00)+
 # GitHub Actions가 온북·트렌드 갱신을 전담한다. 과거 이 단계는 db_to_notes.py(→generate_insights.py로
 # 리네임됨) 부재로 매일 실패했고, gs repo로의 이중 push만 유발하는 중복 파이프라인이었다.
@@ -134,6 +155,7 @@ def main() -> None:
     logger.info("=" * 60)
 
     pal_ok = run_palatium()
+    pq_ok = run_panaq()
     # 트렌드 단계는 gs repo의 host_daily_crawl.sh(05:00)+GitHub Actions가 전담하므로 제거.
     # (과거 db_to_notes.py→generate_insights.py 리네임 이후 이 단계가 매일 실패했고,
     #  중복 파이프라인이라 gs repo로의 이중 push만 유발했음.)
@@ -143,10 +165,11 @@ def main() -> None:
     logger.info("=" * 60)
     logger.info(f"완료  소요: {elapsed}초")
     logger.info(f"  팔라티움: {'✓' if pal_ok else '✗'}")
+    logger.info(f"  파나크:   {'✓' if pq_ok else '✗'}")
     logger.info("  트렌드:   ⏭ skip (gs host_daily_crawl 전담)")
     logger.info("=" * 60)
 
-    if not pal_ok:
+    if not (pal_ok and pq_ok):
         sys.exit(1)
 
 

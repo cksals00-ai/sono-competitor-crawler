@@ -211,6 +211,8 @@ table.pivot{width:100%;border-collapse:collapse;font-size:12px}
         <div class="panel"><div style="max-height:264px;overflow:auto"><table class="pivot" id="pv-vd"></table></div></div>
       </div>
     </div>
+    <div class="stitle">세그먼트 목표 대비 <span class="unit">[실적 RN / 목표 RN / 달성% · 매출 백만원] · 사업계획 '파나크 영덕' 세그목표(2026) — 회원=소노회원+D멤버스 · FIT(OTA)=OTA+G-OTA · 홈페이지=다이렉트 · 인바운드=단체</span></div>
+    <div class="panel"><div style="overflow:auto"><table class="pivot" id="pv-segtgt"></table></div></div>
     <div class="stitle">객실 타입별 실적 <span class="unit">[RN_실 / 객실수_실 / ADR_천원 / REV_백만원 · VAT 제외] · 행 클릭 시 상호 필터</span></div>
     <div class="panel"><div style="max-height:340px;overflow:auto"><table class="pivot" id="pv-room"></table></div></div>
     <div class="stitle">프로모션 실적 <span class="unit">[RN_실 / ADR_천원 / REV_백만원] · FIT에 포함된 프로모션 건을 별도 집계</span></div>
@@ -285,6 +287,7 @@ let DATA = {rows:[],avail_by_month:{},targets:{},monthly_targets:{},date_range:{
 /* ═══════════ 유틸 ═══════════ */
 const Q = s => document.querySelector(s);
 let AVAIL = DATA.avail_by_month || {};
+let AVAILYM = DATA.avail_ym || {};
 let TGT = DATA.targets || {};
 let MTGT = DATA.monthly_targets || {};
 const DIM_LABEL = {y:'연도', m:'월', rate:'요금타입', vd:'거래처', rtf:'객실타입', nat:'국적', rte:'경로', vw:'뷰타입', rt:'객실대분류', promo:'프로모션'};
@@ -320,8 +323,17 @@ const sumRN  = rows => rows.reduce((s,r)=>s+r.n,0);
 const sumRC  = rows => rows.reduce((s,r)=>s+(r.fn?r.n:0),0);   // 객실수(예약단위 실수 = PMS 총합계 객실수 개념)
 const ADR    = rows => { const rn=sumRN(rows); return rn? sumRev(rows)/rn : 0; };
 function availRN(){
-  const months = F.m.size ? [...F.m] : [...new Set(DATA.rows.map(r=>r.m).filter(Boolean))];
-  return months.reduce((s,m)=> s + (AVAIL[String(m)]||0), 0);
+  // 연-월별 가용 합산 → 연도 정합(전체 연도 선택 시도 OCC 과다 안 됨). avail_ym 없으면 월 기준 폴백.
+  const yrs = F.y.size ? [...F.y] : [...new Set(DATA.rows.map(r=>r.y).filter(Boolean))];
+  const mos = F.m.size ? new Set([...F.m]) : null;
+  if(AVAILYM && Object.keys(AVAILYM).length){
+    let s=0;
+    for(const k in AVAILYM){ const p=k.split('-'); const y=+p[0], m=+p[1];
+      if(yrs.includes(y) && (!mos || mos.has(m))) s+=AVAILYM[k]; }
+    return s;
+  }
+  const months = mos ? [...mos] : [...new Set(DATA.rows.map(r=>r.m).filter(Boolean))];
+  return months.reduce((s,m)=> s + (AVAIL[String(m)]||0), 0) * (yrs.length||1);
 }
 const OCC    = rows => { const a=availRN(); return a? sumRN(rows)/a : 0; };
 const RevPAR = rows => { const a=availRN(); return a? sumRev(rows)/a : 0; };
@@ -421,6 +433,27 @@ function renderKPI(){
   setKPI('k-adr',fmtInt(adr/1e3),'천원',`${fmtInt((TGT.adr||0)/1e3)}`, adr/(TGT.adr||1), (TGT.adr||0)>0);
   setKPI('k-occ',(occ*100).toFixed(1),'%',`${((TGT.occ||0)*100).toFixed(0)}%`, occ/(TGT.occ||1), (TGT.occ||0)>0);
   setKPI('k-rvp',fmtInt(rvp/1e3),'천원',`${fmtInt((TGT.revpar||0)/1e3)}`, rvp/(TGT.revpar||1), (TGT.revpar||0)>0);
+}
+function renderSegTarget(){
+  const tbl=Q('#pv-segtgt'); if(!tbl) return;
+  const ST=DATA.seg_targets||{};
+  if(!Object.keys(ST).length){ tbl.innerHTML='<tbody><tr><td style="padding:10px;color:var(--mu)">목표 미설정 (사업계획 파나크 영덕 시트 필요)</td></tr></tbody>'; return; }
+  const G=s=>(s==='소노회원'||s==='D-멤버스')?'회원':(ST[s]?s:null);  // 실적세그→목표그룹
+  const months=F.m.size?[...F.m].map(String):null;
+  const base=kpiBase(filtered()); const aRN={},aRev={};
+  base.forEach(r=>{const g=G(r.seg); if(!g)return; aRN[g]=(aRN[g]||0)+r.n; aRev[g]=(aRev[g]||0)+r.r;});
+  const sumT=(g,key)=>{const mm=ST[g]||{}; const ks=months||Object.keys(mm); let s=0; ks.forEach(k=>{if(mm[k])s+=mm[k][key]||0;}); return s;};
+  const order=['회원','FIT(OTA)','홈페이지(다이렉트)','인바운드'];
+  const y2026=!F.y.size||F.y.has(2026);
+  let h='<thead><tr><th style="text-align:left">세그먼트</th><th>실적 RN</th><th>목표 RN</th><th>달성</th><th>실적 매출</th><th>목표 매출</th><th>달성</th></tr></thead><tbody>';
+  let TaR=0,TtR=0,Tar=0,Ttr=0;
+  order.forEach(g=>{const a=Math.round(aRN[g]||0),t=sumT(g,'rn'),ar=aRev[g]||0,tr=sumT(g,'rev');
+    TaR+=a;TtR+=t;Tar+=ar;Ttr+=tr;
+    const p1=t?a/t*100:0,p2=tr?ar/tr*100:0;
+    h+=`<tr><td style="text-align:left">${g}</td><td>${fmtInt(a)}</td><td>${fmtInt(t)}</td><td class="${p1>=100?'up':'dn'}">${p1.toFixed(0)}%</td><td>${fmtInt(ar/1e6)}</td><td>${fmtInt(tr/1e6)}</td><td class="${p2>=100?'up':'dn'}">${p2.toFixed(0)}%</td></tr>`;});
+  h+=`<tr style="font-weight:700;border-top:2px solid var(--bd)"><td style="text-align:left">합계</td><td>${fmtInt(TaR)}</td><td>${fmtInt(TtR)}</td><td class="${TtR&&TaR>=TtR?'up':'dn'}">${TtR?(TaR/TtR*100).toFixed(0):0}%</td><td>${fmtInt(Tar/1e6)}</td><td>${fmtInt(Ttr/1e6)}</td><td class="${Ttr&&Tar>=Ttr?'up':'dn'}">${Ttr?(Tar/Ttr*100).toFixed(0):0}%</td></tr>`;
+  tbl.innerHTML=h+'</tbody>';
+  if(!y2026){ tbl.insertAdjacentHTML('afterbegin','<caption style="caption-side:top;color:var(--mu);font-size:11px;text-align:left;padding:4px 2px">⚠ 목표는 2026 사업계획 기준 — 선택 연도가 2026이 아니면 참고용</caption>'); }
 }
 function setKPI(id,valStr,unit,tgtStr,ach,hasTgt){
   const c=Q('#'+id); c.querySelector('.val').innerHTML=valStr+(unit?`<span class="u">${unit}</span>`:'');
@@ -630,7 +663,7 @@ function renderEtc(){
 /* ═══════════ 렌더 디스패치 ═══════════ */
 function render(){
   renderKPI(); renderCross();
-  if(PAGE==='overview'){ renderPivot('pv-rate','rate'); renderPivot('pv-vd','vd'); renderPivot('pv-room','rtf'); renderPromo(); renderDailyLine(); renderStayCombo(); renderInsights(); }
+  if(PAGE==='overview'){ renderPivot('pv-rate','rate'); renderPivot('pv-vd','vd'); renderSegTarget(); renderPivot('pv-room','rtf'); renderPromo(); renderDailyLine(); renderStayCombo(); renderInsights(); }
   else if(PAGE==='segment') renderSegment();
   else if(PAGE==='etc') renderEtc();
 }
@@ -668,7 +701,7 @@ function init(){
     DATA = JSON.parse(await new Response(ds).text());
   }catch(e){ console.error('panaq 데이터 로드 실패:', e);
     const el=document.getElementById('foot-src'); if(el) el.textContent='데이터 로드 실패: '+e.message; }
-  AVAIL = DATA.avail_by_month||{}; TGT = DATA.targets||{}; MTGT = DATA.monthly_targets||{};
+  AVAIL = DATA.avail_by_month||{}; AVAILYM = DATA.avail_ym||{}; TGT = DATA.targets||{}; MTGT = DATA.monthly_targets||{};
   init();
   // 다년(24/25/26) — 기본 연도는 최근 연도. (전체 선택 시 가용이 단년 월합산 기준이라 OCC 과다 표기)
   try{ const yrs=[...new Set(DATA.rows.map(r=>r.y).filter(Boolean))].sort((a,b)=>a-b);

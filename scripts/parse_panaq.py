@@ -422,8 +422,13 @@ def parse(data_dir: str = "data") -> dict:
     if "예약번호" in df.columns:
         _rsv = df["예약번호"].astype(str).str.strip()
         df["_blank_rsv"] = df["예약번호"].isna() | _rsv.isin(["", "None", "nan"])
-        df["_gk"] = list(zip(df["투숙객명"].astype(str),
-                             df["도착일자"].astype(str), df["출발일자"].astype(str)))
+        # 단체 요약/상세 그룹키 — 투숙객명+도착+출발. 단, 투숙객명이 비면(PII 스크럽/원본 공란)
+        #   같은 날짜 예약이 한 그룹으로 뭉쳐 대량 유실되므로, 공란은 행별 고유키로 분리(붕괴 방지).
+        _gn = df["투숙객명"].astype(str)
+        _ci = df["도착일자"].astype(str); _co = df["출발일자"].astype(str)
+        df["_gk"] = [ (g, ci, co) if (g.strip() and g.strip().lower() != "nan")
+                      else (f"__u{idx}__", ci, co)
+                      for idx, g, ci, co in zip(df.index, _gn, _ci, _co) ]
         _drop = set()
         for _, g in df.groupby("_gk"):
             summ = g[g["_blank_rsv"]]; det = g[~g["_blank_rsv"]]
@@ -493,6 +498,10 @@ def parse(data_dir: str = "data") -> dict:
         str(m): AVAIL_RN_OVERRIDE.get(m, FULL_ROOMS * calendar.monthrange(YEAR, m)[1])
         for m in range(1, 13)
     }
+    # 연-월별 가용(OCC 연도정합용) — 운영 월(valid 행 존재)만 262×해당 연·월 일수.
+    _vv = df[df["is_valid"] & df["도착년"].notna() & df["도착월"].notna()]
+    _ym = set(zip(_vv["도착년"].astype(int), _vv["도착월"].astype(int)))
+    avail_ym = {f"{y}-{m}": FULL_ROOMS * calendar.monthrange(y, m)[1] for (y, m) in _ym}
 
     # 사업계획 Excel 탐색 → targets / monthly_targets 동적 생성
     plan_path = _find_business_plan(data_dir)
@@ -608,6 +617,7 @@ def parse(data_dir: str = "data") -> dict:
         "monthly_targets": monthly_targets,
         "business_plan_source": plan_src,
         "avail_by_month": avail_by_month,
+        "avail_ym":       avail_ym,     # 연-월별 가용(OCC 연도정합)
         "new_rates":      _new_rates,   # 미검토 신규 요금타입(스킬 검토 대상)
         "zero_rev_holds": zero_holds,   # 매출0 홀드/컴프/수기(집계 제외·표기용)
         "rows":           rows_out,
