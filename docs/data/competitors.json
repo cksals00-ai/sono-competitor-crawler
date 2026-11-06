@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-11-06 08:30:09 KST",
+  "_updated_at": "2026-11-07 08:30:09 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -107,19 +107,19 @@
         }
       ],
       "price_min": 120540,
-      "price_max": 449000,
-      "promo_count": 611,
+      "price_max": 440020,
+      "promo_count": 648,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 319,
+          "count": 392,
           "min": 120540,
-          "max": 449000,
+          "max": 440020,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 292,
+          "count": 256,
           "min": 123000,
           "max": 360000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
@@ -129,19 +129,14 @@
     {
       "brand": "롯데리조트",
       "region": "apac",
-      "title": "2026 Early Winter",
-      "period": "예약기간 : 2026.10.19 ~ 2026.11.06",
-      "discount_pct": 28,
+      "title": "[리워즈 회원 전용] Flash Deals",
+      "period": "예약기간 : 2026.11.09 ~ 2026.11.13",
+      "discount_pct": 0,
       "channel": "롯데리조트 공식 홈페이지",
-      "detail": "객실 최대 28%의 할인 혜택 · 외 [리워즈 회원 전용] Flash Deals · [리워즈 회원 전용] Flash Deals 등 12개",
+      "detail": "한 해의 끝에서, 가장 빛나는 여행의 시작",
       "link": "https://www.lotteresort.com/main/ko/package-event/package/list",
       "campaign_count": 12,
       "campaigns": [
-        {
-          "title": "2026 Early Winter",
-          "period": "예약기간 : 2026.10.19 ~ 2026.11.06",
-          "discount_pct": 28
-        },
         {
           "title": "[리워즈 회원 전용] Flash Deals",
           "period": "예약기간 : 2026.11.09 ~ 2026.11.13",
@@ -189,6 +184,11 @@
         },
         {
           "title": "Dear My Kids",
+          "period": "예약기간 : 2026.11.01 ~ 2027.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "Tasty Holiday",
           "period": "예약기간 : 2026.11.01 ~ 2027.12.31",
           "discount_pct": 0
         },
@@ -258,18 +258,18 @@
       ],
       "price_min": 182275,
       "price_max": 402821,
-      "promo_count": 16,
+      "promo_count": 8,
       "ota_promos": [
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 8,
+          "count": 4,
           "min": 193476,
           "max": 402821,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★ [체크인]15:0"
         },
         {
           "ota": "네이버호텔/야놀자",
-          "count": 8,
+          "count": 4,
           "min": 182275,
           "max": 379500,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★"
@@ -283,7 +283,7 @@
       "period": "2026. 11. 02 ~ 2027. 02. 28",
       "discount_pct": 0,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "눈썰매부터 겨울 액티비티까지 온가족이 함께 즐기는 겨울 여행을 계획해보세요. · 외 뭉쳐야 간다 · 켄트호텔 광안리 by 켄싱턴 [얼리버드] 딜리셔스 홀리데이 등 5개",
+      "detail": "눈썰매부터 겨울 액티비티까지 온가족이 함께 즐기는 겨울 여행을 계획해보세요. · 외 뭉쳐야 간다 · 켄싱턴리조트 가평 12월 얼리버드 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
@@ -298,13 +298,13 @@
           "discount_pct": 0
         },
         {
-          "title": "켄트호텔 광안리 by 켄싱턴 [얼리버드] 딜리셔스 홀리데이",
-          "period": "2026.12.24 ~ 2026.12.31",
+          "title": "켄싱턴리조트 가평 12월 얼리버드",
+          "period": "2026.12.01 ~ 2027.01.31",
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴리조트 지리산남원 리조트 남원 X 남원예촌",
-          "period": "2026.11.04 ~ 2027.03.31",
+          "title": "켄싱턴호텔 평창 [시그니처] 홀리데이 다이닝",
+          "period": "2026.11.09 ~ 2027.02.28",
           "discount_pct": 0
         },
         {
@@ -314,28 +314,28 @@
         }
       ],
       "price_min": 119900,
-      "price_max": 490789,
-      "promo_count": 465,
+      "price_max": 479900,
+      "promo_count": 444,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 276,
+          "count": 264,
           "min": 119900,
           "max": 479900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 148,
+          "count": 141,
           "min": 243409,
           "max": 438214,
           "sample": "프리미어 로잔 룸 - 26평, 정원 전망"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 41,
+          "count": 39,
           "min": 127268,
-          "max": 490789,
+          "max": 424448,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
         }
       ]
