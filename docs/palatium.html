@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <!--__AUTH__--><script src="https://cksals00-ai.github.io/gs_daily_trend_news_public_temp/js/auth.js"></script><!--__AUTH_END__-->
 <style>
 :root{
@@ -184,6 +185,9 @@ table.pivot{width:100%;border-collapse:collapse;font-size:12px}
       </div>
     </div>
     <button class="freset" id="freset">초기화</button>
+    <button class="freset" id="yoyBtn" title="단일 연도 선택 시 전년 동기 대비 표시">📊 전년대비 ON</button>
+    <button class="freset" id="expPNG" title="현재 화면을 PNG로 저장">🖼 PNG</button>
+    <button class="freset" id="expCSV" title="현재 필터 데이터를 CSV로 저장">⬇ CSV</button>
     <div class="fhint">** 다중 선택 가능 · 차트/표 클릭 시 상호 필터</div>
   </div>
   <div class="crossbar" id="crossbar"></div>
@@ -324,6 +328,33 @@ function availRN(){
 }
 const OCC    = rows => { const a=availRN(); return a? sumRN(rows)/a : 0; };
 const RevPAR = rows => { const a=availRN(); return a? sumRev(rows)/a : 0; };
+// ── 전년 대비(YoY) ──
+let YOY = true;
+function availForYM(yrs, mos){
+  const AY = (typeof AVAILYM!=='undefined' && AVAILYM) ? AVAILYM : (DATA.avail_ym||{});
+  if(Object.keys(AY).length){ let s=0; for(const k in AY){ const p=k.split('-'); const y=+p[0], m=+p[1];
+    if(yrs.includes(y) && (!mos || mos.has(m))) s+=AY[k]; } return s; }
+  const ms = mos ? [...mos] : [...new Set(DATA.rows.map(r=>r.m).filter(Boolean))];
+  return ms.reduce((s,m)=>s+((DATA.avail_by_month||{})[String(m)]||0),0);
+}
+function yoyBase(){
+  if(!YOY || F.y.size!==1) return null;
+  const py=[...F.y][0]-1;
+  if(![...new Set(DATA.rows.map(r=>r.y))].includes(py)) return null;
+  const rows=DATA.rows.filter(r=>r.y===py
+    && (!F.m.size||F.m.has(r.m)) && (!F.rate.size||F.rate.has(r.rate))
+    && (!F.vd.size||F.vd.has(r.vd)) && (!F.rtf.size||F.rtf.has(r.rtf)));
+  return {rows:kpiBase(rows), py};
+}
+const _pctD=(c,p)=>(p&&p!==0)?(c/p-1)*100:null;
+const _ppD =(c,p)=>(p!=null)?c-p:null;
+function yoyBadge(id,v,isPP){
+  if(v==null) return;
+  const el=document.querySelector('#'+id+' .sub'); if(!el) return;
+  const cls=v>0?'up':v<0?'dn':''; const arr=v>0?'▲':v<0?'▼':'—';
+  el.insertAdjacentHTML('beforeend',
+    `<span class="ach ${cls}" style="margin-left:8px">전년 ${arr}${(v>0?'+':'')+v.toFixed(1)+(isPP?'%p':'%')}</span>`);
+}
 function scopedTarget(key){
   if(F.m.size){
     if(key==='revenue') return [...F.m].reduce((s,m)=>s+(MTGT[String(m)]?.rev||0),0);
@@ -420,6 +451,16 @@ function renderKPI(){
   setKPI('k-adr',fmtInt(adr/1e3),'천원',`${fmtInt((TGT.adr||0)/1e3)}`, adr/(TGT.adr||1));
   setKPI('k-occ',(occ*100).toFixed(1),'%',`${((TGT.occ||0)*100).toFixed(0)}%`, occ/(TGT.occ||1));
   setKPI('k-rvp',fmtInt(rvp/1e3),'천원',`${fmtInt((TGT.revpar||0)/1e3)}`, rvp/(TGT.revpar||1));
+  // 전년 대비(YoY) 배지 — 단일 연도 선택 시
+  const yb=yoyBase();
+  if(yb && yb.rows.length){
+    const prn=sumRN(yb.rows), prev=sumRev(yb.rows), padr=ADR(yb.rows);
+    const pAv=availForYM([yb.py], F.m.size?F.m:null);
+    const pocc=pAv?prn/pAv*100:0, prvp=pAv?prev/pAv:0;
+    yoyBadge('k-rn', _pctD(rn,prn));   yoyBadge('k-rev', _pctD(rev,prev));
+    yoyBadge('k-adr', _pctD(adr,padr)); yoyBadge('k-occ', _ppD(occ*100,pocc), true);
+    yoyBadge('k-rvp', _pctD(rvp,prvp));
+  }
 }
 function setKPI(id,valStr,unit,tgtStr,ach){
   const c=Q('#'+id); c.querySelector('.val').innerHTML=valStr+(unit?`<span class="u">${unit}</span>`:'');
@@ -641,6 +682,31 @@ function switchPage(pg){
 }
 
 /* ═══════════ 초기화 ═══════════ */
+// ── 내보내기(PNG·CSV) ──
+async function exportPNG(){
+  try{
+    if(typeof html2canvas!=='function'){ alert('이미지 라이브러리 로드 전입니다. 잠시 후 다시 시도하세요.'); return; }
+    const node=document.querySelector('.canvas')||document.body;
+    const bg=getComputedStyle(document.body).backgroundColor||'#08081e';
+    const c=await html2canvas(node,{backgroundColor:bg,scale:2,useCORS:true,windowWidth:node.scrollWidth});
+    const a=document.createElement('a'); a.download='팔라티움_대시보드_'+new Date().toISOString().slice(0,10)+'.png'; a.href=c.toDataURL('image/png'); a.click();
+  }catch(e){ alert('PNG 저장 실패: '+e.message); }
+}
+function exportCSV(){
+  const base=kpiBase(filtered()); let csv='﻿';
+  const scope=(F.y.size?[...F.y].join('/'):'전체')+'년 '+(F.m.size?[...F.m].sort((a,b)=>a-b).join('/')+'월':'전체월');
+  csv+='팔라티움 해운대 매출 성과 · '+scope+'\n\n';
+  const rn=sumRN(base),rev=sumRev(base),adr=ADR(base),occ=OCC(base)*100,rvp=RevPAR(base);
+  csv+='핵심지표,값\n'+`판매RN,${Math.round(rn)}\n총매출(원),${Math.round(rev)}\nADR(원),${Math.round(adr)}\nOCC(%),${occ.toFixed(1)}\nRevPAR(원),${Math.round(rvp)}\n\n`;
+  const agg=(dim)=>{const m={};base.forEach(r=>{const k=r[dim]||'(기타)';if(!m[k])m[k]={rn:0,rev:0,rc:0};m[k].rn+=r.n;m[k].rev+=r.r;m[k].rc+=(r.fn?r.n:0);});return m;};
+  const dump=(title,dim,label)=>{csv+=title+'\n'+label+',판매RN,객실수,ADR(원),매출(원)\n';const m=agg(dim);
+    Object.entries(m).sort((a,b)=>b[1].rev-a[1].rev).forEach(([k,d])=>{csv+=`${k},${Math.round(d.rn)},${Math.round(d.rc)},${d.rn?Math.round(d.rev/d.rn):0},${Math.round(d.rev)}\n`;});csv+='\n';};
+  dump('■ 세그먼트(요금타입)별','rate','요금타입');
+  dump('■ 거래처별','vd','거래처');
+  dump('■ 객실타입별','rtf','객실타입');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const a=document.createElement('a');
+  a.download='팔라티움_데이터_'+new Date().toISOString().slice(0,10)+'.csv'; a.href=URL.createObjectURL(blob); a.click();
+}
 function init(){
   document.querySelectorAll('.slc[data-dim]').forEach(buildSlicer);
   Q('#bkFrom').onchange=e=>{F.bkFrom=e.target.value||null;render();};
@@ -649,6 +715,10 @@ function init(){
   if(bk.min){Q('#bkFrom').min=bk.min;Q('#bkTo').min=bk.min;} if(bk.max){Q('#bkFrom').max=bk.max;Q('#bkTo').max=bk.max;}
   Q('#freset').onclick=()=>{['y','m','rate','vd','rtf'].forEach(d=>F[d].clear());F.bkFrom=F.bkTo=null;CROSS=null;
     Q('#bkFrom').value='';Q('#bkTo').value='';document.querySelectorAll('.slc[data-dim]').forEach(syncSlicer);render();};
+  const yb=Q('#yoyBtn'); if(yb){ yb.classList.toggle('on',YOY);
+    yb.onclick=()=>{YOY=!YOY; yb.textContent=YOY?'📊 전년대비 ON':'📊 전년대비 OFF'; yb.classList.toggle('on',YOY); render();}; }
+  if(Q('#expPNG')) Q('#expPNG').onclick=exportPNG;
+  if(Q('#expCSV')) Q('#expCSV').onclick=exportCSV;
   document.querySelectorAll('#pagenav button').forEach(b=>b.onclick=()=>switchPage(b.dataset.pg));
   document.querySelectorAll('.basisbar button').forEach(b=>b.onclick=()=>{
     BASIS=b.dataset.basis; document.querySelectorAll('.basisbar button').forEach(x=>x.classList.toggle('on',x.dataset.basis===BASIS)); render();});
