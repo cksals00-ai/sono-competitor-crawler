@@ -422,15 +422,23 @@ def parse(data_dir: str = "data") -> dict:
     if "예약번호" in df.columns:
         _rsv = df["예약번호"].astype(str).str.strip()
         df["_blank_rsv"] = df["예약번호"].isna() | _rsv.isin(["", "None", "nan"])
-        # 단체 요약/상세 그룹키 — 투숙객명+도착+출발. 단, 투숙객명이 비면(PII 스크럽/원본 공란)
-        #   같은 날짜 예약이 한 그룹으로 뭉쳐 대량 유실되므로, 공란은 행별 고유키로 분리(붕괴 방지).
+        # 단체 요약/상세 그룹키 — 투숙객명+도착+출발.
+        #   투숙객명이 비면(PII 스크럽/원본 공란) 이름으로 못 묶으므로 **단체번호**로 요약↔상세 연결
+        #   (단체 요약행의 단체번호가 상세행에도 존재 → 정확히 쌍 매칭·이중계상 제거).
+        #   단체번호도 없으면 행별 고유키(같은 날짜 뭉침 방지).
         _gn = df["투숙객명"].astype(str)
         _ci = df["도착일자"].astype(str); _co = df["출발일자"].astype(str)
-        df["_gk"] = [ (g, ci, co) if (g.strip() and g.strip().lower() != "nan")
-                      else (f"__u{idx}__", ci, co)
-                      for idx, g, ci, co in zip(df.index, _gn, _ci, _co) ]
+        _grp = (df["단체번호"].astype(str) if "단체번호" in df.columns
+                else pd.Series(["" for _ in range(len(df))], index=df.index))
+        def _gkey(idx, g, ci, co, gp):
+            g = g.strip()
+            if g and g.lower() != "nan":
+                return "N|" + g + "|" + ci + "|" + co
+            return "U|%d" % idx   # 이름 공란 → 행별 고유(붕괴 방지). 단체 요약/상세는 단체번호로 아래서 처리
+        df["_gk"] = [ _gkey(idx, g, ci, co, gp)
+                      for idx, g, ci, co, gp in zip(df.index, _gn, _ci, _co, _grp) ]
         _drop = set()
-        for _, g in df.groupby("_gk"):
+        for _, g in df.groupby("_gk"):          # 이름 기반(이름 있는 파일: 11월 예약정보조회 등)
             summ = g[g["_blank_rsv"]]; det = g[~g["_blank_rsv"]]
             if len(summ) == 0:
                 continue
@@ -439,6 +447,15 @@ def parse(data_dir: str = "data") -> dict:
                     _drop |= set(summ.index)   # 순수 중복 → 요약 제거(상세 유지)
                 else:
                     _drop |= set(det.index)    # 요약=블록총계 → 상세 제거(요약 유지)
+        # 이름 없는 단체(PII 스크럽/원본 공란): **단체번호**로 요약↔상세를 확인해 **요약행만** 제거.
+        #   (요약 총합계 ≈ 상세 합계면 요약은 순수 이중계상 → 제거, 상세는 항상 보존 → 과붕괴 불가)
+        if "단체번호" in df.columns:
+            _gv = df["단체번호"].astype(str).str.strip()
+            _valid = _gv.ne("") & _gv.str.lower().ne("nan") & _gv.str.strip("0").ne("")
+            for _, gi in df[_valid].groupby(_gv[_valid]):
+                summ = gi[gi["_blank_rsv"]]; det = gi[~gi["_blank_rsv"]]
+                if len(summ) and len(det) and abs(summ["총합계"].sum() - det["총합계"].sum()) < 1000:
+                    _drop |= set(summ.index)   # 요약만 제거(상세 보존)
         if _drop:
             df = df.drop(index=_drop).reset_index(drop=True)
         df.drop(columns=["_gk"], errors="ignore", inplace=True)
