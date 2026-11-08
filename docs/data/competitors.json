@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-11-08 08:30:09 KST",
+  "_updated_at": "2026-11-09 08:30:25 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -108,11 +108,11 @@
       ],
       "price_min": 120540,
       "price_max": 449000,
-      "promo_count": 636,
+      "promo_count": 642,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 386,
+          "count": 392,
           "min": 120540,
           "max": 449000,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
@@ -206,18 +206,13 @@
       "period": "2026-10-12~2026-11-19",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "판매 차수가 올라갈수록 달라지는 가격, 지금의 기회를 놓치지 마세요. · 외 2026/27 동계시즌로커 판매 · 추석 연휴기간 즐길거리 안내 등 9개",
+      "detail": "판매 차수가 올라갈수록 달라지는 가격, 지금의 기회를 놓치지 마세요. · 외 추석 연휴기간 즐길거리 안내 · 2026 FALL SEASON RITUAL PROMOTION 등 9개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
       "campaign_count": 9,
       "campaigns": [
         {
           "title": "뜨거운 성원에 힘입어, 26/27 X6+시즌패스 2차 판매 OPEN!",
           "period": "2026-10-12~2026-11-19",
-          "discount_pct": 0
-        },
-        {
-          "title": "2026/27 동계시즌로커 판매",
-          "period": "2026-09-30~2026-11-08",
           "discount_pct": 0
         },
         {
@@ -254,25 +249,11 @@
           "title": "카카오톡 친구 이벤트",
           "period": "2026-02-02~2026-12-31",
           "discount_pct": 0
-        }
-      ],
-      "price_min": 182275,
-      "price_max": 402821,
-      "promo_count": 8,
-      "ota_promos": [
-        {
-          "ota": "네이버호텔/네이버비밀특가",
-          "count": 4,
-          "min": 193476,
-          "max": 402821,
-          "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★ [체크인]15:0"
         },
         {
-          "ota": "네이버호텔/야놀자",
-          "count": 4,
-          "min": 182275,
-          "max": 379500,
-          "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★"
+          "title": "워터월드 입장권 모바일 앱에서 구매하세요!",
+          "period": "상시",
+          "discount_pct": 0
         }
       ]
     },
@@ -315,11 +296,11 @@
       ],
       "price_min": 119900,
       "price_max": 479900,
-      "promo_count": 447,
+      "promo_count": 444,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 265,
+          "count": 263,
           "min": 119900,
           "max": 479900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
@@ -333,7 +314,7 @@
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 38,
+          "count": 37,
           "min": 127268,
           "max": 424448,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
