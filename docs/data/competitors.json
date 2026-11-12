@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-11-12 08:30:08 KST",
+  "_updated_at": "2026-11-13 08:30:08 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -113,42 +113,35 @@
       ],
       "price_min": 120540,
       "price_max": 449000,
-      "promo_count": 1822,
+      "promo_count": 2022,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 838,
+          "count": 839,
           "min": 122000,
           "max": 449000,
           "sample": "스위트 베드 라이브특가★룸온리 12-2월"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 445,
+          "count": 477,
           "min": 130623,
-          "max": 446026,
+          "max": 375809,
           "sample": "스위트 베드 라이브특가★룸온리 12-2월 [체크인]15:00 "
         },
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 335,
+          "count": 394,
           "min": 120540,
-          "max": 352800,
+          "max": 360000,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 203,
+          "count": 312,
           "min": 123000,
           "max": 310000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
-        },
-        {
-          "ota": "네이버호텔/Agoda",
-          "count": 1,
-          "min": 196146,
-          "max": 196146,
-          "sample": "스탠다드 쿼드(라이브특가★5월)"
         }
       ]
     },
@@ -283,21 +276,21 @@
         }
       ],
       "price_min": 182275,
-      "price_max": 789809,
-      "promo_count": 40,
+      "price_max": 773904,
+      "promo_count": 44,
       "ota_promos": [
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 20,
+          "count": 22,
           "min": 193476,
-          "max": 789809,
+          "max": 773904,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★ [체크인]15:0"
         },
         {
           "ota": "네이버호텔/야놀자",
-          "count": 20,
+          "count": 22,
           "min": 182275,
-          "max": 565225,
+          "max": 729100,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★"
         }
       ]
@@ -309,7 +302,7 @@
       "period": "2026. 11. 10 ~ 2026. 12. 31",
       "discount_pct": 0,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "1년에 단 한번! 올해 마지막 여행을 위한 가장 좋은 타이밍을 절대 놓치지 마세요. · 외 홀리데이 다이닝 · 켄싱턴호텔 평창 아이랑 호캉스 : 엄빠의 휴식 등 5개",
+      "detail": "1년에 단 한번! 올해 마지막 여행을 위한 가장 좋은 타이밍을 절대 놓치지 마세요. · 외 홀리데이 다이닝 · 켄싱턴호텔 평창 Snow Playcation 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
@@ -324,13 +317,13 @@
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴호텔 평창 아이랑 호캉스 : 엄빠의 휴식",
-          "period": "2026.11.10 ~ 2027.03.31",
+          "title": "켄싱턴호텔 평창 Snow Playcation",
+          "period": "2026.12.24 ~ 2027.02.28",
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴호텔 평창 평창 겨울 여행",
-          "period": "2026.11.10 ~ 2027.03.31",
+          "title": "PIC 사이판 TROPICAL GOLF",
+          "period": "2026.11.13 ~ 2027.03.31",
           "discount_pct": 0
         },
         {
@@ -341,18 +334,18 @@
       ],
       "price_min": 119900,
       "price_max": 479900,
-      "promo_count": 351,
+      "promo_count": 354,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 308,
+          "count": 312,
           "min": 119900,
           "max": 479900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 43,
+          "count": 42,
           "min": 127268,
           "max": 424448,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
