@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-11-13 08:30:08 KST",
+  "_updated_at": "2026-11-14 08:30:10 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -113,32 +113,32 @@
       ],
       "price_min": 120540,
       "price_max": 449000,
-      "promo_count": 2022,
+      "promo_count": 1771,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 839,
+          "count": 745,
           "min": 122000,
           "max": 449000,
           "sample": "스위트 베드 라이브특가★룸온리 12-2월"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 477,
+          "count": 429,
           "min": 130623,
-          "max": 375809,
+          "max": 402237,
           "sample": "스위트 베드 라이브특가★룸온리 12-2월 [체크인]15:00 "
         },
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 394,
+          "count": 332,
           "min": 120540,
           "max": 360000,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 312,
+          "count": 265,
           "min": 123000,
           "max": 310000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
@@ -148,18 +148,18 @@
     {
       "brand": "롯데리조트",
       "region": "apac",
-      "title": "Weekday Delight",
-      "period": "예약기간 : 2026.11.11 ~ 2026.12.06",
-      "discount_pct": 0,
+      "title": "Page of JEJU",
+      "period": "예약기간 : 2026.11.13 ~ 2026.11.26",
+      "discount_pct": 25,
       "channel": "롯데리조트 공식 홈페이지",
-      "detail": "객실 무료 업그레이드 + 롯데시네마 영화관람권 + 조식 할인권 + (1월 투숙한정) 어메니티 키트",
+      "detail": "객실 최대 25%의 할인 혜택 · 외 Weekday Delight · Weekday Delight 등 12개",
       "link": "https://www.lotteresort.com/main/ko/package-event/package/list",
       "campaign_count": 12,
       "campaigns": [
         {
-          "title": "Weekday Delight",
-          "period": "예약기간 : 2026.11.11 ~ 2026.12.06",
-          "discount_pct": 0
+          "title": "Page of JEJU",
+          "period": "예약기간 : 2026.11.13 ~ 2026.11.26",
+          "discount_pct": 25
         },
         {
           "title": "Weekday Delight",
@@ -177,23 +177,8 @@
           "discount_pct": 0
         },
         {
-          "title": "[리워즈 회원 전용] Flash Deals",
-          "period": "예약기간 : 2026.11.09 ~ 2026.11.13",
-          "discount_pct": 0
-        },
-        {
-          "title": "[리워즈 회원 전용] Flash Deals",
-          "period": "예약기간 : 2026.11.09 ~ 2026.11.13",
-          "discount_pct": 0
-        },
-        {
-          "title": "[리워즈 회원 전용] Flash Deals",
-          "period": "예약기간 : 2026.11.09 ~ 2026.11.13",
-          "discount_pct": 0
-        },
-        {
-          "title": "[리워즈 회원 전용] Flash Deals",
-          "period": "예약기간 : 2026.11.09 ~ 2026.11.13",
+          "title": "Weekday Delight",
+          "period": "예약기간 : 2026.11.11 ~ 2026.12.06",
           "discount_pct": 0
         },
         {
@@ -215,20 +200,40 @@
           "title": "Smart Choice",
           "period": "예약기간 : 2026.10.17 ~ 2026.12.31",
           "discount_pct": 0
+        },
+        {
+          "title": "Dear My Kids",
+          "period": "예약기간 : 2026.11.01 ~ 2027.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "Dear My Kids",
+          "period": "예약기간 : 2026.11.01 ~ 2027.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "Dear My Kids",
+          "period": "예약기간 : 2026.11.01 ~ 2027.12.31",
+          "discount_pct": 0
         }
       ]
     },
     {
       "brand": "하이원리조트",
       "region": "central",
-      "title": "하이원 스키장 개장 20주년",
-      "period": "2026-11-10~2027-03-01",
+      "title": "수능 끝!! 설(雪)레는 여행 시작",
+      "period": "2026-11-19~2026-12-31",
       "discount_pct": 0,
       "channel": "하이원리조트 공식 홈페이지",
-      "detail": "20년 전 그 설렘을 다시! · 외 뜨거운 성원에 힘입어, 26/27 X6+시즌패스 2차 판매 OPEN! · 추석 연휴기간 즐길거리 안내 등 9개",
+      "detail": "하이원 특가 혜택으로 스트레스를 날려버리자 · 외 하이원 스키장 개장 20주년 · 뜨거운 성원에 힘입어, 26/27 X6+시즌패스 2차 판매 OPEN! 등 9개",
       "link": "https://high1.com/www/eventList.do?key=596&searchSe=프로모션",
       "campaign_count": 9,
       "campaigns": [
+        {
+          "title": "수능 끝!! 설(雪)레는 여행 시작",
+          "period": "2026-11-19~2026-12-31",
+          "discount_pct": 0
+        },
         {
           "title": "하이원 스키장 개장 20주년",
           "period": "2026-11-10~2027-03-01",
@@ -268,27 +273,22 @@
           "title": "5월, 행복이 온(ON) 가족 뷔페",
           "period": "2026-05-23~2026-05-25",
           "discount_pct": 0
-        },
-        {
-          "title": "카카오톡 친구 이벤트",
-          "period": "2026-02-02~2026-12-31",
-          "discount_pct": 0
         }
       ],
       "price_min": 182275,
       "price_max": 773904,
-      "promo_count": 44,
+      "promo_count": 72,
       "ota_promos": [
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 22,
+          "count": 36,
           "min": 193476,
           "max": 773904,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★ [체크인]15:0"
         },
         {
           "ota": "네이버호텔/야놀자",
-          "count": 22,
+          "count": 36,
           "min": 182275,
           "max": 729100,
           "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★"
@@ -302,7 +302,7 @@
       "period": "2026. 11. 10 ~ 2026. 12. 31",
       "discount_pct": 0,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "1년에 단 한번! 올해 마지막 여행을 위한 가장 좋은 타이밍을 절대 놓치지 마세요. · 외 홀리데이 다이닝 · 켄싱턴호텔 평창 Snow Playcation 등 5개",
+      "detail": "1년에 단 한번! 올해 마지막 여행을 위한 가장 좋은 타이밍을 절대 놓치지 마세요. · 외 홀리데이 다이닝 · 켄싱턴호텔 평창 평창 겨울 여행 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
@@ -317,13 +317,13 @@
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴호텔 평창 Snow Playcation",
-          "period": "2026.12.24 ~ 2027.02.28",
+          "title": "켄싱턴호텔 평창 평창 겨울 여행",
+          "period": "2026.11.10 ~ 2027.02.28",
           "discount_pct": 0
         },
         {
-          "title": "PIC 사이판 TROPICAL GOLF",
-          "period": "2026.11.13 ~ 2027.03.31",
+          "title": "켄싱턴호텔 평창 윈터 원더랜드 : 스노우 액티비티",
+          "period": "2026.12.24 ~ 2027.02.28",
           "discount_pct": 0
         },
         {
@@ -334,18 +334,18 @@
       ],
       "price_min": 119900,
       "price_max": 479900,
-      "promo_count": 354,
+      "promo_count": 327,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 312,
+          "count": 289,
           "min": 119900,
           "max": 479900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 42,
+          "count": 38,
           "min": 127268,
           "max": 424448,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
