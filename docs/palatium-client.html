@@ -172,15 +172,15 @@ table.pivot{width:100%;border-collapse:collapse;font-size:12px}
   <div class="page on" id="pg-overview">
     <div class="grid2" style="margin-top:8px">
       <div>
-        <div class="stitle">세그먼트별 실적 <span class="unit">[RN_실 / 객실수_실 / ADR_천원 / REV_백만원 · VAT 제외]</span></div>
+        <div class="stitle">세그먼트별 실적 <span class="unit">[RN_실 / 예약건수_건 / ADR_천원 / REV_백만원 · VAT 제외]</span></div>
         <div class="panel"><div style="max-height:264px;overflow:auto"><table class="pivot" id="pv-rate"></table></div></div>
       </div>
       <div>
-        <div class="stitle">거래처 실적 <span class="unit">[RN_실 / 객실수_실 / ADR_천원 / REV_백만원]</span></div>
+        <div class="stitle">거래처 실적 <span class="unit">[RN_실 / 예약건수_건 / ADR_천원 / REV_백만원]</span></div>
         <div class="panel"><div style="max-height:264px;overflow:auto"><table class="pivot" id="pv-vd"></table></div></div>
       </div>
     </div>
-    <div class="stitle">객실 타입별 실적 <span class="unit">[RN_실 / 객실수_실 / ADR_천원 / REV_백만원 · VAT 제외] · 행 클릭 시 상호 필터</span></div>
+    <div class="stitle">객실 타입별 실적 <span class="unit">[RN_실 / 예약건수_건 / ADR_천원 / REV_백만원 · VAT 제외] · 행 클릭 시 상호 필터</span></div>
     <div class="panel"><div style="max-height:340px;overflow:auto"><table class="pivot" id="pv-room"></table></div></div>
     <div class="stitle">프로모션 실적 <span class="unit">[RN_실 / ADR_천원 / REV_백만원] · FIT에 포함된 프로모션 건을 별도 집계</span></div>
     <div class="panel" id="promo-wrap"><table class="pivot" id="pv-promo"></table></div>
@@ -196,7 +196,6 @@ table.pivot{width:100%;border-collapse:collapse;font-size:12px}
   <div class="page" id="pg-segment">
     <div class="basisbar"><span class="lb">표시 기준</span>
       <button class="on" data-basis="rn">판매 RN</button>
-      <button data-basis="room">객실수</button>
       <button data-basis="rev">매출</button>
       <button data-basis="cnt">예약건수</button>
     </div>
@@ -218,7 +217,6 @@ table.pivot{width:100%;border-collapse:collapse;font-size:12px}
   <div class="page" id="pg-etc">
     <div class="basisbar"><span class="lb">표시 기준</span>
       <button class="on" data-basis="rn">판매 RN</button>
-      <button data-basis="room">객실수</button>
       <button data-basis="rev">매출</button>
       <button data-basis="cnt">예약건수</button>
     </div>
@@ -409,10 +407,8 @@ const monthsPresent = () => [...new Set(DATA.rows.map(r=>r.m).filter(Boolean))].
 /* ═══════════ KPI (공유) ═══════════ */
 function renderKPI(){
   const base=kpiBase(filtered());
-  const rn=sumRN(base),rev=sumRev(base),adr=ADR(base),occ=OCC(base),rvp=RevPAR(base),rc=sumRC(base);
+  const rn=sumRN(base),rev=sumRev(base),adr=ADR(base),occ=OCC(base),rvp=RevPAR(base);
   setKPI('k-rn', fmtInt(rn),'실',`${fmtInt(scopedTarget('rn'))}`, rn/(scopedTarget('rn')||1));
-  Q('#k-rn .sub').insertAdjacentHTML('beforeend',
-    `<span style="margin-left:8px;padding:1px 6px;border-radius:4px;background:rgba(78,157,232,.14);color:var(--c1);font-size:11px">객실수 ${fmtInt(rc)}실</span>`);
   setKPI('k-rev',fmtInt(rev/1e6),'백만',`${fmtInt(scopedTarget('revenue')/1e6)}`, rev/(scopedTarget('revenue')||1));
   setKPI('k-adr',fmtInt(adr/1e3),'천원',`${fmtInt((TGT.adr||0)/1e3)}`, adr/(TGT.adr||1));
   setKPI('k-occ',(occ*100).toFixed(1),'%',`${((TGT.occ||0)*100).toFixed(0)}%`, occ/(TGT.occ||1));
@@ -454,10 +450,10 @@ function renderPromo(){
 }
 function renderPivot(tblId,dim){
   const rows=kpiBase(filtered()), agg={};
-  rows.forEach(r=>{ const k=r[dim]||'(기타)'; (agg[k]=agg[k]||{rn:0,rev:0,rc:0}); agg[k].rn+=r.n; agg[k].rev+=r.r; agg[k].rc+=(r.fn?r.n:0); });
+  rows.forEach(r=>{ const k=r[dim]||'(기타)'; (agg[k]=agg[k]||{rn:0,rev:0,rc:0}); agg[k].rn+=r.n; agg[k].rev+=r.r; agg[k].rc+=(r.fn||0); });
   const arr=Object.entries(agg).map(([k,v])=>({k,rn:v.rn,rc:v.rc,rev:v.rev,adr:v.rn?v.rev/v.rn:0})).sort((a,b)=>b.rev-a.rev);
   const maxRev=Math.max(1,...arr.map(a=>a.rev)); const T={rn:0,rev:0,rc:0}; arr.forEach(a=>{T.rn+=a.rn;T.rev+=a.rev;T.rc+=a.rc});
-  let h=`<thead><tr><th>${DIM_LABEL[dim]}</th><th>RN</th><th>객실수</th><th>ADR</th><th>REV</th></tr></thead><tbody>`;
+  let h=`<thead><tr><th>${DIM_LABEL[dim]}</th><th>RN</th><th>예약건수</th><th>ADR</th><th>REV</th></tr></thead><tbody>`;
   arr.forEach((a,i)=>{ const sel=(CROSS&&CROSS.dim===dim&&CROSS.val===a.k)?' class="sel"':'';
     h+=`<tr${sel} data-v="${encodeURIComponent(a.k)}"><td><div class="dimname"><span class="sw" style="background:${SW[i%SW.length]}"></span>${a.k}</div></td>`
      +`<td class="mono">${fmtInt(a.rn)}</td><td class="mono">${fmtInt(a.rc)}</td><td class="mono">${fmtInt(a.adr/1e3)}</td>`
@@ -664,8 +660,8 @@ function exportCSV(){
   csv+='팔라티움 해운대 매출 성과 · '+scope+'\n\n';
   const rn=sumRN(base),rev=sumRev(base),adr=ADR(base),occ=OCC(base)*100,rvp=RevPAR(base);
   csv+='핵심지표,값\n'+`판매RN,${Math.round(rn)}\n총매출(원),${Math.round(rev)}\nADR(원),${Math.round(adr)}\nOCC(%),${occ.toFixed(1)}\nRevPAR(원),${Math.round(rvp)}\n\n`;
-  const agg=(dim)=>{const m={};base.forEach(r=>{const k=r[dim]||'(기타)';if(!m[k])m[k]={rn:0,rev:0,rc:0};m[k].rn+=r.n;m[k].rev+=r.r;m[k].rc+=(r.fn?r.n:0);});return m;};
-  const dump=(title,dim,label)=>{csv+=title+'\n'+label+',판매RN,객실수,ADR(원),매출(원)\n';const m=agg(dim);
+  const agg=(dim)=>{const m={};base.forEach(r=>{const k=r[dim]||'(기타)';if(!m[k])m[k]={rn:0,rev:0,rc:0};m[k].rn+=r.n;m[k].rev+=r.r;m[k].rc+=(r.fn||0);});return m;};
+  const dump=(title,dim,label)=>{csv+=title+'\n'+label+',판매RN,예약건수,ADR(원),매출(원)\n';const m=agg(dim);
     Object.entries(m).sort((a,b)=>b[1].rev-a[1].rev).forEach(([k,d])=>{csv+=`${k},${Math.round(d.rn)},${Math.round(d.rc)},${d.rn?Math.round(d.rev/d.rn):0},${Math.round(d.rev)}\n`;});csv+='\n';};
   dump('■ 세그먼트(요금타입)별','rate','요금타입');
   dump('■ 거래처별','vd','거래처');
