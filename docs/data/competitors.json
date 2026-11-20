@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-11-20 08:30:09 KST",
+  "_updated_at": "2026-11-21 08:30:08 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -113,56 +113,39 @@
       ],
       "price_min": 120540,
       "price_max": 360000,
-      "promo_count": 418,
+      "promo_count": 677,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 235,
+          "count": 357,
           "min": 120540,
           "max": 360000,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 179,
+          "count": 320,
           "min": 123000,
           "max": 360000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
-        },
-        {
-          "ota": "네이버호텔/Agoda",
-          "count": 4,
-          "min": 148612,
-          "max": 196380,
-          "sample": "스탠다드 쿼드(라이브특가★5월)"
         }
       ]
     },
     {
       "brand": "롯데리조트",
       "region": "apac",
-      "title": "[OPEN RUN] Fortune Begins",
-      "period": "예약기간 : 2026.11.16 ~ 2026.11.20",
-      "discount_pct": 0,
+      "title": "Page of JEJU",
+      "period": "예약기간 : 2026.11.13 ~ 2026.11.26",
+      "discount_pct": 25,
       "channel": "롯데리조트 공식 홈페이지",
-      "detail": "새해의 행운을 가득 담아, 기분 좋은 여행의 시작",
+      "detail": "객실 최대 25%의 할인 혜택 · 외 Weekday Delight · Weekday Delight 등 12개",
       "link": "https://www.lotteresort.com/main/ko/package-event/package/list",
       "campaign_count": 12,
       "campaigns": [
         {
-          "title": "[OPEN RUN] Fortune Begins",
-          "period": "예약기간 : 2026.11.16 ~ 2026.11.20",
-          "discount_pct": 0
-        },
-        {
-          "title": "[OPEN RUN] Fortune Begins",
-          "period": "예약기간 : 2026.11.16 ~ 2026.11.20",
-          "discount_pct": 0
-        },
-        {
-          "title": "[OPEN RUN] Fortune Begins",
-          "period": "예약기간 : 2026.11.16 ~ 2026.11.20",
-          "discount_pct": 0
+          "title": "Page of JEJU",
+          "period": "예약기간 : 2026.11.13 ~ 2026.11.26",
+          "discount_pct": 25
         },
         {
           "title": "Weekday Delight",
@@ -202,6 +185,16 @@
         {
           "title": "Smart Choice",
           "period": "예약기간 : 2026.10.17 ~ 2026.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "Dear My Kids",
+          "period": "예약기간 : 2026.11.01 ~ 2027.12.31",
+          "discount_pct": 0
+        },
+        {
+          "title": "Dear My Kids",
+          "period": "예약기간 : 2026.11.01 ~ 2027.12.31",
           "discount_pct": 0
         },
         {
@@ -267,25 +260,6 @@
           "period": "2026-05-23~2026-05-25",
           "discount_pct": 0
         }
-      ],
-      "price_min": 182275,
-      "price_max": 1029023,
-      "promo_count": 108,
-      "ota_promos": [
-        {
-          "ota": "네이버호텔/야놀자",
-          "count": 64,
-          "min": 182275,
-          "max": 969450,
-          "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★"
-        },
-        {
-          "ota": "네이버호텔/네이버비밀특가",
-          "count": 44,
-          "min": 193476,
-          "max": 1029023,
-          "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★ [체크인]15:0"
-        }
       ]
     },
     {
@@ -295,7 +269,7 @@
       "period": "2026. 11. 18 ~ 2027. 03. 31",
       "discount_pct": 0,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "생일, 결혼 기념일, 프로포즈부터 가족의 특별한 순간까지 사랑하는 사람과 함께하는 모든 기념일을 켄싱턴호텔에서 더욱 특별하게 완성해 보세요. · 외 홀리데이 다이닝 · 켄싱턴리조트 가평 오색 별빛정원전 등 5개",
+      "detail": "생일, 결혼 기념일, 프로포즈부터 가족의 특별한 순간까지 사랑하는 사람과 함께하는 모든 기념일을 켄싱턴호텔에서 더욱 특별하게 완성해 보세요. · 외 홀리데이 다이닝 · 켄싱턴호텔 설악 퀸즈 홀리데이 다이닝 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
@@ -310,13 +284,13 @@
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴리조트 가평 오색 별빛정원전",
-          "period": "2026.12.04 ~ 2027.03.13",
+          "title": "켄싱턴호텔 설악 퀸즈 홀리데이 다이닝",
+          "period": "2026.11.20 ~ 2027.02.28",
           "discount_pct": 0
         },
         {
-          "title": "켄싱턴호텔 설악 [진지영X켄싱턴 설악] 스케치 레코드",
-          "period": "2026.11.08 ~ 2026.12.31",
+          "title": "켄싱턴리조트 가평 오색 별빛정원전",
+          "period": "2026.12.04 ~ 2027.03.13",
           "discount_pct": 0
         },
         {
@@ -327,11 +301,11 @@
       ],
       "price_min": 119900,
       "price_max": 629900,
-      "promo_count": 495,
+      "promo_count": 497,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 300,
+          "count": 299,
           "min": 119900,
           "max": 629900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
@@ -340,12 +314,12 @@
           "ota": "네이버호텔/Booking.com",
           "count": 152,
           "min": 256900,
-          "max": 416900,
+          "max": 456900,
           "sample": "프리미어 로잔 룸 - 26평, 정원 전망"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 43,
+          "count": 46,
           "min": 127268,
           "max": 530593,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
