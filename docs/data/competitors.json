@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-11-21 08:30:08 KST",
+  "_updated_at": "2026-11-22 08:30:08 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -113,21 +113,28 @@
       ],
       "price_min": 120540,
       "price_max": 360000,
-      "promo_count": 677,
+      "promo_count": 699,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 357,
+          "count": 353,
           "min": 120540,
           "max": 360000,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 320,
+          "count": 315,
           "min": 123000,
           "max": 360000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
+        },
+        {
+          "ota": "네이버호텔/네이버비밀특가",
+          "count": 31,
+          "min": 134224,
+          "max": 245236,
+          "sample": "스위트 2인 조식 특가 1박 환불불가_11/20~11/30"
         }
       ]
     },
@@ -260,6 +267,25 @@
           "period": "2026-05-23~2026-05-25",
           "discount_pct": 0
         }
+      ],
+      "price_min": 182275,
+      "price_max": 969450,
+      "promo_count": 54,
+      "ota_promos": [
+        {
+          "ota": "네이버호텔/야놀자",
+          "count": 32,
+          "min": 182275,
+          "max": 969450,
+          "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★"
+        },
+        {
+          "ota": "네이버호텔/네이버비밀특가",
+          "count": 22,
+          "min": 193476,
+          "max": 773904,
+          "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★ [체크인]15:0"
+        }
       ]
     },
     {
@@ -301,25 +327,25 @@
       ],
       "price_min": 119900,
       "price_max": 629900,
-      "promo_count": 497,
+      "promo_count": 493,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 299,
+          "count": 293,
           "min": 119900,
           "max": 629900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 152,
-          "min": 256900,
-          "max": 456900,
+          "count": 156,
+          "min": 233545,
+          "max": 415363,
           "sample": "프리미어 로잔 룸 - 26평, 정원 전망"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 46,
+          "count": 44,
           "min": 127268,
           "max": 530593,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
