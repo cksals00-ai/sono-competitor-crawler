@@ -1,6 +1,6 @@
 {
   "_instruction": "경쟁사 공식 홈페이지 직접 크롤(B) + 가격 CSV 특가 신호(A). crawl_competitor_promos.py 자동 생성.",
-  "_updated_at": "2026-11-27 08:30:09 KST",
+  "_updated_at": "2026-11-28 08:30:09 KST",
   "_source": "경쟁사 공식 홈페이지 (한화/롯데/신라) + sono 가격 CSV",
   "_auto_collected": true,
   "competitors": [
@@ -11,9 +11,9 @@
       "period": "2026.08.04 - 2026.11.30",
       "discount_pct": 81,
       "channel": "한화리조트 공식 홈페이지",
-      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 [프렌즈 전용] 윈터 바우처팩 · 여름 & 가을 시즌 제주 롱스테이케이션 등 21개",
+      "detail": "미리 준비하는 가을여행, 2박 최대 81% 할인 · 외 [프렌즈 전용] 윈터 바우처팩 · 여름 & 가을 시즌 제주 롱스테이케이션 등 22개",
       "link": "https://www.hanwharesort.co.kr/irsweb/resort3/event/package_list.do",
-      "campaign_count": 21,
+      "campaign_count": 22,
       "campaigns": [
         {
           "title": "[추(秋)캉스] 룸온리 2박",
@@ -29,6 +29,11 @@
           "title": "여름 & 가을 시즌 제주 롱스테이케이션",
           "period": "2026.07.20 - 2026.11.30",
           "discount_pct": 51
+        },
+        {
+          "title": "스노우 플레이 IN 평창",
+          "period": "2026.11.27 - 2027.02.28",
+          "discount_pct": 0
         },
         {
           "title": "제주 겨울 골프 패키지",
@@ -123,27 +128,27 @@
       ],
       "price_min": 120540,
       "price_max": 360000,
-      "promo_count": 547,
+      "promo_count": 421,
       "ota_promos": [
         {
           "ota": "네이버호텔/TripBToz",
-          "count": 284,
+          "count": 219,
           "min": 120540,
           "max": 360000,
           "sample": "⚡라스트미닛⚡스위트 - [환불불가] 룸온리 특가"
         },
         {
           "ota": "네이버호텔/여기어때",
-          "count": 247,
+          "count": 196,
           "min": 123000,
           "max": 360000,
           "sample": "스위트 [환불불가-라스트미닛 특가]"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 16,
-          "min": 143306,
-          "max": 274502,
+          "count": 6,
+          "min": 202849,
+          "max": 308815,
           "sample": "스위트 2인 조식 특가 1박 환불불가_11/20~11/30"
         }
       ]
@@ -180,6 +185,21 @@
           "discount_pct": 0
         },
         {
+          "title": "[2박전용] All My Winter",
+          "period": "예약기간 : 2026.11.27 ~ 2026.12.20",
+          "discount_pct": 0
+        },
+        {
+          "title": "[2박전용] All My Winter",
+          "period": "예약기간 : 2026.11.27 ~ 2026.12.20",
+          "discount_pct": 0
+        },
+        {
+          "title": "[2박전용] All My Winter",
+          "period": "예약기간 : 2026.11.27 ~ 2026.12.20",
+          "discount_pct": 0
+        },
+        {
           "title": "Sunset check-in",
           "period": "예약기간 : 2026.07.27 ~ 2026.11.30",
           "discount_pct": 0
@@ -201,22 +221,7 @@
         },
         {
           "title": "Dear My Kids",
-          "period": "예약기간 : 2026.11.01 ~ 2027.12.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "Dear My Kids",
-          "period": "예약기간 : 2026.11.01 ~ 2027.12.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "Dear My Kids",
-          "period": "예약기간 : 2026.11.01 ~ 2027.12.31",
-          "discount_pct": 0
-        },
-        {
-          "title": "EARLY BIRD",
-          "period": "예약기간 : 2026.01.01 ~ 2027.06.30",
+          "period": "예약기간 : 2026.11.01 ~ 2027.02.28",
           "discount_pct": 0
         }
       ]
@@ -277,25 +282,6 @@
           "period": "2026-06-02~2026-11-30",
           "discount_pct": 0
         }
-      ],
-      "price_min": 182275,
-      "price_max": 783725,
-      "promo_count": 112,
-      "ota_promos": [
-        {
-          "ota": "네이버호텔/야놀자",
-          "count": 64,
-          "min": 182275,
-          "max": 783725,
-          "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★"
-        },
-        {
-          "ota": "네이버호텔/네이버비밀특가",
-          "count": 48,
-          "min": 193476,
-          "max": 773904,
-          "sample": "마운틴콘도 그랜드 디럭스 MGD 라이브특가★ [체크인]15:0"
-        }
       ]
     },
     {
@@ -305,18 +291,13 @@
       "period": "2025.05.01 ~ 2027.03.31",
       "discount_pct": 10,
       "channel": "켄싱턴리조트 공식 홈페이지",
-      "detail": "단 2박 예약으로! 켄싱턴리조트 지리산하동·지리산남원에서 쏟아지는 특별 혜택 [2박 전용] 객실 10% 할인+5가지 혜택 1회 · 외 켄싱턴리조트 지리산하동 2박 전용 지리산 플렉스 · 스페셜 모먼트 등 5개",
+      "detail": "단 2박 예약으로! 켄싱턴리조트 지리산하동·지리산남원에서 쏟아지는 특별 혜택 [2박 전용] 객실 10% 할인+5가지 혜택 1회 · 외 스페셜 모먼트 · 코지 윈터 스테이 등 5개",
       "link": "https://www.kensington.co.kr/promotion",
       "campaign_count": 5,
       "campaigns": [
         {
           "title": "켄싱턴리조트 지리산남원 [2박 전용] 지리산 플렉스",
           "period": "2025.05.01 ~ 2027.03.31",
-          "discount_pct": 10
-        },
-        {
-          "title": "켄싱턴리조트 지리산하동 2박 전용 지리산 플렉스",
-          "period": "2026.11.25 ~ 2027.04.30",
           "discount_pct": 10
         },
         {
@@ -330,6 +311,11 @@
           "discount_pct": 0
         },
         {
+          "title": "켄싱턴호텔 평창 [베리트립x평창] 키즈 올인원",
+          "period": "2026.11.28 ~ 2027.02.28",
+          "discount_pct": 0
+        },
+        {
           "title": "켄싱턴리조트 제주중문 제주살이 낭만찾기",
           "period": "2026.05.01 ~ 2027.03.31",
           "discount_pct": 0
@@ -337,25 +323,25 @@
       ],
       "price_min": 117502,
       "price_max": 649900,
-      "promo_count": 540,
+      "promo_count": 480,
       "ota_promos": [
         {
           "ota": "네이버호텔/야놀자",
-          "count": 302,
+          "count": 267,
           "min": 117502,
           "max": 649900,
           "sample": "체크인 시 배정(★단독특가상품★룸온니)"
         },
         {
           "ota": "네이버호텔/Booking.com",
-          "count": 196,
+          "count": 176,
           "min": 238537,
           "max": 636264,
           "sample": "프리미어 로잔 룸 - 26평, 정원 전망"
         },
         {
           "ota": "네이버호텔/네이버비밀특가",
-          "count": 42,
+          "count": 37,
           "min": 127268,
           "max": 530593,
           "sample": "체크인 시 배정(★단독특가상품★룸온니) [체크인]15:00 ["
